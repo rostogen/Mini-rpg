@@ -57,7 +57,11 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .banner.show{animation:ban 2.6s ease forwards}
 @keyframes ban{0%{opacity:0;transform:scale(1.25)}10%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:translateY(-12px)}}
 
-.joy{position:absolute;width:124px;height:124px;border-radius:50%;border:2px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);transform:translate(-50%,-50%);display:none;pointer-events:none;z-index:4}
+.joy{position:absolute;width:124px;height:124px;border-radius:50%;border:2px solid rgba(255,255,255,.16);background:radial-gradient(circle,rgba(255,255,255,.02) 40%,rgba(255,255,255,.08) 70%,rgba(255,255,255,.03));transform:translate(-50%,-50%);display:none;pointer-events:none;z-index:4;box-shadow:0 0 0 1px rgba(0,0,0,.25),inset 0 0 18px rgba(0,0,0,.35)}
+.joy.on{display:block}
+.joy i{position:absolute;width:0;height:0;border:6px solid transparent;opacity:.45}.joy i:nth-of-type(1){left:50%;top:6px;margin-left:-6px;border-bottom-color:#fff}.joy i:nth-of-type(2){left:50%;bottom:6px;margin-left:-6px;border-top-color:#fff}.joy i:nth-of-type(3){top:50%;left:6px;margin-top:-6px;border-right-color:#fff}.joy i:nth-of-type(4){top:50%;right:6px;margin-top:-6px;border-left-color:#fff}
+@media (hover:none){.joy{display:block;left:calc(92px + env(safe-area-inset-left,0px));top:calc(100% - 118px);opacity:.6}.joy.on{opacity:1}}
+@media (hover:none) and (max-width:520px){.joy:not(.on){width:100px;height:100px;left:calc(60px + env(safe-area-inset-left,0px));top:calc(100% - 96px)}.joy:not(.on) b{width:40px;height:40px;margin:-20px}.joyHint{display:none!important}.sk.trn{bottom:162px}}
 .joy b{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px;border-radius:50%;background:rgba(214,162,74,.38);border:2px solid rgba(214,162,74,.8)}
 .joyHint{position:absolute;left:26px;bottom:34px;color:rgba(255,255,255,.35);font-size:12px;pointer-events:none;z-index:3;display:none}
 @media (hover:none){.joyHint{display:block}}
@@ -80,7 +84,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .sk.blz{width:52px;height:52px;right:222px;bottom:16px;background:radial-gradient(circle at 50% 35%,#7a2a12,#2a0d05)}
 .sk.shl{width:50px;height:50px;right:220px;bottom:84px;background:radial-gradient(circle at 50% 35%,#1c3a5c,#0a1a2c)}
 .sk.fir{right:102px}.sk.blt{right:60px}
-.sk.trn{width:56px;height:56px;left:calc(14px + env(safe-area-inset-left,0px));bottom:150px;font-size:25px;z-index:4;background:radial-gradient(circle at 50% 35%,#3a2a5a,#140c24)}
+.sk.trn{width:52px;height:52px;left:calc(14px + env(safe-area-inset-left,0px));bottom:232px;font-size:25px;z-index:4;background:radial-gradient(circle at 50% 35%,#3a2a5a,#140c24)}
 #stage:not(.fp) .sk.trn{display:none}
 .hpw{display:none}#stage.fp .hpw{display:block}
 .ib{position:relative}
@@ -263,7 +267,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
   <div class="toast" id="toast"></div>
   <div class="ttip" id="ttip"></div>
 
-  <div class="joy" id="joy"><b id="joyK"></b></div>
+  <div class="joy" id="joy"><i></i><i></i><i></i><i></i><b id="joyK"></b></div>
   <div class="joyHint" id="joyHint" data-i="joyHint">Тягни пальцем тут, щоб ходити</div>
   <div class="tip plate" id="tip" data-i="tip"></div>
 
@@ -278,7 +282,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     <button class="sk shl" data-a="shield" data-tk="aShield">🛡️<em>H</em></button>
     <button class="sk atk" data-a="attack" data-tk="aAttack">⚔<em>Z</em></button>
   </div>
-  <button class="sk trn" data-a="turn" data-tk="aTurn">↻<em>Q</em></button>
+  <button class="sk trn" data-a="turn" data-tk="aTurn">↻<em>R</em></button>
 
   <div class="modal" id="mTree"><div class="sheet">
     <div class="shead"><h2 data-i="tree">Дерево навичок</h2><button class="x" data-close aria-label="✕">✕</button></div>
@@ -385,8 +389,8 @@ gfxFail:"Не вдалося завантажити 3D, показано 2D|Coul
 resetL:"Прогрес|Progress|Progression|Fortschritt|进度|Progreso|Progressi|Postęp",
 reset:"Скинути прогрес|Reset progress|Réinitialiser|Fortschritt zurücksetzen|重置进度|Reiniciar progreso|Azzera progressi|Resetuj postęp",
 resetQ:"Натисни ще раз, щоб скинути все|Press again to reset everything|Appuie encore pour tout effacer|Nochmal drücken, um alles zu löschen|再按一次以重置全部|Pulsa otra vez para borrar todo|Premi di nuovo per azzerare tutto|Naciśnij ponownie, aby wszystko zresetować",
-ctrl:"Пауза: P або Esc. Рух: WASD або стрілки. Z: удар, натискай кілька разів поспіль для комбо з трьох ударів. X: сильний удар. C: вогняна куля. V: блискавка. B: лікування. N: перекат із невразливістю. M: вихор. G: палаючий клинок. H: щит духу. На телефоні ліва частина екрана працює як джойстик, кнопки праворуч. Прогрес зберігається в цьому браузері. Q: розвернутися. F: перемкнути камеру. Від першого лиця: W — вперед, S — назад, A/D — крок убік.|Pause: P or Esc. Move: WASD or arrow keys. Z: strike, press repeatedly for a three-hit combo. X: heavy strike. C: fireball. V: lightning. B: heal. N: invulnerable roll. M: whirlwind. G: blazing blade. H: spirit shield. On a phone, the left side of the screen is a joystick and the buttons are on the right. Progress is saved in this browser. Q: turn around. F: switch camera. In first person: W forward, S back, A/D strafe.|Pause : P ou Échap. Déplacement : WASD ou flèches. Z : frappe, appuie plusieurs fois pour un combo de trois coups. X : coup puissant. C : boule de feu. V : éclair. B : soin. N : roulade invulnérable. M : tourbillon. G : lame ardente. H : bouclier spirituel. Sur téléphone, la gauche de l'écran sert de joystick et les boutons sont à droite. La progression est sauvegardée dans ce navigateur. Q : se retourner. F : changer de caméra. En première personne : W avancer, S reculer, A/D pas de côté.|Pause: P oder Esc. Bewegen: WASD oder Pfeiltasten. Z: Schlag, mehrmals drücken für eine Dreierkombo. X: schwerer Schlag. C: Feuerball. V: Blitz. B: Heilung. N: unverwundbare Rolle. M: Wirbelwind. G: Flammenklinge. H: Geisterschild. Auf dem Handy ist die linke Bildschirmseite ein Joystick, die Tasten sind rechts. Der Fortschritt wird in diesem Browser gespeichert. Q: umdrehen. F: Kamera wechseln. In der Ego-Perspektive: W vorwärts, S rückwärts, A/D seitwärts.|暂停：P 或 Esc。移动：WASD 或方向键。Z：攻击，连按可打出三连击。X：重击。C：火球。V：闪电。B：治疗。N：无敌翻滚。M：旋风斩。G：烈焰之刃。H：灵魂护盾。手机上屏幕左侧是摇杆，按钮在右侧。进度保存在此浏览器中。 Q：转身。F：切换视角。第一人称时：W 前进，S 后退，A/D 横移。|Pausa: P o Esc. Moverse: WASD o flechas. Z: golpe, pulsa varias veces para un combo de tres golpes. X: golpe fuerte. C: bola de fuego. V: rayo. B: curación. N: voltereta invulnerable. M: torbellino. G: hoja ardiente. H: escudo espiritual. En el móvil, la parte izquierda de la pantalla es un joystick y los botones están a la derecha. El progreso se guarda en este navegador. Q: darse la vuelta. F: cambiar cámara. En primera persona: W avanzar, S retroceder, A/D paso lateral.|Pausa: P o Esc. Movimento: WASD o frecce. Z: colpo, premi più volte per una combo di tre colpi. X: colpo pesante. C: palla di fuoco. V: fulmine. B: cura. N: capriola invulnerabile. M: turbine. G: lama infuocata. H: scudo dello spirito. Sul telefono il lato sinistro dello schermo è un joystick e i pulsanti sono a destra. I progressi vengono salvati in questo browser. Q: girarsi. F: cambia telecamera. In prima persona: W avanti, S indietro, A/D passo laterale.|Pauza: P lub Esc. Ruch: WASD lub strzałki. Z: cios, naciskaj kilka razy dla combo z trzech ciosów. X: mocny cios. C: kula ognia. V: błyskawica. B: leczenie. N: przewrót z nietykalnością. M: wir. G: płonące ostrze. H: tarcza ducha. Na telefonie lewa strona ekranu działa jak joystick, a przyciski są po prawej. Postęp zapisuje się w tej przeglądarce. Q: obrót. F: zmiana kamery. W pierwszej osobie: W naprzód, S w tył, A/D krok w bok.",
-tip:"WASD або стрілки: рух. Z удар (тисни кілька разів для комбо), X сильний удар, C вогонь, V блискавка, B лікування, N перекат, M вихор, G палаючий клинок, H щит духу. P: пауза. Q розворот, F камера.|WASD or arrows: move. Z strike (press repeatedly to combo), X heavy strike, C fire, V lightning, B heal, N roll, M whirlwind, G blazing blade, H spirit shield. P: pause. Q turn, F camera.|WASD ou flèches : déplacement. Z frappe (appuie plusieurs fois pour un combo), X coup puissant, C feu, V éclair, B soin, N roulade, M tourbillon, G lame ardente, H bouclier spirituel. P : pause. Q se retourner, F caméra.|WASD oder Pfeile: bewegen. Z Schlag (mehrmals für Kombo), X schwerer Schlag, C Feuer, V Blitz, B Heilung, N Rolle, M Wirbelwind, G Flammenklinge, H Geisterschild. P: Pause. Q umdrehen, F Kamera.|WASD 或方向键：移动。Z 攻击（连按连击），X 重击，C 火球，V 闪电，B 治疗，N 翻滚，M 旋风斩，G 烈焰之刃，H 灵魂护盾。P：暂停。 Q 转身，F 视角。|WASD o flechas: moverse. Z golpe (pulsa varias veces para combo), X golpe fuerte, C fuego, V rayo, B curación, N voltereta, M torbellino, G hoja ardiente, H escudo espiritual. P: pausa. Q girar, F cámara.|WASD o frecce: movimento. Z colpo (premi più volte per la combo), X colpo pesante, C fuoco, V fulmine, B cura, N capriola, M turbine, G lama infuocata, H scudo dello spirito. P: pausa. Q girarsi, F telecamera.|WASD lub strzałki: ruch. Z cios (naciskaj kilka razy dla combo), X mocny cios, C ogień, V błyskawica, B leczenie, N przewrót, M wir, G płonące ostrze, H tarcza ducha. P: pauza. Q obrót, F kamera.",
+ctrl:"Пауза: P або Esc. Рух: WASD або стрілки. Z: удар, натискай кілька разів поспіль для комбо з трьох ударів. X: сильний удар. C: вогняна куля. V: блискавка. B: лікування. N: перекат із невразливістю. M: вихор. G: палаючий клинок. H: щит духу. На телефоні ліва частина екрана працює як джойстик, кнопки праворуч. Прогрес зберігається в цьому браузері. F: перемкнути камеру. Від першого лиця: W/S — вперед і назад, A/D або стрілки — повертатися, Q/E — крок убік, R — розворот, тягни пальцем справа — оглядатися. На телефоні джойстик: вгору/вниз — іти, вліво/вправо — повертатися.|Pause: P or Esc. Move: WASD or arrow keys. Z: strike, press repeatedly for a three-hit combo. X: heavy strike. C: fireball. V: lightning. B: heal. N: invulnerable roll. M: whirlwind. G: blazing blade. H: spirit shield. On a phone, the left side of the screen is a joystick and the buttons are on the right. Progress is saved in this browser. F: switch camera. In first person: W/S forward and back, A/D or arrows turn, Q/E strafe, R turn around, drag on the right side to look around. On a phone the joystick moves up/down and turns left/right.|Pause : P ou Échap. Déplacement : WASD ou flèches. Z : frappe, appuie plusieurs fois pour un combo de trois coups. X : coup puissant. C : boule de feu. V : éclair. B : soin. N : roulade invulnérable. M : tourbillon. G : lame ardente. H : bouclier spirituel. Sur téléphone, la gauche de l'écran sert de joystick et les boutons sont à droite. La progression est sauvegardée dans ce navigateur. F : changer de caméra. En première personne : W/S avancer et reculer, A/D ou flèches tourner, Q/E pas de côté, R demi-tour, glisse à droite pour regarder autour. Sur téléphone, le joystick avance/recule et tourne.|Pause: P oder Esc. Bewegen: WASD oder Pfeiltasten. Z: Schlag, mehrmals drücken für eine Dreierkombo. X: schwerer Schlag. C: Feuerball. V: Blitz. B: Heilung. N: unverwundbare Rolle. M: Wirbelwind. G: Flammenklinge. H: Geisterschild. Auf dem Handy ist die linke Bildschirmseite ein Joystick, die Tasten sind rechts. Der Fortschritt wird in diesem Browser gespeichert. F: Kamera wechseln. In der Ego-Perspektive: W/S vor und zurück, A/D oder Pfeile drehen, Q/E seitwärts, R umdrehen, rechts ziehen zum Umsehen. Auf dem Handy: Joystick hoch/runter laufen, links/rechts drehen.|暂停：P 或 Esc。移动：WASD 或方向键。Z：攻击，连按可打出三连击。X：重击。C：火球。V：闪电。B：治疗。N：无敌翻滚。M：旋风斩。G：烈焰之刃。H：灵魂护盾。手机上屏幕左侧是摇杆，按钮在右侧。进度保存在此浏览器中。 F：切换视角。第一人称时：W/S 前进后退，A/D 或方向键转向，Q/E 横移，R 转身，在右侧拖动环顾四周。手机上摇杆上下移动、左右转向。|Pausa: P o Esc. Moverse: WASD o flechas. Z: golpe, pulsa varias veces para un combo de tres golpes. X: golpe fuerte. C: bola de fuego. V: rayo. B: curación. N: voltereta invulnerable. M: torbellino. G: hoja ardiente. H: escudo espiritual. En el móvil, la parte izquierda de la pantalla es un joystick y los botones están a la derecha. El progreso se guarda en este navegador. F: cambiar cámara. En primera persona: W/S avanzar y retroceder, A/D o flechas girar, Q/E paso lateral, R darse la vuelta, arrastra a la derecha para mirar. En el móvil, el joystick avanza/retrocede y gira.|Pausa: P o Esc. Movimento: WASD o frecce. Z: colpo, premi più volte per una combo di tre colpi. X: colpo pesante. C: palla di fuoco. V: fulmine. B: cura. N: capriola invulnerabile. M: turbine. G: lama infuocata. H: scudo dello spirito. Sul telefono il lato sinistro dello schermo è un joystick e i pulsanti sono a destra. I progressi vengono salvati in questo browser. F: cambia telecamera. In prima persona: W/S avanti e indietro, A/D o frecce girare, Q/E passo laterale, R girarsi, trascina a destra per guardarti intorno. Sul telefono il joystick avanza/arretra e gira.|Pauza: P lub Esc. Ruch: WASD lub strzałki. Z: cios, naciskaj kilka razy dla combo z trzech ciosów. X: mocny cios. C: kula ognia. V: błyskawica. B: leczenie. N: przewrót z nietykalnością. M: wir. G: płonące ostrze. H: tarcza ducha. Na telefonie lewa strona ekranu działa jak joystick, a przyciski są po prawej. Postęp zapisuje się w tej przeglądarce. F: zmiana kamery. W pierwszej osobie: W/S naprzód i w tył, A/D lub strzałki obrót, Q/E krok w bok, R zawrócenie, przeciągnij po prawej, aby się rozejrzeć. Na telefonie joystick: góra/dół chód, lewo/prawo obrót.",
+tip:"WASD або стрілки: рух. Z удар (тисни кілька разів для комбо), X сильний удар, C вогонь, V блискавка, B лікування, N перекат, M вихор, G палаючий клинок, H щит духу. P: пауза. A/D поворот, Q/E вбік, R розворот, F камера.|WASD or arrows: move. Z strike (press repeatedly to combo), X heavy strike, C fire, V lightning, B heal, N roll, M whirlwind, G blazing blade, H spirit shield. P: pause. A/D turn, Q/E strafe, R turn around, F camera.|WASD ou flèches : déplacement. Z frappe (appuie plusieurs fois pour un combo), X coup puissant, C feu, V éclair, B soin, N roulade, M tourbillon, G lame ardente, H bouclier spirituel. P : pause. A/D tourner, Q/E de côté, R demi-tour, F caméra.|WASD oder Pfeile: bewegen. Z Schlag (mehrmals für Kombo), X schwerer Schlag, C Feuer, V Blitz, B Heilung, N Rolle, M Wirbelwind, G Flammenklinge, H Geisterschild. P: Pause. A/D drehen, Q/E seitwärts, R umdrehen, F Kamera.|WASD 或方向键：移动。Z 攻击（连按连击），X 重击，C 火球，V 闪电，B 治疗，N 翻滚，M 旋风斩，G 烈焰之刃，H 灵魂护盾。P：暂停。 A/D 转向，Q/E 横移，R 转身，F 视角。|WASD o flechas: moverse. Z golpe (pulsa varias veces para combo), X golpe fuerte, C fuego, V rayo, B curación, N voltereta, M torbellino, G hoja ardiente, H escudo espiritual. P: pausa. A/D girar, Q/E lateral, R darse la vuelta, F cámara.|WASD o frecce: movimento. Z colpo (premi più volte per la combo), X colpo pesante, C fuoco, V fulmine, B cura, N capriola, M turbine, G lama infuocata, H scudo dello spirito. P: pausa. A/D girare, Q/E laterale, R girarsi, F telecamera.|WASD lub strzałki: ruch. Z cios (naciskaj kilka razy dla combo), X mocny cios, C ogień, V błyskawica, B leczenie, N przewrót, M wir, G płonące ostrze, H tarcza ducha. P: pauza. A/D obrót, Q/E w bok, R zawrócenie, F kamera.",
 joyHint:"Тягни пальцем тут, щоб ходити|Drag here to walk|Glisse ici pour marcher|Hier ziehen zum Laufen|在此拖动以移动|Arrastra aquí para caminar|Trascina qui per camminare|Przeciągnij tutaj, aby chodzić",
 defeat:"Поразка|Defeat|Défaite|Niederlage|失败|Derrota|Sconfitta|Porażka",
 defeatSub:"Вороги виявилися сильнішими. Прокачай навички або спробуй ще раз.|The enemies were stronger this time. Upgrade your skills or try again.|Les ennemis étaient plus forts cette fois. Améliore tes compétences ou réessaie.|Die Gegner waren diesmal stärker. Verbessere deine Fähigkeiten oder versuche es erneut.|敌人这次更强。升级技能或再试一次。|Esta vez los enemigos fueron más fuertes. Mejora tus habilidades o inténtalo de nuevo.|Questa volta i nemici erano più forti. Potenzia le abilità o riprova.|Tym razem wrogowie byli silniejsi. Ulepsz umiejętności lub spróbuj ponownie.",
@@ -778,11 +782,11 @@ let tNow=0,hitStop=0,shake=0,flashA=0,flashCol="#ffffff",paused=false,modalOpen=
 const CD={heavy:2.6,fire:4,bolt:7,heal:10,dodge:.9,spin:6,blaze:6,shield:9};
 const SKLV={heavy:1,dodge:1,spin:5,fire:7,bolt:9,heal:11,blaze:13,shield:15};
 const ATK=[{dur:.34,hit:.13,reach:46,zr:20,mul:1,kb:90},{dur:.34,hit:.12,reach:46,zr:20,mul:1.1,kb:110},{dur:.44,hit:.18,reach:58,zr:18,mul:1.55,kb:230}];
-const hero={x:150,z:60,h:0,face:1,state:"idle",st:0,anim:0,inv:0,flash:0,combo:0,queued:false,done:false,cd:{heavy:0,fire:0,bolt:0,heal:0,dodge:0,spin:0},slow:0,stepPh:0,dvx:0,dvz:0,trail:[],hand:null};
+const hero={x:150,z:60,h:0,face:1,state:"idle",st:0,anim:0,inv:0,flash:0,combo:0,queued:false,done:false,cd:{heavy:0,fire:0,bolt:0,heal:0,dodge:0,spin:0},ang:0,slow:0,stepPh:0,dvx:0,dvz:0,trail:[],hand:null};
 
 /* ============ INPUT ============ */
 const keys={};let attackHeld=false;
-const KEYACT={KeyZ:"attack",KeyX:"heavy",KeyC:"fire",KeyV:"bolt",KeyB:"heal",KeyN:"dodge",KeyM:"spin",KeyG:"blaze",KeyH:"shield",KeyQ:"turn"};
+const KEYACT={KeyZ:"attack",KeyX:"heavy",KeyC:"fire",KeyV:"bolt",KeyB:"heal",KeyN:"dodge",KeyM:"spin",KeyG:"blaze",KeyH:"shield",KeyR:"turn"};
 window.addEventListener("keydown",e=>{
  if(e.target&&e.target.tagName==="INPUT"){if(e.code==="Escape")e.target.blur();return}
  if(e.ctrlKey||e.metaKey||e.altKey)return;
@@ -796,14 +800,16 @@ window.addEventListener("keydown",e=>{
 });
 window.addEventListener("keyup",e=>{keys[e.code]=false;if(KEYACT[e.code]==="attack")attackHeld=false});
 window.addEventListener("blur",()=>{for(const k in keys)keys[k]=false;attackHeld=false});
-const joy={id:null,ox:0,oy:0,x:0,y:0};
+const joy={id:null,ox:0,oy:0,x:0,y:0},look={id:null,x:0};
+function joyRest(){const j=$("joy");j.classList.remove("on");j.style.left=j.style.top="";$("joyK").style.transform=""}
 stage.addEventListener("pointerdown",e=>{
  if(modalOpen||e.target.closest(".sk,.ib,.plate,.modal"))return;
  const r=stage.getBoundingClientRect();
- if(e.clientX-r.left<r.width*.55&&joy.id===null){joy.id=e.pointerId;joy.ox=e.clientX;joy.oy=e.clientY;joy.x=joy.y=0;const j=$("joy");j.style.left=(e.clientX-r.left)+"px";j.style.top=(e.clientY-r.top)+"px";j.style.display="block";$("joyK").style.transform="";$("joyHint").style.display="none";ac();hideTip()}
+ if(e.clientX-r.left<r.width*.55&&joy.id===null){joy.id=e.pointerId;joy.ox=e.clientX;joy.oy=e.clientY;joy.x=joy.y=0;const j=$("joy");j.style.left=(e.clientX-r.left)+"px";j.style.top=(e.clientY-r.top)+"px";j.classList.add("on");$("joyK").style.transform="";$("joyHint").style.display="none";ac();hideTip()}
+ else if(isFP()&&look.id===null){look.id=e.pointerId;look.x=e.clientX;ac();hideTip()}
 });
-stage.addEventListener("pointermove",e=>{if(e.pointerId!==joy.id)return;let dx=e.clientX-joy.ox,dy=e.clientY-joy.oy;const d=Math.hypot(dx,dy),m=50;if(d>m){dx*=m/d;dy*=m/d}joy.x=dx/m;joy.y=dy/m;$("joyK").style.transform=`translate(${dx}px,${dy}px)`});
-const joyEnd=e=>{if(e.pointerId!==joy.id)return;joy.id=null;joy.x=joy.y=0;$("joy").style.display="none"};
+stage.addEventListener("pointermove",e=>{if(e.pointerId===look.id){if(!paused&&isFP()&&hero.state!=="dead"){hero.ang-=(e.clientX-look.x)*.0065;syncAng()}look.x=e.clientX;return}if(e.pointerId!==joy.id)return;let dx=e.clientX-joy.ox,dy=e.clientY-joy.oy;const d=Math.hypot(dx,dy),m=50;if(d>m){dx*=m/d;dy*=m/d}joy.x=dx/m;joy.y=dy/m;$("joyK").style.transform=`translate(${dx}px,${dy}px)`});
+const joyEnd=e=>{if(e.pointerId===look.id){look.id=null;return}if(e.pointerId!==joy.id)return;joy.id=null;joy.x=joy.y=0;joyRest()};
 stage.addEventListener("pointerup",joyEnd);stage.addEventListener("pointercancel",joyEnd);
 document.querySelectorAll(".sk").forEach(b=>{
  const a=b.dataset.a;
@@ -812,7 +818,7 @@ document.querySelectorAll(".sk").forEach(b=>{
  b.addEventListener("pointerup",up);b.addEventListener("pointerleave",up);b.addEventListener("pointercancel",up);
  b.addEventListener("contextmenu",e=>e.preventDefault());
 });
-function moveVec(){let x=0,z=0;if(keys.KeyD||keys.ArrowRight)x++;if(keys.KeyA||keys.ArrowLeft)x--;if(keys.KeyS||keys.ArrowDown)z++;if(keys.KeyW||keys.ArrowUp)z--;if(Math.hypot(joy.x,joy.y)>.18){x+=joy.x;z+=joy.y}const d=Math.hypot(x,z);if(d>1){x/=d;z/=d}if(isFP()){const f=-z,s=x;x=f*hero.face;z=s*hero.face}return{x,z}}
+function moveVec(){let x=0,z=0;if(keys.KeyD||keys.ArrowRight)x++;if(keys.KeyA||keys.ArrowLeft)x--;if(keys.KeyS||keys.ArrowDown)z++;if(keys.KeyW||keys.ArrowUp)z--;if(Math.hypot(joy.x,joy.y)>.18){x+=joy.x;z+=joy.y}const d=Math.hypot(x,z);if(d>1){x/=d;z/=d}if(isFP())return fpMove(z);return{x,z}}
 let tipHidden=false;function hideTip(){if(tipHidden)return;tipHidden=true;setTimeout(()=>{$("tip").style.opacity=0},6000)}
 
 /* ============ HERO ============ */
@@ -823,14 +829,14 @@ function tryAction(a){
  if(hero.state==="dead"||paused)return;
  if(a!=="attack"&&P.level<(SKLV[a]||1)){toast(t("skLocked",{lv:SKLV[a]||1}));return}
  const h=hero;
- if(a==="turn"){h.face*=-1;return}
- if(isFP()&&free()&&(a==="attack"||a==="heavy"||a==="blaze"||a==="fire"))fpAutoTurn();
+ if(a==="turn"){if(isFP())h.ang+=PI;else h.face*=-1;syncAng();return}
+ if(isFP()&&free()&&(a==="attack"||a==="heavy"||a==="blaze"||a==="fire"))fpAssist();
  if(a==="attack"){
   if(h.state==="attack"){if(h.st>ATK[h.combo].dur*.4&&h.combo<2)h.queued=true;return}
   if(free()){h.combo=0;h.queued=false;setHero("attack");SFX.swing()}
   return;
  }
- if(a==="dodge"){if(h.cd.dodge>0||h.state==="dodge")return;if(!(free()||h.state==="attack"||h.state==="hurt"))return;const m=moveVec();let vx=m.x,vz=m.z;if(Math.hypot(vx,vz)<.2){vx=h.face;vz=0}const d=Math.hypot(vx,vz);h.dvx=vx/d;h.dvz=vz/d;if(Math.abs(vx)>.1&&!isFP())h.face=vx>0?1:-1;setHero("dodge");h.inv=.42;h.cd.dodge=CD.dodge*cdMul("dodge");SFX.dodge();return}
+ if(a==="dodge"){if(h.cd.dodge>0||h.state==="dodge")return;if(!(free()||h.state==="attack"||h.state==="hurt"))return;const m=moveVec();let vx=m.x,vz=m.z;if(Math.hypot(vx,vz)<.2){const fd=hdir();vx=fd.x;vz=fd.z*MZ}const d=Math.hypot(vx,vz);h.dvx=vx/d;h.dvz=vz/d;if(Math.abs(vx)>.1&&!isFP())h.face=vx>0?1:-1;setHero("dodge");h.inv=.42;h.cd.dodge=CD.dodge*cdMul("dodge");SFX.dodge();return}
  if(!free()||h.cd[a]>0)return;
  if(a==="heal"&&P.hp>=P.maxhp){toast("❤ "+Math.ceil(P.hp)+"/"+P.maxhp);return}
  h.cd[a]=CD[a]*cdMul(a);setHero(a);
@@ -840,6 +846,7 @@ function tryAction(a){
 function heroUpdate(dt){
  const h=hero;h.st+=dt*(h.state==="attack"||h.state==="heavy"||h.state==="spin"?1+P.atkSpd/100:1);h.slow=Math.max(0,h.slow-dt);h.inv=Math.max(0,h.inv-dt);h.flash=Math.max(0,h.flash-dt);
  for(const k in h.cd)h.cd[k]=Math.max(0,h.cd[k]-dt);
+ if(isFP()&&h.state!=="dead"){const tr=fpTurnInput();if(tr)h.ang-=tr*2.8*dt}syncAng();
  const mv=moveVec();
  switch(h.state){
   case "idle":case "walk":
@@ -848,16 +855,16 @@ function heroUpdate(dt){
    break;
   case "attack":{
    const A=ATK[h.combo];
-   if(h.st<A.hit+.05)h.x+=h.face*(h.combo===2?110:45)*dt;
+   if(h.st<A.hit+.05){const d=hdir(),v=(h.combo===2?110:45)*dt;h.x+=d.x*v;h.z+=d.z*v/ZS}
    if(!h.done&&h.st>=A.hit){h.done=true;heroMelee(A.reach,A.zr,A.mul,A.kb,"melee")}
    if(attackHeld&&h.st>A.dur*.5&&h.combo<2)h.queued=true;
    if(h.st>=A.dur){if(h.queued&&h.combo<2){h.combo++;h.queued=false;h.st=0;h.done=false;const mv2=moveVec();if(Math.abs(mv2.x)>.3&&!isFP())h.face=mv2.x>0?1:-1;SFX.swing()}else setHero("idle")}
   }break;
   case "heavy":
-   if(!h.done&&h.st>=.45){h.done=true;heroMelee(64,28,1.9,330,"heavy");shake+=4;dustRing(h.x+h.face*34,h.z,26);SFX.heavy()}
+   if(!h.done&&h.st>=.45){h.done=true;heroMelee(64,28,1.9,330,"heavy");shake+=4;dustRing(h.x+hdir().x*34,clamp(h.z+hdir().z*34/ZS,4,DEPTH-4),26);SFX.heavy()}
    if(h.st>=.78)setHero("idle");break;
   case "fire":
-   if(!h.done&&h.st>=.2){h.done=true;const zs=P.fireMulti?[0,-20,20]:[0];zs.forEach((dz,i)=>projs.push({k:"fire",x:h.x+h.face*20,z:clamp(h.z+dz*.2,4,DEPTH-4),h:32,vx:h.face*310,vz:dz*1.6,life:1.3,r:7}));SFX.fire()}
+   if(!h.done&&h.st>=.2){h.done=true;const zs=P.fireMulti?[0,-20,20]:[0];const fd=hdir();zs.forEach((dz,i)=>projs.push({k:"fire",x:h.x+fd.x*20,z:clamp(h.z+fd.z*20/ZS+dz*.2,4,DEPTH-4),h:32,vx:fd.x*310-fd.z*dz*1.6*ZS,vz:fd.z*310/ZS+fd.x*dz*1.6,life:1.3,r:7}));SFX.fire()}
    if(h.st>=.45)setHero("idle");break;
   case "bolt":
    if(!h.done&&h.st>=.26){h.done=true;castBolt()}
@@ -891,15 +898,15 @@ function heroUpdate(dt){
 }
 function heroMelee(reach,zr,mul,kb,kind){
  let hits=0,steal=0;
- for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const fdx=(e.x-hero.x)*hero.face;
-  if(fdx>(kind==="heavy"?-22:-12)&&fdx<reach+e.cfg.rad*e.s&&Math.abs(e.z-hero.z)<zr+(e.cfg.fly?8:0)){const crit=Math.random()<P.crit/100;const d=Math.max(1,Math.round(rnd(P.atk-2,P.atk+4)*mul*(crit?2+P.critDmg/100:1)));const done=damageEnemy(e,d,crit,hero.face,kb,kind);if(P.lifesteal)steal+=done*P.lifesteal/100;hits++}}
+ for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const r=relH(e);
+  if(r.a>(kind==="heavy"?-22:-12)&&r.a<reach+e.cfg.rad*e.s&&r.l<(zr+(e.cfg.fly?8:0))*ZS){const crit=Math.random()<P.crit/100;const d=Math.max(1,Math.round(rnd(P.atk-2,P.atk+4)*mul*(crit?2+P.critDmg/100:1)));const done=damageEnemy(e,d,crit,hero.face,kb,kind);if(P.lifesteal)steal+=done*P.lifesteal/100;hits++}}
  if(steal>=1&&hero.state!=="dead"){const g=Math.min(P.maxhp-P.hp,Math.round(steal));if(g>0){P.hp+=g;addText(hero.x,hero.z,62,"+"+g,"#6bf0ae",11)}}
  if(hits){hitStop=kind==="heavy"?.1:.05;shake+=kind==="heavy"?4:1.4}
 }
 function heroBlaze(){
  let hits=0,steal=0;const mul=1.5*(1+P.fireBonus/100);
- for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const fdx=(e.x-hero.x)*hero.face;
-  if(fdx>-20&&fdx<60+e.cfg.rad*e.s&&Math.abs(e.z-hero.z)<27+(e.cfg.fly?8:0)){const crit=Math.random()<P.crit/100;const d=Math.max(1,Math.round(rnd(P.atk-2,P.atk+4)*mul*(crit?2+P.critDmg/100:1)));const done=damageEnemy(e,d,crit,hero.face,260,"blaze");if(P.lifesteal)steal+=done*P.lifesteal/100;hits++;if(e.state!=="dead")e.burn={t:3,tick:.5,dps:d*.3*(1+P.burnDmg/100)}}}
+ for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const r=relH(e);
+  if(r.a>-20&&r.a<60+e.cfg.rad*e.s&&r.l<(27+(e.cfg.fly?8:0))*ZS){const crit=Math.random()<P.crit/100;const d=Math.max(1,Math.round(rnd(P.atk-2,P.atk+4)*mul*(crit?2+P.critDmg/100:1)));const done=damageEnemy(e,d,crit,hero.face,260,"blaze");if(P.lifesteal)steal+=done*P.lifesteal/100;hits++;if(e.state!=="dead")e.burn={t:3,tick:.5,dps:d*.3*(1+P.burnDmg/100)}}}
  if(steal>=1&&hero.state!=="dead"){const g=Math.min(P.maxhp-P.hp,Math.round(steal));if(g>0){P.hp+=g;addText(hero.x,hero.z,62,"+"+g,"#6bf0ae",11)}}
  if(hits){hitStop=.09;shake+=3.5}
  SFX.heavy();
@@ -918,8 +925,8 @@ function heroSpin(){
 }
 function castBolt(){
  const alive=enemies.filter(e=>e.state!=="dead"&&e.delay<=0&&Math.abs(e.x-camX-LW/2)<LW*.6);
- if(!alive.length){bolts.push({x:hero.x+hero.face*70,z:hero.z,life:.3,max:.3,pts:null});SFX.bolt();return}
- const score=e=>Math.abs(e.x-hero.x)+Math.abs(e.z-hero.z)*1.5+((e.x-hero.x)*hero.face<0?120:0);
+ if(!alive.length){bolts.push({x:hero.x+hdir().x*70,z:clamp(hero.z+hdir().z*70/ZS,4,DEPTH-4),life:.3,max:.3,pts:null});SFX.bolt();return}
+ const score=e=>Math.abs(e.x-hero.x)+Math.abs(e.z-hero.z)*1.5+(relH(e).a<0?120:0);
  alive.sort((a,b)=>score(a)-score(b));
  const base=(P.atk*1.15+25+P.level*3)*(1+P.lightningBonus/100);
  let first=alive[0];const chain=[first];
@@ -1017,7 +1024,7 @@ function enemyUpdate(e,dt){
 }
 function startEnemyAttack(e,kind){
  const C=e.cfg;e.state="windup";e.st=0;e.face=hero.x>e.x?1:-1;e.atkKind=kind||C.style;
- if(C.blink&&Math.random()<.55){const col=C.body==="ghost"?"#7fa3c9":"#5a2a3a";puff(e.x,e.z,col);e.x=hero.x-hero.face*30;e.z=hero.z+rnd(-4,4);e.face=hero.x>e.x?1:-1;puff(e.x,e.z,col);SFX.dodge()}
+ if(C.blink&&Math.random()<.55){const col=C.body==="ghost"?"#7fa3c9":"#5a2a3a";puff(e.x,e.z,col);{const fd=hdir();e.x=hero.x-fd.x*30;e.z=clamp(hero.z-fd.z*30/ZS+rnd(-4,4),4,DEPTH-4)}e.face=hero.x>e.x?1:-1;puff(e.x,e.z,col);SFX.dodge()}
  const snd={lunge:C.body==="spider"?"hiss":"growl",swoop:"screech",claw:C.body==="ghost"?"wail":null,cast:"chant",charge:"charge",web:"hiss"}[e.atkKind];
  if(C.k==="troll")SFX.grunt();else if(snd)SFX[snd]();
  if(C.summon&&e.summons<2&&aliveCount()<7&&Math.random()<.45){
@@ -1768,7 +1775,7 @@ function init3D(){
  G3.moon=sprite(null,0xffffff,700,1,false);G3.moon.material.depthWrite=false;G3.moon.renderOrder=-8;scene.add(G3.moon);
  G3.moonGlow=sprite(tGlow,0xffffff,2600,.35);G3.moonGlow.renderOrder=-8;scene.add(G3.moonGlow);
  // ground
- const gG=new T.PlaneGeometry(7000,6000).rotateX(-PI/2);
+ const gG=new T.PlaneGeometry(7000,6000,140,150).rotateX(-PI/2);G3.gsx=null;
  G3.ground=new T.Mesh(gG,new T.MeshStandardMaterial({roughness:1,metalness:0}));G3.ground.receiveShadow=true;scene.add(G3.ground);
  const laneD=DEPTH*ZS+44,lG=new T.PlaneGeometry(7000,laneD).rotateX(-PI/2);
  G3.lane=new T.Mesh(lG,new T.MeshStandardMaterial({roughness:.95,metalness:0,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2}));G3.lane.receiveShadow=true;G3.lane.renderOrder=-1;scene.add(G3.lane);
@@ -1815,7 +1822,7 @@ function updateCamFP(){
  cam.updateProjectionMatrix();cam.updateMatrixWorld();G3.ptScale=H*G3.rr.getPixelRatio()/(2*Math.tan(fv*PI/360));
  G3.sky.position.copy(cam.position);G3.stars.position.copy(cam.position);
  const v=new T3.Vector3(.86,.26,-.44).normalize();G3.skyU.mDir.value.copy(v);G3.moon.position.copy(cam.position).addScaledVector(v,7000);G3.moonGlow.position.copy(G3.moon.position);
- const f=G3.scene.fog;f.near=260;f.far=1650;
+ const f=G3.scene.fog;f.near=G3.hi?260:200;f.far=G3.hi?1650:1250;
  const cx=h.x+fx*240,sun=G3.sun;sun.target.position.set(cx,0,zC);sun.position.set(cx+340,780,zC-420);Object.assign(sun.shadow.camera,{left:-560,right:560,top:450,bottom:-450});sun.shadow.camera.updateProjectionMatrix();
  G3.rim.target.position.set(cx,30,zC);G3.rim.position.set(cx-500,260,zC-300);G3.fill.target.position.set(px+fx*120,30,pz+fz*120);G3.fill.position.set(px-fx*60,py+160,pz-fz*60);
 }
@@ -1832,7 +1839,7 @@ function setBiome3(bi){
  G3.moonGlow.material.color.set(B.moon);
  // ground textures
  const rnd2=(i)=>hash(i*1.37+bi*91);
- const old=[G3.ground.material.map,G3.ground.material.emissiveMap,G3.lane.material.map];old.forEach(t=>t&&t.dispose());
+ const old=[G3.ground.material.map,G3.ground.material.emissiveMap,G3.lane.material.map,G3.lane.material.normalMap];old.forEach(t=>t&&t.dispose());
  const gtex=cvTex(512,512,(g)=>{g.fillStyle=B.ground[1];g.fillRect(0,0,512,512);
   for(let i=0;i<900;i++){const x=rnd2(i)*512,y=rnd2(i+5000)*512,r=3+rnd2(i+9000)*26;g.fillStyle=hexA(i%3?B.ground[0]:shade(B.ground[1],-.35),.08+rnd2(i+300)*.14);g.beginPath();g.ellipse(x,y,r,r*.7,rnd2(i+70)*3,0,7);g.fill()}
   for(let i=0;i<260;i++){const x=rnd2(i+1e4)*512,y=rnd2(i+2e4)*512;g.fillStyle=hexA(B.stone,.5);g.beginPath();g.ellipse(x,y,1.5+rnd2(i)*3,1+rnd2(i+1)*2,0,0,7);g.fill()}
@@ -1843,18 +1850,31 @@ function setBiome3(bi){
   em.repeat.copy(gtex.repeat);G3.ground.material.emissiveMap=em;G3.ground.material.emissive.set(0xff7a2a);G3.ground.material.emissiveIntensity=1.1}
  else{G3.ground.material.emissiveMap=null;G3.ground.material.emissive.set(0);}
  G3.ground.material.needsUpdate=true;
- const ltex=cvTex(512,256,(g)=>{g.clearRect(0,0,512,256);const top=18,bot=238;
+ const st=[];const ltex=cvTex(512,256,(g)=>{g.clearRect(0,0,512,256);const top=18,bot=238;
   const gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,hexA(B.ground[0],0));gr.addColorStop(top/256,hexA(B.ground[0],1));gr.addColorStop(bot/256,hexA(shade(B.ground[0],-.1),1));gr.addColorStop(1,hexA(B.ground[0],0));g.fillStyle=gr;g.fillRect(0,0,512,256);
   g.save();g.beginPath();g.rect(0,top-6,512,bot-top+12);g.clip();
-  for(let row=0,y=top;y<bot;row++){const h=24+rnd2(row)*10;let x=-rnd2(row+40)*40;while(x<512){const w=34+rnd2(x*.3+row*17)*30;g.fillStyle=shade(B.stone,(rnd2(x+row*3)-.5)*.35);g.strokeStyle=hexA(shade(B.ground[1],-.5),.85);g.lineWidth=2.4;g.beginPath();g.roundRect(x+2,y+2,w-4,h-4,7);g.fill();g.stroke();g.fillStyle="rgba(255,255,255,.05)";g.fillRect(x+5,y+4,w-12,3);x+=w}y+=h}
+  for(let row=0,y=top;y<bot;row++){const h=24+rnd2(row)*10;let x=-rnd2(row+40)*40;while(x<512){const w=34+rnd2(x*.3+row*17)*30;g.fillStyle=shade(B.stone,(rnd2(x+row*3)-.5)*.35);g.strokeStyle=hexA(shade(B.ground[1],-.5),.85);g.lineWidth=2.4;g.beginPath();g.roundRect(x+2,y+2,w-4,h-4,7);g.fill();g.stroke();g.fillStyle="rgba(255,255,255,.05)";g.fillRect(x+5,y+4,w-12,3);st.push([x+2,y+2,w-4,h-4]);x+=w}y+=h}
   for(let i=0;i<200;i++){g.fillStyle=hexA(B.ground[1],.35);g.beginPath();g.arc(rnd2(i+7e4)*512,top+rnd2(i+8e4)*(bot-top),1+rnd2(i)*5,0,7);g.fill()}
   g.restore();
  },false);
- ltex.wrapS=T.RepeatWrapping;ltex.repeat.set(7000/256,1);G3.lane.material.map=ltex;G3.lane.material.needsUpdate=true;
+ ltex.wrapS=T.RepeatWrapping;ltex.repeat.set(7000/256,1);G3.lane.material.map=ltex;
+ // bumpy cobblestones: normal map built from the same stone layout
+ {const W=512,H=256,k=document.createElement("canvas");k.width=W;k.height=H;const g=k.getContext("2d");g.fillStyle="#000";g.fillRect(0,0,W,H);g.filter="blur(2.5px)";g.fillStyle="#d0d0d0";
+  for(const [x,y,w,h] of st){g.beginPath();g.roundRect(x+1,y+1,w-2,h-2,9);g.fill();for(const off of [-512,512])if(x+w>512||x<0){g.beginPath();g.roundRect(x+1+off,y+1,w-2,h-2,9);g.fill()}}g.filter="none";
+  const src=g.getImageData(0,0,W,H).data,out=g.createImageData(W,H),o=out.data,hh=(x,y)=>src[((Math.min(H-1,Math.max(0,y)))*W+((x+W)%W))*4]/255;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const dx=(hh(x+1,y)-hh(x-1,y))*2.4,dy=(hh(x,y+1)-hh(x,y-1))*2.4,L=Math.hypot(dx,dy,1),i=(y*W+x)*4;o[i]=(-dx/L*.5+.5)*255;o[i+1]=(dy/L*.5+.5)*255;o[i+2]=(1/L*.5+.5)*255;o[i+3]=255}
+  g.putImageData(out,0,0);const nt=new T.CanvasTexture(k);nt.wrapS=T.RepeatWrapping;nt.repeat.copy(ltex.repeat);G3.lane.material.normalMap=nt;G3.lane.material.normalScale.set(1.4,1.4)}
+ G3.lane.material.needsUpdate=true;
  const mf=new T.Color(B.far).lerp(fogC,.4),mn=new T.Color(B.far2).lerp(fogC,.22);G3.mtn.forEach((m,i)=>m.material.color.copy(i%2?mn:mf));G3.mtn.forEach(m=>m.userData.cx=null);
- for(const [i,ch] of G3.chunks){G3.decor.remove(ch.g);ch.g.traverse(o=>{if(o.isSprite)o.material.dispose()})}G3.chunks.clear();G3.torches=[];
+ for(const [i,ch] of G3.chunks){G3.decor.remove(ch.g);ch.g.traverse(o=>{if(o.isSprite)o.material.dispose();else if(o.isInstancedMesh)o.dispose()})}G3.chunks.clear();G3.torches=[];
  if(G3.decMat){for(const k in G3.decMat)G3.decMat[k].dispose();G3.treeGeo.forEach(t=>{t.wood.dispose();t.leaf&&t.leaf.dispose()});G3.rockGeo.forEach(g=>g.dispose());G3.tuftGeo.dispose();G3.decMat=null}
 }
+
+/* --- terrain: the road runs through a valley with hills on both sides --- */
+function terrH(x,z){const L0=-34,L1=DEPTH*ZS+34,d=z<L0?L0-z:z>L1?z-L1:0;if(d<=0)return 0;
+ const s=Math.min(1,d/170),k=s*s*(3-2*s),n=(Math.sin(x*.0043+z*.0031)*.5+Math.sin(x*.0117-z*.0071)*.3+Math.sin(x*.027+z*.019)*.2)*.5+.5;
+ return(k*(12+n*95)+Math.max(0,d-200)*.16*(.6+n*.7))*(z>L1?.55:1)}
+function shapeTerrain(sx){const g=G3.ground.geometry,p=g.attributes.position;for(let i=0;i<p.count;i++)p.setY(i,terrH(sx+p.getX(i),-400+p.getZ(i)));p.needsUpdate=true;g.computeVertexNormals();g.computeBoundingSphere()}
 
 /* --- mountains --- */
 function updateMtn3(){
@@ -1889,7 +1909,7 @@ function decMats(){
 function buildChunk(i){
  const T=T3,M=decMats(),g=new T.Group(),bi=G3.biome,h=k=>hash(i*31.7+k*7.13+bi*3.3),x0=i*CHW;
  let tg0=g;const fp=new T.Group();g.add(fp);
- const mesh=(geo,mat,x,y,z,s,ry)=>{const m=new T.Mesh(geo,mat);m.position.set(x,y,z);if(s!=null)typeof s==="number"?m.scale.setScalar(s):m.scale.set(...s);if(ry)m.rotation.y=ry;m.castShadow=G3.hi;m.receiveShadow=true;tg0.add(m);return m};
+ const mesh=(geo,mat,x,y,z,s,ry)=>{const m=new T.Mesh(geo,mat);m.position.set(x,y+terrH(x,z),z);if(s!=null)typeof s==="number"?m.scale.setScalar(s):m.scale.set(...s);if(ry)m.rotation.y=ry;m.castShadow=G3.hi;m.receiveShadow=true;tg0.add(m);return m};
  // torch at the far edge of the lane
  {const tx=x0+120,tz=-8;mesh(geo("tp",()=>new T.CylinderGeometry(1.4,1.9,30,6).translate(0,15,0)),M.wood,tx,0,tz);mesh(geo("tb",()=>new T.CylinderGeometry(5,3,5,7).translate(0,2.5,0)),M.iron,tx,29,tz);
   const fl=sprite(G3.tFlame,0xffffff,1,1);fl.scale.set(11,20,1);fl.position.set(tx,40,tz);g.add(fl);const gl=sprite(G3.tGlow,0xff8a3a,110,.35);gl.position.set(tx,36,tz);g.add(gl);
@@ -1904,22 +1924,32 @@ function buildChunk(i){
   if(k<.55){const tg=G3.treeGeo[Math.floor(h(j+70)*6)];const t=mesh(tg.wood,j%2?M.bark:M.bark2,x,0,z,s*(1+(-z)/500),h(j+80)*6);t.castShadow=false;if(tg.leaf)t.add(new T.Mesh(tg.leaf,M.leaf))}
   else if(k<.82)mesh(G3.rockGeo[j%3],M.stone2,x,0,z,[10+h(j)*16,8+h(j+1)*16,10+h(j+2)*14],h(j+3)*6);
   else if(bi===0){mesh(geo("gs",()=>new T.BoxGeometry(4,22,14).translate(0,11,0)),M.stone,x,0,z,1,h(j)*.6-.3).rotation.z=(h(j+1)-.5)*.3;}
-  else if(bi===1){const w=mesh(geo("wp",()=>new T.CircleGeometry(1,18).rotateX(-PI/2)),M.water,x,.4,z,[30+h(j)*40,1,14+h(j+1)*16]);w.castShadow=false;for(let r=0;r<6;r++)mesh(geo("rd",()=>new T.CylinderGeometry(.5,.8,1,4).translate(0,.5,0)),M.grass,x+(h(j*9+r)-.5)*50,0,z+(h(j*7+r)-.5)*20,[1,14+h(r+j)*16,1])}
+  else if(bi===1){const zw=-44-h(j+44)*22,w=mesh(geo("wp",()=>new T.CircleGeometry(1,18).rotateX(-PI/2)),M.water,x,.4,zw,[30+h(j)*40,1,14+h(j+1)*16]);w.castShadow=false;for(let r=0;r<6;r++)mesh(geo("rd",()=>new T.CylinderGeometry(.5,.8,1,4).translate(0,.5,0)),M.grass,x+(h(j*9+r)-.5)*50,0,zw+(h(j*7+r)-.5)*20,[1,14+h(r+j)*16,1])}
   else{mesh(geo("sp",()=>new T.ConeGeometry(1,1,5).translate(0,.5,0)),M.stone2,x,0,z,[8+h(j)*8,40+h(j+1)*70,8+h(j+2)*8],h(j+3)*6);const lv=mesh(geo("lv",()=>new T.BoxGeometry(1,1,1)),M.lava,x+14,.3,z+10,[26+h(j)*30,.6,2.4],h(j+5)*3);lv.castShadow=false}}
  // glowing mushrooms / fireflies anchors (crimson & marsh)
  if(bi!==2)for(let j=0;j<2;j++){const x=x0+h(j+90)*CHW,z=-14-h(j+91)*40;mesh(geo("ms",()=>new T.CylinderGeometry(.8,1.2,6,5).translate(0,3,0)),M.bone,x,0,z);mesh(geo("mc",()=>new T.SphereGeometry(4,8,5,0,PI*2,0,PI/2)),M.glow,x,5.5,z).castShadow=false}
  // far layer: big trees and towers
  for(let j=0;j<3;j++){const x=x0+h(j+100)*CHW,z=-420-h(j+110)*700,k=h(j+120);
-  if(k<.32){const s=1.4+h(j+130)*1.2,t=new T.Group();t.position.set(x,0,z);t.scale.setScalar(s);g.add(t);
+  if(k<.32){const s=1.4+h(j+130)*1.2,t=new T.Group();t.position.set(x,terrH(x,z),z);t.scale.setScalar(s);g.add(t);
    const b=new T.Mesh(geo("tw",()=>new T.CylinderGeometry(15,18,110,8).translate(0,55,0)),M.tower);t.add(b);
    for(let q=0;q<6;q++){const a=q/6*PI*2;const cr=new T.Mesh(geo("tc",()=>new T.BoxGeometry(7,9,7).translate(0,4.5,0)),M.tower);cr.position.set(Math.cos(a)*14,110,Math.sin(a)*14);t.add(cr)}
-   const w=new T.Mesh(geo("tww",()=>new T.BoxGeometry(5,11,2)),M.win);w.position.set(0,72,17);t.add(w);const gl=sprite(G3.tGlow,new T.Color(BIOMES[bi].accent),70,.4);gl.position.set(0,72,20);t.add(gl);G3.torches.push({x,y:72*s,z,gl,i,win:1})}
+   const w=new T.Mesh(geo("tww",()=>new T.BoxGeometry(5,11,2)),M.win);w.position.set(0,72,17);t.add(w);const gl=sprite(G3.tGlow,new T.Color(BIOMES[bi].accent),70,.4);gl.position.set(0,72,20);t.add(gl);G3.torches.push({x,y:72*s+terrH(x,z),z,gl,i,win:1})}
   else{const tg=G3.treeGeo[Math.floor(h(j+140)*6)];const t=mesh(tg.wood,M.bark2,x,0,z,1.5+h(j+150)*1.2,h(j+160)*6);t.castShadow=false;if(tg.leaf)t.add(new T.Mesh(tg.leaf,M.leaf))}}
  // foreground (near the camera): grass and rocks
  for(let j=0;j<5;j++){const x=x0+h(j+200)*CHW,z=DEPTH*ZS+26+h(j+210)*110;
   if(h(j+220)<.7)mesh(G3.tuftGeo,M.grass,x,0,z,1.2+h(j+230)*.9,h(j)*6);else mesh(G3.rockGeo[j%3],M.stone2,x,0,z,[6+h(j)*8,4+h(j+1)*5,6+h(j+2)*6],h(j+3)*6)}
- // near side (only seen in first person): torch, trees, rocks
+ // stone curbs along both edges of the road
+ const curb=(z0,par)=>{const n=16,im=new T.InstancedMesh(geo("curb",()=>new T.BoxGeometry(1,1,1).translate(0,.5,0)),M.stone,n),m4=new T.Matrix4(),q=new T.Quaternion(),eu=new T.Euler();let k=0;
+  for(let j=0;j<n;j++){if(h(j+500+z0)<.2)continue;eu.set(0,(h(j+520+z0)-.5)*.3,(h(j+530+z0)-.5)*.14);q.setFromEuler(eu);m4.compose(new T.Vector3(x0+j*CHW/n+h(j+510)*6,-1,z0+(h(j+540)-.5)*4),q,new T.Vector3(16+h(j+550)*6,5+h(j+560+z0)*6,9+h(j+570)*3));im.setMatrixAt(k++,m4)}
+  im.count=k;im.castShadow=G3.hi;im.receiveShadow=true;par.add(im)};
+ curb(-17,g);curb(DEPTH*ZS+17,fp);
+ // broken pillars behind the far curb
+ for(let j=0;j<2;j++)if(h(j+580)<.45){const x=x0+h(j+590)*CHW,ph=26+h(j+600)*50;mesh(geo("pil",()=>new T.CylinderGeometry(6.5,7.5,1,8).translate(0,.5,0)),M.stone2,x,0,-30-h(j+610)*16,[1,ph,1]);mesh(geo("pcap",()=>new T.BoxGeometry(18,5,18)),M.stone,x,ph+2,-30-h(j+610)*16).rotation.set(h(j)*.3,h(j+1)*2,h(j+2)*.3)}
+ // near side (only seen in first person): torch, trees, rocks, arches over the road
  tg0=fp;
+ if(h(620)<.32){const ax=x0+200,zA=-34,zB=DEPTH*ZS+34,pg=geo("apl",()=>new T.BoxGeometry(18,124,18).translate(0,62,0));mesh(pg,M.stone2,ax,0,zA);mesh(pg,M.stone2,ax,0,zB);
+  const tp=mesh(geo("atop",()=>new T.BoxGeometry(22,18,1).translate(0,9,0)),M.stone,ax,122,(zA+zB)/2);tp.scale.z=zB-zA+26;mesh(geo("akey",()=>new T.BoxGeometry(12,22,14)),M.stone2,ax,128,(zA+zB)/2);
+  const rn=new T.Mesh(geo("arun",()=>new T.BoxGeometry(2,7,7)),M.win);rn.position.set(ax+12,130,(zA+zB)/2);fp.add(rn)}
  {const tx=x0+310,tz=DEPTH*ZS+14;mesh(geo("tp",()=>new T.CylinderGeometry(1.4,1.9,30,6).translate(0,15,0)),M.wood,tx,0,tz);mesh(geo("tb",()=>new T.CylinderGeometry(5,3,5,7).translate(0,2.5,0)),M.iron,tx,29,tz);
   const fl=sprite(G3.tFlame,0xffffff,1,1);fl.scale.set(11,20,1);fl.position.set(tx,40,tz);fp.add(fl);const gl=sprite(G3.tGlow,0xff8a3a,110,.35);gl.position.set(tx,36,tz);fp.add(gl);
   G3.torches.push({x:tx,y:40,z:tz,fl,gl,i,fp:1})}
@@ -1931,12 +1961,12 @@ function buildChunk(i){
  return{g,fp};
 }
 function updateChunks3(){
- const FP=isFP(),a=Math.floor((Math.min(camX,FP?hero.x:camX)-(FP?1700:900))/CHW),b=Math.floor((Math.max(camX+LW,FP?hero.x:0)+(FP?1700:900))/CHW);
+ const FP=isFP(),R=FP?(G3.hi?1700:1200):900,a=Math.floor((Math.min(camX,FP?hero.x:camX)-R)/CHW),b=Math.floor((Math.max(camX+LW,FP?hero.x:0)+R)/CHW);
  for(let i=a;i<=b;i++)if(!G3.chunks.has(i)){const ch=buildChunk(i);G3.chunks.set(i,ch);G3.decor.add(ch.g)}
- for(const [i,ch] of G3.chunks)if(i<a-1||i>b+1){G3.decor.remove(ch.g);ch.g.traverse(o=>{if(o.isSprite)o.material.dispose()});G3.chunks.delete(i);G3.torches=G3.torches.filter(t=>t.i!==i)}
+ for(const [i,ch] of G3.chunks)if(i<a-1||i>b+1){G3.decor.remove(ch.g);ch.g.traverse(o=>{if(o.isSprite)o.material.dispose();else if(o.isInstancedMesh)o.dispose()});G3.chunks.delete(i);G3.torches=G3.torches.filter(t=>t.i!==i)}
  for(const [i,ch] of G3.chunks)ch.fp.visible=FP;for(const m of G3.mtn)m.visible=FP||!m.userData.fp;
  for(const t of G3.torches){if(t.fl){const f=.85+.15*Math.sin(tNow*13+t.i)+.08*Math.sin(tNow*7.3+t.i*2);t.fl.scale.set(11*f,20*(.9+.2*Math.sin(tNow*9+t.i)),1);t.gl.material.opacity=.28+.1*f}}
- const sx=Math.round(camX/256)*256;G3.ground.position.set(sx,0,-400);G3.lane.position.set(sx,.3,DEPTH*ZS/2);
+ const sx=Math.round(camX/256)*256;if(G3.gsx!==sx){G3.gsx=sx;shapeTerrain(sx)}G3.ground.position.set(sx,0,-400);G3.lane.position.set(sx,.3,DEPTH*ZS/2);
 }
 
 /* --- character models --- */
@@ -2223,7 +2253,7 @@ function setLook3(M,flash,alpha){
  if(M.al!==alpha){M.al=alpha;for(const m of M.mats)m.opacity=m.userData.o0*alpha;for(const m of M.glows)m.opacity=m.userData.o0*alpha;M.root.traverse(o=>{if(o.isSprite||o.isLine)o.material.opacity=(o.userData.o0!=null?o.userData.o0:(o.userData.o0=o.material.opacity))*alpha})}
 }
 function yawTo(M,face,bias,dt,th0){const th=th0!=null?th0:(M.th||CAM.th);turnTo(M,face>0?-th-(bias||0):-PI+th+(bias||0),dt)}
-function turnTo(M,tgt,dt){if(M.yawC==null)M.yawC=tgt;const d=((tgt-M.yawC+PI)%(2*PI)+2*PI)%(2*PI)-PI;M.yawC+=d*Math.min(1,dt*16);if(M.yawC>PI)M.yawC-=2*PI;else if(M.yawC<-PI)M.yawC+=2*PI;M.yaw.rotation.y=M.yawC}
+function turnTo(M,tgt,dt,rate){if(M.yawC==null)M.yawC=tgt;const d=((tgt-M.yawC+PI)%(2*PI)+2*PI)%(2*PI)-PI;M.yawC+=d*Math.min(1,dt*(rate||16));if(M.yawC>PI)M.yawC-=2*PI;else if(M.yawC<-PI)M.yawC+=2*PI;M.yaw.rotation.y=M.yawC}
 function crown3(M){if(M.crown)return M.crown;const T=T3,g=new T.Group(),gm=mm(M,"#e6b84e","metal");P3(M,CYg(5,5.4,3,10).clone(),gm,g);for(let i=0;i<5;i++){const a=i/5*PI*2;P3(M,CNg(1.3,4.5,4),gm,g,Math.cos(a)*4.6,1.4,Math.sin(a)*4.6)}
  g.position.y=M.crownY;M.headObj.add(g);M.crown=g;return g}
 
@@ -2266,7 +2296,7 @@ function syncHero3(dt){
  let alpha=1;if(h.inv>0&&h.state!=="dodge"&&h.state!=="dead"&&Math.floor(h.inv*22)%2)alpha=.5;
  const p=heroPose();if(p.trail&&h.state==="blaze")p.trail.blaze=1;
  const mv=h.state==="walk"?moveVec():{z:0};
- const fp=isFP();if(fp)turnTo(M,h.face>0?0:-PI,dt);else yawTo(M,h.face,mv.z*.45,dt);if(h.state==="spin")M.yaw.rotation.y=M.yawC-clamp(h.st/.62,0,1)*PI*4;
+ const fp=isFP();if(fp)turnTo(M,h.ang,dt,26);else yawTo(M,h.face,mv.z*.45,dt);if(h.state==="spin")M.yaw.rotation.y=M.yawC-clamp(h.st/.62,0,1)*PI*4;
  const r=poseHuman(M,p,HERO_LOOK.glowCol,h.flash>0);setLook3(M,h.flash>0,fp?1:alpha);
  M.head.visible=M.torG.visible=M.legF.g.visible=M.legB.g.visible=!fp;if(M.cape)M.cape.visible=!fp;
  M.armB.g.visible=!fp||h.state==="fire"||h.state==="bolt"||h.state==="heal"||h.state==="shield"||h.state==="heavy"||h.state==="blaze"||h.state==="hurt"||h.state==="dead";
@@ -2295,7 +2325,7 @@ function syncEnemies3(dt){
   const C=e.cfg,alpha=e.state==="dead"?clamp(1-(e.st-.7)/.6,0,1):1;M.root.visible=alpha>0;if(!M.root.visible)continue;
   W3(M.root,e.x,e.z,e.h);M.body.scale.setScalar(e.s*CHS);if(isFP()){const dx=hero.x-e.x;turnTo(M,dx*e.face>0&&e.state!=="dead"?Math.atan2(-(hero.z-e.z)*ZS,dx):e.face>0?0:-PI,dt)}else yawTo(M,e.face,0,dt);animModel3(M,e);
   let a=alpha;if(C.body==="ghost")a*=.75+.15*Math.sin(tNow*4+e.seed);
-  if(isFP()){const d=(e.x-hero.x)*hero.face;if(d<8&&d>-CAM.fpBack-44)a*=.15}
+  if(isFP()){const r=relH(e);if(r.a<8&&r.a>-CAM.fpBack-44&&r.l<70)a*=.15}
   setLook3(M,e.flash>0,a);
   if(e.boss&&e.state!=="dead"){crown3(M).visible=true;const au=pool3("aura",()=>{const s=sprite(G3.tGlow,0xd6a24a,1,.3);G3.fx.add(s);return s});W3(au,e.x,e.z,e.h+C.hgt*e.s*CHS*.45);au.scale.setScalar(C.hgt*e.s*CHS*2.6);au.material.opacity=.22+.05*Math.sin(tNow*3)}else if(M.crown)M.crown.visible=false;
   if(e.burn&&e.burn.t>0&&e.state!=="dead"){const b=pool3("burn",()=>{const s=sprite(G3.tGlow,0xff6a1a,1,.5);G3.fx.add(s);return s});W3(b,e.x,e.z,e.h+C.hgt*e.s*CHS*.45);b.scale.set(C.rad*e.s*CHS*3.2,C.hgt*e.s*CHS*1.3,1);b.material.opacity=.35+.15*Math.sin(tNow*20)}
@@ -2369,7 +2399,7 @@ function syncLights3(){
  for(const b of bolts)if(!(b.delay>0))L.push([b.x,(b.h||0)+30,b.z*ZS,0xbfe6ff,320*clamp(b.life/b.max,0,1),6]);
  for(const pr of parts)if(pr.t==="blast")L.push([pr.x,pr.h,pr.z*ZS,0xffa040,300*clamp(pr.life/pr.max,0,1),6]);
  if(G3.castLight){const c=G3.castLight;L.push([c.x,c.y,c.z,c.col,c.i,3])}
- const FP=isFP(),fx0=FP?hero.x+hero.face*120:cx;
+ const FP=isFP(),fx0=FP?hero.x+hdir().x*120:cx;
  for(const t of G3.torches)if(!t.win&&(FP||!t.fp)&&Math.abs(t.x-fx0)<LW*.9)L.push([t.x,t.y,t.z,0xff9a45,150*(.9+.1*Math.sin(tNow*13+t.i)),1-Math.abs(t.x-fx0)/LW]);
  L.sort((a,b)=>b[5]-a[5]);
  G3.pl.forEach((l,i)=>{const c=L[i];if(c){l.position.set(c[0],c[1],c[2]);l.color.set(c[3]);l.intensity=c[4]}else l.intensity=0});
@@ -2379,7 +2409,7 @@ function render3D(dt){
  const bi=biomeIdx();if(G3.biome!==bi)setBiome3(bi);
  poolReset();syncHero3(dt);if(isFP())updateCamFP();else updateCam3();G3.ptMats.forEach(m=>m.uniforms.uScale.value=G3.ptScale);updateMtn3();updateChunks3();
  syncEnemies3(dt);syncProj3();syncLoot3();syncCoins3();syncBolts3();syncParts3(dt);syncLights3();
- G3.stars.material.opacity=.55+.2*Math.sin(tNow*.7);
+ G3.stars.material.opacity=.55+.2*Math.sin(tNow*.7);syncBarrier3();
  if(modalOpen==="mBest")drawBestiary3();
  G3.rr.render(G3.scene,G3.cam);
  overlay3();
@@ -2403,7 +2433,7 @@ function overlay3(){
  if(!fp&&h.state!=="dead"){const [sx,ny]=pj(h.x,h.z,64*CHS+8);c.font="700 9px Cinzel,Georgia,serif";c.textAlign="center";c.fillStyle="rgba(243,233,238,.85)";c.strokeStyle="rgba(0,0,0,.7)";c.lineWidth=2.5;c.strokeText(nickname,sx,ny);c.fillText(nickname,sx,ny);
   const hpr=Math.max(0,Math.min(1,(P.hp||0)/(P.maxhp||1))),bw=46,bx=sx-bw/2,by=ny+5;c.fillStyle="rgba(10,4,8,.9)";c.fillRect(bx-1,by-1,bw+2,7);c.fillStyle=hpr<.3?"#ff8b3a":"#e14b5a";c.fillRect(bx,by,bw*hpr,5);c.strokeStyle="rgba(0,0,0,.6)";c.lineWidth=1;c.strokeRect(bx-1,by-1,bw+2,7)}
  // crosshair: where the next strike lands
- if(fp&&h.state!=="dead"){const [x,y,z]=pj(h.x+h.face*44,h.z,30);if(z<1){const hit=enemies.some(e=>{if(e.state==="dead"||e.delay>0)return false;const d=(e.x-h.x)*h.face;return d>-12&&d<46+e.cfg.rad*e.s&&Math.abs(e.z-h.z)<20+(e.cfg.fly?8:0)});
+ if(fp&&h.state!=="dead"){const fd=hdir(),[x,y,z]=pj(h.x+fd.x*44,h.z+fd.z*44/ZS,30);if(z<1){const hit=enemies.some(e=>{if(e.state==="dead"||e.delay>0)return false;const r=relH(e);return r.a>-12&&r.a<46+e.cfg.rad*e.s&&r.l<(20+(e.cfg.fly?8:0))*ZS});
   c.save();c.strokeStyle=hit?"rgba(255,77,98,.95)":"rgba(255,240,225,.55)";c.lineWidth=hit?2:1.5;const r=hit?7:6;c.beginPath();c.arc(x,y,r,0,7);c.stroke();for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){c.beginPath();c.moveTo(x+dx*(r+3),y+dy*(r+3));c.lineTo(x+dx*(r+8),y+dy*(r+8));c.stroke()}c.restore()}}
  // screen effects (same as 2D)
  const g=c.createRadialGradient(LW/2,LH*.55,Math.min(LW,LH)*.35,LW/2,LH*.55,Math.max(LW,LH)*.75);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.5)");c.fillStyle=g;c.fillRect(0,0,LW,LH);
@@ -2420,8 +2450,7 @@ function overlay3(){
   c.fillStyle=danger?"#ff2a40":e.boss?"#e6b84e":"#e14b5a";c.beginPath();c.moveTo(x+(left?-6:6)*s,y);c.lineTo(x+(left?4:-4)*s,y-6*s);c.lineTo(x+(left?4:-4)*s,y+6*s);c.closePath();c.fill()}
  if(cleared&&!locked&&h.state!=="dead"){const k=(Math.sin(tNow*5)+1)/2;c.fillStyle=`rgba(214,162,74,${.6+.4*k})`;
   if(fp){const x=LW/2,y=Math.max(96,LH*.24)-k*6;c.font="700 12px Cinzel,Georgia,serif";c.textAlign="center";
-   if(h.face>0){c.beginPath();c.moveTo(x,y-14);c.lineTo(x-12,y+2);c.lineTo(x-5,y+2);c.lineTo(x-5,y+14);c.lineTo(x+5,y+14);c.lineTo(x+5,y+2);c.lineTo(x+12,y+2);c.closePath();c.fill();c.fillText(t("go"),x,y+30)}
-   else{c.font="900 26px system-ui,sans-serif";c.fillText("↻",x,y+8);c.font="700 12px Cinzel,Georgia,serif";c.fillText(t("aTurn")+" (Q)",x,y+28)}}
+   const ra=((h.ang+PI)%(2*PI)+2*PI)%(2*PI)-PI;c.save();c.translate(x,y);c.rotate(ra);c.beginPath();c.moveTo(0,-14);c.lineTo(-12,2);c.lineTo(-5,2);c.lineTo(-5,14);c.lineTo(5,14);c.lineTo(5,2);c.lineTo(12,2);c.closePath();c.fill();c.restore();c.fillText(t("go"),x,y+30)}
   else{const x=LW-34+k*8,y=Math.max(110,GT-70);c.beginPath();c.moveTo(x+14,y);c.lineTo(x-4,y-12);c.lineTo(x-4,y-5);c.lineTo(x-18,y-5);c.lineTo(x-18,y+5);c.lineTo(x-4,y+5);c.lineTo(x-4,y+12);c.closePath();c.fill();c.font="700 12px Cinzel,Georgia,serif";c.textAlign="right";c.fillText(t("go"),x-22,y+4)}}
 }
 /* --- 3D bestiary --- */
@@ -2449,12 +2478,25 @@ function drawBestiary3(){
  G3.rr.setScissorTest(false);G3.rr.setViewport(0,0,G3.W,G3.H);G3.rr.setClearColor(0x000000,1);
  tNow=saveT;
 }
-/* --- first-person helpers (game input) --- */
-function fpAutoTurn(){
- // in first person: if nothing is in front but an enemy is right behind, turn to face it
- const h=hero,al=enemies.filter(e=>e.state!=="dead"&&e.delay<=0&&Math.abs(e.z-h.z)<34+(e.cfg.fly?8:0));
- const fr=al.some(e=>{const d=(e.x-h.x)*h.face;return d>-14&&d<150}),bk=al.some(e=>{const d=(e.x-h.x)*-h.face;return d>-14&&d<110});
- if(!fr&&bk)h.face*=-1;
+/* --- first person: 360° look (used by the hero logic) --- */
+const MZ=125/(82*ZS);
+function hdir(){const a=hero.ang||0;return{x:Math.cos(a),z:-Math.sin(a)}}
+function relH(e){const f=hdir(),dx=e.x-hero.x,dz=(e.z-hero.z)*ZS;return{a:dx*f.x+dz*f.z,l:Math.abs(-dx*f.z+dz*f.x)}}
+function syncAng(){const h=hero;if(!isFP()){h.ang=h.face>0?0:PI;return}h.ang=((h.ang+PI)%(2*PI)+2*PI)%(2*PI)-PI;const c=Math.cos(h.ang);if(Math.abs(c)>.15)h.face=c>0?1:-1}
+function fpTurnInput(){let t=0;if(keys.KeyD||keys.ArrowRight)t++;if(keys.KeyA||keys.ArrowLeft)t--;if(Math.abs(joy.x)>.15)t+=joy.x;return clamp(t,-1,1)}
+function fpMove(){let f=0,s=0;if(keys.KeyW||keys.ArrowUp)f++;if(keys.KeyS||keys.ArrowDown)f--;if(Math.abs(joy.y)>.25)f-=joy.y;if(keys.KeyE)s++;if(keys.KeyQ)s--;f=clamp(f,-1,1);const L=Math.hypot(f,s);if(L>1){f/=L;s/=L}const d=hdir();return{x:f*d.x-s*d.z,z:(f*d.z+s*d.x)*MZ}}
+function fpAssist(){
+ // aim assist: face the closest enemy in front (or one right behind) before striking
+ const h=hero;let best=null,bs=1e9;
+ for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const dx=e.x-h.x,dz=(e.z-h.z)*ZS,dist=Math.hypot(dx,dz);if(dist>180)continue;
+  const an=Math.atan2(-dz,dx),da=Math.abs(((an-h.ang+PI)%(2*PI)+2*PI)%(2*PI)-PI);if(da>1.15&&dist>115)continue;const sc=dist+da*80;if(sc<bs){bs=sc;best=an}}
+ if(best!=null){h.ang=best;syncAng()}
+}
+function syncBarrier3(){
+ const on=locked&&isFP();if(!G3.barrier){const T=T3,tx=cvTex(64,128,(g)=>{const gr=g.createLinearGradient(0,128,0,0);gr.addColorStop(0,"rgba(255,255,255,.9)");gr.addColorStop(1,"rgba(255,255,255,0)");g.fillStyle=gr;g.fillRect(0,0,64,128);g.fillStyle="rgba(255,255,255,.9)";for(let i=0;i<6;i++){g.fillRect(8+i*9,60+(i%3)*14,3,10)}},true);
+  G3.barrier=[0,1].map(()=>{const m=new T.Mesh(new T.PlaneGeometry(1,1).translate(0,.5,0),new T.MeshBasicMaterial({map:tx,transparent:true,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide,toneMapped:false,fog:false}));m.rotation.y=PI/2;G3.fx.add(m);return m});G3.barTex=tx}
+ G3.barrier.forEach((m,i)=>{m.visible=on;if(!on)return;m.position.set(i?arenaX+LW-12:arenaX+12,0,DEPTH*ZS/2);m.scale.set(DEPTH*ZS+40,110,1);m.material.color.set(BIOMES[G3.biome].accent);m.material.opacity=.32+.1*Math.sin(tNow*3+i)});
+ G3.barTex.repeat.set(6,1);G3.barTex.offset.x=tNow*.15;
 }
 
 /* ============ LOOP ============ */
@@ -2499,7 +2541,7 @@ function hud(){
 let banTimer=null;
 function banner(a,b){const el=$("banner");$("banT").textContent=a;$("banS").textContent=b||"";el.classList.remove("show");void el.offsetWidth;el.classList.add("show")}
 let toastT=null;function toast(s,col){const el=$("toast");el.textContent=s;el.style.background=col||"";el.style.color=col?"#10080c":"";el.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),col?1900:1200)}
-function openModal(id){closeModal(true);modalOpen=id;paused=true;$(id).classList.add("on");attackHeld=false;joy.id=null;$("joy").style.display="none";for(const k in keys)keys[k]=false;
+function openModal(id){closeModal(true);modalOpen=id;paused=true;$(id).classList.add("on");attackHeld=false;joy.id=null;joy.x=joy.y=0;look.id=null;joyRest();for(const k in keys)keys[k]=false;
  if(id==="mTree")renderTree();if(id==="mBest")buildBestiary();if(id==="mPause")fillSettings();if(id==="mInv"){iSel=null;renderInv()}if(id==="mDrops")renderDrops();SFX.open()}
 function closeModal(silent){if(!modalOpen)return;if(typeof hideTip2==="function")hideTip2();if(modalOpen==="mInv")bag.forEach(x=>x.nw=false);if(!silent)SFX.close();$(modalOpen).classList.remove("on");modalOpen=null;paused=false;last=performance.now();if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();if(!silent)save()}
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal()));
