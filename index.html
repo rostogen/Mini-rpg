@@ -93,9 +93,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .sk.locked em{display:none}
 @media (max-width:520px){.sk.locked::before{font-size:8.5px;line-height:13px;padding:0 3px;top:-13px;letter-spacing:-.2px}}
 .sk.locked em{background:#1a1016;color:#e8b04b;border-color:#e8b04b}
-@media (hover:none){.sk em{display:none}
 .skl{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);max-width:70px;width:max-content;text-align:center;font:800 8px/1.05 system-ui,sans-serif;color:#f6eaf0;background:rgba(14,7,12,.86);border:1px solid rgba(255,255,255,.16);border-radius:6px;padding:2px 4px;pointer-events:none;text-shadow:none;letter-spacing:.01em;z-index:1}
-.sk.atk .skl{font-size:10px;bottom:-4px}.sk.locked .skl{color:rgba(240,225,232,.55)}}
+.sk.atk .skl{font-size:10px;bottom:-4px}.sk.locked .skl{color:rgba(240,225,232,.55)}
+@media (hover:none){.sk em{display:none}}
 .sk.atk{width:88px;height:88px;right:0;bottom:8px;font-size:34px;background:radial-gradient(circle at 50% 35%,#7a1f30,#3a0d16);border-color:rgba(225,75,90,.7)}
 .sk.hvy{width:60px;height:60px;right:98px;bottom:0}
 .sk.fir{width:58px;height:58px;right:104px;bottom:70px;background:radial-gradient(circle at 50% 35%,#6a2a12,#2a0f08)}
@@ -1084,7 +1084,7 @@ const depthS=z=>.88+.12*z/DEPTH;
 
 /* ============ WORLD STATE ============ */
 let camX=0,arenaX=0,locked=false,cleared=false,waveTimer=0;
-let debris=[],enemies=[],projs=[],parts=[],coins=[],texts=[],bolts=[],stains=[],decals=[],beams=[],goldAcc=0,goldT=0,soulT=0;
+let slashes=[],debris=[],enemies=[],projs=[],parts=[],coins=[],texts=[],bolts=[],stains=[],decals=[],beams=[],goldAcc=0,goldT=0,soulT=0;
 function scatter(e,k,n){const C=e.cfg,h0=e.h+C.hgt*e.s*.45;for(let i=0;i<n;i++){const a=rnd(0,PI*2),sp=rnd(40,150);debris.push({k:i===0&&k==="bone"?"skull":k,x:e.x+rnd(-6,6),z:e.z+rnd(-4,4),h:h0+rnd(-14,18),vx:Math.cos(a)*sp,vz:Math.sin(a)*sp*.35,vh:rnd(60,190),rx:rnd(0,6),rz:rnd(0,6),vr:rnd(-14,14),s:e.s*(k==="rock"?rnd(.8,1.6):rnd(.8,1.15)),col:C.look.bone||(k==="rock"?C.look.skin:"#e8e1cf"),life:rnd(3.5,5),max:5})}if(debris.length>90)debris.splice(0,debris.length-90)}
 function decal(k,x,z,r,life,col){if(decals.length>40)decals.shift();decals.push({k,x,z:clamp(z,0,DEPTH),r,life,max:life,col:col||"#ffffff",rot:rnd(0,PI*2)})}
 function fireworks(){const cx=isFP()?hero.x+hdir().x*230:camX+LW/2,cz=isFP()?clamp(hero.z+hdir().z*60,-40,DEPTH+40):DEPTH*.3,cols=["#ffd34e","#ff5f6f","#6bf0ae","#8fc6ff","#c79cff","#ffb03a"];
@@ -1217,16 +1217,17 @@ function heroUpdate(dt){
 function heroMelee(reach,zr,mul,kb,kind){
  let hits=0,steal=0;
  for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const r=relH(e);
-  if(r.a>(kind==="heavy"?-22:-12)&&r.a<reach+e.cfg.rad*e.s&&r.l<(zr+(e.cfg.fly?8:0))*ZS){const crit=Math.random()<P.crit/100;const d=Math.max(1,Math.round(rnd(P.atk-2,P.atk+4)*mul*(crit?2+P.critDmg/100:1)));const done=damageEnemy(e,d,crit,hero.face,kb,kind);if(P.lifesteal)steal+=done*P.lifesteal/100;hits++}}
+  if(r.a>(kind==="heavy"?-22:-12)&&r.a<reach+e.cfg.rad*e.s&&r.l<(zr+(e.cfg.fly?8:0))*ZS){const crit=Math.random()<P.crit/100;const d=Math.max(1,Math.round(rnd(P.atk-2,P.atk+4)*mul*(crit?2+P.critDmg/100:1)));const done=damageEnemy(e,d,crit,hero.face,kb,kind);slashAt(e,kind==="heavy"?1.45:hero.combo===1?-.55:hero.combo===2?0:.6,kind==="heavy",crit?"#ffe28a":"#ffffff");if(P.lifesteal)steal+=done*P.lifesteal/100;hits++}}
  if(steal>=1&&hero.state!=="dead"){const g=Math.min(P.maxhp-P.hp,Math.round(steal));if(g>0){P.hp+=g;addText(hero.x,hero.z,62,"+"+g,"#6bf0ae",11)}}
- if(hits){hitStop=kind==="heavy"?.1:.05;shake+=kind==="heavy"?4:1.4;hero.bloody=Math.min(1,(hero.bloody||0)+.2);if(kind==="heavy")impact(2,lastHitE);else if(hero.state==="attack"&&hero.combo===2){impact(1,lastHitE);SFX.finisher()}}
+ if(hits){hitStop=kind==="heavy"?.1:.05;shake+=kind==="heavy"?4:1.4;bloodySword();if(kind==="heavy")impact(2,lastHitE);else if(hero.state==="attack"&&hero.combo===2){impact(1,lastHitE);SFX.finisher()}}
 }
+function slashAt(e,a,big,col){if(slashes.length>12)slashes.shift();slashes.push({x:e.x,z:e.z,h:e.h+e.cfg.hgt*e.s*CHS*.55,s:e.cfg.hgt*e.s,a:a+rnd(-.18,.18),big,col,life:big?.3:.22,max:big?.3:.22})}
 function heroBlaze(){
  let hits=0,steal=0;const mul=1.5*(1+(P.fireBonus+P.blazeBonus)/100);
  for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const r=relH(e);
-  if(r.a>-20&&r.a<60+e.cfg.rad*e.s&&r.l<(27+(e.cfg.fly?8:0))*ZS){const crit=Math.random()<P.crit/100;const d=Math.max(1,Math.round(rnd(P.atk-2,P.atk+4)*mul*(crit?2+P.critDmg/100:1)));const done=damageEnemy(e,d,crit,hero.face,260,"blaze");if(P.lifesteal)steal+=done*P.lifesteal/100;hits++;if(e.state!=="dead")e.burn={t:3,tick:.5,dps:d*.3*(1+P.burnDmg/100)}}}
+  if(r.a>-20&&r.a<60+e.cfg.rad*e.s&&r.l<(27+(e.cfg.fly?8:0))*ZS){const crit=Math.random()<P.crit/100;const d=Math.max(1,Math.round(rnd(P.atk-2,P.atk+4)*mul*(crit?2+P.critDmg/100:1)));const done=damageEnemy(e,d,crit,hero.face,260,"blaze");slashAt(e,1.45,true,"#ffb05a");if(P.lifesteal)steal+=done*P.lifesteal/100;hits++;if(e.state!=="dead")e.burn={t:3,tick:.5,dps:d*.3*(1+P.burnDmg/100)}}}
  if(steal>=1&&hero.state!=="dead"){const g=Math.min(P.maxhp-P.hp,Math.round(steal));if(g>0){P.hp+=g;addText(hero.x,hero.z,62,"+"+g,"#6bf0ae",11)}}
- if(hits){hitStop=.09;shake+=3.5;hero.bloody=Math.min(1,(hero.bloody||0)+.2)}
+ if(hits){hitStop=.09;shake+=3.5;bloodySword()}
  SFX.heavy();
 }
 function heroShield(){
@@ -1237,9 +1238,9 @@ function heroShield(){
 }
 function heroSpin(){
  let hits=0,steal=0;const mul=1.25*(1+P.spinBonus/100);
- for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const dx=e.x-hero.x,dz=(e.z-hero.z)*2;if(Math.hypot(dx,dz)<62+e.cfg.rad*e.s){const crit=Math.random()<P.crit/100;const d=Math.max(1,Math.round(rnd(P.atk-2,P.atk+4)*mul*(crit?2+P.critDmg/100:1)));const done=damageEnemy(e,d,crit,dx>0?1:-1,140,"spin");if(P.lifesteal)steal+=done*P.lifesteal/100;hits++}}
+ for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const dx=e.x-hero.x,dz=(e.z-hero.z)*2;if(Math.hypot(dx,dz)<62+e.cfg.rad*e.s){const crit=Math.random()<P.crit/100;const d=Math.max(1,Math.round(rnd(P.atk-2,P.atk+4)*mul*(crit?2+P.critDmg/100:1)));const done=damageEnemy(e,d,crit,dx>0?1:-1,140,"spin");slashAt(e,rnd(-.3,.3),false,"#ffe9a0");if(P.lifesteal)steal+=done*P.lifesteal/100;hits++}}
  if(steal>=1&&hero.state!=="dead"){const g=Math.min(P.maxhp-P.hp,Math.round(steal));if(g>0){P.hp+=g;addText(hero.x,hero.z,62,"+"+g,"#6bf0ae",11)}}
- if(hits){hitStop=.04;shake+=2;hero.bloody=Math.min(1,(hero.bloody||0)+.2)}
+ if(hits){hitStop=.04;shake+=2;bloodySword()}
 }
 function castBolt(){
  const alive=enemies.filter(e=>e.state!=="dead"&&e.delay<=0&&Math.abs(e.x-camX-LW/2)<LW*.6);
@@ -1506,6 +1507,7 @@ function luckTick(){
 const bloodOn=()=>true;
 function bloodCol(C){const L=C.look;if(L.blood)return L.blood;if(C.body==="slime")return L.goo;if(C.body==="ghost")return L.eye;if(L.bones)return"#e6dfcc";if(L.head==="golem")return"#8a8992";if(C.body==="spider")return"#8fd13a";if(L.head==="zombie")return"#5a2418";if(C.body==="dragon")return"#7a0c12";return"#a30f1f"}
 const bloodLiquid=C=>!(C.look.bones||C.look.head==="golem"||C.look.dry);
+function bloodySword(){const e=lastHitE;if(!e||!bloodLiquid(e.cfg))return;hero.bloody=Math.min(1,(hero.bloody||0)+.2);if(G3&&T3)(G3.bloodC||(G3.bloodC=new T3.Color())).set(shade(bloodCol(e.cfg),-.45))}
 function blood(x,z,h,dir,n,col,spd,liq){if(!bloodOn())return;spd=spd||1;liq=liq!==false;for(let i=0;i<n;i++)parts.push({x,z,h,vx:(dir||rnd(-1,1))*rnd(30,170)*spd+rnd(-40,40),vz:rnd(-35,35),vh:rnd(10,150)*spd,g:440,life:rnd(.6,1),max:1,col,size:rnd(1.4,3.2),t:"blood",liq});
  if(!liq)return;const d=dir||(Math.random()<.5?-1:1);
  for(let i=0;i<4;i++)parts.push({x:x+d*rnd(2,8),z:z+rnd(-3,3),h:h+rnd(-4,4),vx:d*rnd(15,45),vz:rnd(-8,8),vh:rnd(-5,25),g:0,life:rnd(.25,.5),max:.5,col:shade(col,-.15),size:rnd(4,7.5),t:"smoke"});
@@ -3183,6 +3185,14 @@ function syncParts3(dt){
   else ptPush(A,q.x,q.y,q.z,colA,.35+.3*Math.sin(tNow*3+q.ph),kd==="rise"?3:4.5)}
  ptFlush(A);ptFlush(S);
 }
+function syncSlash3(dt){
+ if(!G3.tSlash)G3.tSlash=cvTex(256,128,(g)=>{const arc=(t)=>{g.beginPath();g.ellipse(128,118,118,92,0,PI,PI*2);g.ellipse(128,118+t,112,92-t*1.6,0,PI*2,PI,true);g.closePath();g.fill()};
+  g.fillStyle="rgba(255,255,255,.45)";g.filter="blur(5px)";arc(26);g.filter="none";g.fillStyle="#ffffff";arc(11);
+  g.globalCompositeOperation="destination-in";const gr=g.createLinearGradient(0,0,256,0);gr.addColorStop(0,"rgba(0,0,0,0)");gr.addColorStop(.28,"rgba(0,0,0,1)");gr.addColorStop(.8,"rgba(0,0,0,1)");gr.addColorStop(1,"rgba(0,0,0,0)");g.fillStyle=gr;g.fillRect(0,0,256,128)});
+ for(const q of slashes)q.life-=dt;slashes=slashes.filter(q=>q.life>0);
+ for(const q of slashes){const o=pool3("slash",()=>{const sp=sprite(G3.tSlash,0xffffff,1,1,false);sp.renderOrder=6;G3.fx.add(sp);return sp}),k=1-q.life/q.max,sz=q.s*CHS*(q.big?1.5:1.1)*(.75+eo(Math.min(1,k*2.5))*.45);
+  W3(o,q.x,q.z,q.h);o.scale.set(sz,sz*.5,1);o.material.rotation=q.a;o.material.color.set(q.col);o.material.opacity=Math.pow(1-k,1.3)}
+}
 function syncLights3(){
  const L=[],cx=camX+LW/2;
  for(const p of projs){if(p.k==="fire")L.push([p.x,p.h,p.z*ZS,0xff8a2a,170,5]);else if(p.k==="dfire")L.push([p.x,p.h,p.z*ZS,0xff6a1a,110,4]);else if(p.k==="boom")L.push([p.x,20,p.z*ZS,0xff6a1a,260*(1-p.life/p.max),5]);else if(p.k==="orb")L.push([p.x,p.h,p.z*ZS,p.col?new T3.Color(p.col).getHex():0x9a6bff,110,4])}
@@ -3198,7 +3208,7 @@ function syncLights3(){
 function render3D(dt){
  const bi=biomeIdx();if(G3.biome!==bi)setBiome3(bi);
  poolReset();syncHero3(dt);if(isFP()){updateCamFP();vmSync(dt)}else updateCam3();G3.ptMats.forEach(m=>m.uniforms.uScale.value=G3.ptScale);updateMtn3();updateChunks3();
- syncEnemies3(dt);syncStains3();syncDecals3();syncDebris3();syncProj3();syncLoot3();syncCoins3();syncBolts3();syncParts3(dt);syncLights3();
+ syncEnemies3(dt);syncStains3();syncDecals3();syncDebris3();syncProj3();syncLoot3();syncCoins3();syncBolts3();syncParts3(dt);syncSlash3(dt);syncLights3();
  G3.stars.material.opacity=.55+.2*Math.sin(tNow*.7);G3.skyU.uT.value=tNow;G3.skyU.uLin.value=G3.comp&&G3.ultra?1:0;syncBarrier3();
  if(modalOpen==="mBest")drawBestiary3();
  if(G3.comp&&G3.ultra)G3.comp.render();else G3.rr.render(G3.scene,G3.cam);if(isFP()&&G3.vm)vmRender();
@@ -3299,7 +3309,7 @@ function vmBuild(){
   if(!withGrip)ell(M,glove2,f,0,0,0,.95,2.2,.95);
   return f};
  // the sword sits in the right fist; its blade points along the fist's +Y
- const sw=new T.Group();sw.position.set(0,0,-2.2);sw.rotation.x=-1.0;M.R.h.add(sw);M.sw=sw;
+ const sw=new T.Group();sw.position.set(0,.3,-2.6);sw.rotation.x=-.6;M.R.h.add(sw);M.sw=sw;
  fist(sw,true);
  P3(M,CYg(.85,.85,5.8,14),leather,sw);for(let i=0;i<5;i++)P3(M,geo("vmWr2",()=>new T.TorusGeometry(.87,.16,6,14).rotateX(PI/2)),mm(M,"#24140c"),sw,0,-2.5+i*1.2,0);
  P3(M,ICg(1.15,1),tr,sw,0,-3.6,0);P3(M,geo("vmPr",()=>new T.TorusGeometry(.75,.22,6,14)),tr,sw,0,-3.6,0);
@@ -3378,11 +3388,18 @@ function syncBarrier3(){
  G3.barTex.repeat.set(6,1);G3.barTex.offset.x=tNow*.15;
 }
 /* --- blood: stains on the ground, drops on the screen (first person) --- */
+function splatTex3(dir,sd){const W=dir?256:128;return cvTex(W,128,(g)=>{const R=k=>hash(sd*17.3+k*3.71),cx=64,cy=64,C=[],n=dir?10:14;
+ for(let i=0;i<n;i++){const a=R(i)*PI*2,d=R(i+40)*(dir?18:22),r=(dir?13:15)+R(i+80)*(dir?15:17);C.push([cx+Math.cos(a)*d*(dir?1.4:1),cy+Math.sin(a)*d*.8,r])}
+ const blob=(k,col)=>{g.fillStyle=col;g.beginPath();for(const [x,y,r] of C){g.moveTo(x+r*k,y);g.arc(x,y,r*k,0,7)}g.fill()};
+ blob(1,"#7d7d7d");g.save();g.globalCompositeOperation="source-atop";g.filter="blur(6px)";blob(.74,"#ffffff");g.restore();g.filter="none";g.fillStyle="#8e8e8e";
+ if(dir){for(let i=0;i<9;i++){const y=cy+(R(i+120)-.5)*64,x0=cx+8+R(i+130)*28,l=46+R(i+140)*130,w=2+R(i+150)*5;g.beginPath();g.moveTo(x0,y-w);g.quadraticCurveTo(x0+l*.6,y-w*.35,x0+l,y+(R(i+160)-.5)*6);g.quadraticCurveTo(x0+l*.6,y+w*.35,x0,y+w);g.closePath();g.fill();g.beginPath();g.arc(x0+l+3,y,w*.85,0,7);g.fill()}
+  for(let i=0;i<16;i++){const x=cx+30+R(i+200)*190,y=cy+(R(i+210)-.5)*100,r=1+R(i+220)*3.5;g.beginPath();g.ellipse(x,y,r*1.8,r,0,0,7);g.fill()}}
+ else for(let i=0;i<13;i++){const a=R(i+300)*PI*2,d=40+R(i+310)*20,r=1.5+R(i+320)*4;g.beginPath();g.ellipse(cx+Math.cos(a)*d,cy+Math.sin(a)*d,r*1.7,r,a,0,7);g.fill()}
+})}
 function syncStains3(){
- const T=T3;if(!G3.tStain)G3.tStain=cvTex(128,128,(g)=>{g.fillStyle="#fff";g.beginPath();for(let i=0;i<14;i++){const a=i/14*PI*2,r=34+hash(i*3.7)*18;g[i?"lineTo":"moveTo"](64+Math.cos(a)*r,64+Math.sin(a)*r)}g.closePath();g.fill();for(let i=0;i<9;i++){const a=hash(i*5.1)*PI*2,d=44+hash(i*2.3)*16,r=3+hash(i*7.7)*7;g.beginPath();g.arc(64+Math.cos(a)*d,64+Math.sin(a)*d,r,0,7);g.fill()}});
- if(!G3.tSplat)G3.tSplat=cvTex(256,128,(g)=>{g.fillStyle="#fff";g.beginPath();g.ellipse(70,64,46,34,0,0,7);g.fill();for(let i=0;i<9;i++){const y=64+(hash(i*3.3)-.5)*70,l=60+hash(i*1.7)*110,w=3+hash(i*5.1)*7;g.beginPath();g.ellipse(70+l/2,y,l/2,w,(hash(i)-.5)*.2,0,7);g.fill();g.beginPath();g.arc(70+l+6,y+(hash(i+9)-.5)*8,w*.8,0,7);g.fill()}for(let i=0;i<14;i++){g.beginPath();g.arc(30+hash(i*9.1)*210,10+hash(i*4.3)*108,1.5+hash(i*2.2)*4,0,7);g.fill()}});
- for(const st of stains){const o=pool3(st.dir?"stain2":"stain",()=>{const m=new T.Mesh(geo("stG",()=>new T.PlaneGeometry(2,2).rotateX(-PI/2)),new T.MeshStandardMaterial({map:st.dir?G3.tSplat:G3.tStain,transparent:true,depthWrite:false,roughness:.22,metalness:.15,polygonOffset:true,polygonOffsetFactor:-3}));m.renderOrder=1;m.receiveShadow=true;G3.fx.add(m);return m});
-  const r=st.r*(st.grow?eo(st.g):1)*1.15;o.position.set(st.x,terrH(st.x,st.z*ZS)+.45,st.z*ZS);o.rotation.y=st.rot;o.scale.set(st.dir?r*1.9:r,1,st.dir?r*.85:r*.9);o.material.color.set(st.col);o.material.opacity=Math.min(1,st.life/1.5)*.88}
+ const T=T3;if(!G3.tStainV){G3.tStainV=[0,1,2,3].map(i=>splatTex3(0,i));G3.tSplatV=[0,1,2,3].map(i=>splatTex3(1,i+7))}
+ for(const st of stains){const v=Math.floor(st.seed)%4,o=pool3((st.dir?"stain2_":"stain_")+v,()=>{const m=new T.Mesh(geo("stG",()=>new T.PlaneGeometry(2,2).rotateX(-PI/2)),new T.MeshStandardMaterial({map:st.dir?G3.tSplatV[v]:G3.tStainV[v],transparent:true,depthWrite:false,roughness:.16,metalness:.1,polygonOffset:true,polygonOffsetFactor:-3}));m.renderOrder=1;m.receiveShadow=true;G3.fx.add(m);return m});
+  const r=st.r*(st.grow?eo(st.g):1)*1.15;o.position.set(st.x,terrH(st.x,st.z*ZS)+.45,st.z*ZS);o.rotation.y=st.rot;o.scale.set(st.dir?r*1.9:r,1,st.dir?r*.85:r*.9);o.material.color.set(st.col).multiplyScalar(.6+.4*Math.min(1,st.life/st.max*1.6));o.material.opacity=Math.min(1,st.life/1.5)*.92}
 }
 function syncDecals3(){
  const T=T3;if(!G3.tCrack){
@@ -3734,7 +3751,7 @@ function randSalt(){const a=new Uint8Array(16);(window.crypto||{}).getRandomValu
 async function hashPw(pw,salt){
  try{if(window.crypto&&crypto.subtle){const enc=new TextEncoder(),key=await crypto.subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveBits"]);const bits=await crypto.subtle.deriveBits({name:"PBKDF2",salt:enc.encode(salt),iterations:120000,hash:"SHA-256"},key,256);return"p2$"+bufHex(bits)}}catch(e){}
  let h1=0xdeadbeef,h2=0x41c6ce57;const str=salt+"|"+pw;for(let r=0;r<2000;r++)for(let i=0;i<str.length;i++){const ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}return"f1$"+(h1>>>0).toString(16)+(h2>>>0).toString(16)}
-function resetWorld(){debris=[];enemies=[];projs=[];coins=[];bolts=[];parts=[];texts=[];stains=[];loots=[];decals=[];beams=[];hero.slow=0;setHero("idle");hero.inv=1;hero.x=LW*.3;hero.z=60;camX=0;arenaX=0;locked=false;cleared=false;tSel=null;renderTree.did=0;startWave()}
+function resetWorld(){slashes=[];debris=[];enemies=[];projs=[];coins=[];bolts=[];parts=[];texts=[];stains=[];loots=[];decals=[];beams=[];hero.slow=0;setHero("idle");hero.inv=1;hero.x=LW*.3;hero.z=60;camX=0;arenaX=0;locked=false;cleared=false;tSel=null;renderTree.did=0;startWave()}
 function switchTo(email,fresh){save();session=email;if(fresh){P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};itemSeq=1;nickname=LS.get(PK("r2_nick"),"")}else loadState();prevVis=null;iSel=null;recalc();if(!(P.hp>0))P.hp=P.maxhp;save();resetWorld();hud()}
 $("aGo").onclick=async()=>{
  const err=m=>{$("aErr").textContent=m};
