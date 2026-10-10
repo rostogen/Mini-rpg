@@ -49,7 +49,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .bar{height:11px;background:#1e1318;border-radius:99px;overflow:hidden;margin-top:6px;border:1px solid #0b0608;position:relative}
 .bar i{display:block;height:100%;width:100%;transition:width .18s}
 .bar.hp i{background:linear-gradient(90deg,var(--blood),var(--blood2))}
-.bar.xp{height:6px;margin-top:5px}.bar.xp i{background:linear-gradient(90deg,#5b3fae,#9a7cf0)}
+.bar.xp{height:11px;margin-top:5px}.nm.nonick{justify-content:flex-start}.nm.nonick #hName{display:none}.bar.xp i{background:linear-gradient(90deg,#5b3fae,#9a7cf0)}
 .bar span{position:absolute;inset:0;font-size:9.5px;line-height:10px;text-align:center;color:#fff;text-shadow:0 1px 2px #000;font-weight:700}
 .rightHud{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
 .res{display:flex;gap:12px;font-size:13.5px;font-weight:700;white-space:nowrap}
@@ -93,7 +93,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .sk.locked em{display:none}
 @media (max-width:520px){.sk.locked::before{font-size:8.5px;line-height:13px;padding:0 3px;top:-13px;letter-spacing:-.2px}}
 .sk.locked em{background:#1a1016;color:#e8b04b;border-color:#e8b04b}
-@media (hover:none){.sk em{display:none}}
+@media (hover:none){.sk em{display:none}
+.skl{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);max-width:70px;width:max-content;text-align:center;font:800 8px/1.05 system-ui,sans-serif;color:#f6eaf0;background:rgba(14,7,12,.86);border:1px solid rgba(255,255,255,.16);border-radius:6px;padding:2px 4px;pointer-events:none;text-shadow:none;letter-spacing:.01em;z-index:1}
+.sk.atk .skl{font-size:10px;bottom:-4px}.sk.locked .skl{color:rgba(240,225,232,.55)}}
 .sk.atk{width:88px;height:88px;right:0;bottom:8px;font-size:34px;background:radial-gradient(circle at 50% 35%,#7a1f30,#3a0d16);border-color:rgba(225,75,90,.7)}
 .sk.hvy{width:60px;height:60px;right:98px;bottom:0}
 .sk.fir{width:58px;height:58px;right:104px;bottom:70px;background:radial-gradient(circle at 50% 35%,#6a2a12,#2a0f08)}
@@ -288,7 +290,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
       <div class="bar hp hpw"><i id="hpBar"></i><span id="hpTxt"></span></div>
-      <div class="bar xp"><i id="xpBar" style="width:0"></i></div>
+      <div class="bar xp"><i id="xpBar" style="width:0"></i><span id="xpTxt"></span></div>
     </div>
     <div class="rightHud">
       <div class="plate res"><span class="g">🪙 <b id="hGold">0</b></span><span>⚔ <b id="hWave">#1</b></span></div>
@@ -314,15 +316,15 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
   <div class="tip plate" id="tip" data-i="tip"></div>
 
   <div class="pad" id="pad">
-    <button class="sk ddg" data-a="dodge" data-tk="aDodge">💨<em>N</em></button>
-    <button class="sk spn" data-a="spin" data-tk="aSpin">🌀<em>M</em></button>
-    <button class="sk hvy" data-a="heavy" data-tk="aHeavy">💥<em>X</em></button>
-    <button class="sk fir" data-a="fire" data-tk="aFire">🔥<em>C</em></button>
-    <button class="sk blt" data-a="bolt" data-tk="aBolt">⚡<em>V</em></button>
-    <button class="sk hel" data-a="heal" data-tk="aHeal">💚<em>B</em></button>
-    <button class="sk blz" data-a="blaze" data-tk="aBlaze">🗡️<em>G</em></button>
-    <button class="sk shl" data-a="shield" data-tk="aShield">🛡️<em>H</em></button>
-    <button class="sk atk" data-a="attack" data-tk="aAttack">⚔<em>Z</em></button>
+    <button class="sk ddg" data-a="dodge" data-tk="aDodge">💨<em>N</em><small class="skl" data-i="aDodge"></small></button>
+    <button class="sk spn" data-a="spin" data-tk="aSpin">🌀<em>M</em><small class="skl" data-i="aSpin"></small></button>
+    <button class="sk hvy" data-a="heavy" data-tk="aHeavy">💥<em>X</em><small class="skl" data-i="aHeavy"></small></button>
+    <button class="sk fir" data-a="fire" data-tk="aFire">🔥<em>C</em><small class="skl" data-i="aFire"></small></button>
+    <button class="sk blt" data-a="bolt" data-tk="aBolt">⚡<em>V</em><small class="skl" data-i="aBolt"></small></button>
+    <button class="sk hel" data-a="heal" data-tk="aHeal">💚<em>B</em><small class="skl" data-i="aHeal"></small></button>
+    <button class="sk blz" data-a="blaze" data-tk="aBlaze">🗡️<em>G</em><small class="skl" data-i="aBlaze"></small></button>
+    <button class="sk shl" data-a="shield" data-tk="aShield">🛡️<em>H</em><small class="skl" data-i="aShield"></small></button>
+    <button class="sk atk" data-a="attack" data-tk="aAttack">⚔<em>Z</em><small class="skl" data-i="aAttack"></small></button>
   </div>
 
   <div class="modal" id="mTree"><div class="sheet">
@@ -564,7 +566,7 @@ dodged:"Ухилився!|Dodged!|Esquivé !|Ausgewichen!|闪避！|¡Esquivado!
 aShield:"Щит духу|Spirit Shield|Bouclier spirituel|Geisterschild|灵魂护盾|Escudo espiritual|Scudo dello spirito|Tarcza ducha|Escudo espiritual|魂の盾|영혼 방패"
 };
 const T8={};for(const k in T8src)T8[k]=S8(T8src[k]);
-const TIERS={common:S8("Звичайний|Common|Commun|Gewöhnlich|普通|Común|Comune|Zwykły|Comum|コモン|일반"),uncommon:S8("Незвичайний|Uncommon|Peu commun|Ungewöhnlich|罕见|Poco común|Non comune|Niezwykły|Incomum|アンコモン|고급"),rare:S8("Рідкісний|Rare|Rare|Selten|稀有|Raro|Raro|Rzadki|Raro|レア|희귀"),elite:S8("Елітний|Elite|Élite|Elite|精英|Élite|Élite|Elitarny|Elite|エリート|정예"),epic:S8("Епічний|Epic|Épique|Episch|史诗|Épico|Epico|Epicki|Épico|エピック|에픽"),boss:S8("Бос|Boss|Boss|Boss|首领|Jefe|Boss|Boss|Chefe|ボス|보스")};
+const TIERS={common:S8("Звичайний|Common|Commun|Gewöhnlich|普通|Común|Comune|Zwykły|Comum|コモン|일반"),uncommon:S8("Незвичайний|Uncommon|Peu commun|Ungewöhnlich|罕见|Poco común|Non comune|Niezwykły|Incomum|アンコモン|고급"),rare:S8("Рідкісний|Rare|Rare|Selten|稀有|Raro|Raro|Rzadki|Raro|レア|희귀"),elite:S8("Легендарний|Legendary|Légendaire|Legendär|传说|Legendario|Leggendario|Legendarny|Lendário|レジェンダリー|전설"),epic:S8("Епічний|Epic|Épique|Episch|史诗|Épico|Epico|Epicki|Épico|エピック|에픽"),boss:S8("Бос|Boss|Boss|Boss|首领|Jefe|Boss|Boss|Chefe|ボス|보스")};
 const BIOME_N=[S8("Багряний ліс|Crimson Wood|Bois écarlate|Karmesinwald|猩红森林|Bosque carmesí|Bosco cremisi|Szkarłatny las|Bosque carmesim|深紅の森|진홍의 숲"),S8("Мертві болота|Dead Marsh|Marais mort|Totes Moor|死亡沼泽|Pantano muerto|Palude morta|Martwe bagna|Pântano morto|死の沼|죽음의 늪"),S8("Попелясті пустища|Ashen Wastes|Terres de cendre|Aschenöde|灰烬荒原|Páramo de ceniza|Lande di cenere|Popielne pustkowia|Ermos de cinzas|灰の荒野|잿빛 황무지"),S8("Крижаний перевал|Frozen Pass|Col gelé|Gefrorener Pass|冰封山口|Paso helado|Passo ghiacciato|Zamarznięta przełęcz|Passo congelado|凍てつく峠|얼어붙은 고개"),S8("Смарагдові руїни|Emerald Ruins|Ruines d'émeraude|Smaragdruinen|翡翠遗迹|Ruinas esmeralda|Rovine di smeraldo|Szmaragdowe ruiny|Ruínas esmeralda|翠玉の遺跡|에메랄드 유적"),S8("Сонячна долина|Sunny Vale|Val ensoleillé|Sonnental|阳光谷地|Valle soleado|Valle soleggiata|Słoneczna dolina|Vale ensolarado|陽だまりの谷|햇살 골짜기"),S8("Осінній ліс|Autumn Forest|Forêt d'automne|Herbstwald|秋日森林|Bosque otoñal|Foresta autunnale|Jesienny las|Floresta outonal|秋の森|가을 숲"),S8("Сакуровий сад|Sakura Garden|Jardin de sakura|Kirschblütengarten|樱花庭园|Jardín de sakura|Giardino dei ciliegi|Ogród sakury|Jardim de sakura|桜の庭|벚꽃 정원"),S8("Піщаний каньйон|Sand Canyon|Canyon de sable|Sandschlucht|沙岩峡谷|Cañón de arena|Canyon di sabbia|Piaskowy kanion|Cânion de areia|砂の峡谷|모래 협곡"),S8("Тропічні джунглі|Tropic Jungle|Jungle tropicale|Tropendschungel|热带丛林|Selva tropical|Giungla tropicale|Tropikalna dżungla|Selva tropical|熱帯ジャングル|열대 정글"),S8("Грибний гай|Mushroom Grove|Bosquet des champignons|Pilzhain|蘑菇林|Arboleda de hongos|Boschetto dei funghi|Grzybowy gaj|Bosque de cogumelos|キノコの森|버섯 숲"),S8("Лавандові поля|Lavender Fields|Champs de lavande|Lavendelfelder|薰衣草花田|Campos de lavanda|Campi di lavanda|Lawendowe pola|Campos de lavanda|ラベンダー畑|라벤더 들판")];
 let lang=LS.get("r2_lang","uk");if(!LANGS.some(l=>l[0]===lang))lang="uk";
 let LX=LANGS.findIndex(l=>l[0]===lang);
@@ -3470,8 +3472,8 @@ const _dc={};function setTx(id,v){v=String(v);if(_dc[id]!==v){_dc[id]=v;$(id).te
 function setW(id,p){const v=(Math.round(p*10)/10)+"%";if(_dc[id+"w"]!==v){_dc[id+"w"]=v;$(id).style.width=v}}
 function hud(){
  {const lv=String(P.level),gd=String(P.gold);if(_dc.hLv!==undefined&&_dc.hLv!==lv)popCls($("hLv"),"pop");if(_dc.hGold!==undefined&&_dc.hGold!==gd)popCls($("hGold"),"bump")}
- setTx("hName",nickname);setTx("hLv",P.level);
- setW("xpBar",P.xp/(100+P.level*45)*100);
+ setTx("hName",nickname);setTx("hLv",P.level);if(_dc.nn!==!!nickname){_dc.nn=!!nickname;$("hName").parentNode.classList.toggle("nonick",!nickname)}
+ {const need=100+P.level*45;setW("xpBar",P.xp/need*100);setTx("xpTxt",Math.floor(P.xp)+" / "+need)}
  setTx("hGold",P.gold);
  if(goldAcc>0&&realT-goldT>.45){goldT=realT;const el=document.createElement("span");el.className="gfly";el.textContent="+"+goldAcc+" 🪙";$("gflyW").appendChild(el);setTimeout(()=>el.remove(),1100);goldAcc=0}setTx("hWave","#"+battleNo);
  luckTick();luckLive();
@@ -3498,7 +3500,7 @@ function toggleFullscreen(){try{const el=document.documentElement;
  if(!isFull()){(el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen||function(){}).call(el);if(screen.orientation&&screen.orientation.lock)screen.orientation.lock("landscape").catch(()=>{})}
  else(document.exitFullscreen||document.webkitExitFullscreen||document.msExitFullscreen||function(){}).call(document)}catch(err){}}
 $("bFull").onclick=toggleFullscreen;
-document.addEventListener("fullscreenchange",()=>{$("bFull").textContent=isFull()?"⛶":"⛶";setTimeout(resize,60)});
+document.addEventListener("fullscreenchange",()=>{$("bFull").firstChild.nodeValue="⛶";setTimeout(resize,60)});
 window.addEventListener("orientationchange",()=>setTimeout(resize,120));
 document.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&!b.classList.contains("sk"))SFX.ui()},true);
 $("retryB").onclick=()=>{closeModal();retry()};
@@ -3619,7 +3621,7 @@ function renderInv(){
  const es=P.eqStats||{},ks=Object.keys(es);
  $("eqSum").innerHTML=`<b>${t("eqBonus")}</b><br>`+(ks.length?ks.map(k=>statTxt(k,Math.round(es[k]*10)/10)).join("<br>"):"—");
  $("sellCommon").disabled=!bag.some(x=>x.r===0);
- {const a=$("asell"),as=S.asell==null?-1:S.asell,html=`<option value="-1">${t("asOff")}</option>`+[0,1,2,3].map(i=>`<option value="${i}">≤ ${L(RAR[i].n)}</option>`).join("");if(a._h!==html){a._h=html;a.innerHTML=html}a.value=String(as)}
+ {const a=$("asell"),as=S.asell==null?-1:S.asell,html=`<option value="-1">${t("asOff")}</option>`+[0,1,2,3,4,5,6].map(i=>`<option value="${i}">≤ ${L(RAR[i].n)}</option>`).join("");if(a._h!==html){a._h=html;a.innerHTML=html}a.value=String(as)}
  renderIDet();
 }
 function renderIDet(){
@@ -3662,7 +3664,7 @@ bindItemLongPress($("eqGrid"),tg=>{const b=tg.closest("[data-eq]");return b?eq[b
 function pct(x){x*=100;return(x>=10?x.toFixed(1):x>=1?x.toFixed(2):x.toFixed(3)).replace(/\.?0+$/,"")+"%"}
 function fmtT(sec){sec=Math.max(0,Math.ceil(sec));const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return h?`${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`:`${m}:${String(s).padStart(2,"0")}`}
 const dropChanceAt=l=>Math.min(.65,(.22+l*.015)*(1+P.dropBonus/100));
-function rarRows(pr,cmp){return RAR.map((R,i)=>`<div class="rrow r${i}" style="--rc:${R.col}"><b${R.rainbow?' class="rbt"':""}>${L(R.n)}</b><div class="rbar"><i style="width:${Math.max(2,Math.sqrt(pr[i])*100).toFixed(1)}%"></i></div><span class="pc">${pct(pr[i])}${cmp?` <span class="${cmp[i]>pr[i]?"up":"dn"}" style="color:${cmp[i]>pr[i]?"#6bf0ae":"#ff8a8a"}">→ ${pct(cmp[i])}</span>`:""}</span></div>`).join("")}
+function rarRows(pr,cmp){return RAR.map((R,i)=>`<div class="rrow r${i}" style="--rc:${R.col}"><b${R.rainbow?' class="rbt"':""}>${L(R.n)}</b><div class="rbar"><i style="width:${Math.max(1.2,Math.cbrt(pr[i])*100).toFixed(1)}%"></i></div><span class="pc">${pct(pr[i])}${cmp?` <span class="${cmp[i]>pr[i]?"up":"dn"}" style="color:${cmp[i]>pr[i]?"#6bf0ae":"#ff8a8a"}">→ ${pct(cmp[i])}</span>`:""}</span></div>`).join("")}
 let dTab="dChance";
 function renderDrops(){
  const pr=rarProbs(0);
