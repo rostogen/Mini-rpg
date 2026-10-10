@@ -670,9 +670,69 @@ const ETYPES=[
 {k:"mimic",n:S8("Мімік|Mimic|Mimique|Mimik|宝箱怪|Mímico|Mimic|Mimik|Mímico|ミミック|미믹"),hp:140,atk:18,tier:"rare",spd:60,range:70,wind:.5,act:.5,rec:.7,style:"hop",body:"slime",size:1,rad:13,hgt:28,lootX:2,
  look:{goo:"#7a4a22",goo2:"#3a2210",eye:"#ffd34e",chest:true,blood:"#7a0c12"}},
 {k:"demonlord",bossOnly:true,n:S8("Владика демонів|Demon Lord|Seigneur démon|Dämonenfürst|恶魔领主|Señor demonio|Signore dei demoni|Władca demonów|Senhor dos demônios|魔王|악마 군주"),hp:300,atk:28,tier:"boss",spd:60,range:44,wind:.55,act:.16,rec:.55,style:"combo",body:"human",size:1.45,rad:15,hgt:72,summon:true,summonK:"imp",heavy:true,aura:"#ff3a2a",
- look:{skin:"#7a1a1a",cloth:"#2a0a0a",cloth2:"#1a0505",boot:"#0a0202",armor:"#3a0d0d",arm2:"#3a0d0d",head:"demon",weapon:"hsword",cape:"#4a0a0a",wings:true,trim:"#ff8a2a",blade:"#ff5a2a",glowIdle:.8,glowCol:"#ff6a2a",tw:18,limbW:8,wOff:.8}}
+ look:{skin:"#7a1a1a",cloth:"#2a0a0a",cloth2:"#1a0505",boot:"#0a0202",armor:"#3a0d0d",arm2:"#3a0d0d",head:"demon",weapon:"hsword",cape:"#4a0a0a",wings:true,trim:"#ff8a2a",blade:"#ff5a2a",glowIdle:.8,glowCol:"#ff6a2a",tw:18,limbW:8,wOff:.8}},
+{k:"pumpkin",n:S8("Гарбузоголовий|Pumpkin Head|Tête de citrouille|Kürbiskopf|南瓜头|Cabeza de calabaza|Testa di zucca|Dyniogłowy|Cabeça de abóbora|カボチャ頭|호박머리"),hp:62,atk:9,tier:"common",spd:80,range:28,wind:.45,act:.14,rec:.5,style:"swing",body:"human",size:.85,rad:9,hgt:54,
+ look:{skin:"#6a8a3a",cloth:"#3a2a1a",cloth2:"#5a4a2a",boot:"#2a1a10",head:"pumpkin",cap:"#e8761a",eye:"#ffb030",weapon:"dagger",tw:11,limbW:5,wOff:.3,cape:"#4a3a22",blood:"#e8a040"}},
+{k:"mummy",n:S8("Мумія|Mummy|Momie|Mumie|木乃伊|Momia|Mummia|Mumia|Múmia|ミイラ|미라"),hp:84,atk:10,tier:"common",spd:34,range:26,wind:.7,act:.16,rec:.6,style:"grab",body:"human",size:1,rad:10,hgt:58,
+ look:{skin:"#d8ccac",cloth:"#c8b890",cloth2:"#b0a078",boot:"#9a8a66",head:"mummy",eye:"#4affd0",weapon:"none",blood:"#c8b890"}},
+{k:"sapling",n:S8("Злий паросток|Angry Sapling|Jeune pousse furieuse|Wütender Setzling|愤怒树苗|Retoño furioso|Alberello furioso|Wściekła sadzonka|Muda furiosa|怒れる若木|성난 묘목"),hp:70,atk:9,tier:"common",spd:58,range:34,wind:.6,act:.16,rec:.6,style:"swing",body:"human",size:.8,rad:9,hgt:52,
+ look:{skin:"#7a5a32",cloth:"#6a4a2a",cloth2:"#5a3e22",boot:"#4a3018",head:"treant",cap:"#5ab83a",eye:"#c8ff5a",weapon:"club",tw:10,limbW:4.6,wOff:1,blood:"#9ac84a"}},
+{k:"gobarcher",n:S8("Гоблін-лучник|Goblin Archer|Archer gobelin|Goblin-Bogenschütze|哥布林弓手|Arquero goblin|Arciere goblin|Goblin łucznik|Arqueiro goblin|ゴブリンアーチャー|고블린 궁수"),hp:58,atk:9,tier:"common",spd:76,range:165,wind:.7,act:.2,rec:.85,style:"shoot",body:"human",size:.8,rad:9,hgt:52,
+ look:{skin:"#8ab84a",cloth:"#3a5a2a",cloth2:"#2a3e1c",boot:"#2a1a10",head:"goblin",weapon:"bow",legL:10,armL:9,torso:15,tw:12,headR:8.5,wOff:0,cape:"#2a4a1c"}},
+{k:"scarab",n:S8("Жук-скарабей|Scarab Beetle|Scarabée|Skarabäus|圣甲虫|Escarabajo escarabeo|Scarabeo|Skarabeusz|Escaravelho|スカラベ|스카라베"),hp:64,atk:9,tier:"common",spd:96,range:68,wind:.5,act:.3,rec:.6,style:"lunge",body:"spider",size:.75,rad:13,hgt:22,
+ look:{body:"#1e3a6a",body2:"#2a5a8a",mark:"#ffd84a",eye:"#ffd84a",blood:"#8aff6a"}},
+{k:"icebat",n:S8("Крижаний кажан|Frost Bat|Chauve-souris de givre|Frostfledermaus|冰霜蝙蝠|Murciélago de escarcha|Pipistrello del gelo|Lodowy nietoperz|Morcego de gelo|フロストバット|서리 박쥐"),hp:92,atk:12,tier:"uncommon",spd:118,range:70,wind:.45,act:.4,rec:.8,style:"swoop",body:"bat",size:1.05,rad:11,hgt:22,fly:true,flyH:60,chill:true,aura:"#bff8ff",
+ look:{fur:"#a8c8e8",wing:"#6a9ac8",eye:"#7ff5ff",blood:"#bfe9ff"}},
+{k:"jelly",n:S8("Желейний слиз|Jelly Slime|Slime gélatineux|Geleeschleim|果冻史莱姆|Limo gelatinoso|Melma gelatinosa|Galaretowaty szlam|Gosma gelatinosa|ゼリースライム|젤리 슬라임"),hp:104,atk:12,tier:"uncommon",spd:58,range:70,wind:.5,act:.5,rec:.7,style:"hop",body:"slime",size:1.05,rad:13,hgt:28,split:true,
+ look:{goo:"#ff7ab8",goo2:"#c83a8a",eye:"#ffffff",blood:"#ff9ad0"}},
+{k:"cactoid",n:S8("Кактусовий громило|Cactus Brute|Brute cactus|Kaktusschläger|仙人掌蛮兵|Bruto cactus|Bruto cactus|Kaktusowy osiłek|Bruto cacto|サボテン兵|선인장 깡패"),hp:112,atk:13,tier:"uncommon",spd:50,range:36,wind:.6,act:.16,rec:.6,style:"swing",body:"human",size:1.1,rad:11,hgt:60,
+ look:{skin:"#4f9a44",cloth:"#3a7a34",cloth2:"#2e6a2a",boot:"#2a4a1c",head:"treant",cap:"#ff5a8a",eye:"#ffe14e",weapon:"club",tw:14,limbW:6.5,wOff:1,blood:"#9ae05a"}},
+{k:"wasp",n:S8("Гігантська оса|Giant Wasp|Guêpe géante|Riesenwespe|巨型黄蜂|Avispa gigante|Vespa gigante|Olbrzymia osa|Vespa gigante|巨大スズメバチ|거대 말벌"),hp:96,atk:13,tier:"uncommon",spd:125,range:72,wind:.42,act:.4,rec:.75,style:"swoop",body:"bat",size:.9,rad:10,hgt:20,fly:true,flyH:54,poison:true,
+ look:{fur:"#e8b820",wing:"#e8f4ff",eye:"#2a1a1a",blood:"#c8e05a"}},
+{k:"pirate",n:S8("Скелет-пірат|Skeleton Pirate|Pirate squelette|Skelettpirat|骷髅海盗|Pirata esqueleto|Pirata scheletro|Szkielet pirat|Pirata esqueleto|スケルトン海賊|해골 해적"),hp:100,atk:13,tier:"uncommon",spd:68,range:32,wind:.48,act:.14,rec:.55,style:"combo",body:"human",size:.95,rad:9,hgt:58,
+ look:{skin:"#e6dfcc",cloth:"#3a2a4a",cloth2:"#cbc3aa",boot:"#2a1a10",head:"skull",weapon:"sword",tw:8,limbW:4.2,bones:true,hoodOn:true,cape:"#b82a2a",out:"#2a2320",blade:"#c9d0d8",eye:"#ffd84a",trim:"#e6b84e"}},
+{k:"werewolf",n:S8("Перевертень|Werewolf|Loup-garou|Werwolf|狼人|Hombre lobo|Lupo mannaro|Wilkołak|Lobisomem|人狼|늑대인간"),hp:135,atk:18,tier:"rare",spd:105,range:34,wind:.38,act:.14,rec:.48,style:"combo",body:"human",size:1.15,rad:11,hgt:64,
+ look:{skin:"#5a4a3a",cloth:"#4a3a2a",cloth2:"#3a2a1a",boot:"#3a2e22",head:"wolfman",fur:"#5a4a3a",eye:"#ffd34e",weapon:"claw",tw:15,limbW:7,wOff:0}},
+{k:"yeti",n:S8("Єті|Yeti|Yéti|Yeti|雪人|Yeti|Yeti|Yeti|Yeti|イエティ|예티"),hp:150,atk:18,tier:"rare",spd:52,range:40,wind:.75,act:.2,rec:.75,style:"slam",body:"human",size:1.3,rad:13,hgt:66,heavy:true,chill:true,
+ look:{skin:"#e8f0f8",cloth:"#d0dcea",cloth2:"#b8c8dc",boot:"#9aaac0",head:"yeti",face:"#6a8aa8",eye:"#5ecbff",weapon:"fists",tw:18,limbW:9,wOff:0}},
+{k:"samurai",n:S8("Самурай-привид|Ghost Samurai|Samouraï fantôme|Geistersamurai|幽灵武士|Samurái fantasma|Samurai fantasma|Samuraj widmo|Samurai fantasma|亡霊の侍|유령 사무라이"),hp:130,atk:19,tier:"rare",spd:76,range:38,wind:.36,act:.12,rec:.45,style:"combo",body:"human",size:1.05,rad:10,hgt:62,blink:true,aura:"#9fe8ff",
+ look:{skin:"#9fc8d8",cloth:"#2a3a5a",cloth2:"#1a2a44",boot:"#121a2a",armor:"#3a4a6a",arm2:"#3a4a6a",head:"samurai",trim:"#e6c64a",weapon:"sword",blade:"#e8f4ff",eye:"#7ff5ff",glowIdle:.4,glowCol:"#9fe8ff",wOff:.6}},
+{k:"djinn",n:S8("Піщаний джин|Sand Djinn|Djinn des sables|Sanddschinn|沙之灯神|Genio de arena|Djinn delle sabbie|Piaskowy dżinn|Djinn da areia|砂のジン|모래 지니"),hp:128,atk:17,tier:"rare",spd:74,range:190,wind:.75,act:.25,rec:.95,style:"cast",body:"ghost",size:1.05,rad:10,hgt:62,blink:true,orbCol:"#ffd84a",
+ look:{robe:"#e8c48a",robe2:"#b0703a",eye:"#ffe14e"}},
+{k:"beetle",n:S8("Броньований жук|Armored Beetle|Scarabée blindé|Panzerkäfer|装甲甲虫|Escarabajo acorazado|Scarabeo corazzato|Pancerny chrząszcz|Besouro blindado|装甲カブト|장갑 딱정벌레"),hp:150,atk:17,tier:"rare",spd:80,range:70,wind:.55,act:.3,rec:.65,style:"lunge",body:"spider",size:1.15,rad:17,hgt:30,heavy:true,
+ look:{body:"#1a2a3a",body2:"#3a5a7a",mark:"#5ec8ff",eye:"#5ec8ff",blood:"#8aff6a"}},
+{k:"treant",n:S8("Древній ент|Ancient Treant|Tréant ancien|Uralter Baumhirte|远古树人|Ent anciano|Ent antico|Pradawny ent|Ent ancestral|古代のトレント|고대 나무정령"),hp:230,atk:21,tier:"epic",spd:36,range:46,wind:.85,act:.2,rec:.85,style:"slam",body:"human",size:1.5,rad:15,hgt:70,heavy:true,regen:true,
+ look:{skin:"#6b4a2a",cloth:"#5a3e22",cloth2:"#4a3018",boot:"#3a2414",head:"treant",cap:"#4aa83a",eye:"#c8ff5a",weapon:"fists",tw:19,limbW:9,armL:11,legL:11,wOff:0,blood:"#9ac84a"}},
+{k:"cyclops",n:S8("Циклоп|Cyclops|Cyclope|Zyklop|独眼巨人|Cíclope|Ciclope|Cyklop|Ciclope|サイクロプス|사이클롭스"),hp:240,atk:23,tier:"epic",spd:42,range:46,wind:.8,act:.2,rec:.8,style:"slam",body:"human",size:1.5,rad:15,hgt:70,heavy:true,
+ look:{skin:"#c89a6a",cloth:"#6a4a2a",cloth2:"#4a3018",boot:"#2a1a10",head:"cyclops",eye:"#ff5a3a",weapon:"club",tw:20,limbW:9.5,wOff:1}},
+{k:"icegolem",n:S8("Крижаний голем|Ice Golem|Golem de glace|Eisgolem|冰魔像|Gólem de hielo|Golem di ghiaccio|Lodowy golem|Golem de gelo|アイスゴーレム|얼음 골렘"),hp:210,atk:18,tier:"epic",spd:30,range:40,wind:.9,act:.2,rec:.8,style:"slam",body:"human",size:1.4,rad:15,hgt:66,heavy:true,chill:true,aura:"#bff8ff",
+ look:{skin:"#a8d8f0",cloth:"#8ac0e0",cloth2:"#6aa0c8",boot:"#5a90b8",head:"golem",moss:"#e8f8ff",weapon:"fists",tw:19,limbW:9,armL:11,legL:11,eye:"#e8ffff",blood:"#d8f4ff"}},
+{k:"manticore",n:S8("Мантикора|Manticore|Manticore|Mantikor|蝎尾狮|Mantícora|Manticora|Mantykora|Mantícora|マンティコア|만티코어"),hp:215,atk:21,tier:"epic",spd:115,range:78,wind:.5,act:.3,rec:.6,style:"lunge",body:"wolf",size:1.3,rad:18,hgt:40,poison:true,aura:"#ff5a3a",
+ look:{fur:"#c86a2a",fur2:"#8a3a1a",eye:"#ffd34e"}},
+{k:"warlock",n:S8("Темний чаклун|Dark Warlock|Sorcier noir|Dunkler Hexer|黑暗术士|Brujo oscuro|Stregone oscuro|Mroczny czarnoksiężnik|Bruxo sombrio|闇の魔術師|어둠의 흑마법사"),hp:200,atk:20,tier:"epic",spd:46,range:195,wind:.8,act:.25,rec:1,style:"cast",body:"human",size:1.1,rad:11,hgt:62,summon:true,summonK:"imp",orbCol:"#b05aff",
+ look:{skin:"#b8a8c8",cloth:"#2a1a3a",cloth2:"#1a1028",boot:"#0e0816",cape:"#4a1a6a",head:"hood",weapon:"staff",wOff:1.2}},
+{k:"anubis",n:S8("Вартовий Анубіса|Anubis Guard|Garde d'Anubis|Anubiswächter|阿努比斯守卫|Guardia de Anubis|Guardia di Anubi|Strażnik Anubisa|Guarda de Anúbis|アヌビスの番兵|아누비스 수호병"),hp:270,atk:29,tier:"elite",spd:66,range:44,wind:.46,act:.14,rec:.52,style:"combo",body:"human",size:1.25,rad:12,hgt:68,heavy:true,
+ look:{skin:"#1a1a22",cloth:"#22222c",cloth2:"#e6c64a",boot:"#1a1a22",armor:"#e6c64a",arm2:"#e6c64a",head:"wolfman",fur:"#1a1a22",eye:"#ffd84a",gold:true,weapon:"spear",trim:"#e6c64a",tw:15,limbW:7,wOff:.3}},
+{k:"frostgiant",n:S8("Крижаний велетень|Frost Giant|Géant du givre|Frostriese|霜巨人|Gigante de escarcha|Gigante del gelo|Lodowy olbrzym|Gigante do gelo|霜の巨人|서리 거인"),hp:300,atk:30,tier:"elite",spd:46,range:50,wind:.8,act:.2,rec:.8,style:"slam",body:"human",size:1.6,rad:16,hgt:74,heavy:true,chill:true,aura:"#bff8ff",
+ look:{skin:"#8ab0d0",cloth:"#3a4a6a",cloth2:"#2a3a5a",boot:"#1a2a3a",head:"ogre",weapon:"axe2",tw:20,limbW:9.5,wOff:1,trim:"#bff8ff"}},
+{k:"valkyrie",n:S8("Темна валькірія|Dark Valkyrie|Valkyrie sombre|Dunkle Walküre|黑暗女武神|Valquiria oscura|Valchiria oscura|Mroczna walkiria|Valquíria sombria|闇のワルキューレ|어둠의 발키리"),hp:260,atk:30,tier:"elite",spd:72,range:46,wind:.45,act:.14,rec:.5,style:"combo",body:"human",size:1.15,rad:12,hgt:66,blink:true,aura:"#c8a0ff",
+ look:{skin:"#c8b8d8",cloth:"#2a1a3a",cloth2:"#1a1028",boot:"#120a1a",armor:"#4a3a6a",arm2:"#4a3a6a",head:"dknight",weapon:"spear",cape:"#3a1a5a",wings:true,trim:"#c8a0ff",blade:"#e8d8ff",glowIdle:.5,glowCol:"#c8a0ff",tw:14,limbW:6.5,wOff:.3}},
+{k:"thunderbird",n:S8("Громовий птах|Thunderbird|Oiseau-tonnerre|Donnervogel|雷鸟|Pájaro del trueno|Uccello del tuono|Ptak gromu|Pássaro-trovão|サンダーバード|천둥새"),hp:250,atk:28,tier:"elite",spd:110,range:72,wind:.48,act:.4,rec:.8,style:"swoop",body:"bat",size:1.7,rad:16,hgt:26,fly:true,flyH:66,aura:"#7ff5ff",
+ look:{fur:"#2a5aa8",wing:"#4a8ae8",eye:"#e8ffff",phoenix:true,flA:"#7fd8ff",flB:"#e8ffff",noFlame:true,blood:"#7fd8ff"}},
+{k:"lavagolem",n:S8("Лавовий голем|Lava Golem|Golem de lave|Lavagolem|熔岩魔像|Gólem de lava|Golem di lava|Lawowy golem|Golem de lava|溶岩ゴーレム|용암 골렘"),hp:290,atk:29,tier:"elite",spd:34,range:46,wind:.85,act:.2,rec:.8,style:"slam",body:"human",size:1.5,rad:16,hgt:70,heavy:true,aura:"#ff8a2a",
+ look:{skin:"#3a2a2a",cloth:"#2a1a1a",cloth2:"#1a1010",boot:"#140a0a",head:"golem",moss:"#ff6a1a",weapon:"fists",tw:20,limbW:9.5,armL:11,legL:11,eye:"#ffb03a",glowIdle:.6,glowCol:"#ff8a2a",blood:"#ff8a2a"}},
+{k:"pharaoh",bossOnly:true,n:S8("Фараон-мумія|Mummy Pharaoh|Pharaon momifié|Mumienpharao|木乃伊法老|Faraón momia|Faraone mummia|Faraon mumia|Faraó múmia|ミイラのファラオ|미라 파라오"),hp:170,atk:15,tier:"boss",spd:50,range:200,wind:.8,act:.25,rec:1,style:"cast",body:"human",size:1.25,rad:12,hgt:64,summon:true,summonK:"mummy",orbCol:"#4affd0",aura:"#ffd84a",
+ look:{skin:"#d8ccac",cloth:"#e6c64a",cloth2:"#2a4a8a",boot:"#c8b890",head:"pharaoh",eye:"#4affd0",weapon:"staff",cape:"#2a4a8a",trim:"#e6c64a",tw:14,limbW:6.5,wOff:1.2,blood:"#c8b890"}},
+{k:"treeking",bossOnly:true,n:S8("Король лісу|Forest King|Roi de la forêt|Waldkönig|森林之王|Rey del bosque|Re della foresta|Król lasu|Rei da floresta|森の王|숲의 왕"),hp:200,atk:18,tier:"boss",spd:36,range:50,wind:.85,act:.2,rec:.8,style:"slam",body:"human",size:1.75,rad:18,hgt:74,heavy:true,regen:true,summon:true,summonK:"sapling",aura:"#8aff6a",
+ look:{skin:"#5a3e22",cloth:"#4a3018",cloth2:"#3a2414",boot:"#2a1a0e",head:"treant",cap:"#ff8ab8",eye:"#ffe14e",weapon:"fists",tw:20,limbW:10,armL:12,legL:12,wOff:0,blood:"#9ac84a"}},
+{k:"werelord",bossOnly:true,n:S8("Вовкулака-вожак|Werewolf Alpha|Loup-garou alpha|Werwolf-Alpha|狼人首领|Hombre lobo alfa|Lupo mannaro alfa|Wilkołak alfa|Lobisomem alfa|人狼の長|늑대인간 우두머리"),hp:220,atk:21,tier:"boss",spd:110,range:36,wind:.36,act:.14,rec:.45,style:"combo",body:"human",size:1.4,rad:13,hgt:68,summon:true,summonK:"wolf",aura:"#ff5a3a",
+ look:{skin:"#3a3038",cloth:"#2a2028",cloth2:"#1a1418",boot:"#2a2228",head:"wolfman",fur:"#3a3038",eye:"#ff3a3a",weapon:"claw",tw:17,limbW:8,wOff:0,cape:"#5a1a1a"}},
+{k:"yetiking",bossOnly:true,n:S8("Король єті|Yeti King|Roi yéti|Yetikönig|雪人之王|Rey yeti|Re yeti|Król yeti|Rei yeti|イエティキング|예티 왕"),hp:250,atk:23,tier:"boss",spd:56,range:46,wind:.75,act:.2,rec:.75,style:"slam",body:"human",size:1.7,rad:17,hgt:72,heavy:true,chill:true,summon:true,summonK:"icebat",aura:"#bff8ff",
+ look:{skin:"#f4f8ff",cloth:"#dce6f2",cloth2:"#c4d4e6",boot:"#a8b8cc",head:"yeti",face:"#4a6a8a",eye:"#7ff5ff",horns:true,weapon:"club",tw:20,limbW:10,wOff:1}},
+{k:"shogun",bossOnly:true,n:S8("Шьоґун-привид|Ghost Shogun|Shogun fantôme|Geistershogun|幽灵将军|Shogun fantasma|Shogun fantasma|Szogun widmo|Xogum fantasma|亡霊の将軍|유령 쇼군"),hp:290,atk:27,tier:"boss",spd:80,range:42,wind:.36,act:.12,rec:.45,style:"combo",body:"human",size:1.4,rad:13,hgt:70,blink:true,summon:true,summonK:"samurai",aura:"#9fe8ff",
+ look:{skin:"#8ab8d0",cloth:"#5a1a2a",cloth2:"#3a0e1a",boot:"#1a0a10",armor:"#7a1a2a",arm2:"#7a1a2a",head:"samurai",trim:"#e6c64a",weapon:"sword",blade:"#e8f4ff",eye:"#7ff5ff",cape:"#3a0e1a",glowIdle:.6,glowCol:"#9fe8ff",tw:15,limbW:7,wOff:.6}}
 ];
-{const ORD=["goblin","imp","zombie","kobold","skel","bandit","bat","skelwar","wolf","ghoul","slime","myconid","spider","cultist","spirit","mimic","vamp","hound","frostwolf","wraith","assassin","magma","orc","widow","necro","lizard","hag","shaman","banshee","troll","golem","ogre","gargoyle","spiderq","scorpion","mino","dragon","phoenix","wyvern","stormsp","knight","deathknight","gking","slimek","lich","fenrir","eldrake","demonlord"];
+{const ORD=["goblin","imp","pumpkin","zombie","mummy","kobold","sapling","skel","gobarcher","bandit","scarab","bat","skelwar","wolf","icebat","ghoul","slime","jelly","myconid","cactoid","spider","wasp","cultist","pirate","spirit","mimic","vamp","hound","frostwolf","werewolf","wraith","assassin","samurai","magma","orc","beetle","widow","djinn","necro","lizard","yeti","hag","shaman","banshee","troll","treant","golem","icegolem","ogre","cyclops","gargoyle","manticore","spiderq","warlock","scorpion","mino","anubis","dragon","phoenix","thunderbird","wyvern","frostgiant","stormsp","valkyrie","knight","lavagolem","deathknight","gking","pharaoh","slimek","treeking","lich","werelord","fenrir","yetiking","eldrake","shogun","demonlord"];
  ETYPES.sort((a,b)=>ORD.indexOf(a.k)-ORD.indexOf(b.k))}
 const EIDX={};ETYPES.forEach((C,i)=>EIDX[C.k]=i);
 const REGT=ETYPES.map((C,i)=>i).filter(i=>!ETYPES[i].bossOnly),BOSST=ETYPES.map((C,i)=>i).filter(i=>ETYPES[i].bossOnly);
@@ -1292,7 +1352,7 @@ function startEnemyAttack(e,kind){
  const C=e.cfg;e.state="windup";e.st=0;e.face=hero.x>e.x?1:-1;e.atkKind=kind||C.style;
  if(C.blink&&Math.random()<.55){const col=C.body==="ghost"?"#7fa3c9":"#5a2a3a";puff(e.x,e.z,col);{const fd=hdir();e.x=hero.x-fd.x*30;e.z=clamp(hero.z-fd.z*30/ZS+rnd(-4,4),4,DEPTH-4)}e.face=hero.x>e.x?1:-1;puff(e.x,e.z,col);SFX.blink()}
  const snd={lunge:C.body==="spider"?"hiss":"growl",swoop:"screech",claw:C.body==="ghost"?"wail":null,cast:"chant",charge:"charge",web:"hiss"}[e.atkKind];
- const ks={imp:"cackle",hag:"cackle",banshee:"shriek",hound:"bark",fenrir:"bark",ogre:"bellow",gking:"bellow",skelwar:"rattle",lich:"rattle",myconid:"spore",magma:"sizzle",slimek:"squish",eldrake:"roar",wyvern:"screech",deathknight:"scythe",frostwolf:"frost",gargoyle:"stoneWing",assassin:"shadowStep",scorpion:"hiss",phoenix:"screech",mimic:"chomp",demonlord:"demonRoar"}[C.k];
+ const ks={imp:"cackle",hag:"cackle",banshee:"shriek",hound:"bark",fenrir:"bark",ogre:"bellow",gking:"bellow",skelwar:"rattle",lich:"rattle",myconid:"spore",magma:"sizzle",slimek:"squish",eldrake:"roar",wyvern:"screech",deathknight:"scythe",frostwolf:"frost",gargoyle:"stoneWing",assassin:"shadowStep",scorpion:"hiss",phoenix:"screech",mimic:"chomp",demonlord:"demonRoar",pumpkin:"cackle",jelly:"squish",scarab:"hiss",beetle:"hiss",werewolf:"bark",werelord:"bark",yeti:"bellow",yetiking:"bellow",cyclops:"bellow",frostgiant:"bellow",treeking:"bellow",samurai:"shadowStep",shogun:"shadowStep",valkyrie:"shriek",thunderbird:"screech",icegolem:"frost",lavagolem:"sizzle",pharaoh:"rattle",anubis:"growl"}[C.k];
  if(ks)SFX[ks]();else if(C.k==="troll")SFX.grunt();else if(snd)SFX[snd]();
  if(e.state==="windup"){parts.push({x:e.x,z:e.z,h:0,life:C.wind,max:C.wind,t:"ring",col:e.boss?"#ffb03a":"#ff4d62",size:C.rad*e.s*.9});for(let i=0;i<5;i++)parts.push({x:e.x+e.face*C.rad*e.s*1.1,z:e.z,h:C.hgt*e.s*.62,vx:Math.cos(i*1.26)*70,vz:0,vh:Math.sin(i*1.26)*70,g:0,life:.22,max:.22,col:"#ffffff",size:2.2,t:"spark"})}
  if(C.summon&&e.summons<2&&aliveCount()<7&&Math.random()<.45){
@@ -1701,6 +1761,7 @@ function drawHead(type,x,y,r,L,tilt){
   c.beginPath();c.moveTo(r*.2,-r*.7);c.quadraticCurveTo(r*.6,-r*1.7,-r*.1,-r*2.2);c.quadraticCurveTo(r*.1,-r*1.4,-r*.35,-r*.9);c.closePath();c.fillStyle="#efe0cf";c.fill();c.stroke();
   c.save();c.shadowColor="#ff3b52";c.shadowBlur=9;c.strokeStyle="#ff4d62";c.lineWidth=2.2;c.beginPath();c.moveTo(r*.05,-r*.12);c.lineTo(r*.95,-r*.12);c.stroke();c.restore();
   break;
+ default:circ(0,0,r,L.cap||L.fur||L.skin||"#888888");glowDot(r*.45,-r*.12,r*.17,L.eye||"#ffd34e");
  }
  c.restore();
 }
@@ -2263,7 +2324,7 @@ function setBiome3(bi){
  G3.hemi.intensity=B.day?1.3:1.1;G3.amb.intensity=B.day?.45:.6;G3.sun.intensity=B.day?2.8:2.2;G3.rim.intensity=B.day?.45:.9;G3.rr.toneMappingExposure=B.day?1.1:1.25;G3.skyU.cTop.value.set(...hx3(B.sky[0]));G3.skyU.cMid.value.set(...hx3(B.sky[1]));G3.skyU.cLow.value.set(...hx3(B.sky[2]));G3.skyU.cBot.value.set(...hx3(fogH));G3.skyU.mCol.value.set(...hx3(B.moon));
  const fogC=new T.Color(fogH);G3.scene.fog.color.copy(fogC);
  G3.hemi.color.set(shade(B.sky[2],.25));G3.hemi.groundColor.set(B.ground[1]);
- G3.sun.color.set(shade(B.moon,-.05));G3.rim.color.set(shade(B.accent,-.1));G3.rimU.value.set(shade(B.moon,.1)).multiplyScalar(.38);
+ G3.sun.color.set(shade(B.moon,-.05));G3.rim.color.set(shade(B.accent,-.1));G3.rimU.value.set(shade(B.moon,.1)).multiplyScalar(B.day?.14:.38);
  if(G3.moon.material.map)G3.moon.material.map.dispose();
  G3.moon.material.map=B.day?cvTex(128,128,(g)=>{const gr=g.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,"#ffffff");gr.addColorStop(.32,"#fffdf4");gr.addColorStop(.42,hexA(B.moon,.55));gr.addColorStop(1,hexA(B.moon,0));g.fillStyle=gr;g.fillRect(0,0,128,128)}):cvTex(128,128,(g)=>{g.fillStyle=B.moon;g.beginPath();g.arc(64,64,40,0,7);g.fill();g.fillStyle=hexA(B.sky[1],.28);for(const [x,y,r] of [[52,54,10],[80,76,7],[74,46,5],[48,82,4]]){g.beginPath();g.arc(x,y,r,0,7);g.fill()}});G3.moon.material.needsUpdate=true;
  G3.moonGlow.material.color.set(B.moon);G3.moonGlow.material.opacity=B.day?.55:.35;
@@ -2652,7 +2713,7 @@ function buildHead(M,type,r,L){
   coneTo(M,cp,H,-r*.35,r*1.0,0,r*.65,r*1.1,-.6,1,0);for(const s of [1,-1])eyeG(M,"#5bff9a",H,r*1.18,0,s*r*.25,r*.14)}break;
  case "troll":{ell(M,sk,H,0,0,0,r*1.15,r,r*1.05);const s2=mm(M,shade(L.skin,-.15));for(const s of [1,-1]){coneTo(M,s2,H,-r*.3,r*.1,s*r*.85,r*.42,r*1.6,-.8,.3,s*.5);eyeG(M,"#ffd34e",H,r*1.0,r*.15,s*r*.36,r*.15);coneTo(M,mm(M,"#f2ead8"),H,r*.85,-r*.55,s*r*.3,r*.12,r*.5,0,1,0,4)}
   ell(M,mm(M,shade(L.skin,-.1)),H,r*1.08,-r*.1,0,r*.6,r*.33,r*.42);add(BXg(r*.7,r*.18,r*1.45),dark,r*.72,r*.36,0);ell(M,mm(M,"#2a3a1c"),H,-r*.25,r*.85,0,r*.7,r*.25,r*.6)}break;
- case "golem":{add(BXg(r*2,r*1.95,r*1.9),sk,0,-r*.07,0);ell(M,mm(M,"#3f6b3a"),H,-r*.2,r*.92,0,r*.8,r*.25,r*.75);eyeG(M,L.eye||"#5ec8ff",H,r*1.0,r*.12,r*.4,r*.25);eyeG(M,L.eye||"#5ec8ff",H,r*1.0,r*.12,-r*.4,r*.17)}break;
+ case "golem":{add(BXg(r*2,r*1.95,r*1.9),sk,0,-r*.07,0);ell(M,L.moss?glowM(M,L.moss):mm(M,"#3f6b3a"),H,-r*.2,r*.92,0,r*.8,r*.25,r*.75);eyeG(M,L.eye||"#5ec8ff",H,r*1.0,r*.12,r*.4,r*.25);eyeG(M,L.eye||"#5ec8ff",H,r*1.0,r*.12,-r*.4,r*.17)}break;
  case "bull":{ell(M,sk,H,0,0,0,r*1.05,r*.95,r);ell(M,mm(M,shade(L.skin,.25)),H,r*.82,-r*.35,0,r*.62,r*.48,r*.62);for(const s of [1,-1]){add(SPg(r*.1),dark,r*1.38,-r*.28,s*r*.2);eyeG(M,"#ff3b3b",H,r*.66,r*.22,s*r*.52,r*.14);
    const hn=mm(M,"#e9dcc8");coneTo(M,hn,H,-r*.05,r*.55,s*r*.6,r*.3,r*1.5,-.2,.55,s*.85);coneTo(M,hn,H,-r*.25,r*1.35,s*r*1.65,r*.17,r*1.1,.35,1,s*.05)}
   const rg=add(geo("nr"+r,()=>new T.TorusGeometry(r*.26,.8,4,10)),mm(M,"#e6b84e","metal"),r*1.36,-r*.62,0);rg.rotation.y=PI/2}break;
@@ -2693,6 +2754,49 @@ function buildHead(M,type,r,L){
  case "demon":{ell(M,sk,H,0,0,0,r*1.05,r,r);ell(M,mm(M,shade(L.skin,-.15)),H,r*.45,-r*.45,0,r*.7,r*.45,r*.8);const hn=mm(M,"#1a0a0a","metal");
   for(const s of [1,-1]){eyeG(M,"#ffb03a",H,r*.95,r*.2,s*r*.35,r*.17);coneTo(M,hn,H,-r*.1,r*.6,s*r*.6,r*.32,r*1.6,-.6,.8,s*.7);coneTo(M,hn,H,-r*1.0,r*1.62,s*r*1.55,r*.2,r*1.4,.4,1,s*.2);coneTo(M,mm(M,"#f2ead8"),H,r*.9,-r*.62,s*r*.35,r*.12,r*.55,0,-1,0,4)}
   add(BXg(r*.7,r*.15,r*1.5),dark,r*.68,r*.42,0);const fl=sprite(G3.tGlow,0xff5a2a,r*5,.35);fl.position.set(0,r*.3,0);H.add(fl)}break;
+ case "pumpkin":{const pc=mm(M,L.cap||"#e8761a"),pc2=mm(M,shade(L.cap||"#e8761a",-.15)),gl=glowM(M,L.eye||"#ffb030");r*=1.08;
+  for(let i=0;i<6;i++){const a=i/6*PI*2;ell(M,i%2?pc:pc2,H,Math.cos(a)*r*.42,r*.05,Math.sin(a)*r*.42,r*.78,r*.92,r*.78)}
+  add(CYg(r*.14,r*.2,r*.6,6),mm(M,"#4a6a2a"),-r*.05,r*.98,0).rotation.z=.35;coneTo(M,mm(M,"#5a8a3a"),H,0,r*.88,r*.2,r*.22,r*.8,.2,.3,1);
+  const tri=geo("tri3",()=>new T3.ConeGeometry(1,1,3));for(const s of [1,-1]){const e=add(tri,gl,r*1.13,r*.22,s*r*.38);e.scale.set(r*.1,r*.32,r*.22);e.rotation.y=PI/2}
+  add(BXg(r*.12,r*.22,r*.95),gl,r*1.12,-r*.32,0);for(const s of [1,-1,0])add(BXg(r*.1,r*.11,r*.12),s?pc:pc2,r*1.17,s?-r*.26:-r*.4,s*r*.24);
+  const sp=sprite(G3.tGlow,new T3.Color(L.eye||"#ffb030"),r*3.2,.4);sp.position.set(r*.7,0,0);H.add(sp)}break;
+ case "mummy":case "pharaoh":{const bw=mm(M,L.skin,"cloth"),bw2=mm(M,shade(L.skin,-.15),"cloth"),ec=L.eye||"#4affd0";ell(M,bw,H,0,0,0,r,r*1.05,r*.95);
+  for(let i=0;i<5;i++){const b=add(geo("mband"+r.toFixed(1),()=>new T3.TorusGeometry(r*.97,r*.09,4,18)),i%2?bw2:bw,0,r*(-.55+i*.28),0);b.rotation.x=PI/2+(hash(i*3.1)-.5)*.35;b.rotation.y=(hash(i*1.7)-.5)*.3}
+  ell(M,dark,H,r*.8,r*.14,0,r*.24,r*.2,r*.72);for(const s of [1,-1]){eyeG(M,ec,H,r*.97,r*.14,s*r*.32,r*.12);const g2=sprite(G3.tGlow,new T3.Color(ec),r*1.3,.45);g2.position.set(r*1.02,r*.14,s*r*.32);H.add(g2)}
+  coneTo(M,bw2,H,-r*.55,-r*.3,r*.5,r*.14,r*1.3,-.6,-1,.3,4);
+  if(type==="pharaoh"){const gd=mm(M,L.trim||"#e6c64a","metal"),bl=mm(M,L.cloth2||"#2a4a8a","cloth");add(HEMg(r*1.16),gd,-r*.05,r*.05,0);
+   const bd=add(geo("phb"+r.toFixed(1),()=>new T3.TorusGeometry(r*1.12,r*.08,4,20)),bl,-r*.05,r*.22,0);bd.rotation.x=PI/2;
+   for(const s of [1,-1]){const f=add(BXg(r*.42,r*1.5,r*.22),gd,-r*.1,-r*.55,s*r*1.0);f.rotation.x=s*.12;for(let i=0;i<3;i++)add(BXg(r*.44,r*.11,r*.24),bl,-r*.1,-r*.2-i*r*.4,s*r*(1.0-i*.05))}
+   add(BXg(r*.22,r*.7,r*.22),gd,r*.72,-r*1.05,0);coneTo(M,gd,H,r*1.0,r*.78,0,r*.1,r*.5,.4,1,0,4);eyeG(M,"#ff3a3a",H,r*1.12,r*1.0,0,r*.07)}
+ }break;
+ case "treant":{const bk=mm(M,L.skin),bk2=mm(M,shade(L.skin,-.25)),ec=L.eye||"#c8ff5a";ell(M,bk,H,0,r*.1,0,r*.95,r*1.25,r*.92);
+  for(let i=0;i<5;i++){const a=PI*.35+i*1.1;add(BXg(r*.12,r*1.6,r*.12),bk2,Math.cos(a)*r*.86,r*.1,Math.sin(a)*r*.86).rotation.y=-a}
+  for(const s of [1,-1]){ell(M,dark,H,r*.72,r*.2,s*r*.34,r*.25,r*.2,r*.22);eyeG(M,ec,H,r*.9,r*.2,s*r*.34,r*.1)}
+  ell(M,dark,H,r*.8,-r*.42,0,r*.2,r*.16,r*.42);coneTo(M,bk,H,r*.88,-r*.02,0,r*.14,r*.5,1,-.3,0,4);
+  for(let i=0;i<4;i++){const a=(i-1.5)*.55;coneTo(M,bk2,H,-r*.1,r*1.15,Math.sin(a)*r*.5,r*.14,r*1.2,-.3,1,Math.sin(a)*.9,4)}
+  const lf=mm(M,L.cap||"#4aa83a"),lf2=mm(M,shade(L.cap||"#4aa83a",-.2));for(let i=0;i<6;i++){const a=i/6*PI*2;add(ICg(r*.5,1),i%2?lf:lf2,-r*.1+Math.cos(a)*r*.6,r*1.55+hash(i)*r*.3,Math.sin(a)*r*.6)}add(ICg(r*.62,1),lf,-r*.1,r*1.85,0);
+  const ms=mm(M,"#4a7a2a");for(let i=0;i<3;i++)coneTo(M,ms,H,r*.72,-r*.75,(i-1)*r*.3,r*.1,r*.6,.1,-1,0,4)}break;
+ case "wolfman":{const fc=L.fur||L.skin,fr=mm(M,fc),fr2=mm(M,shade(fc,-.2)),lt=mm(M,shade(fc,.25));ell(M,fr,H,0,0,0,r,r*.95,r*.92);
+  ell(M,fr,H,r*.75,-r*.22,0,r*.72,r*.42,r*.46);ell(M,lt,H,r*.82,-r*.42,0,r*.6,r*.24,r*.4);add(SPg(r*.17),dark,r*1.45,-r*.12,0);
+  for(const s of [1,-1]){coneTo(M,fr2,H,-r*.15,r*.6,s*r*.5,r*.3,r*1.05,-.15,1,s*.25,4);eyeG(M,L.eye||"#ffd34e",H,r*.8,r*.22,s*r*.38,r*.13);add(BXg(r*.4,r*.1,r*.25),fr2,r*.8,r*.38,s*r*.36).rotation.x=s*.25;
+   coneTo(M,mm(M,"#f4ecd8"),H,r*1.15,-r*.55,s*r*.22,r*.07,r*.3,0,-1,0,4)}
+  for(let i=0;i<5;i++)coneTo(M,fr2,H,-r*.6,r*.2-i*r*.18,(i-2)*r*.3,r*.24,r*1.0,-1,-.2,(i-2)*.2,4);
+  if(L.gold){const gd=mm(M,"#e6c64a","metal");const c1=add(geo("wcol"+r.toFixed(1),()=>new T3.TorusGeometry(r*.8,r*.14,5,18)),gd,-r*.1,-r*.85,0);c1.rotation.x=PI/2;for(const s of [1,-1])add(BXg(r*.12,r*.5,r*.08),gd,-r*.05,r*.85,s*r*.5)}}break;
+ case "yeti":{const fr=mm(M,L.skin),fc=mm(M,L.face||"#6a8aa8");ell(M,fr,H,0,r*.05,0,r*1.15,r*1.1,r*1.08);ell(M,fc,H,r*.62,-r*.1,0,r*.62,r*.68,r*.72);
+  for(const s of [1,-1]){eyeG(M,L.eye||"#5ecbff",H,r*1.2,r*.12,s*r*.3,r*.12);add(BXg(r*.36,r*.12,r*.34),fr,r*1.0,r*.34,s*r*.3).rotation.x=s*-.2;coneTo(M,mm(M,"#f4ecd8"),H,r*1.12,-r*.45,s*r*.25,r*.09,r*.36,0,1,0,4)}
+  ell(M,dark,H,r*1.12,-r*.38,0,r*.14,r*.17,r*.36);for(let i=0;i<6;i++){const a=i/6*PI*2;coneTo(M,fr,H,Math.cos(a)*r*.45-r*.2,r*.85,Math.sin(a)*r*.6,r*.3,r*.7,Math.cos(a)*.4-.3,1,Math.sin(a)*.5,5)}
+  if(L.horns){const hn=mm(M,"#c8b8a0");for(const s of [1,-1]){coneTo(M,hn,H,-r*.1,r*.55,s*r*.85,r*.28,r*1.3,-.3,.4,s*.85);coneTo(M,hn,H,-r*.55,r*1.0,s*r*1.85,r*.16,r*.9,.4,1,s*.1)}
+   const cr=mm(M,"#bff8ff","metal");for(let i=0;i<5;i++){const a=(i-2)*.42;coneTo(M,cr,H,Math.cos(a)*r*.2,r*1.0,Math.sin(a)*r*.8,r*.15,r*(i===2?1.1:.7),-.1,1,Math.sin(a)*.3,4)}}}break;
+ case "samurai":{const ar=mm(M,L.armor||"#3a4a6a","metal"),gd=mm(M,L.trim||"#e6c64a","metal"),mk=mm(M,"#5a1a1a"),ec=L.eye||"#7ff5ff";add(SPg(r*.95),sk);
+  add(HEMg(r*1.16),ar,-r*.04,r*.12,0);const sm=mm(M,shade(L.armor||"#3a4a6a",-.15),"metal");sm.side=T3.DoubleSide;const sh=add(geo("shik"+r.toFixed(1),()=>new T3.CylinderGeometry(r*1.18,r*1.6,r*.75,12,1,true)),sm,-r*.2,-r*.15,0);sh.rotation.z=.25;
+  for(const s of [1,-1]){const k=coneTo(M,gd,H,r*.85,r*.75,s*r*.25,r*.12,r*1.5,.25,1,s*.55,4);k.scale.z=.35}
+  add(SPg(r*.2),gd,r*1.05,r*.55,0);ell(M,mk,H,r*.62,-r*.4,0,r*.5,r*.42,r*.68);for(let i=0;i<4;i++)add(BXg(r*.08,r*.06,r*.1),mm(M,"#f4ecd8"),r*1.1,-r*.45,(i-1.5)*r*.14);
+  for(const s of [1,-1]){eyeG(M,ec,H,r*.92,r*.08,s*r*.32,r*.12);const g2=sprite(G3.tGlow,new T3.Color(ec),r*1.4,.45);g2.position.set(r*.98,r*.08,s*r*.32);H.add(g2)}}break;
+ case "cyclops":{ell(M,sk,H,0,0,0,r*1.12,r*1.05,r*1.05);const s2=mm(M,shade(L.skin,-.15));
+  ell(M,mm(M,"#f4f0e6"),H,r*.78,r*.18,0,r*.42,r*.42,r*.48);eyeG(M,L.eye||"#ff5a3a",H,r*1.12,r*.18,0,r*.2);add(SPg(r*.1),dark,r*1.27,r*.18,0);
+  add(BXg(r*.4,r*.18,r*1.2),s2,r*.95,r*.62,0).rotation.z=-.15;ell(M,s2,H,r*.92,-r*.12,0,r*.25,r*.2,r*.22);
+  ell(M,dark,H,r*.94,-r*.52,0,r*.2,r*.14,r*.55);for(const s of [1,-1])coneTo(M,mm(M,"#f2ead8"),H,r*1.0,-r*.62,s*r*.38,r*.12,r*.5,0,1,0,4);
+  coneTo(M,mm(M,"#e8dcc4"),H,-r*.1,r*.95,0,r*.26,r*1.0,-.2,1,0);for(const s of [1,-1])ell(M,s2,H,0,r*.1,s*r*1.08,r*.25,r*.36,r*.16)}break;
  default:add(SPg(r),sk);
  }
 }
@@ -2815,8 +2919,8 @@ function buildBat(L){
  M.f=new T.Group();M.body.add(M.f);ell(M,fur,M.f,0,0,0,8,9,7);
  for(const s of [1,-1]){coneTo(M,fur,M.f,.5,6.5,s*3,2,7,.1,1,s*.25,4);eyeG(M,L.eye,M.f,6.6,3,s*2.5,1.4);coneTo(M,mm(M,"#ffffff"),M.f,7,-2,s*1.1,.5,2.2,0,-1,0,3)}
  M.wR=new T.Group();M.wR.position.set(0,1,5);M.f.add(M.wR);P3(M,wingGeo("bat"),wm,M.wR).scale.set(1.3,1,1.35);M.wL=new T.Group();M.wL.position.set(0,1,-5);M.f.add(M.wL);P3(M,wingGeo("bat"),wm,M.wL).scale.set(1.3,1,-1.35);
- if(L.phoenix){const fm=glowM(M,"#ffb03a"),cr=glowM(M,"#fff2a0");for(let i=0;i<5;i++)coneTo(M,fm,M.f,-5,-3,(i-2)*1.8,1.3,13-Math.abs(i-2)*2,-1,-.35,(i-2)*.25,4);for(let i=0;i<3;i++)coneTo(M,cr,M.f,2-i*2,8,0,.8,6-i,-.4,1,0,4);
-  const fl=sprite(G3.tFlame,0xffffff,1,1);fl.scale.set(18,28,1);fl.position.set(-2,4,0);M.f.add(fl);M.flame=fl;M.wR.children[0].scale.set(2.3,1,2.4);M.wL.children[0].scale.set(2.3,1,-2.4);const gl=sprite(G3.tGlow,0xff8a2a,80,.45);M.f.add(gl)}
+ if(L.phoenix){const fm=glowM(M,L.flA||"#ffb03a"),cr=glowM(M,L.flB||"#fff2a0");for(let i=0;i<5;i++)coneTo(M,fm,M.f,-5,-3,(i-2)*1.8,1.3,13-Math.abs(i-2)*2,-1,-.35,(i-2)*.25,4);for(let i=0;i<3;i++)coneTo(M,cr,M.f,2-i*2,8,0,.8,6-i,-.4,1,0,4);
+  if(!L.noFlame){const fl=sprite(G3.tFlame,0xffffff,1,1);fl.scale.set(18,28,1);fl.position.set(-2,4,0);M.f.add(fl);M.flame=fl}M.wR.children[0].scale.set(2.3,1,2.4);M.wL.children[0].scale.set(2.3,1,-2.4);const gl=sprite(G3.tGlow,new T.Color(L.flA||"#ff8a2a"),80,.45);M.f.add(gl)}
  M.headObj=M.f;M.crownY=11;M.th=1.05;return M;
 }
 function animBat(M,e){
@@ -2999,7 +3103,7 @@ function syncEnemies3(dt){
   let a=alpha*sk;if(C.body==="ghost")a*=.75+.15*Math.sin(tNow*4+e.seed);if(C.stealth&&e.state==="chase")a*=.22+.1*Math.sin(tNow*6+e.seed);
   if(isFP()){const r=relH(e);if(r.a<8&&r.a>-CAM.fpBack-44&&r.l<70)a*=.15}
   setLook3(M,e.flash>0,a);
-  if(e.boss&&e.state!=="dead"){crown3(M).visible=true;const au=pool3("aura",()=>{const s=sprite(G3.tGlow,0xd6a24a,1,.3);G3.fx.add(s);return s});W3(au,e.x,e.z,e.h+C.hgt*e.s*CHS*.45);au.scale.setScalar(C.hgt*e.s*CHS*2.6);au.material.opacity=.22+.05*Math.sin(tNow*3)}else if(M.crown)M.crown.visible=false;
+  if(e.boss&&e.state!=="dead"){crown3(M).visible=true;const au=pool3("aura",()=>{const s=sprite(G3.tGlow,0xd6a24a,1,.3);G3.fx.add(s);return s});W3(au,e.x,e.z,e.h+C.hgt*e.s*CHS*.45);au.scale.setScalar(C.hgt*e.s*CHS*2.6);au.material.opacity=(BIOMES[G3.biome].day?.07:.22)+.05*Math.sin(tNow*3)}else if(M.crown)M.crown.visible=false;
   if(e.burn&&e.burn.t>0&&e.state!=="dead"){const b=pool3("burn",()=>{const s=sprite(G3.tGlow,0xff6a1a,1,.5);G3.fx.add(s);return s});W3(b,e.x,e.z,e.h+C.hgt*e.s*CHS*.45);b.scale.set(C.rad*e.s*CHS*3.2,C.hgt*e.s*CHS*1.3,1);b.material.opacity=.35+.15*Math.sin(tNow*20)}
   if(!(e.state==="dead"&&e.st>1))blob3(e.x,e.z,e.h,C.rad*e.s*1.3)}
  for(const [e,M] of G3.emap)if(!seen.has(e)){G3.emap.delete(e);freeModel3(M)}
