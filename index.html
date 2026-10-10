@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mini RPG 3D — Тіньові землі</title>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&display=swap" rel="stylesheet">
@@ -23,6 +24,12 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 #stage{position:relative;width:100%;height:100%;overflow:hidden;touch-action:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 
+.boot{position:absolute;inset:0;z-index:60;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#2a1220,#07040a 70%);transition:opacity .5s}
+.boot.off{opacity:0;pointer-events:none}
+.bootIn{display:flex;flex-direction:column;align-items:center;gap:14px;color:#cdbac4;font-size:14px}
+.bootIn b{font-family:Cinzel,Georgia,serif;font-size:34px;color:var(--gold);letter-spacing:.04em;text-shadow:0 0 24px rgba(225,75,90,.5)}
+.bootSpin{width:38px;height:38px;border-radius:50%;border:3px solid rgba(214,162,74,.25);border-top-color:var(--gold);animation:bspin .9s linear infinite}
+@keyframes bspin{to{transform:rotate(360deg)}}
 .hud{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:10px 12px;pointer-events:none;z-index:5}
 .plate{background:rgba(12,7,13,.8);border:1px solid var(--line);border-radius:12px;padding:8px 11px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .me{width:230px;max-width:48vw}
@@ -71,7 +78,10 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .sk:after{content:"";position:absolute;inset:-2px;border-radius:50%;background:conic-gradient(rgba(5,2,6,.78) calc(var(--cd)*360deg),transparent 0);pointer-events:none}
 .sk.on{transform:scale(.92);border-color:var(--gold)}
 .sk em{position:absolute;top:-6px;right:-4px;font-style:normal;font-size:10px;font-weight:700;background:#2a1822;border:1px solid var(--line);border-radius:6px;padding:0 4px;color:#d9c7cf}
-.sk.locked{filter:grayscale(.85) brightness(.48);pointer-events:none}
+.sk.locked{pointer-events:none;color:transparent;text-shadow:0 0 0 rgba(170,150,160,.45);border-color:rgba(255,255,255,.08);background:rgba(25,14,24,.55)!important}
+.sk.locked::before{content:attr(data-lv);position:absolute;left:50%;top:-15px;transform:translateX(-50%);font:800 10px/14px system-ui,sans-serif;color:#ffd98a;background:rgba(26,16,22,.95);border:1px solid #e8b04b;border-radius:7px;padding:0 5px;white-space:nowrap;text-shadow:none;z-index:2}
+.sk.locked em{display:none}
+@media (max-width:520px){.sk.locked::before{font-size:8.5px;line-height:13px;padding:0 3px;top:-13px;letter-spacing:-.2px}}
 .sk.locked em{background:#1a1016;color:#e8b04b;border-color:#e8b04b}
 @media (hover:none){.sk em{display:none}}
 .sk.atk{width:88px;height:88px;right:0;bottom:8px;font-size:34px;background:radial-gradient(circle at 50% 35%,#7a1f30,#3a0d16);border-color:rgba(225,75,90,.7)}
@@ -103,7 +113,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .dpane{display:none}.dpane.on{display:block}
 .invWrap{display:grid;grid-template-columns:250px 1fr;gap:14px}
 @media(max-width:640px){.invWrap{grid-template-columns:1fr}}
-.eqGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.eqGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
 .slot,.cell{position:relative;aspect-ratio:1;border-radius:12px;border:2px solid var(--rc,#3a2a36);background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--rc,#2a1a26) 28%,#120b12),#0d080d);display:grid;place-items:center;font-size:26px;cursor:pointer;padding:0;color:inherit}
 .slot.empty{opacity:.45;font-size:22px;filter:grayscale(1);border-style:dashed}
 .slot small{position:absolute;bottom:2px;left:0;right:0;font-size:9.5px;color:var(--muted);font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 3px}
@@ -241,9 +251,10 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 <div id="stage">
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
 
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span></div></div>
   <div class="hud">
     <div class="plate me">
-      <div class="nm"><span id="hName">Rostogen</span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
+      <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
       <div class="bar hp hpw"><i id="hpBar"></i><span id="hpTxt"></span></div>
       <div class="bar xp"><i id="xpBar" style="width:0"></i></div>
     </div>
@@ -324,7 +335,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     <div class="pacts"><button class="btn main" data-close data-i="resume">▶ Продовжити</button><button class="btn" id="pTree"></button><button class="btn" id="pInv"></button><button class="btn" id="pDrops"></button><button class="btn" id="pBest"></button></div>
     <h3 class="h3" data-i="settings">Налаштування</h3>
     <div class="row"><div><b data-i="acc">Акаунт</b><div class="m" id="accWho"></div></div><div class="accb" id="accBtns"></div></div>
-    <div class="row"><div><b data-i="nick">Нікнейм</b><div class="m" data-i="nickHint">Показується над героєм</div></div><div><input id="nickIn" class="inp" maxlength="18"> <button class="btn" id="nickOk" data-i="save">Зберегти</button></div></div>
+    <div class="row"><div><b data-i="nick">Нікнейм</b><div class="m" data-i="nickHint">Показується над героєм</div></div><div><input id="nickIn" class="inp" maxlength="18" placeholder="…"> <button class="btn" id="nickOk" data-i="save">Зберегти</button></div></div>
     <div class="row"><b data-i="lang">Мова</b><select id="langSel" class="sel"></select></div>
     <div class="row"><b data-i="sfx">Звукові ефекти</b><input id="sfxR" class="rng" type="range" min="0" max="100"></div>
     <div class="row"><b data-i="music">Гучність музики</b><input id="musR" class="rng" type="range" min="0" max="100"></div>
@@ -368,11 +379,11 @@ lv:"Рів.|Lv.|Niv.|St.|等级|Nv.|Liv.|Poz.",
 best:"Бестіарій|Bestiary|Bestiaire|Bestiarium|怪物图鉴|Bestiario|Bestiario|Bestiariusz",
 bestHint:"Вороги, яких ти зустрінеш. Невідомі показані тінню, доки не переможеш хоча б одного.|Enemies you will meet. Unknown ones stay in shadow until you defeat at least one.|Les ennemis que tu vas affronter. Les inconnus restent dans l'ombre tant que tu n'en as pas vaincu un.|Gegner, denen du begegnest. Unbekannte bleiben im Schatten, bis du mindestens einen besiegt hast.|你将遇到的敌人。未击败过的敌人只显示剪影。|Enemigos que encontrarás. Los desconocidos se ven como sombras hasta que derrotes al menos uno.|Nemici che incontrerai. Quelli sconosciuti restano in ombra finché non ne sconfiggi almeno uno.|Wrogowie, których spotkasz. Nieznani pozostają w cieniu, dopóki nie pokonasz choć jednego.",
 settings:"Налаштування|Settings|Paramètres|Einstellungen|设置|Ajustes|Impostazioni|Ustawienia",
-nick:"Нікнейм|Nickname|Pseudo|Spielername|昵称|Apodo|Nickname|Pseudonim",
+nick:"Ім'я героя|Nickname|Pseudo|Spielername|昵称|Apodo|Nickname|Pseudonim",
 nickHint:"Показується над героєм|Shown above your hero|Affiché au-dessus de ton héros|Wird über deinem Helden angezeigt|显示在英雄头顶|Se muestra sobre tu héroe|Mostrato sopra il tuo eroe|Wyświetlany nad bohaterem",
 save:"Зберегти|Save|Enregistrer|Speichern|保存|Guardar|Salva|Zapisz",
 lang:"Мова|Language|Langue|Sprache|语言|Idioma|Lingua|Język",
-sfx:"Звукові ефекти|Sound effects|Effets sonores|Soundeffekte|音效|Efectos de sonido|Effetti sonori|Efekty dźwiękowe",
+sfx:"Звуки|Sound effects|Effets sonores|Soundeffekte|音效|Efectos de sonido|Effetti sonori|Efekty dźwiękowe",
 music:"Гучність музики|Music volume|Volume de la musique|Musiklautstärke|音乐音量|Volumen de la música|Volume musica|Głośność muzyki",
 musicOn:"Фонова музика|Background music|Musique de fond|Hintergrundmusik|背景音乐|Música de fondo|Musica di sottofondo|Muzyka w tle",
 gfx:"Графіка|Graphics|Graphismes|Grafik|画面|Gráficos|Grafica|Grafika",
@@ -381,6 +392,8 @@ gfxLo:"3D — швидка|3D — fast|3D — rapide|3D — schnell|3D — 流�
 gfx2d:"2D — класична|2D — classic|2D — classique|2D — klassisch|2D — 经典|2D — clásico|2D — classica|2D — klasyczna",
 bloodL:"Кров|Blood|Sang|Blut|血液效果|Sangre|Sangue|Krew",
 bloodHint:"Бризки та плями крові (13+)|Blood splashes and stains (13+)|Éclaboussures et taches de sang (13+)|Blutspritzer und Flecken (13+)|血液飞溅与血迹（13+）|Salpicaduras y manchas de sangre (13+)|Schizzi e macchie di sangue (13+)|Rozbryzgi i plamy krwi (13+)",
+loading:"Завантаження 3D…|Loading 3D…|Chargement de la 3D…|3D wird geladen…|正在加载3D…|Cargando 3D…|Caricamento 3D…|Wczytywanie 3D…",
+nickPh:"Введи своє ім'я|Enter your name|Entre ton nom|Gib deinen Namen ein|输入你的名字|Escribe tu nombre|Inserisci il tuo nome|Wpisz swoje imię",
 aTurn:"Розвернутися|Turn around|Se retourner|Umdrehen|转身|Darse la vuelta|Girarsi|Obrót",
 view:"Камера|Camera|Caméra|Kamera|视角|Cámara|Telecamera|Kamera",
 viewFP:"Від першого лиця|First person|Première personne|Ego-Perspektive|第一人称|Primera persona|Prima persona|Pierwsza osoba",
@@ -389,11 +402,11 @@ gfxFail:"Не вдалося завантажити 3D, показано 2D|Coul
 resetL:"Прогрес|Progress|Progression|Fortschritt|进度|Progreso|Progressi|Postęp",
 reset:"Скинути прогрес|Reset progress|Réinitialiser|Fortschritt zurücksetzen|重置进度|Reiniciar progreso|Azzera progressi|Resetuj postęp",
 resetQ:"Натисни ще раз, щоб скинути все|Press again to reset everything|Appuie encore pour tout effacer|Nochmal drücken, um alles zu löschen|再按一次以重置全部|Pulsa otra vez para borrar todo|Premi di nuovo per azzerare tutto|Naciśnij ponownie, aby wszystko zresetować",
-ctrl:"Пауза: P або Esc. Рух: WASD або стрілки. Z: удар, натискай кілька разів поспіль для комбо з трьох ударів. X: сильний удар. C: вогняна куля. V: блискавка. B: лікування. N: перекат із невразливістю. M: вихор. G: палаючий клинок. H: щит духу. На телефоні ліва частина екрана працює як джойстик, кнопки праворуч. Прогрес зберігається в цьому браузері. F: перемкнути камеру. Від першого лиця: W/S — вперед і назад, A/D або стрілки — повертатися, Q/E — крок убік, R — розворот, тягни пальцем справа — оглядатися. На телефоні джойстик: вгору/вниз — іти, вліво/вправо — повертатися.|Pause: P or Esc. Move: WASD or arrow keys. Z: strike, press repeatedly for a three-hit combo. X: heavy strike. C: fireball. V: lightning. B: heal. N: invulnerable roll. M: whirlwind. G: blazing blade. H: spirit shield. On a phone, the left side of the screen is a joystick and the buttons are on the right. Progress is saved in this browser. F: switch camera. In first person: W/S forward and back, A/D or arrows turn, Q/E strafe, R turn around, drag on the right side to look around. On a phone the joystick moves up/down and turns left/right.|Pause : P ou Échap. Déplacement : WASD ou flèches. Z : frappe, appuie plusieurs fois pour un combo de trois coups. X : coup puissant. C : boule de feu. V : éclair. B : soin. N : roulade invulnérable. M : tourbillon. G : lame ardente. H : bouclier spirituel. Sur téléphone, la gauche de l'écran sert de joystick et les boutons sont à droite. La progression est sauvegardée dans ce navigateur. F : changer de caméra. En première personne : W/S avancer et reculer, A/D ou flèches tourner, Q/E pas de côté, R demi-tour, glisse à droite pour regarder autour. Sur téléphone, le joystick avance/recule et tourne.|Pause: P oder Esc. Bewegen: WASD oder Pfeiltasten. Z: Schlag, mehrmals drücken für eine Dreierkombo. X: schwerer Schlag. C: Feuerball. V: Blitz. B: Heilung. N: unverwundbare Rolle. M: Wirbelwind. G: Flammenklinge. H: Geisterschild. Auf dem Handy ist die linke Bildschirmseite ein Joystick, die Tasten sind rechts. Der Fortschritt wird in diesem Browser gespeichert. F: Kamera wechseln. In der Ego-Perspektive: W/S vor und zurück, A/D oder Pfeile drehen, Q/E seitwärts, R umdrehen, rechts ziehen zum Umsehen. Auf dem Handy: Joystick hoch/runter laufen, links/rechts drehen.|暂停：P 或 Esc。移动：WASD 或方向键。Z：攻击，连按可打出三连击。X：重击。C：火球。V：闪电。B：治疗。N：无敌翻滚。M：旋风斩。G：烈焰之刃。H：灵魂护盾。手机上屏幕左侧是摇杆，按钮在右侧。进度保存在此浏览器中。 F：切换视角。第一人称时：W/S 前进后退，A/D 或方向键转向，Q/E 横移，R 转身，在右侧拖动环顾四周。手机上摇杆上下移动、左右转向。|Pausa: P o Esc. Moverse: WASD o flechas. Z: golpe, pulsa varias veces para un combo de tres golpes. X: golpe fuerte. C: bola de fuego. V: rayo. B: curación. N: voltereta invulnerable. M: torbellino. G: hoja ardiente. H: escudo espiritual. En el móvil, la parte izquierda de la pantalla es un joystick y los botones están a la derecha. El progreso se guarda en este navegador. F: cambiar cámara. En primera persona: W/S avanzar y retroceder, A/D o flechas girar, Q/E paso lateral, R darse la vuelta, arrastra a la derecha para mirar. En el móvil, el joystick avanza/retrocede y gira.|Pausa: P o Esc. Movimento: WASD o frecce. Z: colpo, premi più volte per una combo di tre colpi. X: colpo pesante. C: palla di fuoco. V: fulmine. B: cura. N: capriola invulnerabile. M: turbine. G: lama infuocata. H: scudo dello spirito. Sul telefono il lato sinistro dello schermo è un joystick e i pulsanti sono a destra. I progressi vengono salvati in questo browser. F: cambia telecamera. In prima persona: W/S avanti e indietro, A/D o frecce girare, Q/E passo laterale, R girarsi, trascina a destra per guardarti intorno. Sul telefono il joystick avanza/arretra e gira.|Pauza: P lub Esc. Ruch: WASD lub strzałki. Z: cios, naciskaj kilka razy dla combo z trzech ciosów. X: mocny cios. C: kula ognia. V: błyskawica. B: leczenie. N: przewrót z nietykalnością. M: wir. G: płonące ostrze. H: tarcza ducha. Na telefonie lewa strona ekranu działa jak joystick, a przyciski są po prawej. Postęp zapisuje się w tej przeglądarce. F: zmiana kamery. W pierwszej osobie: W/S naprzód i w tył, A/D lub strzałki obrót, Q/E krok w bok, R zawrócenie, przeciągnij po prawej, aby się rozejrzeć. Na telefonie joystick: góra/dół chód, lewo/prawo obrót.",
-tip:"WASD або стрілки: рух. Z удар (тисни кілька разів для комбо), X сильний удар, C вогонь, V блискавка, B лікування, N перекат, M вихор, G палаючий клинок, H щит духу. P: пауза. A/D поворот, Q/E вбік, R розворот, F камера.|WASD or arrows: move. Z strike (press repeatedly to combo), X heavy strike, C fire, V lightning, B heal, N roll, M whirlwind, G blazing blade, H spirit shield. P: pause. A/D turn, Q/E strafe, R turn around, F camera.|WASD ou flèches : déplacement. Z frappe (appuie plusieurs fois pour un combo), X coup puissant, C feu, V éclair, B soin, N roulade, M tourbillon, G lame ardente, H bouclier spirituel. P : pause. A/D tourner, Q/E de côté, R demi-tour, F caméra.|WASD oder Pfeile: bewegen. Z Schlag (mehrmals für Kombo), X schwerer Schlag, C Feuer, V Blitz, B Heilung, N Rolle, M Wirbelwind, G Flammenklinge, H Geisterschild. P: Pause. A/D drehen, Q/E seitwärts, R umdrehen, F Kamera.|WASD 或方向键：移动。Z 攻击（连按连击），X 重击，C 火球，V 闪电，B 治疗，N 翻滚，M 旋风斩，G 烈焰之刃，H 灵魂护盾。P：暂停。 A/D 转向，Q/E 横移，R 转身，F 视角。|WASD o flechas: moverse. Z golpe (pulsa varias veces para combo), X golpe fuerte, C fuego, V rayo, B curación, N voltereta, M torbellino, G hoja ardiente, H escudo espiritual. P: pausa. A/D girar, Q/E lateral, R darse la vuelta, F cámara.|WASD o frecce: movimento. Z colpo (premi più volte per la combo), X colpo pesante, C fuoco, V fulmine, B cura, N capriola, M turbine, G lama infuocata, H scudo dello spirito. P: pausa. A/D girare, Q/E laterale, R girarsi, F telecamera.|WASD lub strzałki: ruch. Z cios (naciskaj kilka razy dla combo), X mocny cios, C ogień, V błyskawica, B leczenie, N przewrót, M wir, G płonące ostrze, H tarcza ducha. P: pauza. A/D obrót, Q/E w bok, R zawrócenie, F kamera.",
-joyHint:"Тягни пальцем тут, щоб ходити|Drag here to walk|Glisse ici pour marcher|Hier ziehen zum Laufen|在此拖动以移动|Arrastra aquí para caminar|Trascina qui per camminare|Przeciągnij tutaj, aby chodzić",
+ctrl:"Пауза: P або Esc. Рух: WASD або стрілки. Z — удар (тисни кілька разів поспіль для комбо з трьох ударів), X — сильний удар, C — вогняна куля, V — блискавка, B — лікування, N — перекат (на мить ти невразливий), M — вихор, G — палаючий клинок, H — щит духу. F — перемкнути камеру. Від першого лиця: W/S — уперед і назад, A/D або стрілки — повертатися, Q/E — крок убік, R — розвернутися, тягни пальцем по правій частині екрана — оглядатися. На телефоні джойстик ліворуч: вгору/вниз — іти, вліво/вправо — повертатися. Прогрес зберігається в цьому браузері.|Pause: P or Esc. Move: WASD or arrow keys. Z: strike, press repeatedly for a three-hit combo. X: heavy strike. C: fireball. V: lightning. B: heal. N: invulnerable roll. M: whirlwind. G: blazing blade. H: spirit shield. On a phone, the left side of the screen is a joystick and the buttons are on the right. Progress is saved in this browser. F: switch camera. In first person: W/S forward and back, A/D or arrows turn, Q/E strafe, R turn around, drag on the right side to look around. On a phone the joystick moves up/down and turns left/right.|Pause : P ou Échap. Déplacement : WASD ou flèches. Z : frappe, appuie plusieurs fois pour un combo de trois coups. X : coup puissant. C : boule de feu. V : éclair. B : soin. N : roulade invulnérable. M : tourbillon. G : lame ardente. H : bouclier spirituel. Sur téléphone, la gauche de l'écran sert de joystick et les boutons sont à droite. La progression est sauvegardée dans ce navigateur. F : changer de caméra. En première personne : W/S avancer et reculer, A/D ou flèches tourner, Q/E pas de côté, R demi-tour, glisse à droite pour regarder autour. Sur téléphone, le joystick avance/recule et tourne.|Pause: P oder Esc. Bewegen: WASD oder Pfeiltasten. Z: Schlag, mehrmals drücken für eine Dreierkombo. X: schwerer Schlag. C: Feuerball. V: Blitz. B: Heilung. N: unverwundbare Rolle. M: Wirbelwind. G: Flammenklinge. H: Geisterschild. Auf dem Handy ist die linke Bildschirmseite ein Joystick, die Tasten sind rechts. Der Fortschritt wird in diesem Browser gespeichert. F: Kamera wechseln. In der Ego-Perspektive: W/S vor und zurück, A/D oder Pfeile drehen, Q/E seitwärts, R umdrehen, rechts ziehen zum Umsehen. Auf dem Handy: Joystick hoch/runter laufen, links/rechts drehen.|暂停：P 或 Esc。移动：WASD 或方向键。Z：攻击，连按可打出三连击。X：重击。C：火球。V：闪电。B：治疗。N：无敌翻滚。M：旋风斩。G：烈焰之刃。H：灵魂护盾。手机上屏幕左侧是摇杆，按钮在右侧。进度保存在此浏览器中。 F：切换视角。第一人称时：W/S 前进后退，A/D 或方向键转向，Q/E 横移，R 转身，在右侧拖动环顾四周。手机上摇杆上下移动、左右转向。|Pausa: P o Esc. Moverse: WASD o flechas. Z: golpe, pulsa varias veces para un combo de tres golpes. X: golpe fuerte. C: bola de fuego. V: rayo. B: curación. N: voltereta invulnerable. M: torbellino. G: hoja ardiente. H: escudo espiritual. En el móvil, la parte izquierda de la pantalla es un joystick y los botones están a la derecha. El progreso se guarda en este navegador. F: cambiar cámara. En primera persona: W/S avanzar y retroceder, A/D o flechas girar, Q/E paso lateral, R darse la vuelta, arrastra a la derecha para mirar. En el móvil, el joystick avanza/retrocede y gira.|Pausa: P o Esc. Movimento: WASD o frecce. Z: colpo, premi più volte per una combo di tre colpi. X: colpo pesante. C: palla di fuoco. V: fulmine. B: cura. N: capriola invulnerabile. M: turbine. G: lama infuocata. H: scudo dello spirito. Sul telefono il lato sinistro dello schermo è un joystick e i pulsanti sono a destra. I progressi vengono salvati in questo browser. F: cambia telecamera. In prima persona: W/S avanti e indietro, A/D o frecce girare, Q/E passo laterale, R girarsi, trascina a destra per guardarti intorno. Sul telefono il joystick avanza/arretra e gira.|Pauza: P lub Esc. Ruch: WASD lub strzałki. Z: cios, naciskaj kilka razy dla combo z trzech ciosów. X: mocny cios. C: kula ognia. V: błyskawica. B: leczenie. N: przewrót z nietykalnością. M: wir. G: płonące ostrze. H: tarcza ducha. Na telefonie lewa strona ekranu działa jak joystick, a przyciski są po prawej. Postęp zapisuje się w tej przeglądarce. F: zmiana kamery. W pierwszej osobie: W/S naprzód i w tył, A/D lub strzałki obrót, Q/E krok w bok, R zawrócenie, przeciągnij po prawej, aby się rozejrzeć. Na telefonie joystick: góra/dół chód, lewo/prawo obrót.",
+tip:"Z — удар (тисни кілька разів для комбо), X — сильний удар, C — вогонь, V — блискавка, B — лікування, N — перекат, M — вихор, G — палаючий клинок, H — щит духу. W/S — рух, A/D — поворот, Q/E — крок убік, R — розворот, F — камера, P — пауза.|WASD or arrows: move. Z strike (press repeatedly to combo), X heavy strike, C fire, V lightning, B heal, N roll, M whirlwind, G blazing blade, H spirit shield. P: pause. A/D turn, Q/E strafe, R turn around, F camera.|WASD ou flèches : déplacement. Z frappe (appuie plusieurs fois pour un combo), X coup puissant, C feu, V éclair, B soin, N roulade, M tourbillon, G lame ardente, H bouclier spirituel. P : pause. A/D tourner, Q/E de côté, R demi-tour, F caméra.|WASD oder Pfeile: bewegen. Z Schlag (mehrmals für Kombo), X schwerer Schlag, C Feuer, V Blitz, B Heilung, N Rolle, M Wirbelwind, G Flammenklinge, H Geisterschild. P: Pause. A/D drehen, Q/E seitwärts, R umdrehen, F Kamera.|WASD 或方向键：移动。Z 攻击（连按连击），X 重击，C 火球，V 闪电，B 治疗，N 翻滚，M 旋风斩，G 烈焰之刃，H 灵魂护盾。P：暂停。 A/D 转向，Q/E 横移，R 转身，F 视角。|WASD o flechas: moverse. Z golpe (pulsa varias veces para combo), X golpe fuerte, C fuego, V rayo, B curación, N voltereta, M torbellino, G hoja ardiente, H escudo espiritual. P: pausa. A/D girar, Q/E lateral, R darse la vuelta, F cámara.|WASD o frecce: movimento. Z colpo (premi più volte per la combo), X colpo pesante, C fuoco, V fulmine, B cura, N capriola, M turbine, G lama infuocata, H scudo dello spirito. P: pausa. A/D girare, Q/E laterale, R girarsi, F telecamera.|WASD lub strzałki: ruch. Z cios (naciskaj kilka razy dla combo), X mocny cios, C ogień, V błyskawica, B leczenie, N przewrót, M wir, G płonące ostrze, H tarcza ducha. P: pauza. A/D obrót, Q/E w bok, R zawrócenie, F kamera.",
+joyHint:"Тягни пальцем тут, щоб іти|Drag here to walk|Glisse ici pour marcher|Hier ziehen zum Laufen|在此拖动以移动|Arrastra aquí para caminar|Trascina qui per camminare|Przeciągnij tutaj, aby chodzić",
 defeat:"Поразка|Defeat|Défaite|Niederlage|失败|Derrota|Sconfitta|Porażka",
-defeatSub:"Вороги виявилися сильнішими. Прокачай навички або спробуй ще раз.|The enemies were stronger this time. Upgrade your skills or try again.|Les ennemis étaient plus forts cette fois. Améliore tes compétences ou réessaie.|Die Gegner waren diesmal stärker. Verbessere deine Fähigkeiten oder versuche es erneut.|敌人这次更强。升级技能或再试一次。|Esta vez los enemigos fueron más fuertes. Mejora tus habilidades o inténtalo de nuevo.|Questa volta i nemici erano più forti. Potenzia le abilità o riprova.|Tym razem wrogowie byli silniejsi. Ulepsz umiejętności lub spróbuj ponownie.",
+defeatSub:"Цього разу вороги виявилися сильнішими. Прокачай навички або спробуй ще раз.|The enemies were stronger this time. Upgrade your skills or try again.|Les ennemis étaient plus forts cette fois. Améliore tes compétences ou réessaie.|Die Gegner waren diesmal stärker. Verbessere deine Fähigkeiten oder versuche es erneut.|敌人这次更强。升级技能或再试一次。|Esta vez los enemigos fueron más fuertes. Mejora tus habilidades o inténtalo de nuevo.|Questa volta i nemici erano più forti. Potenzia le abilità o riprova.|Tym razem wrogowie byli silniejsi. Ulepsz umiejętności lub spróbuj ponownie.",
 openTree:"Відкрити дерево навичок|Open skill tree|Ouvrir l'arbre|Skillbaum öffnen|打开技能树|Abrir el árbol|Apri l'albero|Otwórz drzewko",
 retry:"Спробувати знову|Try again|Réessayer|Nochmal versuchen|再试一次|Reintentar|Riprova|Spróbuj ponownie",
 pause:"Пауза|Paused|Pause|Pause|暂停|Pausa|Pausa|Pauza",
@@ -401,20 +414,20 @@ fullscreen:"Повноекранний режим|Fullscreen|Plein écran|Vollbi
 skLocked:"🔒 Розблокується на {lv} рівні|🔒 Unlocks at level {lv}|🔒 Débloqué au niveau {lv}|🔒 Freischaltung ab Stufe {lv}|🔒 {lv}级解锁|🔒 Se desbloquea en el nivel {lv}|🔒 Si sblocca al livello {lv}|🔒 Odblokowuje się na poziomie {lv}",
 acc:"Акаунт|Account|Compte|Konto|账户|Cuenta|Account|Konto",
 guest:"Ти граєш як гість|You are playing as a guest|Tu joues en invité|Du spielst als Gast|你正在以访客身份游戏|Estás jugando como invitado|Stai giocando come ospite|Grasz jako gość",
-asUser:"Ти увійшов як {e}|Signed in as {e}|Connecté en tant que {e}|Angemeldet als {e}|已登录：{e}|Sesión iniciada como {e}|Accesso come {e}|Zalogowano jako {e}",
+asUser:"Вхід виконано: {e}|Signed in as {e}|Connecté en tant que {e}|Angemeldet als {e}|已登录：{e}|Sesión iniciada como {e}|Accesso come {e}|Zalogowano jako {e}",
 signUp:"Створити акаунт|Sign up|Créer un compte|Konto erstellen|注册|Crear cuenta|Registrati|Załóż konto",
 logIn:"Увійти|Log in|Se connecter|Anmelden|登录|Iniciar sesión|Accedi|Zaloguj się",
 logOut:"Вийти|Log out|Se déconnecter|Abmelden|退出登录|Cerrar sesión|Esci|Wyloguj",
-email:"Імейл|Email|E-mail|E-Mail|邮箱|Correo|Email|E-mail",
+email:"Електронна пошта|Email|E-mail|E-Mail|邮箱|Correo|Email|E-mail",
 pass:"Пароль|Password|Mot de passe|Passwort|密码|Contraseña|Password|Hasło",
 pass2:"Повтори пароль|Repeat password|Répète le mot de passe|Passwort wiederholen|确认密码|Repite la contraseña|Ripeti la password|Powtórz hasło",
 keepProg:"Перенести поточний прогрес у новий акаунт|Move my current progress to the new account|Transférer ma progression actuelle|Aktuellen Fortschritt übernehmen|将当前进度转移到新账户|Pasar mi progreso actual a la cuenta nueva|Trasferisci i progressi attuali|Przenieś obecny postęp na nowe konto",
 authNote:"Акаунт зберігається в цьому браузері на цьому пристрої. На іншому телефоні чи комп'ютері його не буде.|The account is stored in this browser on this device. It won't be on another phone or computer.|Le compte est stocké dans ce navigateur, sur cet appareil. Il ne sera pas sur un autre téléphone ou ordinateur.|Das Konto wird in diesem Browser auf diesem Gerät gespeichert. Auf einem anderen Gerät ist es nicht vorhanden.|账户保存在此设备的浏览器中，在其他手机或电脑上不可用。|La cuenta se guarda en este navegador de este dispositivo. No estará en otro teléfono u ordenador.|L'account è salvato in questo browser su questo dispositivo. Non sarà su un altro telefono o computer.|Konto jest zapisane w tej przeglądarce na tym urządzeniu. Nie będzie go na innym telefonie ani komputerze.",
-eBad:"Введи правильний імейл, наприклад name@example.com|Enter a valid email, for example name@example.com|Saisis un e-mail valide, par exemple name@example.com|Gib eine gültige E-Mail ein, z. B. name@example.com|请输入有效邮箱，例如 name@example.com|Escribe un correo válido, por ejemplo name@example.com|Inserisci un'email valida, ad esempio name@example.com|Wpisz poprawny e-mail, np. name@example.com",
-eShort:"Пароль має бути щонайменше 6 символів|Password must be at least 6 characters|Le mot de passe doit comporter au moins 6 caractères|Das Passwort muss mindestens 6 Zeichen haben|密码至少需要 6 个字符|La contraseña debe tener al menos 6 caracteres|La password deve avere almeno 6 caratteri|Hasło musi mieć co najmniej 6 znaków",
+eBad:"Введи правильну адресу пошти, наприклад name@example.com|Enter a valid email, for example name@example.com|Saisis un e-mail valide, par exemple name@example.com|Gib eine gültige E-Mail ein, z. B. name@example.com|请输入有效邮箱，例如 name@example.com|Escribe un correo válido, por ejemplo name@example.com|Inserisci un'email valida, ad esempio name@example.com|Wpisz poprawny e-mail, np. name@example.com",
+eShort:"Пароль має містити щонайменше 6 символів|Password must be at least 6 characters|Le mot de passe doit comporter au moins 6 caractères|Das Passwort muss mindestens 6 Zeichen haben|密码至少需要 6 个字符|La contraseña debe tener al menos 6 caracteres|La password deve avere almeno 6 caratteri|Hasło musi mieć co najmniej 6 znaków",
 eMatch:"Паролі не збігаються|Passwords don't match|Les mots de passe ne correspondent pas|Passwörter stimmen nicht überein|两次密码不一致|Las contraseñas no coinciden|Le password non coincidono|Hasła nie są takie same",
-eTaken:"Акаунт з цим імейлом уже є. Перейди на вкладку «Увійти»|An account with this email already exists. Use the Log in tab|Un compte existe déjà avec cet e-mail. Utilise l'onglet Se connecter|Mit dieser E-Mail gibt es schon ein Konto. Nutze den Tab Anmelden|该邮箱已注册，请使用“登录”标签|Ya existe una cuenta con este correo. Usa la pestaña Iniciar sesión|Esiste già un account con questa email. Usa la scheda Accedi|Konto z tym e-mailem już istnieje. Użyj karty Zaloguj się",
-eNone:"Акаунта з цим імейлом немає. Створи його на першій вкладці|No account with this email. Create one on the first tab|Aucun compte avec cet e-mail. Crée-le dans le premier onglet|Kein Konto mit dieser E-Mail. Erstelle es im ersten Tab|没有此邮箱的账户，请在第一个标签注册|No hay cuenta con este correo. Créala en la primera pestaña|Nessun account con questa email. Crealo nella prima scheda|Brak konta z tym e-mailem. Załóż je w pierwszej karcie",
+eTaken:"Акаунт із цією поштою вже існує. Перейди на вкладку «Увійти»|An account with this email already exists. Use the Log in tab|Un compte existe déjà avec cet e-mail. Utilise l'onglet Se connecter|Mit dieser E-Mail gibt es schon ein Konto. Nutze den Tab Anmelden|该邮箱已注册，请使用“登录”标签|Ya existe una cuenta con este correo. Usa la pestaña Iniciar sesión|Esiste già un account con questa email. Usa la scheda Accedi|Konto z tym e-mailem już istnieje. Użyj karty Zaloguj się",
+eNone:"Акаунта з такою поштою немає. Створи його на першій вкладці|No account with this email. Create one on the first tab|Aucun compte avec cet e-mail. Crée-le dans le premier onglet|Kein Konto mit dieser E-Mail. Erstelle es im ersten Tab|没有此邮箱的账户，请在第一个标签注册|No hay cuenta con este correo. Créala en la primera pestaña|Nessun account con questa email. Crealo nella prima scheda|Brak konta z tym e-mailem. Załóż je w pierwszej karcie",
 eWrong:"Неправильний пароль|Wrong password|Mot de passe incorrect|Falsches Passwort|密码错误|Contraseña incorrecta|Password errata|Błędne hasło",
 eWait:"Забагато спроб. Зачекай {n} с|Too many attempts. Wait {n} s|Trop de tentatives. Attends {n} s|Zu viele Versuche. Warte {n} s|尝试次数过多，请等待 {n} 秒|Demasiados intentos. Espera {n} s|Troppi tentativi. Attendi {n} s|Za dużo prób. Poczekaj {n} s",
 created:"Акаунт створено|Account created|Compte créé|Konto erstellt|账户已创建|Cuenta creada|Account creato|Konto utworzone",
@@ -424,8 +437,8 @@ resume:"▶ Продовжити|▶ Resume|▶ Reprendre|▶ Weiter|▶ 继续|
 tree:"Дерево навичок|Skill Tree|Arbre de compétences|Skillbaum|技能树|Árbol de habilidades|Albero delle abilità|Drzewko umiejętności",
 tabTree:"Дерево|Tree|Arbre|Baum|技能树|Árbol|Albero|Drzewko",
 tabTrain:"Тренування|Training|Entraînement|Training|训练|Entrenamiento|Allenamento|Trening",
-treeHint:"Починай від центру. Нові вузли з'являються, коли ти купуєш сусідній. Наведи курсор або затисни вузол, щоб побачити, що він дає. Під кожним вузлом його ціна.|Start from the center. New nodes appear when you buy a neighboring one. Hover or press and hold a node to see what it gives. Each node shows its price below it.|Commence au centre. De nouveaux nœuds apparaissent quand tu achètes un nœud voisin. Survole ou maintiens un nœud pour voir ce qu'il donne. Son prix est affiché dessous.|Beginne in der Mitte. Neue Knoten erscheinen, wenn du einen benachbarten kaufst. Fahre über einen Knoten oder halte ihn gedrückt, um seinen Effekt zu sehen. Der Preis steht darunter.|从中心开始。购买相邻节点后会出现新节点。悬停或长按节点查看效果，价格显示在下方。|Empieza por el centro. Aparecen nodos nuevos cuando compras uno vecino. Pasa el cursor o mantén pulsado un nodo para ver qué da. Su precio aparece debajo.|Inizia dal centro. Nuovi nodi compaiono quando ne compri uno vicino. Passa sopra o tieni premuto un nodo per vedere cosa dà. Il prezzo è sotto.|Zacznij od środka. Nowe węzły pojawiają się, gdy kupisz sąsiedni. Najedź lub przytrzymaj węzeł, aby zobaczyć, co daje. Cena jest pod nim.",
-trainHint:"Тренування можна купувати безкінечно. Кожен рівень дорожчий за попередній.|Training can be bought forever. Each level costs more than the last.|L'entraînement s'achète à l'infini. Chaque niveau coûte plus cher.|Training ist unbegrenzt kaufbar. Jede Stufe kostet mehr.|训练可以无限购买，每级都比上一级更贵。|El entrenamiento se puede comprar sin límite. Cada nivel cuesta más.|L'allenamento si compra all'infinito. Ogni livello costa di più.|Trening można kupować bez końca. Każdy poziom kosztuje więcej.",
+treeHint:"Починай із центру. Нові вузли з'являються, щойно купиш сусідній. Наведи курсор або затисни вузол, щоб побачити, що він дає. Ціна — під кожним вузлом.|Start from the center. New nodes appear when you buy a neighboring one. Hover or press and hold a node to see what it gives. Each node shows its price below it.|Commence au centre. De nouveaux nœuds apparaissent quand tu achètes un nœud voisin. Survole ou maintiens un nœud pour voir ce qu'il donne. Son prix est affiché dessous.|Beginne in der Mitte. Neue Knoten erscheinen, wenn du einen benachbarten kaufst. Fahre über einen Knoten oder halte ihn gedrückt, um seinen Effekt zu sehen. Der Preis steht darunter.|从中心开始。购买相邻节点后会出现新节点。悬停或长按节点查看效果，价格显示在下方。|Empieza por el centro. Aparecen nodos nuevos cuando compras uno vecino. Pasa el cursor o mantén pulsado un nodo para ver qué da. Su precio aparece debajo.|Inizia dal centro. Nuovi nodi compaiono quando ne compri uno vicino. Passa sopra o tieni premuto un nodo per vedere cosa dà. Il prezzo è sotto.|Zacznij od środka. Nowe węzły pojawiają się, gdy kupisz sąsiedni. Najedź lub przytrzymaj węzeł, aby zobaczyć, co daje. Cena jest pod nim.",
+trainHint:"Тренування можна купувати без обмежень. Кожен наступний рівень дорожчий.|Training can be bought forever. Each level costs more than the last.|L'entraînement s'achète à l'infini. Chaque niveau coûte plus cher.|Training ist unbegrenzt kaufbar. Jede Stufe kostet mehr.|训练可以无限购买，每级都比上一级更贵。|El entrenamiento se puede comprar sin límite. Cada nivel cuesta más.|L'allenamento si compra all'infinito. Ogni livello costa di più.|Trening można kupować bez końca. Każdy poziom kosztuje więcej.",
 opened:"Відкрито|Unlocked|Débloqués|Freigeschaltet|已解锁|Desbloqueados|Sbloccati|Odblokowane",
 unlock:"Відкрити за 🪙 {n}|Unlock for 🪙 {n}|Débloquer : 🪙 {n}|Freischalten: 🪙 {n}|解锁 🪙 {n}|Desbloquear 🪙 {n}|Sblocca 🪙 {n}|Odblokuj za 🪙 {n}",
 owned:"Відкрито|Unlocked|Débloqué|Freigeschaltet|已解锁|Desbloqueado|Sbloccato|Odblokowane",
@@ -436,14 +449,14 @@ centerD:"Звідси починаються всі шляхи|Every path starts
 maxed:"Максимум|Maxed|Max|Maximal|已满级|Máximo|Massimo|Maks.",
 now:"Зараз|Now|Actuel|Aktuell|当前|Ahora|Ora|Teraz",
 revived:"Друге дихання|Second wind|Second souffle|Zweiter Atem|重获新生|Segundo aliento|Secondo respiro|Drugi oddech",
-critDmg:"Шкода криту|Crit damage|Dégâts critiques|Kritischer Schaden|暴击伤害|Daño crítico|Danno critico|Obrażenia krytyczne",
+critDmg:"Критична шкода|Crit damage|Dégâts critiques|Kritischer Schaden|暴击伤害|Daño crítico|Danno critico|Obrażenia krytyczne",
 dmgRed:"Захист|Defense|Défense|Verteidigung|减伤|Defensa|Difesa|Obrona",
 wave:"Битва {n}|Battle {n}|Combat {n}|Kampf {n}|第 {n} 战|Batalla {n}|Battaglia {n}|Bitwa {n}",
 bossWave:"Бос наближається|A boss approaches|Un boss approche|Ein Boss naht|首领来袭|Se acerca un jefe|Arriva un boss|Nadchodzi boss",
-cleared:"Битву виграно|Battle won|Combat gagné|Kampf gewonnen|战斗胜利|Batalla ganada|Battaglia vinta|Bitwa wygrana",
-goRight:"Йди праворуч, щоб рушити далі|Walk right to move on|Va à droite pour continuer|Geh nach rechts, um weiterzuziehen|向右走继续前进|Camina a la derecha para seguir|Vai a destra per proseguire|Idź w prawo, aby ruszyć dalej",
+cleared:"Перемога!|Battle won|Combat gagné|Kampf gewonnen|战斗胜利|Batalla ganada|Battaglia vinta|Bitwa wygrana",
+goRight:"Іди вперед, щоб рушити далі|Keep going to move on|Va à droite pour continuer|Geh nach rechts, um weiterzuziehen|向右走继续前进|Camina a la derecha para seguir|Vai a destra per proseguire|Idź w prawo, aby ruszyć dalej",
 levelUp:"Рівень {n}|Level {n}|Niveau {n}|Stufe {n}|等级 {n}|Nivel {n}|Livello {n}|Poziom {n}",
-lvlSub:"Здоров'я відновлено, атака і витривалість зросли|Health restored, attack and stamina increased|Santé restaurée, attaque et endurance augmentées|Leben aufgefüllt, Angriff und Ausdauer erhöht|生命已恢复，攻击和耐力提升|Salud restaurada, ataque y aguante aumentados|Salute ripristinata, attacco e resistenza aumentati|Zdrowie przywrócone, atak i wytrzymałość wzrosły",
+lvlSub:"Здоров'я відновлено, атака й витривалість зросли|Health restored, attack and stamina increased|Santé restaurée, attaque et endurance augmentées|Leben aufgefüllt, Angriff und Ausdauer erhöht|生命已恢复，攻击和耐力提升|Salud restaurada, ataque y aguante aumentados|Salute ripristinata, attacco e resistenza aumentati|Zdrowie przywrócone, atak i wytrzymałość wzrosły",
 bossDown:"Боса переможено|Boss defeated|Boss vaincu|Boss besiegt|首领已击败|Jefe derrotado|Boss sconfitto|Boss pokonany",
 bought:"Покращено|Upgraded|Amélioré|Verbessert|已升级|Mejorado|Potenziato|Ulepszono",
 need:"Не вистачає золота|Not enough gold|Pas assez d'or|Nicht genug Gold|金币不足|No tienes suficiente oro|Oro insufficiente|Za mało złota",
@@ -453,8 +466,8 @@ off:"Увімкнути|Turn on|Activer|Einschalten|开启|Encender|Attiva|Włą
 go:"Далі|Go|Suite|Weiter|前进|Sigue|Avanti|Dalej",
 saved:"Збережено|Saved|Enregistré|Gespeichert|已保存|Guardado|Salvato|Zapisano",
 inv:"Інвентар|Inventory|Inventaire|Inventar|背包|Inventario|Inventario|Ekwipunek",
-invHint:"Тут речі, які впали з ворогів. Натисни на річ, щоб побачити її бонуси й вдягнути.|Items dropped by enemies. Tap an item to see its bonuses and equip it.|Objets lâchés par les ennemis. Touche un objet pour voir ses bonus et l'équiper.|Gegenstände von Gegnern. Tippe darauf, um Boni zu sehen und sie anzulegen.|敌人掉落的物品。点击物品查看属性并装备。|Objetos que sueltan los enemigos. Toca uno para ver sus bonos y equiparlo.|Oggetti lasciati dai nemici. Tocca un oggetto per vederne i bonus ed equipaggiarlo.|Przedmioty od wrogów. Dotknij przedmiotu, aby zobaczyć premie i go założyć.",
-equipTitle:"Екіпіровка|Equipment|Équipement|Ausrüstung|装备|Equipo|Equipaggiamento|Wyposażenie",
+invHint:"Тут речі, що випали з ворогів. Натисни на річ, щоб побачити її бонуси й вдягнути.|Items dropped by enemies. Tap an item to see its bonuses and equip it.|Objets lâchés par les ennemis. Touche un objet pour voir ses bonus et l'équiper.|Gegenstände von Gegnern. Tippe darauf, um Boni zu sehen und sie anzulegen.|敌人掉落的物品。点击物品查看属性并装备。|Objetos que sueltan los enemigos. Toca uno para ver sus bonos y equiparlo.|Oggetti lasciati dai nemici. Tocca un oggetto per vederne i bonus ed equipaggiarlo.|Przedmioty od wrogów. Dotknij przedmiotu, aby zobaczyć premie i go założyć.",
+equipTitle:"Спорядження|Equipment|Équipement|Ausrüstung|装备|Equipo|Equipaggiamento|Wyposażenie",
 bag:"Сумка|Bag|Sac|Tasche|物品栏|Bolsa|Borsa|Torba",
 equip:"Вдягнути|Equip|Équiper|Anlegen|装备|Equipar|Equipaggia|Załóż",
 unequip:"Зняти|Unequip|Retirer|Ablegen|卸下|Quitar|Rimuovi|Zdejmij",
@@ -463,20 +476,20 @@ sellCommon:"Продати всі звичайні|Sell all common|Vendre tous l
 sold:"Продано: 🪙 {n}|Sold: 🪙 {n}|Vendu : 🪙 {n}|Verkauft: 🪙 {n}|已出售：🪙 {n}|Vendido: 🪙 {n}|Venduto: 🪙 {n}|Sprzedano: 🪙 {n}",
 equipped:"Вдягнуто|Equipped|Équipé|Angelegt|已装备|Equipado|Equipaggiato|Założone",
 emptySlot:"Порожньо|Empty|Vide|Leer|空|Vacío|Vuoto|Puste",
-noItems:"Сумка порожня. Бий ворогів, і з них випадатимуть речі.|Your bag is empty. Defeat enemies to find items.|Ton sac est vide. Bats des ennemis pour trouver des objets.|Deine Tasche ist leer. Besiege Gegner, um Gegenstände zu finden.|背包是空的。击败敌人获得物品。|Tu bolsa está vacía. Derrota enemigos para encontrar objetos.|La borsa è vuota. Sconfiggi i nemici per trovare oggetti.|Torba jest pusta. Pokonuj wrogów, aby znaleźć przedmioty.",
+noItems:"Сумка порожня. Перемагай ворогів — з них випадатимуть речі.|Your bag is empty. Defeat enemies to find items.|Ton sac est vide. Bats des ennemis pour trouver des objets.|Deine Tasche ist leer. Besiege Gegner, um Gegenstände zu finden.|背包是空的。击败敌人获得物品。|Tu bolsa está vacía. Derrota enemigos para encontrar objetos.|La borsa è vuota. Sconfiggi i nemici per trovare oggetti.|Torba jest pusta. Pokonuj wrogów, aby znaleźć przedmioty.",
 pickItem:"Натисни на річ, щоб побачити її бонуси|Tap an item to see its bonuses|Touche un objet pour voir ses bonus|Tippe auf einen Gegenstand, um seine Boni zu sehen|点击物品查看属性|Toca un objeto para ver sus bonos|Tocca un oggetto per vederne i bonus|Dotknij przedmiotu, aby zobaczyć premie",
 ilvl:"Рівень речі {n}|Item level {n}|Niveau d'objet {n}|Gegenstandsstufe {n}|物品等级 {n}|Nivel de objeto {n}|Livello oggetto {n}|Poziom przedmiotu {n}",
 vsEq:"Порівняно з вдягнутим|Compared to equipped|Comparé à l'équipé|Im Vergleich zum angelegten|与已装备相比|Comparado con lo equipado|Rispetto all'equipaggiato|W porównaniu z założonym",
-eqBonus:"Бонуси від екіпіровки|Bonuses from equipment|Bonus de l'équipement|Boni durch Ausrüstung|装备加成|Bonos del equipo|Bonus dall'equipaggiamento|Premie z wyposażenia",
+eqBonus:"Бонуси спорядження|Bonuses from equipment|Bonus de l'équipement|Boni durch Ausrüstung|装备加成|Bonos del equipo|Bonus dall'equipaggiamento|Premie z wyposażenia",
 found:"Знайдено: {n}|Found: {n}|Trouvé : {n}|Gefunden: {n}|获得：{n}|Encontrado: {n}|Trovato: {n}|Znaleziono: {n}",
-bagFull:"Сумка повна, річ продано за 🪙 {n}|Bag full, item sold for 🪙 {n}|Sac plein, objet vendu 🪙 {n}|Tasche voll, verkauft für 🪙 {n}|背包已满，物品已出售 🪙 {n}|Bolsa llena, vendido por 🪙 {n}|Borsa piena, venduto a 🪙 {n}|Torba pełna, sprzedano za 🪙 {n}",
-drops:"Шанси дропу|Drop chances|Chances de butin|Dropchancen|掉落概率|Probabilidad de botín|Probabilità di bottino|Szanse na łup",
+bagFull:"Сумка повна — річ продано за 🪙 {n}|Bag full, item sold for 🪙 {n}|Sac plein, objet vendu 🪙 {n}|Tasche voll, verkauft für 🪙 {n}|背包已满，物品已出售 🪙 {n}|Bolsa llena, vendido por 🪙 {n}|Borsa piena, venduto a 🪙 {n}|Torba pełna, sprzedano za 🪙 {n}",
+drops:"Шанси здобичі|Drop chances|Chances de butin|Dropchancen|掉落概率|Probabilidad de botín|Probabilità di bottino|Szanse na łup",
 tabChance:"Шанси|Chances|Chances|Chancen|概率|Probabilidades|Probabilità|Szanse",
 tabLuck:"Удача|Luck|Chance|Glück|幸运|Suerte|Fortuna|Szczęście",
 dropsHint:"Коли ворог гине, з нього може випасти річ. Нижче шанс кожної рідкості.|When an enemy dies it may drop an item. Below is the chance of each rarity.|Quand un ennemi meurt, il peut lâcher un objet. Voici la chance de chaque rareté.|Besiegte Gegner können einen Gegenstand fallen lassen. Unten die Chance jeder Seltenheit.|敌人死亡时可能掉落物品。下面是各稀有度的概率。|Al morir, un enemigo puede soltar un objeto. Abajo está la probabilidad de cada rareza.|Quando un nemico muore può lasciare un oggetto. Sotto la probabilità di ogni rarità.|Pokonany wróg może upuścić przedmiot. Poniżej szansa na każdą rzadkość.",
-dropChance:"Шанс, що звичайний ворог скине річ|Chance a regular enemy drops an item|Chance qu'un ennemi normal lâche un objet|Chance, dass ein normaler Gegner etwas fallen lässt|普通敌人掉落物品的概率|Probabilidad de que un enemigo normal suelte un objeto|Probabilità che un nemico normale lasci un oggetto|Szansa, że zwykły wróg upuści przedmiot",
-bossAlways:"Бос завжди скидає річ, щонайменше рідкісну|A boss always drops an item, rare or better|Un boss lâche toujours un objet, rare ou mieux|Ein Boss lässt immer etwas fallen, mindestens selten|首领必定掉落稀有或更好的物品|Un jefe siempre suelta un objeto, raro o mejor|Un boss lascia sempre un oggetto, raro o migliore|Boss zawsze upuszcza przedmiot, co najmniej rzadki",
-luckHint:"Вкладай золото в удачу, щоб речі падали частіше й були рідкіснішими. Кожне покращення потребує часу, і за раз можна проводити лише одне.|Spend gold on luck so items drop more often and rarer. Each upgrade takes time and only one can run at once.|Investis de l'or dans la chance pour des objets plus fréquents et plus rares. Chaque amélioration prend du temps, une seule à la fois.|Investiere Gold in Glück für häufigere und seltenere Beute. Jede Verbesserung dauert und es läuft immer nur eine.|花费金币提升幸运，物品掉落更频繁、更稀有。每次升级需要时间，且一次只能进行一项。|Invierte oro en suerte para que caigan objetos más a menudo y más raros. Cada mejora tarda y solo puede haber una a la vez.|Investi oro nella fortuna per oggetti più frequenti e più rari. Ogni potenziamento richiede tempo e se ne può fare uno alla volta.|Inwestuj złoto w szczęście, aby przedmioty wypadały częściej i były rzadsze. Każde ulepszenie trwa i naraz może trwać tylko jedno.",
+dropChance:"Шанс, що звичайний ворог залишить річ|Chance a regular enemy drops an item|Chance qu'un ennemi normal lâche un objet|Chance, dass ein normaler Gegner etwas fallen lässt|普通敌人掉落物品的概率|Probabilidad de que un enemigo normal suelte un objeto|Probabilità che un nemico normale lasci un oggetto|Szansa, że zwykły wróg upuści przedmiot",
+bossAlways:"Бос завжди залишає річ, щонайменше рідкісну|A boss always drops an item, rare or better|Un boss lâche toujours un objet, rare ou mieux|Ein Boss lässt immer etwas fallen, mindestens selten|首领必定掉落稀有或更好的物品|Un jefe siempre suelta un objeto, raro o mejor|Un boss lascia sempre un oggetto, raro o migliore|Boss zawsze upuszcza przedmiot, co najmniej rzadki",
+luckHint:"Вкладай золото в удачу, і речі падатимуть частіше та будуть рідкіснішими. Кожне покращення триває певний час, і одночасно може йти лише одне.|Spend gold on luck so items drop more often and rarer. Each upgrade takes time and only one can run at once.|Investis de l'or dans la chance pour des objets plus fréquents et plus rares. Chaque amélioration prend du temps, une seule à la fois.|Investiere Gold in Glück für häufigere und seltenere Beute. Jede Verbesserung dauert und es läuft immer nur eine.|花费金币提升幸运，物品掉落更频繁、更稀有。每次升级需要时间，且一次只能进行一项。|Invierte oro en suerte para que caigan objetos más a menudo y más raros. Cada mejora tarda y solo puede haber una a la vez.|Investi oro nella fortuna per oggetti più frequenti e più rari. Ogni potenziamento richiede tempo e se ne può fare uno alla volta.|Inwestuj złoto w szczęście, aby przedmioty wypadały częściej i były rzadsze. Każde ulepszenie trwa i naraz może trwać tylko jedno.",
 luckLvl:"Рівень удачі {n} / {m}|Luck level {n} / {m}|Niveau de chance {n} / {m}|Glücksstufe {n} / {m}|幸运等级 {n} / {m}|Nivel de suerte {n} / {m}|Livello fortuna {n} / {m}|Poziom szczęścia {n} / {m}",
 luckGo:"Покращити за 🪙 {n}|Upgrade for 🪙 {n}|Améliorer : 🪙 {n}|Verbessern: 🪙 {n}|升级 🪙 {n}|Mejorar por 🪙 {n}|Potenzia a 🪙 {n}|Ulepsz za 🪙 {n}",
 luckTime:"Час покращення: {t}|Upgrade time: {t}|Durée : {t}|Dauer: {t}|升级时间：{t}|Tiempo de mejora: {t}|Durata: {t}|Czas ulepszenia: {t}",
@@ -495,7 +508,7 @@ aBlaze:"Палаючий клинок|Blazing Blade|Lame ardente|Flammenklinge|�
 aShield:"Щит духу|Spirit Shield|Bouclier spirituel|Geisterschild|灵魂护盾|Escudo espiritual|Scudo dello spirito|Tarcza ducha"
 };
 const T8={};for(const k in T8src)T8[k]=S8(T8src[k]);
-const TIERS={common:S8("Звичайний|Common|Commun|Gewöhnlich|普通|Común|Comune|Zwykły"),uncommon:S8("Незвичний|Uncommon|Peu commun|Ungewöhnlich|罕见|Poco común|Non comune|Niezwykły"),rare:S8("Рідкісний|Rare|Rare|Selten|稀有|Raro|Raro|Rzadki"),elite:S8("Елітний|Elite|Élite|Elite|精英|Élite|Élite|Elitarny"),epic:S8("Епічний|Epic|Épique|Episch|史诗|Épico|Epico|Epicki")};
+const TIERS={common:S8("Звичайний|Common|Commun|Gewöhnlich|普通|Común|Comune|Zwykły"),uncommon:S8("Незвичайний|Uncommon|Peu commun|Ungewöhnlich|罕见|Poco común|Non comune|Niezwykły"),rare:S8("Рідкісний|Rare|Rare|Selten|稀有|Raro|Raro|Rzadki"),elite:S8("Елітний|Elite|Élite|Elite|精英|Élite|Élite|Elitarny"),epic:S8("Епічний|Epic|Épique|Episch|史诗|Épico|Epico|Epicki")};
 const BIOME_N=[S8("Багряний ліс|Crimson Wood|Bois écarlate|Karmesinwald|猩红森林|Bosque carmesí|Bosco cremisi|Szkarłatny las"),S8("Мертві болота|Dead Marsh|Marais mort|Totes Moor|死亡沼泽|Pantano muerto|Palude morta|Martwe bagna"),S8("Попелясті пустища|Ashen Wastes|Terres de cendre|Aschenöde|灰烬荒原|Páramo de ceniza|Lande di cenere|Popielne pustkowia")];
 let lang=LS.get("r2_lang","uk");if(!LANGS.some(l=>l[0]===lang))lang="uk";
 let LX=LANGS.findIndex(l=>l[0]===lang);
@@ -534,11 +547,11 @@ const ETYPES=[
  look:{skin:"#6f8f7a",cloth:"#4e3b28",cloth2:"#3a2c1d",boot:"#2a2016",head:"troll",weapon:"club",tw:18,limbW:9,wOff:1.0}},
 {k:"golem",n:S8("Кам'яний голем|Stone Golem|Golem de pierre|Steingolem|石魔像|Gólem de piedra|Golem di pietra|Kamienny golem"),hp:190,atk:17,tier:"elite",spd:30,range:40,wind:.9,act:.2,rec:.8,style:"slam",body:"human",size:1.38,rad:15,hgt:66,heavy:true,
  look:{skin:"#7b7a82",cloth:"#62616a",cloth2:"#4d4c55",boot:"#44434b",head:"golem",weapon:"fists",tw:19,limbW:9,armL:11,legL:11,eye:"#5ec8ff"}},
-{k:"spiderq",n:S8("Павуча матріарх|Spider Matriarch|Matriarche araignée|Spinnenmatriarchin|蜘蛛女王|Matriarca araña|Matriarca ragno|Pajęcza matriarchini"),hp:205,atk:21,tier:"elite",spd:95,range:76,wind:.52,act:.3,rec:.6,style:"lunge",body:"spider",size:1.3,rad:20,hgt:34,web:true,
+{k:"spiderq",n:S8("Королева павуків|Spider Matriarch|Matriarche araignée|Spinnenmatriarchin|蜘蛛女王|Matriarca araña|Matriarca ragno|Pajęcza matriarchini"),hp:205,atk:21,tier:"elite",spd:95,range:76,wind:.52,act:.3,rec:.6,style:"lunge",body:"spider",size:1.3,rad:20,hgt:34,web:true,
  look:{body:"#241820",body2:"#4a1f30",mark:"#ffb03a",eye:"#ff2a3a"}},
 {k:"mino",n:S8("Мінотавр|Minotaur|Minotaure|Minotaurus|牛头人|Minotauro|Minotauro|Minotaur"),hp:240,atk:26,tier:"epic",spd:62,range:130,wind:.75,act:.6,rec:.9,style:"charge",body:"human",size:1.3,rad:14,hgt:68,heavy:true,
  look:{skin:"#6b4a33",cloth:"#3d2a1c",cloth2:"#5a3d28",boot:"#2a1c12",head:"bull",weapon:"axe2",tw:17,limbW:8.5,wOff:1.0}},
-{k:"dragon",n:S8("Малий дракон|Lesser Drake|Petit dragon|Kleiner Drache|幼龙|Dragón menor|Drago minore|Mały smok"),hp:230,atk:27,tier:"epic",spd:55,range:165,wind:.75,act:.4,rec:1.1,style:"breath",body:"dragon",size:1.05,rad:18,hgt:40,fly:true,flyH:44,
+{k:"dragon",n:S8("Молодий дракон|Lesser Drake|Petit dragon|Kleiner Drache|幼龙|Dragón menor|Drago minore|Mały smok"),hp:230,atk:27,tier:"epic",spd:55,range:165,wind:.75,act:.4,rec:1.1,style:"breath",body:"dragon",size:1.05,rad:18,hgt:40,fly:true,flyH:44,
  look:{scale:"#2f7a45",belly:"#c9b36a",wing:"#4a2f5c",eye:"#ffd34e"}},
 {k:"knight",n:S8("Пекельний лицар|Hell Knight|Chevalier infernal|Höllenritter|地狱骑士|Caballero infernal|Cavaliere infernale|Piekielny rycerz"),hp:280,atk:31,tier:"epic",spd:56,range:38,wind:.48,act:.14,rec:.55,style:"combo",body:"human",size:1.15,rad:12,hgt:64,heavy:true,
  look:{skin:"#3a1a1e",cloth:"#4a1c22",cloth2:"#2e1014",boot:"#1a080a",armor:"#5a2c31",arm2:"#5a2c31",head:"hknight",weapon:"hsword",cape:"#1a0508",wOff:.8}}
@@ -546,43 +559,43 @@ const ETYPES=[
 const EIDX={};ETYPES.forEach((C,i)=>EIDX[C.k]=i);
 const STNsrc={
 atk:["Гострий клинок|Keen Edge|Lame affûtée|Scharfe Klinge|锋利之刃|Filo agudo|Lama affilata|Ostre ostrze","+{v} до атаки|+{v} attack|+{v} d'attaque|+{v} Angriff|攻击 +{v}|+{v} de ataque|+{v} attacco|+{v} ataku"],
-critDmg:["Нищівний удар|Crushing Blow|Coup écrasant|Vernichtender Schlag|毁灭打击|Golpe demoledor|Colpo devastante|Miażdżący cios","+{v}% шкоди криту|+{v}% crit damage|+{v}% dégâts critiques|+{v}% kritischer Schaden|暴击伤害 +{v}%|+{v}% daño crítico|+{v}% danno critico|+{v}% obrażeń krytycznych"],
+critDmg:["Нищівний удар|Crushing Blow|Coup écrasant|Vernichtender Schlag|毁灭打击|Golpe demoledor|Colpo devastante|Miażdżący cios","+{v}% до критичної шкоди|+{v}% crit damage|+{v}% dégâts critiques|+{v}% kritischer Schaden|暴击伤害 +{v}%|+{v}% daño crítico|+{v}% danno critico|+{v}% obrażeń krytycznych"],
 atkSpd:["Швидкі руки|Quick Hands|Mains rapides|Flinke Hände|疾手|Manos rápidas|Mani rapide|Szybkie ręce","+{v}% швидкості ударів|+{v}% attack speed|+{v}% vitesse d'attaque|+{v}% Angriffstempo|攻击速度 +{v}%|+{v}% velocidad de ataque|+{v}% velocità d'attacco|+{v}% szybkości ataku"],
-crit:["Око мисливця|Hunter's Eye|Œil du chasseur|Jägerauge|猎人之眼|Ojo del cazador|Occhio del cacciatore|Oko łowcy","+{v}% шансу криту|+{v}% crit chance|+{v}% chance critique|+{v}% Krit-Chance|暴击率 +{v}%|+{v}% prob. de crítico|+{v}% prob. critico|+{v}% szansy na kryt."],
+crit:["Око мисливця|Hunter's Eye|Œil du chasseur|Jägerauge|猎人之眼|Ojo del cazador|Occhio del cacciatore|Oko łowcy","+{v}% до шансу критичного удару|+{v}% crit chance|+{v}% chance critique|+{v}% Krit-Chance|暴击率 +{v}%|+{v}% prob. de crítico|+{v}% prob. critico|+{v}% szansy na kryt."],
 dmgMul:["Лють|Fury|Fureur|Raserei|狂怒|Furia|Furia|Furia","+{v}% до всієї шкоди|+{v}% all damage|+{v}% tous dégâts|+{v}% gesamter Schaden|全部伤害 +{v}%|+{v}% todo el daño|+{v}% tutti i danni|+{v}% wszystkich obrażeń"],
-maxhp:["Загартування|Toughness|Robustesse|Zähigkeit|坚韧|Dureza|Tempra|Hart ducha","+{v} макс. здоров'я|+{v} max health|+{v} santé max|+{v} max. Leben|最大生命 +{v}|+{v} salud máx.|+{v} salute max|+{v} maks. zdrowia"],
-armor:["Латна броня|Plate Armor|Armure de plates|Plattenpanzer|板甲|Armadura de placas|Armatura a piastre|Zbroja płytowa","+{v} броні|+{v} armor|+{v} armure|+{v} Rüstung|护甲 +{v}|+{v} armadura|+{v} armatura|+{v} pancerza"],
-dmgRed:["Кам'яна шкіра|Stoneskin|Peau de pierre|Steinhaut|石肤|Piel de piedra|Pelle di pietra|Kamienna skóra","−{v}% вхідної шкоди|−{v}% damage taken|−{v}% dégâts subis|−{v}% erlittener Schaden|受到伤害 −{v}%|−{v}% daño recibido|−{v}% danni subiti|−{v}% otrzymanych obrażeń"],
-thorns:["Шипи|Thorns|Épines|Dornen|荆棘|Espinas|Spine|Ciernie","Повертає {v}% шкоди нападнику|Reflects {v}% damage to attackers|Renvoie {v}% des dégâts|Wirft {v}% Schaden zurück|反弹 {v}% 伤害|Devuelve {v}% del daño|Rifletti {v}% dei danni|Odbija {v}% obrażeń"],
-dodgeCd:["Спритність|Agility|Agilité|Gewandtheit|敏捷|Agilidad|Agilità|Zwinność","Перекат −{v}% перезарядки|Roll −{v}% cooldown|Roulade −{v}% de recharge|Rolle −{v}% Abklingzeit|翻滚冷却 −{v}%|Voltereta −{v}% de recarga|Capriola −{v}% ricarica|Przewrót −{v}% odnowienia"],
-fireBonus:["Жар|Heat|Chaleur|Glut|炽热|Calor|Calore|Żar","Вогонь +{v}% шкоди|Fire +{v}% damage|Feu +{v}% de dégâts|Feuer +{v}% Schaden|火焰伤害 +{v}%|Fuego +{v}% de daño|Fuoco +{v}% danni|Ogień +{v}% obrażeń"],
+maxhp:["Загартування|Toughness|Robustesse|Zähigkeit|坚韧|Dureza|Tempra|Hart ducha","+{v} до здоров'я|+{v} max health|+{v} santé max|+{v} max. Leben|最大生命 +{v}|+{v} salud máx.|+{v} salute max|+{v} maks. zdrowia"],
+armor:["Латна броня|Plate Armor|Armure de plates|Plattenpanzer|板甲|Armadura de placas|Armatura a piastre|Zbroja płytowa","+{v} до броні|+{v} armor|+{v} armure|+{v} Rüstung|护甲 +{v}|+{v} armadura|+{v} armatura|+{v} pancerza"],
+dmgRed:["Кам'яна шкіра|Stoneskin|Peau de pierre|Steinhaut|石肤|Piel de piedra|Pelle di pietra|Kamienna skóra","−{v}% отриманої шкоди|−{v}% damage taken|−{v}% dégâts subis|−{v}% erlittener Schaden|受到伤害 −{v}%|−{v}% daño recibido|−{v}% danni subiti|−{v}% otrzymanych obrażeń"],
+thorns:["Шипи|Thorns|Épines|Dornen|荆棘|Espinas|Spine|Ciernie","Повертає нападнику {v}% шкоди|Reflects {v}% damage to attackers|Renvoie {v}% des dégâts|Wirft {v}% Schaden zurück|反弹 {v}% 伤害|Devuelve {v}% del daño|Rifletti {v}% dei danni|Odbija {v}% obrażeń"],
+dodgeCd:["Спритність|Agility|Agilité|Gewandtheit|敏捷|Agilidad|Agilità|Zwinność","Перекат відновлюється на {v}% швидше|Roll −{v}% cooldown|Roulade −{v}% de recharge|Rolle −{v}% Abklingzeit|翻滚冷却 −{v}%|Voltereta −{v}% de recarga|Capriola −{v}% ricarica|Przewrót −{v}% odnowienia"],
+fireBonus:["Жар|Heat|Chaleur|Glut|炽热|Calor|Calore|Żar","Вогняна куля: +{v}% шкоди|Fire +{v}% damage|Feu +{v}% de dégâts|Feuer +{v}% Schaden|火焰伤害 +{v}%|Fuego +{v}% de daño|Fuoco +{v}% danni|Ogień +{v}% obrażeń"],
 fireRad:["Широке полум'я|Wide Flames|Flammes larges|Weite Flammen|烈焰扩散|Llamas amplias|Fiamme ampie|Szerokie płomienie","Вибух вогню ширший на {v}%|Fire blast {v}% wider|Explosion {v}% plus large|Feuerexplosion {v}% größer|火焰爆炸范围 +{v}%|Explosión {v}% más amplia|Esplosione più ampia del {v}%|Wybuch ognia szerszy o {v}%"],
-fireCd:["Іскріння|Kindling|Étincelle|Zunder|引燃|Chispa|Scintilla|Iskra","Вогонь −{v}% перезарядки|Fire −{v}% cooldown|Feu −{v}% de recharge|Feuer −{v}% Abklingzeit|火球冷却 −{v}%|Fuego −{v}% de recarga|Fuoco −{v}% ricarica|Ogień −{v}% odnowienia"],
+fireCd:["Розпал|Kindling|Étincelle|Zunder|引燃|Chispa|Scintilla|Iskra","Вогняна куля відновлюється на {v}% швидше|Fire −{v}% cooldown|Feu −{v}% de recharge|Feuer −{v}% Abklingzeit|火球冷却 −{v}%|Fuego −{v}% de recarga|Fuoco −{v}% ricarica|Ogień −{v}% odnowienia"],
 burn:["Пекельне полум'я|Hellfire|Feu infernal|Höllenfeuer|地狱火|Fuego infernal|Fuoco infernale|Piekielny ogień","Вогонь підпалює ворогів на 3 с|Fire sets enemies ablaze for 3 s|Le feu embrase les ennemis 3 s|Feuer setzt Gegner 3 s in Brand|火焰点燃敌人 3 秒|El fuego quema a los enemigos 3 s|Il fuoco incendia i nemici per 3 s|Ogień podpala wrogów na 3 s"],
-burnDmg:["Жарке тління|Smolder|Braises|Schwelbrand|余烬|Brasas|Brace|Tlenie","Підпал +{v}% шкоди|Burning +{v}% damage|Brûlure +{v}% de dégâts|Brand +{v}% Schaden|燃烧伤害 +{v}%|Quemadura +{v}% de daño|Bruciatura +{v}% danni|Podpalenie +{v}% obrażeń"],
-fireMulti:["Потрійний вогонь|Triple Fire|Triple feu|Dreifachfeuer|三重火球|Fuego triple|Fuoco triplo|Potrójny ogień","Вогонь випускає 3 кулі|Fire launches 3 fireballs|Le feu lance 3 boules|Feuer schießt 3 Feuerbälle|一次发射 3 枚火球|El fuego lanza 3 bolas|Il fuoco lancia 3 palle|Ogień wystrzeliwuje 3 kule"],
-lightningBonus:["Заряд|Charge|Charge|Ladung|充能|Carga|Carica|Ładunek","Блискавка +{v}% шкоди|Lightning +{v}% damage|Éclair +{v}% de dégâts|Blitz +{v}% Schaden|闪电伤害 +{v}%|Rayo +{v}% de daño|Fulmine +{v}% danni|Błyskawica +{v}% obrażeń"],
-chain:["Ланцюг|Chain|Chaîne|Kette|连锁|Cadena|Catena|Łańcuch","+{v} ціль блискавки|+{v} lightning target|+{v} cible d'éclair|+{v} Blitzziel|闪电目标 +{v}|+{v} objetivo del rayo|+{v} bersaglio del fulmine|+{v} cel błyskawicy"],
-boltCd:["Статика|Static|Statique|Statik|静电|Estática|Statica|Statyka","Блискавка −{v}% перезарядки|Lightning −{v}% cooldown|Éclair −{v}% de recharge|Blitz −{v}% Abklingzeit|闪电冷却 −{v}%|Rayo −{v}% de recarga|Fulmine −{v}% ricarica|Błyskawica −{v}% odnowienia"],
+burnDmg:["Тління|Smolder|Braises|Schwelbrand|余烬|Brasas|Brace|Tlenie","Горіння завдає на {v}% більше шкоди|Burning +{v}% damage|Brûlure +{v}% de dégâts|Brand +{v}% Schaden|燃烧伤害 +{v}%|Quemadura +{v}% de daño|Bruciatura +{v}% danni|Podpalenie +{v}% obrażeń"],
+fireMulti:["Потрійний вогонь|Triple Fire|Triple feu|Dreifachfeuer|三重火球|Fuego triple|Fuoco triplo|Potrójny ogień","Випускає 3 вогняні кулі|Fire launches 3 fireballs|Le feu lance 3 boules|Feuer schießt 3 Feuerbälle|一次发射 3 枚火球|El fuego lanza 3 bolas|Il fuoco lancia 3 palle|Ogień wystrzeliwuje 3 kule"],
+lightningBonus:["Заряд|Charge|Charge|Ladung|充能|Carga|Carica|Ładunek","Блискавка: +{v}% шкоди|Lightning +{v}% damage|Éclair +{v}% de dégâts|Blitz +{v}% Schaden|闪电伤害 +{v}%|Rayo +{v}% de daño|Fulmine +{v}% danni|Błyskawica +{v}% obrażeń"],
+chain:["Ланцюг|Chain|Chaîne|Kette|连锁|Cadena|Catena|Łańcuch","Блискавка перескакує ще на {v} ціль|+{v} lightning target|+{v} cible d'éclair|+{v} Blitzziel|闪电目标 +{v}|+{v} objetivo del rayo|+{v} bersaglio del fulmine|+{v} cel błyskawicy"],
+boltCd:["Статика|Static|Statique|Statik|静电|Estática|Statica|Statyka","Блискавка відновлюється на {v}% швидше|Lightning −{v}% cooldown|Éclair −{v}% de recharge|Blitz −{v}% Abklingzeit|闪电冷却 −{v}%|Rayo −{v}% de recarga|Fulmine −{v}% ricarica|Błyskawica −{v}% odnowienia"],
 boltTwice:["Буря|Tempest|Tempête|Unwetter|风暴|Tempestad|Burrasca|Nawałnica","Блискавка б'є двічі|Lightning strikes twice|L'éclair frappe deux fois|Blitz schlägt zweimal ein|闪电打击两次|El rayo golpea dos veces|Il fulmine colpisce due volte|Błyskawica uderza dwa razy"],
-healBonus:["Живиця|Lifesap|Sève de vie|Lebenssaft|生命汁液|Savia vital|Linfa vitale|Żywica","Лікування +{v}%|Heal +{v}%|Soin +{v}%|Heilung +{v}%|治疗 +{v}%|Curación +{v}%|Cura +{v}%|Leczenie +{v}%"],
+healBonus:["Живиця|Lifesap|Sève de vie|Lebenssaft|生命汁液|Savia vital|Linfa vitale|Żywica","Лікування сильніше на {v}%|Heal +{v}%|Soin +{v}%|Heilung +{v}%|治疗 +{v}%|Curación +{v}%|Cura +{v}%|Leczenie +{v}%"],
 regen:["Відновлення|Recovery|Récupération|Erholung|恢复|Recuperación|Recupero|Regeneracja","+{v} здоров'я за секунду в бою|+{v} health per second in battle|+{v} santé par seconde en combat|+{v} Leben pro Sekunde im Kampf|战斗中每秒回复 {v} 生命|+{v} salud por segundo en combate|+{v} salute al secondo in battaglia|+{v} zdrowia na sekundę w walce"],
 lifesteal:["Вампіризм|Lifesteal|Vol de vie|Lebensraub|吸血|Robo de vida|Furto vitale|Kradzież życia","{v}% шкоди мечем лікує тебе|{v}% of sword damage heals you|{v}% des dégâts d'épée te soignent|{v}% des Schwertschadens heilt dich|剑击伤害的 {v}% 转为生命|El {v}% del daño de espada te cura|Il {v}% dei danni di spada ti cura|{v}% obrażeń mieczem leczy cię"],
-healCd:["Молитва|Prayer|Prière|Gebet|祈祷|Plegaria|Preghiera|Modlitwa","Лікування −{v}% перезарядки|Heal −{v}% cooldown|Soin −{v}% de recharge|Heilung −{v}% Abklingzeit|治疗冷却 −{v}%|Curación −{v}% de recarga|Cura −{v}% ricarica|Leczenie −{v}% odnowienia"],
-revive:["Друге дихання|Second Wind|Second souffle|Zweiter Atem|重获新生|Segundo aliento|Secondo respiro|Drugi oddech","Раз за битву повертає тебе з 40% здоров'я|Once per battle, revive with 40% health|Une fois par combat, ressuscite avec 40% de santé|Einmal pro Kampf mit 40% Leben wiederbeleben|每场战斗一次，以 40% 生命复活|Una vez por batalla, revives con 40% de salud|Una volta per battaglia, rinasci con il 40% di salute|Raz na bitwę wracasz z 40% zdrowia"],
+healCd:["Молитва|Prayer|Prière|Gebet|祈祷|Plegaria|Preghiera|Modlitwa","Лікування відновлюється на {v}% швидше|Heal −{v}% cooldown|Soin −{v}% de recharge|Heilung −{v}% Abklingzeit|治疗冷却 −{v}%|Curación −{v}% de recarga|Cura −{v}% ricarica|Leczenie −{v}% odnowienia"],
+revive:["Друге дихання|Second Wind|Second souffle|Zweiter Atem|重获新生|Segundo aliento|Secondo respiro|Drugi oddech","Раз за битву рятує від смерті й повертає 40% здоров'я|Once per battle, revive with 40% health|Une fois par combat, ressuscite avec 40% de santé|Einmal pro Kampf mit 40% Leben wiederbeleben|每场战斗一次，以 40% 生命复活|Una vez por batalla, revives con 40% de salud|Una volta per battaglia, rinasci con il 40% di salute|Raz na bitwę wracasz z 40% zdrowia"],
 goldBonus:["Скарбошукач|Treasure Hunter|Chasseur de trésors|Schatzjäger|寻宝者|Cazatesoros|Cacciatore di tesori|Łowca skarbów","+{v}% золота|+{v}% gold|+{v}% d'or|+{v}% Gold|金币 +{v}%|+{v}% de oro|+{v}% oro|+{v}% złota"],
 xpBonus:["Мудрість|Wisdom|Sagesse|Weisheit|智慧|Sabiduría|Saggezza|Mądrość","+{v}% досвіду|+{v}% experience|+{v}% d'expérience|+{v}% Erfahrung|经验 +{v}%|+{v}% de experiencia|+{v}% esperienza|+{v}% doświadczenia"],
 speed:["Легкий крок|Light Step|Pas léger|Leichter Schritt|轻盈步伐|Paso ligero|Passo leggero|Lekki krok","+{v}% швидкості руху|+{v}% move speed|+{v}% vitesse de déplacement|+{v}% Laufgeschwindigkeit|移动速度 +{v}%|+{v}% velocidad de movimiento|+{v}% velocità di movimento|+{v}% szybkości ruchu"],
-cdr:["Потік мани|Mana Flow|Flux de mana|Manafluss|法力涌流|Flujo de maná|Flusso di mana|Przepływ many","Усі перезарядки −{v}%|All cooldowns −{v}%|Toutes les recharges −{v}%|Alle Abklingzeiten −{v}%|所有冷却 −{v}%|Todas las recargas −{v}%|Tutte le ricariche −{v}%|Wszystkie odnowienia −{v}%"],
-spinBonus:["Сталевий вихор|Steel Cyclone|Cyclone d'acier|Stahlzyklon|钢铁旋风|Ciclón de acero|Ciclone d'acciaio|Stalowy cyklon","Вихор +{v}% шкоди|Whirlwind +{v}% damage|Tourbillon +{v}% de dégâts|Wirbelwind +{v}% Schaden|旋风斩伤害 +{v}%|Torbellino +{v}% de daño|Turbine +{v}% danni|Wir +{v}% obrażeń"],
-spinCd:["Нестримність|Momentum|Élan|Schwung|势不可挡|Impulso|Slancio|Rozpęd","Вихор −{v}% перезарядки|Whirlwind −{v}% cooldown|Tourbillon −{v}% de recharge|Wirbelwind −{v}% Abklingzeit|旋风斩冷却 −{v}%|Torbellino −{v}% de recarga|Turbine −{v}% ricarica|Wir −{v}% odnowienia"],
-dropBonus:["Нюх на скарби|Treasure Sense|Flair du trésor|Schatzgespür|寻宝嗅觉|Olfato del tesoro|Fiuto per i tesori|Węch do skarbów","+{v}% до шансу дропу|+{v}% drop chance|+{v}% chance de butin|+{v}% Dropchance|掉落率 +{v}%|+{v}% prob. de botín|+{v}% prob. di bottino|+{v}% szansy na łup"],
-rarBonus:["Благословення|Blessing|Bénédiction|Segen|祝福|Bendición|Benedizione|Błogosławieństwo","+{v} до рівня удачі для рідкості|+{v} luck level for rarity|+{v} niveau de chance (rareté)|+{v} Glücksstufe für Seltenheit|稀有度幸运等级 +{v}|+{v} nivel de suerte para rareza|+{v} livello fortuna per rarità|+{v} poziom szczęścia dla rzadkości"]
+cdr:["Потік мани|Mana Flow|Flux de mana|Manafluss|法力涌流|Flujo de maná|Flusso di mana|Przepływ many","Усі вміння відновлюються на {v}% швидше|All cooldowns −{v}%|Toutes les recharges −{v}%|Alle Abklingzeiten −{v}%|所有冷却 −{v}%|Todas las recargas −{v}%|Tutte le ricariche −{v}%|Wszystkie odnowienia −{v}%"],
+spinBonus:["Сталевий вихор|Steel Cyclone|Cyclone d'acier|Stahlzyklon|钢铁旋风|Ciclón de acero|Ciclone d'acciaio|Stalowy cyklon","Вихор: +{v}% шкоди|Whirlwind +{v}% damage|Tourbillon +{v}% de dégâts|Wirbelwind +{v}% Schaden|旋风斩伤害 +{v}%|Torbellino +{v}% de daño|Turbine +{v}% danni|Wir +{v}% obrażeń"],
+spinCd:["Нестримність|Momentum|Élan|Schwung|势不可挡|Impulso|Slancio|Rozpęd","Вихор відновлюється на {v}% швидше|Whirlwind −{v}% cooldown|Tourbillon −{v}% de recharge|Wirbelwind −{v}% Abklingzeit|旋风斩冷却 −{v}%|Torbellino −{v}% de recarga|Turbine −{v}% ricarica|Wir −{v}% odnowienia"],
+dropBonus:["Нюх на скарби|Treasure Sense|Flair du trésor|Schatzgespür|寻宝嗅觉|Olfato del tesoro|Fiuto per i tesori|Węch do skarbów","+{v}% до шансу здобичі|+{v}% drop chance|+{v}% chance de butin|+{v}% Dropchance|掉落率 +{v}%|+{v}% prob. de botín|+{v}% prob. di bottino|+{v}% szansy na łup"],
+rarBonus:["Благословення|Blessing|Bénédiction|Segen|祝福|Bendición|Benedizione|Błogosławieństwo","+{v} до удачі на рідкісні речі|+{v} luck level for rarity|+{v} niveau de chance (rareté)|+{v} Glücksstufe für Seltenheit|稀有度幸运等级 +{v}|+{v} nivel de suerte para rareza|+{v} livello fortuna per rarità|+{v} poziom szczęścia dla rzadkości"]
 };
 const STN={};for(const k in STNsrc)STN[k]=[S8(STNsrc[k][0]),S8(STNsrc[k][1])];
 const statTxt=(k,v)=>L(STN[k][1]).split("{v}").join(v);
 const SECT=[
- {col:"#e14b5a",icon:"⚔",n:S8("Сила|Might|Puissance|Macht|力量|Fuerza|Forza|Siła"),cap1:S8("Майстер клинка|Blademaster|Maître lame|Klingenmeister|剑术大师|Maestro de la espada|Maestro di spada|Mistrz ostrza"),cap2:S8("Бог війни|God of War|Dieu de la guerre|Kriegsgott|战神|Dios de la guerra|Dio della guerra|Bóg wojny"),
+ {col:"#ff5f6f",icon:"⚔",n:S8("Сила|Might|Puissance|Macht|力量|Fuerza|Forza|Siła"),cap1:S8("Майстер клинка|Blademaster|Maître lame|Klingenmeister|剑术大师|Maestro de la espada|Maestro di spada|Mistrz ostrza"),cap2:S8("Бог війни|God of War|Dieu de la guerre|Kriegsgott|战神|Dios de la guerra|Dio della guerra|Bóg wojny"),
   nodes:[[["atk",3]],[["atk",4]],[["critDmg",15]],[["atk",6]],[["atkSpd",6]],[["crit",3]],[["atk",8]],[["critDmg",20]],[["atkSpd",8]],[["atk",10]],[["crit",5]],[["dmgMul",20],["atk",10]],
    [["atk",12]],[["critDmg",25]],[["atkSpd",8]],[["spinBonus",25]],[["atk",14]],[["crit",4]],[["spinCd",15]],[["critDmg",30]],[["atk",16]],[["atkSpd",10]],[["spinBonus",30]],[["dmgMul",10]],[["atk",20]],[["dmgMul",25],["critDmg",40]]]},
  {col:"#9fb3c8",icon:"🛡",n:S8("Сталь|Steel|Acier|Stahl|钢铁|Acero|Acciaio|Stal"),cap1:S8("Незламний|Unbreakable|Inébranlable|Unzerbrechlich|坚不可摧|Inquebrantable|Indistruttibile|Niezłomny"),cap2:S8("Живий бастіон|Living Bastion|Bastion vivant|Lebende Bastion|活体堡垒|Bastión viviente|Bastione vivente|Żywy bastion"),
@@ -619,9 +632,9 @@ function talDesc(n){return n.fx.map(([k,v])=>statTxt(k,v)).join(", ")}
 const TRAIN=[
  {id:"atk",ic:"⚔",n:S8("Сила удару|Strength|Force|Stärke|力量训练|Fuerza|Forza|Siła"),d:S8("+2 до атаки за рівень|+2 attack per level|+2 d'attaque par niveau|+2 Angriff pro Stufe|每级攻击 +2|+2 de ataque por nivel|+2 attacco per livello|+2 ataku na poziom"),per:2,base:40,grow:1.16,max:0},
  {id:"hp",ic:"❤",n:S8("Витривалість|Endurance|Endurance|Ausdauer|耐力|Resistencia|Resistenza|Wytrzymałość"),d:S8("+12 макс. здоров'я за рівень|+12 max health per level|+12 santé max par niveau|+12 max. Leben pro Stufe|每级最大生命 +12|+12 salud máx. por nivel|+12 salute max per livello|+12 maks. zdrowia na poziom"),per:12,base:40,grow:1.16,max:0},
- {id:"arm",ic:"🛡",n:S8("Загартування|Hardening|Endurcissement|Abhärtung|淬炼|Endurecimiento|Tempra|Hartowanie"),d:S8("+1 броні за рівень|+1 armor per level|+1 armure par niveau|+1 Rüstung pro Stufe|每级护甲 +1|+1 armadura por nivel|+1 armatura per livello|+1 pancerza na poziom"),per:1,base:60,grow:1.2,max:40},
+ {id:"arm",ic:"🛡",n:S8("Стійкість|Hardening|Endurcissement|Abhärtung|淬炼|Endurecimiento|Tempra|Hartowanie"),d:S8("+1 броні за рівень|+1 armor per level|+1 armure par niveau|+1 Rüstung pro Stufe|每级护甲 +1|+1 armadura por nivel|+1 armatura per livello|+1 pancerza na poziom"),per:1,base:60,grow:1.2,max:40},
  {id:"crit",ic:"🎯",n:S8("Точність|Precision|Précision|Präzision|精准|Precisión|Precisione|Precyzja"),d:S8("+1% шансу криту за рівень|+1% crit chance per level|+1% chance critique par niveau|+1% Krit-Chance pro Stufe|每级暴击率 +1%|+1% prob. de crítico por nivel|+1% prob. critico per livello|+1% szansy na kryt. na poziom"),per:1,base:70,grow:1.2,max:30},
- {id:"mag",ic:"✨",n:S8("Арканні знання|Arcane Lore|Savoir arcanique|Arkanes Wissen|奥术知识|Saber arcano|Sapere arcano|Wiedza tajemna"),d:S8("+6% вогню і блискавки за рівень|+6% fire and lightning per level|+6% feu et éclair par niveau|+6% Feuer und Blitz pro Stufe|每级火焰与闪电 +6%|+6% fuego y rayo por nivel|+6% fuoco e fulmine per livello|+6% ognia i błyskawicy na poziom"),per:6,base:60,grow:1.18,max:0},
+ {id:"mag",ic:"✨",n:S8("Таємні знання|Arcane Lore|Savoir arcanique|Arkanes Wissen|奥术知识|Saber arcano|Sapere arcano|Wiedza tajemna"),d:S8("+6% вогню і блискавки за рівень|+6% fire and lightning per level|+6% feu et éclair par niveau|+6% Feuer und Blitz pro Stufe|每级火焰与闪电 +6%|+6% fuego y rayo por nivel|+6% fuoco e fulmine per livello|+6% ognia i błyskawicy na poziom"),per:6,base:60,grow:1.18,max:0},
  {id:"heal",ic:"💚",n:S8("Цілительство|Healing Arts|Art de guérir|Heilkunst|治疗之术|Arte curativo|Arte curativa|Sztuka leczenia"),d:S8("+8% лікування за рівень|+8% healing per level|+8% de soin par niveau|+8% Heilung pro Stufe|每级治疗 +8%|+8% curación por nivel|+8% cura per livello|+8% leczenia na poziom"),per:8,base:55,grow:1.18,max:0},
  {id:"gold",ic:"🪙",n:S8("Жадібність|Greed|Avidité|Gier|贪婪|Codicia|Avidità|Chciwość"),d:S8("+4% золота за рівень|+4% gold per level|+4% d'or par niveau|+4% Gold pro Stufe|每级金币 +4%|+4% de oro por nivel|+4% oro per livello|+4% złota na poziom"),per:4,base:80,grow:1.22,max:50},
  {id:"swift",ic:"💨",n:S8("Швидкість|Swiftness|Célérité|Schnelligkeit|迅捷|Rapidez|Rapidità|Szybkość"),d:S8("+3% швидкості руху і ударів|+3% move and attack speed|+3% vitesse de déplacement et d'attaque|+3% Lauf- und Angriffstempo|移动与攻击速度 +3%|+3% velocidad de movimiento y ataque|+3% velocità di movimento e attacco|+3% szybkości ruchu i ataku"),per:3,base:90,grow:1.25,max:15}
@@ -640,9 +653,11 @@ const SLOTS=[
  {k:"weapon",ic:"🗡️",main:["atk"],n:S8("Зброя|Weapon|Arme|Waffe|武器|Arma|Arma|Broń"),names:[[S8("Залізний меч|Iron Sword|Épée de fer|Eisenschwert|铁剑|Espada de hierro|Spada di ferro|Żelazny miecz"),S8("Мідний кинджал|Bronze Dagger|Poignard de bronze|Bronzedolch|青铜匕首|Daga de bronce|Pugnale di bronzo|Brązowy sztylet"),S8("Зазублений тесак|Serrated Cleaver|Hachoir dentelé|Gezackter Hackmesser|锯齿砍刀|Machete dentado|Mannaia dentata|Ząbkowany tasak")],[S8("Руновий клинок|Runic Blade|Lame runique|Runenklinge|符文之刃|Hoja rúnica|Lama runica|Runiczne ostrze"),S8("Клинок тіней|Shadow Blade|Lame des ombres|Schattenklinge|暗影之刃|Hoja de las sombras|Lama delle ombre|Ostrze cieni"),S8("Серп ночі|Night Sickle|Faucille de la nuit|Nachtsichel|夜之镰|Hoz nocturna|Falce notturna|Sierp nocy")],[S8("Клинок зорепаду|Starfall Blade|Lame Chute-d'étoiles|Sternenfall-Klinge|星陨之刃|Hoja Estrella fugaz|Lama Cadistella|Ostrze Spadającej Gwiazdy"),S8("Меч вічної ночі|Sword of Eternal Night|Épée de la nuit éternelle|Schwert der ewigen Nacht|永夜之剑|Espada de la noche eterna|Spada della notte eterna|Miecz wiecznej nocy"),S8("Ятаган безодні|Abyssal Scimitar|Cimeterre abyssal|Abgrundkrummsäbel|深渊弯刀|Cimitarra abisal|Scimitarra abissale|Otchłanny jatagan")]]},
  {k:"helmet",ic:"🪖",main:["maxhp"],n:S8("Шолом|Helmet|Casque|Helm|头盔|Casco|Elmo|Hełm"),names:[[S8("Шкіряний каптур|Leather Hood|Capuche de cuir|Lederkapuze|皮兜帽|Capucha de cuero|Cappuccio di cuoio|Skórzany kaptur"),S8("Тканий капелюх|Woven Cap|Chapeau tissé|Gewebte Mütze|编织帽|Gorro tejido|Berretto intrecciato|Tkana czapka"),S8("Бронзовий обруч|Bronze Circlet|Diadème de bronze|Bronzereif|青铜额环|Diadema de bronce|Cerchietto di bronzo|Brązowa opaska")],[S8("Сталевий шолом|Steel Helm|Heaume d'acier|Stahlhelm|钢盔|Yelmo de acero|Elmo d'acciaio|Stalowy hełm"),S8("Шолом вартового|Sentinel Helm|Heaume de sentinelle|Wächterhelm|哨兵头盔|Yelmo del centinela|Elmo del sentinella|Hełm strażnika"),S8("Маска мисливця|Hunter's Mask|Masque du chasseur|Jägermaske|猎人面具|Máscara del cazador|Maschera del cacciatore|Maska łowcy")],[S8("Корона вічності|Crown of Eternity|Couronne d'éternité|Krone der Ewigkeit|永恒之冠|Corona de la eternidad|Corona dell'eternità|Korona wieczności"),S8("Вінець забуття|Circlet of Oblivion|Diadème de l'oubli|Kranz des Vergessens|遗忘之冠|Diadema del olvido|Diadema dell'oblio|Diadem zapomnienia"),S8("Шолом падшого короля|Fallen King's Helm|Heaume du roi déchu|Helm des gefallenen Königs|堕落之王头盔|Yelmo del rey caído|Elmo del re caduto|Hełm upadłego króla")]]},
  {k:"armor",ic:"🛡️",main:["armor","maxhp"],n:S8("Обладунок|Armor|Armure|Rüstung|护甲|Armadura|Armatura|Zbroja"),names:[[S8("Стьобана куртка|Padded Jacket|Veste matelassée|Gepolsterte Jacke|棉甲|Chaqueta acolchada|Giaco imbottito|Pikowana kurtka"),S8("Проста роба|Simple Robe|Robe simple|Einfache Robe|简朴长袍|Túnica sencilla|Semplice tunica|Prosta szata"),S8("Шкіряний жилет|Leather Vest|Gilet de cuir|Lederweste|皮背心|Chaleco de cuero|Gilet di cuoio|Skórzana kamizelka")],[S8("Латний нагрудник|Plate Cuirass|Cuirasse de plates|Plattenharnisch|板甲胸甲|Coraza de placas|Corazza a piastre|Napierśnik płytowy"),S8("Кольчуга мисливця|Hunter's Mail|Cotte du chasseur|Jägerkettenhemd|猎人锁甲|Cota del cazador|Cotta del cacciatore|Kolczuga łowcy"),S8("Луската броня|Scaled Armor|Armure écaillée|Schuppenrüstung|鳞甲|Armadura escamada|Armatura squamata|Łuskowa zbroja")],[S8("Обладунок дракона|Dragon Armor|Armure du dragon|Drachenrüstung|龙鳞甲|Armadura de dragón|Armatura del drago|Smocza zbroja"),S8("Панцир безсмертного|Immortal Carapace|Carapace de l'immortel|Panzer des Unsterblichen|不朽甲壳|Coraza del inmortal|Corazza dell'immortale|Pancerz nieśmiertelnego"),S8("Лати падшого бога|Fallen God's Plate|Plaques du dieu déchu|Platte des gefallenen Gottes|堕神铠甲|Placas del dios caído|Piastre del dio caduto|Płyty upadłego boga")]]},
- {k:"boots",ic:"👢",main:["speed"],n:S8("Чоботи|Boots|Bottes|Stiefel|靴子|Botas|Stivali|Buty"),names:[[S8("Мандрівні чоботи|Traveler's Boots|Bottes de voyageur|Wanderstiefel|旅行靴|Botas de viajero|Stivali da viandante|Buty wędrowca"),S8("Полотняні сандалі|Linen Sandals|Sandales de lin|Leinensandalen|亚麻凉鞋|Sandalias de lino|Sandali di lino|Lniane sandały"),S8("Старі чоботи|Worn Boots|Bottes usées|Abgetragene Stiefel|旧靴|Botas gastadas|Stivali consumati|Znoszone buty")],[S8("Чоботи мисливця|Hunter's Boots|Bottes du chasseur|Jägerstiefel|猎人之靴|Botas de cazador|Stivali del cacciatore|Buty łowcy"),S8("Чоботи слідопита|Tracker's Boots|Bottes du pisteur|Fährtenstiefel|追踪者之靴|Botas del rastreador|Stivali dell'inseguitore|Buty tropiciela"),S8("Чоботи тихої ходи|Boots of Silent Step|Bottes du pas silencieux|Stiefel des leisen Schritts|静步之靴|Botas del paso silencioso|Stivali del passo silenzioso|Buty cichego kroku")],[S8("Крила вітру|Wings of the Wind|Ailes du vent|Schwingen des Windes|疾风之翼|Alas del viento|Ali del vento|Skrzydła wiatru"),S8("Ступні бурі|Stormstride Boots|Bottes de la tempête|Sturmschritt-Stiefel|风暴之步|Botas de la tormenta|Stivali della tempesta|Buty burzy"),S8("Хода порожнечі|Voidwalker Boots|Bottes du marcheur du vide|Leerenwanderer-Stiefel|虚空行者之靴|Botas del caminante del vacío|Stivali del camminatore del vuoto|Buty wędrowca pustki")]]},
+ {k:"boots",ic:"👢",main:["speed"],n:S8("Чоботи|Boots|Bottes|Stiefel|靴子|Botas|Stivali|Buty"),names:[[S8("Мандрівні чоботи|Traveler's Boots|Bottes de voyageur|Wanderstiefel|旅行靴|Botas de viajero|Stivali da viandante|Buty wędrowca"),S8("Полотняні сандалі|Linen Sandals|Sandales de lin|Leinensandalen|亚麻凉鞋|Sandalias de lino|Sandali di lino|Lniane sandały"),S8("Старі чоботи|Worn Boots|Bottes usées|Abgetragene Stiefel|旧靴|Botas gastadas|Stivali consumati|Znoszone buty")],[S8("Чоботи мисливця|Hunter's Boots|Bottes du chasseur|Jägerstiefel|猎人之靴|Botas de cazador|Stivali del cacciatore|Buty łowcy"),S8("Чоботи слідопита|Tracker's Boots|Bottes du pisteur|Fährtenstiefel|追踪者之靴|Botas del rastreador|Stivali dell'inseguitore|Buty tropiciela"),S8("Чоботи тихої ходи|Boots of Silent Step|Bottes du pas silencieux|Stiefel des leisen Schritts|静步之靴|Botas del paso silencioso|Stivali del passo silenzioso|Buty cichego kroku")],[S8("Крила вітру|Wings of the Wind|Ailes du vent|Schwingen des Windes|疾风之翼|Alas del viento|Ali del vento|Skrzydła wiatru"),S8("Кроки бурі|Stormstride Boots|Bottes de la tempête|Sturmschritt-Stiefel|风暴之步|Botas de la tormenta|Stivali della tempesta|Buty burzy"),S8("Хода порожнечі|Voidwalker Boots|Bottes du marcheur du vide|Leerenwanderer-Stiefel|虚空行者之靴|Botas del caminante del vacío|Stivali del camminatore del vuoto|Buty wędrowca pustki")]]},
  {k:"ring",ic:"💍",main:["crit"],n:S8("Перстень|Ring|Anneau|Ring|戒指|Anillo|Anello|Pierścień"),names:[[S8("Мідний перстень|Copper Ring|Anneau de cuivre|Kupferring|铜戒指|Anillo de cobre|Anello di rame|Miedziany pierścień"),S8("Дерев'яний перстень|Wooden Ring|Anneau de bois|Holzring|木戒指|Anillo de madera|Anello di legno|Drewniany pierścień"),S8("Кістяний перстень|Bone Ring|Anneau d'os|Knochenring|骨戒指|Anillo de hueso|Anello d'osso|Kościany pierścień")],[S8("Срібний перстень|Silver Ring|Anneau d'argent|Silberring|银戒指|Anillo de plata|Anello d'argento|Srebrny pierścień"),S8("Перстень мисливця|Hunter's Ring|Anneau du chasseur|Jägerring|猎人戒指|Anillo del cazador|Anello del cacciatore|Pierścień łowcy"),S8("Перстень рун|Ring of Runes|Anneau runique|Runenring|符文戒指|Anillo rúnico|Anello runico|Pierścień run")],[S8("Перстень долі|Ring of Fate|Anneau du destin|Ring des Schicksals|命运之戒|Anillo del destino|Anello del destino|Pierścień przeznaczenia"),S8("Кільце вічності|Ring of Eternity|Anneau d'éternité|Ring der Ewigkeit|永恒之戒|Anillo de la eternidad|Anello dell'eternità|Pierścień wieczności"),S8("Печатка забутого царя|Seal of the Forgotten King|Sceau du roi oublié|Siegel des vergessenen Königs|遗忘之王的印记|Sello del rey olvidado|Sigillo del re dimenticato|Pieczęć zapomnianego króla")]]},
- {k:"amulet",ic:"📿",main:["fireBonus|lightningBonus|healBonus"],n:S8("Амулет|Amulet|Amulette|Amulett|护符|Amuleto|Amuleto|Amulet"),names:[[S8("Амулет з кістки|Bone Amulet|Amulette d'os|Knochenamulett|骨制护符|Amuleto de hueso|Amuleto d'osso|Kościany amulet"),S8("Дерев'яний талісман|Wooden Talisman|Talisman de bois|Holztalisman|木制护身符|Talismán de madera|Talismano di legno|Drewniany talizman"),S8("Шнурок з іклом|Fang Necklace|Collier de croc|Fangkette|獠牙项链|Collar de colmillo|Collana di zanna|Naszyjnik z kłem")],[S8("Місячний амулет|Moon Amulet|Amulette lunaire|Mondamulett|月之护符|Amuleto lunar|Amuleto lunare|Księżycowy amulet"),S8("Амулет мисливця|Hunter's Amulet|Amulette du chasseur|Jägeramulett|猎人护符|Amuleto del cazador|Amuleto del cacciatore|Amulet łowcy"),S8("Амулет попелу|Amulet of Ash|Amulette de cendre|Aschenamulett|灰烬护符|Amuleto de ceniza|Amuleto di cenere|Amulet popiołu")],[S8("Серце бурі|Heart of the Storm|Cœur de la tempête|Herz des Sturms|风暴之心|Corazón de la tormenta|Cuore della tempesta|Serce burzy"),S8("Сльоза зірки|Tear of the Star|Larme d'étoile|Träne des Sterns|星之泪|Lágrima de estrella|Lacrima di stella|Łza gwiazdy"),S8("Кулон вічної пітьми|Pendant of Eternal Dusk|Pendentif du crépuscule éternel|Anhänger der ewigen Dämmerung|永暮坠饰|Colgante del ocaso eterno|Ciondolo del crepuscolo eterno|Wisior wiecznego zmierzchu")]]}
+ {k:"amulet",ic:"📿",main:["fireBonus|lightningBonus|healBonus"],n:S8("Амулет|Amulet|Amulette|Amulett|护符|Amuleto|Amuleto|Amulet"),names:[[S8("Амулет з кістки|Bone Amulet|Amulette d'os|Knochenamulett|骨制护符|Amuleto de hueso|Amuleto d'osso|Kościany amulet"),S8("Дерев'яний талісман|Wooden Talisman|Talisman de bois|Holztalisman|木制护身符|Talismán de madera|Talismano di legno|Drewniany talizman"),S8("Ікло на шнурку|Fang Necklace|Collier de croc|Fangkette|獠牙项链|Collar de colmillo|Collana di zanna|Naszyjnik z kłem")],[S8("Місячний амулет|Moon Amulet|Amulette lunaire|Mondamulett|月之护符|Amuleto lunar|Amuleto lunare|Księżycowy amulet"),S8("Амулет мисливця|Hunter's Amulet|Amulette du chasseur|Jägeramulett|猎人护符|Amuleto del cazador|Amuleto del cacciatore|Amulet łowcy"),S8("Амулет попелу|Amulet of Ash|Amulette de cendre|Aschenamulett|灰烬护符|Amuleto de ceniza|Amuleto di cenere|Amulet popiołu")],[S8("Серце бурі|Heart of the Storm|Cœur de la tempête|Herz des Sturms|风暴之心|Corazón de la tormenta|Cuore della tempesta|Serce burzy"),S8("Сльоза зірки|Tear of the Star|Larme d'étoile|Träne des Sterns|星之泪|Lágrima de estrella|Lacrima di stella|Łza gwiazdy"),S8("Кулон вічної пітьми|Pendant of Eternal Dusk|Pendentif du crépuscule éternel|Anhänger der ewigen Dämmerung|永暮坠饰|Colgante del ocaso eterno|Ciondolo del crepuscolo eterno|Wisior wiecznego zmierzchu")]]},
+ {k:"necklace",ic:"💎",main:["maxhp","regen|lifesteal"],n:S8("Намисто|Necklace|Collier|Halskette|项链|Collar|Collana|Naszyjnik"),names:[[S8("Намисто з намистин|Bead Necklace|Collier de perles|Perlenkette|串珠项链|Collar de cuentas|Collana di perline|Naszyjnik z koralików"),S8("Мідне намисто|Copper Necklace|Collier de cuivre|Kupferkette|铜项链|Collar de cobre|Collana di rame|Miedziany naszyjnik"),S8("Намисто з мушель|Shell Necklace|Collier de coquillages|Muschelkette|贝壳项链|Collar de conchas|Collana di conchiglie|Naszyjnik z muszli")],[S8("Срібне намисто|Silver Necklace|Collier d'argent|Silberkette|银项链|Collar de plata|Collana d'argento|Srebrny naszyjnik"),S8("Гранатове намисто|Garnet Necklace|Collier de grenats|Granatkette|石榴石项链|Collar de granates|Collana di granati|Naszyjnik z granatów"),S8("Намисто вовчої зграї|Wolfpack Necklace|Collier de la meute|Halskette des Wolfsrudels|狼群项链|Collar de la manada|Collana del branco|Naszyjnik wilczej watahy")],[S8("Намисто зоряного пилу|Stardust Necklace|Collier de poussière d'étoiles|Sternenstaubkette|星尘项链|Collar de polvo estelar|Collana di polvere di stelle|Naszyjnik gwiezdnego pyłu"),S8("Намисто королеви ночі|Necklace of the Night Queen|Collier de la reine de la nuit|Halskette der Nachtkönigin|夜之女王项链|Collar de la reina de la noche|Collana della regina della notte|Naszyjnik królowej nocy"),S8("Намисто серця дракона|Dragonheart Necklace|Collier cœur-de-dragon|Drachenherzkette|龙心项链|Collar corazón de dragón|Collana cuor di drago|Naszyjnik smoczego serca")]]},
+ {k:"gloves",ic:"🧤",main:["atkSpd","atk|critDmg"],n:S8("Рукавиці|Gloves|Gants|Handschuhe|手套|Guantes|Guanti|Rękawice"),names:[[S8("Шкіряні рукавиці|Leather Gloves|Gants de cuir|Lederhandschuhe|皮手套|Guantes de cuero|Guanti di cuoio|Skórzane rękawice"),S8("Робочі рукавиці|Work Gloves|Gants de travail|Arbeitshandschuhe|劳作手套|Guantes de trabajo|Guanti da lavoro|Robocze rękawice"),S8("Плетені рукавиці|Woven Gloves|Gants tressés|Geflochtene Handschuhe|编织手套|Guantes tejidos|Guanti intrecciati|Plecione rękawice")],[S8("Сталеві рукавиці|Steel Gauntlets|Gantelets d'acier|Stahlhandschuhe|钢铁护手|Guanteletes de acero|Guanti d'acciaio|Stalowe rękawice"),S8("Рукавиці мисливця|Hunter's Gloves|Gants du chasseur|Jägerhandschuhe|猎人手套|Guantes del cazador|Guanti del cacciatore|Rękawice łowcy"),S8("Рукавиці лучника|Archer's Gloves|Gants de l'archer|Bogenschützenhandschuhe|弓手手套|Guantes del arquero|Guanti dell'arciere|Rękawice łucznika")],[S8("Рукавиці титана|Titan Gauntlets|Gantelets du titan|Titanenhandschuhe|泰坦护手|Guanteletes del titán|Guanti del titano|Rękawice tytana"),S8("Рукавиці грози|Stormgrip Gauntlets|Gantelets de l'orage|Sturmgriff-Handschuhe|雷霆护手|Guanteletes de la tormenta|Guanti della tempesta|Rękawice burzy"),S8("Рукавиці безодні|Abyssal Gauntlets|Gantelets abyssaux|Abgrundhandschuhe|深渊护手|Guanteletes abisales|Guanti abissali|Rękawice otchłani")]]}
 ];
 const SLOTI={};SLOTS.forEach((s,i)=>SLOTI[s.k]=i);
 // stat: [base, per item level, cap per item (0 = none), decimals]
@@ -668,7 +683,7 @@ function loadState(){
  tal=LS.get(PK("r2_tal"),[]).filter(id=>TALN[id]);
  train=LS.get(PK("r2_train"),{});
  kills=LS.get(PK("r2_kills"),{});
- nickname=LS.get(PK("r2_nick"),"Rostogen");
+ nickname=LS.get(PK("r2_nick"),"");if(nickname==="Rostogen"&&!LS.get("r2_nickmig",false)){nickname="";LS.set("r2_nickmig",true)}
  battleNo=LS.get(PK("r2_battle"),1);
  bag=(LS.get(PK("r2_bag"),[])||[]).filter(validItem);
  eq=LS.get(PK("r2_eq"),{})||{};for(const k in eq)if(!validItem(eq[k])||eq[k].s!==SLOTI[k])delete eq[k];
@@ -693,6 +708,8 @@ function recalc(){
  if(eq.helmet)HL.helm=rc("helmet");
  if(eq.boots)HL.boot=shade(rc("boots"),-.55);
  if(eq.amulet&&eq.amulet.r>=4)HL.cape=shade(rc("amulet"),-.55);
+ if(eq.gloves){HL.glove=shade(rc("gloves"),-.3);HL.arm2=shade(rc("gloves"),-.45)}
+ if(eq.necklace)HL.neck=rc("necklace");
  HERO_LOOK=HL;
  const tl=k=>train[k]||0;
  s.atk+=2*tl("atk");s.maxhp+=12*tl("hp");s.armor+=tl("arm");s.crit+=tl("crit");s.fireBonus+=6*tl("mag");s.lightningBonus+=6*tl("mag");s.healBonus+=8*tl("heal");s.goldBonus+=4*tl("gold");s.speed+=3*tl("swift");s.atkSpd+=3*tl("swift");
@@ -1224,6 +1241,7 @@ function drawHuman(x,y,s,face,p,L,alpha){
  limb(1,hipY,p.lf[0],legL,-p.lf[1],legL,lw,L.cloth2,L.boot,O);
  c.lineCap="round";c.beginPath();c.moveTo(0,hipY);c.lineTo(sx,sy);c.strokeStyle=O;c.lineWidth=tw+3;c.stroke();c.strokeStyle=L.cloth;c.lineWidth=tw;c.stroke();
  if(L.armor){c.beginPath();c.moveTo(lerp(0,sx,.35),lerp(hipY,sy,.35));c.lineTo(sx,sy+1);c.strokeStyle=L.armor;c.lineWidth=tw-3;c.stroke();c.beginPath();c.moveTo(lerp(0,sx,.5)+2,lerp(hipY,sy,.5));c.lineTo(sx+2,sy+2);c.strokeStyle=shade(L.armor,.3);c.lineWidth=2;c.stroke()}
+ if(L.neck){c.fillStyle=L.neck;c.strokeStyle=O;c.lineWidth=1;c.beginPath();c.arc(sx+3,sy+5,2.4,0,7);c.fill();c.stroke()}
  if(L.trim){c.fillStyle=L.trim;c.beginPath();c.arc(lerp(0,sx,.12)+2,lerp(hipY,sy,.12),2,0,7);c.fill()}
  if(L.bones){c.strokeStyle="#6b6252";c.lineWidth=1.2;for(let i=1;i<=4;i++){const k=i/5,rx=lerp(0,sx,k),ry=lerp(hipY,sy,k);c.beginPath();c.moveTo(rx-5,ry);c.quadraticCurveTo(rx,ry-2,rx+5,ry);c.stroke()}}
  if(L.head==="golem"){c.strokeStyle=shade(L.cloth,-.35);c.lineWidth=1.2;c.beginPath();c.moveTo(sx-3,sy+3);c.lineTo(sx+2,sy+8);c.lineTo(sx-1,sy+12);c.stroke()}
@@ -1703,7 +1721,7 @@ function drawOverlay(){
 }
 
 /* ============ 3D RENDERER (Three.js) ============ */
-const ZS=2.2,CHS=1.18,CAM={pitch:.3,fov:30,th:.38,zoom:1,ox:0,fpFov:88,fpPitch:-.07,fpBack:30};
+const ZS=2.2,CHS=1.18,CURVE=.000028,CAM={pitch:.3,fov:30,th:.38,zoom:1,ox:0,fpFov:88,fpPitch:-.07,fpBack:30};
 let T3=null,G3=null;
 const R3={ok:false,failed:false,loading:false,errN:0};
 const gfxMode=()=>S.gfx==="lo"||S.gfx==="2d"||S.gfx==="hi"?S.gfx:(window.matchMedia&&matchMedia("(hover:none)").matches?"lo":"hi");
@@ -1722,6 +1740,15 @@ function applyGfx(){
  if(gfxMode()!=="2d"&&!R3.ok)load3D();
  applyView();
 }
+/* --- round world: the ground bends away with distance (applied to every lit/basic material and sprites) --- */
+function curveWorld3(){
+ const T=T3,K=CURVE.toFixed(8),pv="vec4 mvPosition = vec4( transformed, 1.0 );\n#ifdef USE_BATCHING\n\tmvPosition = batchingMatrix * mvPosition;\n#endif\n#ifdef USE_INSTANCING\n\tmvPosition = instanceMatrix * mvPosition;\n#endif\n#ifndef NO_CURVE\n{vec4 cwP = modelMatrix * mvPosition; vec2 cwD = cwP.xz - cameraPosition.xz; cwP.y -= dot(cwD,cwD)*"+K+"; mvPosition = viewMatrix * cwP;}\n#else\nmvPosition = modelViewMatrix * mvPosition;\n#endif\ngl_Position = projectionMatrix * mvPosition;";
+ for(const k of ["basic","lambert","phong","standard","physical","toon","matcap"]){const L=T.ShaderLib[k];if(L&&L.vertexShader.includes("#include <project_vertex>"))L.vertexShader=L.vertexShader.replace("#include <project_vertex>",pv)}
+ const sp=T.ShaderLib.sprite,a="vec4 mvPosition = modelViewMatrix * vec4( 0.0, 0.0, 0.0, 1.0 );";
+ if(sp.vertexShader.includes(a))sp.vertexShader=sp.vertexShader.replace(a,a+"\n#ifndef NO_CURVE\n{vec4 cwP = modelMatrix * vec4(0.,0.,0.,1.); vec2 cwD = cwP.xz - cameraPosition.xz; mvPosition.xyz += mat3(viewMatrix) * vec3(0., -dot(cwD,cwD)*"+K+", 0.);}\n#endif");
+}
+const curveDrop=(x,z)=>{if(!G3)return 0;const p=G3.cam.position,dx=x-p.x,dz=z-p.z;return(dx*dx+dz*dz)*CURVE};
+
 /* --- helpers --- */
 const hx3=h=>{const n=parseInt(h.slice(1),16);return[(n>>16)/255,(n>>8&255)/255,(n&255)/255]};
 const GC={};const geo=(k,f)=>GC[k]||(GC[k]=f());
@@ -1748,6 +1775,7 @@ function W3(o,x,z,h){o.position.set(x,h||0,z*ZS);return o}
 /* --- init --- */
 function init3D(){
  const T=T3,hi=gfxMode()==="hi";
+ curveWorld3();
  const rr=new T.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
  rr.outputColorSpace=T.SRGBColorSpace;rr.toneMapping=T.ACESFilmicToneMapping;rr.toneMappingExposure=1.25;
  rr.shadowMap.enabled=true;rr.shadowMap.type=T.PCFSoftShadowMap;
@@ -1782,14 +1810,14 @@ function init3D(){
  {const n=700,pa=new Float32Array(n*3);for(let i=0;i<n;i++){const a=hash(i*3.1)*PI*2,y=.03+Math.pow(hash(i*7.7),1.4)*.9,r=Math.sqrt(1-y*y);pa.set([Math.cos(a)*r*8500,y*8500,Math.sin(a)*r*8500],i*3)}
   const sg=new T.BufferGeometry();sg.setAttribute("position",new T.BufferAttribute(pa,3));
   G3.stars=new T.Points(sg,new T.PointsMaterial({color:0xffffff,size:1.6,sizeAttenuation:false,transparent:true,opacity:.75,depthWrite:false,fog:false}));G3.stars.frustumCulled=false;G3.stars.renderOrder=-9;scene.add(G3.stars)}
- G3.moon=sprite(null,0xffffff,700,1,false);G3.moon.material.depthWrite=false;G3.moon.renderOrder=-8;scene.add(G3.moon);
- G3.moonGlow=sprite(tGlow,0xffffff,2600,.35);G3.moonGlow.renderOrder=-8;scene.add(G3.moonGlow);
+ G3.moon=sprite(null,0xffffff,700,1,false);G3.moon.material.depthWrite=false;G3.moon.material.defines={NO_CURVE:""};G3.moon.renderOrder=-8;scene.add(G3.moon);
+ G3.moonGlow=sprite(tGlow,0xffffff,2600,.35);G3.moonGlow.material.defines={NO_CURVE:""};G3.moonGlow.renderOrder=-8;scene.add(G3.moonGlow);
  // ground
  const gG=new T.PlaneGeometry(7000,6000,140,150).rotateX(-PI/2);G3.gsx=null;
  G3.ground=new T.Mesh(gG,new T.MeshStandardMaterial({roughness:1,metalness:0}));G3.ground.receiveShadow=true;scene.add(G3.ground);
- const laneD=DEPTH*ZS+44,lG=new T.PlaneGeometry(7000,laneD).rotateX(-PI/2);
+ const laneD=DEPTH*ZS+44,lG=new T.PlaneGeometry(7000,laneD,280,8).rotateX(-PI/2);
  G3.lane=new T.Mesh(lG,new T.MeshStandardMaterial({roughness:.95,metalness:0,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2}));G3.lane.receiveShadow=true;G3.lane.renderOrder=-1;scene.add(G3.lane);
- G3.mtn=[];for(const L of [{z:-2300,amp:620,par:1.3,step:40},{z:-1350,amp:330,par:4.7,step:30},{z:2700,amp:620,par:7.1,step:40,fp:1},{z:1800,amp:330,par:2.9,step:30,fp:1}]){const m=new T.Mesh(new T.BufferGeometry(),new T.MeshBasicMaterial({color:0,fog:false}));m.userData=L;scene.add(m);G3.mtn.push(m)}
+ G3.mtn=[];for(const L of [{z:-2300,amp:620,par:1.3,step:40},{z:-1350,amp:330,par:4.7,step:30},{z:2700,amp:620,par:7.1,step:40,fp:1},{z:1800,amp:330,par:2.9,step:30,fp:1}]){const m=new T.Mesh(new T.BufferGeometry(),new T.MeshBasicMaterial({color:0,fog:false}));m.material.defines={NO_CURVE:""};m.userData=L;scene.add(m);G3.mtn.push(m)}
  G3.decor=new T.Group();scene.add(G3.decor);G3.chars=new T.Group();scene.add(G3.chars);G3.fx=new T.Group();scene.add(G3.fx);
  initFx3();
  scene.fog=new T.Fog(0x000000,900,4000);
@@ -1899,20 +1927,20 @@ const CHW=380;
 function decMats(){
  if(G3.decMat)return G3.decMat;const T=T3,B=BIOMES[G3.biome],bi=G3.biome;
  const s=(c,o)=>new T.MeshStandardMaterial(Object.assign({color:c,roughness:.9,metalness:0,flatShading:true},o||{}));
- const M={bark:s(shade(B.near,.18)),bark2:s(shade(B.mid,.12)),stone:s(B.stone),stone2:s(shade(B.stone,-.2)),grass:s(shade(B.near,.3)),wood:s("#2a1810"),iron:s("#3a2418",{roughness:.6,metalness:.4}),
+ const M={bark:s(shade(B.near,.18),{flatShading:false}),bark2:s(shade(B.mid,.12),{flatShading:false}),stone:s(B.stone,{flatShading:false}),stone2:s(shade(B.stone,-.2),{flatShading:false}),grass:s(shade(B.near,.3)),wood:s("#2a1810"),iron:s("#3a2418",{roughness:.6,metalness:.4}),
   bone:s("#cfc2b0"),tower:s(shade(B.mid,.2)),win:new T.MeshBasicMaterial({color:B.accent,toneMapped:false}),
-  leaf:s(bi===0?"#7a1424":bi===1?"#2f4a3a":"#1a0c08",{emissive:new T.Color(bi===0?"#3a0610":bi===1?"#0c1a12":"#3a1004"),emissiveIntensity:1}),
+  leaf:s(bi===0?"#7a1424":bi===1?"#2f4a3a":"#1a0c08",{flatShading:false,emissive:new T.Color(bi===0?"#3a0610":bi===1?"#0c1a12":"#3a1004"),emissiveIntensity:1}),
   glow:new T.MeshBasicMaterial({color:bi===0?"#ff5a7a":bi===1?"#8fffd0":"#ff8a3a",toneMapped:false}),
   water:s("#0e1822",{roughness:.08,metalness:.6,flatShading:false,transparent:true,opacity:.85}),
   lava:new T.MeshBasicMaterial({color:"#ff6a1a",toneMapped:false})};
  G3.decMat=M;G3.treeGeo=[];
  for(let k=0;k<6;k++){const L=[],sd=k*13.7+bi*100;
-  const br=(x,y,z,a,yaw,len,w,d)=>{const x2=x+Math.cos(yaw)*Math.sin(a)*len,y2=y+Math.cos(a)*len,z2=z+Math.sin(yaw)*Math.sin(a)*len;L.push(segM(x,y,z,x2,y2,z2,w,w*.62,5));
+  const br=(x,y,z,a,yaw,len,w,d)=>{const x2=x+Math.cos(yaw)*Math.sin(a)*len,y2=y+Math.cos(a)*len,z2=z+Math.sin(yaw)*Math.sin(a)*len;L.push(segM(x,y,z,x2,y2,z2,w,w*.62,9));
    if(d<3)for(let j=0;j<2+(d===0?1:0);j++){const h=hash(sd*1.7+d*13+j*5.3+x*.01);br(x2,y2,z2,a*.5+(.35+h*.6),yaw+(j-.5)*2.2+h*1.4,len*(.55+h*.22),w*.62,d+1)}
-   else if(bi===0&&hash(sd+x+y)>.35){const g=new T.IcosahedronGeometry(6+hash(sd+y)*6,0);L.push({g,m:new T.Matrix4().makeTranslation(x2,y2,z2),leaf:1})}};
+   else if(bi===0&&hash(sd+x+y)>.35){const g=new T.IcosahedronGeometry(6+hash(sd+y)*6,2);L.push({g,m:new T.Matrix4().makeTranslation(x2,y2,z2),leaf:1})}};
   br(0,0,0,0,0,46+hash(sd)*20,6+hash(sd+1)*2,0);
   G3.treeGeo.push({wood:mergeGeos(L.filter(x=>!x.leaf)),leaf:L.some(x=>x.leaf)?mergeGeos(L.filter(x=>x.leaf)):null})}
- G3.rockGeo=[0,1,2].map(k=>{const g=new T.DodecahedronGeometry(1,0);const p=g.attributes.position;for(let i=0;i<p.count;i++){p.setY(i,p.getY(i)*(.55+hash(k*9+i)*.3));p.setX(i,p.getX(i)*(.9+hash(k*5+i)*.3))}g.computeVertexNormals();return g});
+ G3.rockGeo=[0,1,2].map(k=>{const g=new T.IcosahedronGeometry(1,2);const p=g.attributes.position;for(let i=0;i<p.count;i++){p.setY(i,p.getY(i)*(.55+hash(k*9+i)*.3));p.setX(i,p.getX(i)*(.9+hash(k*5+i)*.3))}g.computeVertexNormals();return g});
  G3.tuftGeo=mergeGeos([0,1,2,3,4,5].map(i=>{const g=new T.ConeGeometry(.9,1,3).translate(0,.5,0);const m=new T.Matrix4().compose(new T.Vector3(Math.cos(i*2.4)*2,0,Math.sin(i*2.4)*2),new T.Quaternion().setFromEuler(new T.Euler(Math.cos(i*1.3)*.35,0,Math.sin(i*1.7)*.35)),new T.Vector3(1,8+hash(i)*7,1));return{g,m}}));
  return M;
 }
@@ -1941,7 +1969,7 @@ function buildChunk(i){
  // far layer: big trees and towers
  for(let j=0;j<3;j++){const x=x0+h(j+100)*CHW,z=-420-h(j+110)*700,k=h(j+120);
   if(k<.32){const s=1.4+h(j+130)*1.2,t=new T.Group();t.position.set(x,terrH(x,z),z);t.scale.setScalar(s);g.add(t);
-   const b=new T.Mesh(geo("tw",()=>new T.CylinderGeometry(15,18,110,8).translate(0,55,0)),M.tower);t.add(b);
+   const b=new T.Mesh(geo("tw",()=>new T.CylinderGeometry(15,18,110,20).translate(0,55,0)),M.tower);t.add(b);
    for(let q=0;q<6;q++){const a=q/6*PI*2;const cr=new T.Mesh(geo("tc",()=>new T.BoxGeometry(7,9,7).translate(0,4.5,0)),M.tower);cr.position.set(Math.cos(a)*14,110,Math.sin(a)*14);t.add(cr)}
    const w=new T.Mesh(geo("tww",()=>new T.BoxGeometry(5,11,2)),M.win);w.position.set(0,72,17);t.add(w);const gl=sprite(G3.tGlow,new T.Color(BIOMES[bi].accent),70,.4);gl.position.set(0,72,20);t.add(gl);G3.torches.push({x,y:72*s+terrH(x,z),z,gl,i,win:1})}
   else{const tg=G3.treeGeo[Math.floor(h(j+140)*6)];const t=mesh(tg.wood,M.bark2,x,0,z,1.5+h(j+150)*1.2,h(j+160)*6);t.castShadow=false;if(tg.leaf)t.add(new T.Mesh(tg.leaf,M.leaf))}}
@@ -1983,7 +2011,7 @@ function updateChunks3(){
 function newModel(kind,L){const T=T3,root=new T.Group(),yaw=new T.Group(),body=new T.Group();root.add(yaw);yaw.add(body);return{kind,L,root,yaw,body,mats:[],glows:[],mc:{},fl:-1,al:-1,yawC:null}}
 function mm(M,col,kind){
  const k=col+"|"+(kind||"");if(M.mc[k])return M.mc[k];
- const o={color:col,roughness:.78,metalness:0,flatShading:true,transparent:true};
+ const o={color:col,roughness:.62,metalness:0,flatShading:false,transparent:true};
  if(kind==="metal"){o.roughness=.32;o.metalness=.55}else if(kind==="cloth")o.roughness=.95;
  else if(kind==="goo"){o.roughness=.16;o.opacity=.84;o.emissive=new T3.Color(col).multiplyScalar(.3);o.flatShading=false}
  else if(kind==="ghost"){o.opacity=.8;o.emissive=new T3.Color(col).multiplyScalar(.35);o.side=T3.DoubleSide;o.depthWrite=false}
@@ -1992,14 +2020,14 @@ function mm(M,col,kind){
 function rimify(m){m.customProgramCacheKey=()=>"rim";m.onBeforeCompile=sh=>{sh.uniforms.uRim=G3.rimU;sh.fragmentShader=sh.fragmentShader.replace("#include <common>","#include <common>\nuniform vec3 uRim;").replace("#include <emissivemap_fragment>","#include <emissivemap_fragment>\n{float rim=1.-abs(dot(normalize(vViewPosition),normal));totalEmissiveRadiance+=uRim*pow(rim,3.);}")}}
 function glowM(M,col){const k="G"+col;if(M.mc[k])return M.mc[k];const m=new T3.MeshBasicMaterial({color:col,toneMapped:false,transparent:true});m.userData.o0=1;M.mc[k]=m;M.glows.push(m);return m}
 function P3(M,g,m,par,x,y,z){const o=new T3.Mesh(g,m);o.position.set(x||0,y||0,z||0);o.castShadow=true;(par||M.body).add(o);return o}
-const SPg=r=>geo("sp"+r.toFixed(2),()=>new T3.SphereGeometry(r,12,9));
-const SP1=()=>geo("sp1",()=>new T3.SphereGeometry(1,14,10));
-const ICg=(r,d)=>geo("ic"+r.toFixed(2)+"_"+d,()=>new T3.IcosahedronGeometry(r,d||0));
-const CNg=(r,h,s)=>geo("cn"+r.toFixed(2)+"_"+h.toFixed(2)+"_"+(s||6),()=>new T3.ConeGeometry(r,h,s||6).translate(0,h/2,0));
+const SPg=r=>geo("sp"+r.toFixed(2),()=>new T3.SphereGeometry(r,22,16));
+const SP1=()=>geo("sp1",()=>new T3.SphereGeometry(1,28,20));
+const ICg=(r,d)=>geo("ic"+r.toFixed(2)+"_"+d,()=>new T3.IcosahedronGeometry(r,d==null?3:d));
+const CNg=(r,h,s)=>geo("cn"+r.toFixed(2)+"_"+h.toFixed(2)+"_"+(s||6),()=>new T3.ConeGeometry(r,h,Math.max(10,(s||6)*2)).translate(0,h/2,0));
 const BXg=(w,h,d)=>geo("bx"+w.toFixed(2)+"_"+h.toFixed(2)+"_"+d.toFixed(2),()=>new T3.BoxGeometry(w,h,d));
-const LMg=(r,len)=>geo("lm"+r.toFixed(2)+"_"+len.toFixed(2),()=>new T3.CapsuleGeometry(r,len,2,7).translate(0,-len/2,0));
-const CYg=(r1,r2,h,s)=>geo("cy"+r1.toFixed(2)+"_"+r2.toFixed(2)+"_"+h.toFixed(2)+"_"+(s||6),()=>new T3.CylinderGeometry(r1,r2,h,s||6));
-const HEMg=r=>geo("hm"+r.toFixed(2),()=>new T3.SphereGeometry(r,12,7,0,PI*2,0,PI*.55));
+const LMg=(r,len)=>geo("lm"+r.toFixed(2)+"_"+len.toFixed(2),()=>new T3.CapsuleGeometry(r,len,6,14).translate(0,-len/2,0));
+const CYg=(r1,r2,h,s)=>geo("cy"+r1.toFixed(2)+"_"+r2.toFixed(2)+"_"+h.toFixed(2)+"_"+(s||6),()=>new T3.CylinderGeometry(r1,r2,h,Math.max(14,s||6)));
+const HEMg=r=>geo("hm"+r.toFixed(2),()=>new T3.SphereGeometry(r,24,12,0,PI*2,0,PI*.55));
 function ell(M,m,par,x,y,z,sx,sy,sz){const o=P3(M,SP1(),m,par,x,y,z);o.scale.set(sx,sy,sz);return o}
 function eyeG(M,col,par,x,y,z,r){const o=new T3.Mesh(SPg(r),glowM(M,col));o.position.set(x,y,z);par.add(o);return o}
 function coneTo(M,m,par,x,y,z,r,h,dx,dy,dz,s){const o=P3(M,CNg(r,h,s),m,par,x,y,z);aim(o,dx,dy,dz);return o}
@@ -2011,20 +2039,21 @@ function buildHuman(L){
  M.pivot=new T.Group();M.inner=new T.Group();M.body.add(M.pivot);M.pivot.add(M.inner);
  const cl=mm(M,L.cloth,"cloth"),cl2=mm(M,L.cloth2,"cloth"),boot=mm(M,L.boot),skin=mm(M,L.skin),arm2=mm(M,L.arm2||L.skin,L.arm2?"metal":"");
  const leg=z=>{const g=new T.Group();g.position.z=z;M.inner.add(g);P3(M,LMg(lw*.56,legL),cl2,g);const k=new T.Group();k.position.y=-legL;g.add(k);P3(M,LMg(lw*.5,legL),boot,k);
-  P3(M,BXg(lw*1.7,lw*.7,lw*1.1),boot,k,lw*.42,-legL+lw*.25,0);return{g,k}};
+  ell(M,boot,k,lw*.42,-legL+lw*.12,0,lw*.95,lw*.48,lw*.6);return{g,k}};
  M.legF=leg(M.hp);M.legB=leg(-M.hp);
  M.torG=new T.Group();M.inner.add(M.torG);
- const tm=P3(M,geo("to"+tw+"_"+tor,()=>new T.CylinderGeometry(tw*.5,tw*.4,tor+3,8).translate(0,tor/2,0)),cl,M.torG);tm.scale.set(L.bones?.5:.78,1,L.bones?.75:1.12);
+ const tm=P3(M,geo("to"+tw+"_"+tor,()=>new T.CapsuleGeometry(tw*.45,tor-tw*.35,6,18).translate(0,tor/2,0)),cl,M.torG);tm.scale.set(L.bones?.5:.78,1,L.bones?.75:1.12);
  ell(M,cl2,M.torG,0,1.5,0,tw*.36,tw*.3,tw*.5);
- if(L.armor){const a=P3(M,geo("ar"+tw+"_"+tor,()=>new T.CylinderGeometry(tw*.56,tw*.47,tor*.62,8).translate(0,tor*.66,0)),mm(M,L.armor,"metal"),M.torG);a.scale.set(.84,1,1.16);
+ if(L.armor){const a=P3(M,geo("ar"+tw+"_"+tor,()=>new T.SphereGeometry(tw*.56,22,14,0,PI*2,PI*.18,PI*.62).scale(1,tor*.85/(tw*1.12),1).translate(0,tor*.62,0)),mm(M,L.armor,"metal"),M.torG);a.scale.set(.84,1,1.16);
   for(const s of [1,-1])ell(M,mm(M,L.armor,"metal"),M.torG,0,tor-.5,s*tw*.5,tw*.3,tw*.26,tw*.3)}
  if(L.trim){const b=P3(M,geo("bt"+tw,()=>new T.TorusGeometry(tw*.42,1.1,5,14)),mm(M,L.trim,"metal"),M.torG,0,tor*.2,0);b.rotation.x=PI/2;b.scale.set(.82,1.14,1)}
  if(L.bones){const rb=mm(M,"#e6dfcc");for(let i=0;i<4;i++){const r=P3(M,geo("rb"+tw,()=>new T.TorusGeometry(tw*.36,.9,4,10)),rb,M.torG,0,tor*(.4+i*.15),0);r.rotation.x=PI/2;r.scale.set(.85,1.1,1)}}
  if(L.head==="golem"){for(let i=0;i<3;i++)P3(M,ICg(tw*.22,0),mm(M,shade(L.cloth,-.15)),M.torG,(hash(i)-.5)*tw*.6,tor*(.3+i*.25),(hash(i+4)-.5)*tw*.9)}
  P3(M,LMg(hr*.36,4),skin,M.torG,0,tor+4,0);
+ if(L.neck){const ch=P3(M,geo("nch"+tw,()=>new T.TorusGeometry(tw*.36,.35,6,24)),mm(M,"#e6c46a","metal"),M.torG,0,tor-1.5,0);ch.rotation.x=PI/2+.35;ch.scale.set(.85,1.15,1);const gem=new T.Mesh(SPg(1.7),glowM(M,L.neck));gem.position.set(tw*.43,tor*.62,0);M.torG.add(gem)}
  M.head=new T.Group();M.inner.add(M.head);buildHead(M,L.head,hr,L);
- const arm=z=>{const g=new T.Group();g.position.z=z;M.inner.add(g);P3(M,LMg(lw*.48,armL),cl,g);const k=new T.Group();k.position.y=-armL;g.add(k);P3(M,LMg(lw*.42,armL),arm2,k);
-  const hand=P3(M,ICg(lw*.58,0),L.weapon==="fists"?mm(M,shade(L.skin,-.1)):skin,k,0,-armL,0);if(L.weapon==="fists")hand.scale.setScalar(1.7);return{g,k,hand}};
+ const arm=z=>{const g=new T.Group();g.position.z=z;M.inner.add(g);const up=P3(M,LMg(lw*.48,armL),cl,g);const k=new T.Group();k.position.y=-armL;g.add(k);const fo=P3(M,LMg(lw*.42,armL),arm2,k);fo.userData.mats=[arm2,cl];
+  const hand=P3(M,ICg(lw*.58),L.weapon==="fists"?mm(M,shade(L.skin,-.1)):L.glove?mm(M,L.glove):skin,k,0,-armL,0);if(L.glove){hand.scale.setScalar(1.18);P3(M,geo("cuff"+lw,()=>new T.TorusGeometry(lw*.5,lw*.18,8,14)),mm(M,L.glove),k,0,-armL*.82,0).rotation.x=PI/2}if(L.weapon==="fists")hand.scale.setScalar(1.7);return{g,k,hand,up,fo}};
  M.armF=arm(M.sw);M.armB=arm(-M.sw);
  M.wpn=new T.Group();M.inner.add(M.wpn);buildWeapon(M,L.weapon,L);
  if(L.cape){const cm=mm(M,L.cape,"cloth");cm.side=T.DoubleSide;const w=tw*1.15,l1=tor*.6,l2=tor*.55+11;
@@ -2271,7 +2300,7 @@ function crown3(M){if(M.crown)return M.crown;const T=T3,g=new T.Group(),gm=mm(M,
 function initFx3(){
  const T=T3,mk=(add)=>{const N=4000,g=new T.BufferGeometry();g.setAttribute("position",new T.BufferAttribute(new Float32Array(N*3),3));g.setAttribute("color",new T.BufferAttribute(new Float32Array(N*4),4));g.setAttribute("size",new T.BufferAttribute(new Float32Array(N),1));g.setDrawRange(0,0);
   const m=new T.ShaderMaterial({uniforms:{uScale:{value:1}},transparent:true,depthWrite:false,blending:add?T.AdditiveBlending:T.NormalBlending,
-   vertexShader:"attribute float size;attribute vec4 color;varying vec4 vC;uniform float uScale;void main(){vC=color;vec4 mv=modelViewMatrix*vec4(position,1.);gl_PointSize=clamp(size*uScale/-mv.z,1.,256.);gl_Position=projectionMatrix*mv;}",
+   vertexShader:"attribute float size;attribute vec4 color;varying vec4 vC;uniform float uScale;void main(){vC=color;vec4 wp=modelMatrix*vec4(position,1.);vec2 cd=wp.xz-cameraPosition.xz;wp.y-=dot(cd,cd)*"+CURVE.toFixed(8)+";vec4 mv=viewMatrix*wp;gl_PointSize=clamp(size*uScale/-mv.z,1.,256.);gl_Position=projectionMatrix*mv;}",
    fragmentShader:add?"varying vec4 vC;void main(){float r=length(gl_PointCoord-.5)*2.;if(r>1.)discard;float a=vC.a*pow(1.-r,1.6);gl_FragColor=vec4(vC.rgb*a+vec3(a*a*.35),1.);}"
     :"varying vec4 vC;void main(){float r=length(gl_PointCoord-.5)*2.;if(r>1.)discard;gl_FragColor=vec4(vC.rgb,vC.a*smoothstep(1.,.2,r));}"});
   if(add)m.blending=T.CustomBlending,m.blendSrc=T.OneFactor,m.blendDst=T.OneFactor;
@@ -2310,7 +2339,7 @@ function syncHero3(dt){
  const r=poseHuman(M,p,HERO_LOOK.glowCol,h.flash>0&&!fp);setLook3(M,h.flash>0&&!fp,fp?1:alpha);
  if(M.blade){if(!M.bladeBase)M.bladeBase=M.blade.color.clone();M.blade.color.copy(M.bladeBase).lerp(G3.bloodC||(G3.bloodC=new T3.Color("#5a0a12")),(bloodOn()?h.bloody||0:0)*.8)}
  M.inner.position.x=fp?Math.sin(tNow*1.1)*.6:0;if(fp)M.inner.position.y+=Math.sin(tNow*2.2)*.7;
- M.head.visible=M.torG.visible=M.legF.g.visible=M.legB.g.visible=!fp;if(M.cape)M.cape.visible=!fp;
+ M.head.visible=M.torG.visible=M.legF.g.visible=M.legB.g.visible=!fp;M.armF.up.visible=M.armB.up.visible=!fp;{const fs=fp?4.5:1;for(const A of [M.armF,M.armB]){A.fo.scale.y=fs;A.fo.position.y=(fs-1)*M.armL;A.fo.material=A.fo.userData.mats[fp?1:0]}}if(M.cape)M.cape.visible=!fp;
  M.armB.g.visible=!fp||h.state==="fire"||h.state==="bolt"||h.state==="heal"||h.state==="shield"||h.state==="heavy"||h.state==="blaze"||h.state==="hurt"||h.state==="dead";
  if(fp){if(h.state==="dodge")M.pivot.rotation.z=0;const hipY=2*M.legL-p.crouch+p.bob,sx=Math.sin(p.lean)*M.tor,sy=hipY+Math.cos(p.lean)*M.tor,ha=p.lean+p.headTilt;G3.eye={x:sx+Math.sin(ha)*(M.hr+3),y:sy+Math.cos(ha)*(M.hr+3)+1}}
  blob3(h.x,h.z,0,15);
@@ -2431,8 +2460,8 @@ function render3D(dt){
 }
 /* --- 2D overlay on top of the 3D view --- */
 const _pv={};
-function pj(x,z,h){const v=_pv.v||(_pv.v=new T3.Vector3());v.set(x,h,z*ZS).project(G3.cam);return[(v.x*.5+.5)*G3.W/SC,(-v.y*.5+.5)*G3.H/SC,v.z]}
-function pjO(o,dy){const v=_pv.w||(_pv.w=new T3.Vector3());o.getWorldPosition(v);v.y+=dy||0;v.project(G3.cam);return[(v.x*.5+.5)*G3.W/SC,(-v.y*.5+.5)*G3.H/SC]}
+function pj(x,z,h){const v=_pv.v||(_pv.v=new T3.Vector3());v.set(x,h-curveDrop(x,z*ZS),z*ZS).project(G3.cam);return[(v.x*.5+.5)*G3.W/SC,(-v.y*.5+.5)*G3.H/SC,v.z]}
+function pjO(o,dy){const v=_pv.w||(_pv.w=new T3.Vector3());o.getWorldPosition(v);v.y+=(dy||0)-curveDrop(v.x,v.z);v.project(G3.cam);return[(v.x*.5+.5)*G3.W/SC,(-v.y*.5+.5)*G3.H/SC]}
 function overlay3(){
  c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cv.width,cv.height);c.setTransform(dpr*SC,0,0,dpr*SC,0,0);
  const h=hero,fp=isFP();
@@ -2460,7 +2489,7 @@ function overlay3(){
  const vv=_pv.e||(_pv.e=new T3.Vector3());
  for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const [sx,sy,sz]=pj(e.x,e.z,e.h+20);if(sz<1&&sx>-4&&sx<LW+4)continue;
   let left,y,sc=1;
-  if(fp){vv.set(e.x,e.h+20,e.z*ZS).applyMatrix4(G3.cam.matrixWorldInverse);left=vv.x<0;const ang=Math.abs(Math.atan2(vv.x,-vv.z));y=LH*.32+ang/PI*LH*.42;const d=Math.hypot(vv.x,vv.z);sc=1+clamp(1-d/420,0,1)*.9}
+  if(fp){vv.set(e.x,e.h+20-curveDrop(e.x,e.z*ZS),e.z*ZS).applyMatrix4(G3.cam.matrixWorldInverse);left=vv.x<0;const ang=Math.abs(Math.atan2(vv.x,-vv.z));y=LH*.32+ang/PI*LH*.42;const d=Math.hypot(vv.x,vv.z);sc=1+clamp(1-d/420,0,1)*.9}
   else{left=sx<0;y=clamp(sy,40,LH-40)}
   const danger=e.state==="windup"||e.state==="strike",x=left?10:LW-10,s=(danger?1.35+Math.sin(tNow*20)*.15:1)*sc;
   c.fillStyle=danger?"#ff2a40":e.boss?"#e6b84e":"#e14b5a";c.beginPath();c.moveTo(x+(left?-6:6)*s,y);c.lineTo(x+(left?4:-4)*s,y-6*s);c.lineTo(x+(left?4:-4)*s,y+6*s);c.closePath();c.fill()}
@@ -2534,7 +2563,7 @@ function drawScreenBlood(dt){
 }
 
 /* ============ LOOP ============ */
-let last=performance.now(),hudT=0,realT=0;
+let last=performance.now(),hudT=0,realT=0,booting=true;
 let autoSaveT=10;
 function update(dt){
  autoSaveT-=dt;if(autoSaveT<=0){autoSaveT=10;save()}
@@ -2551,6 +2580,7 @@ function frame(ts){
  const dt=Math.min(.05,(ts-last)/1000);last=ts;realT+=dt;
  requestAnimationFrame(frame);
  try{
+ if(booting){if(R3.ok||R3.failed||gfxMode()==="2d"||realT>12){booting=false;$("boot").classList.add("off");last=performance.now()}else return}
  if(!paused){tNow+=dt;let g=dt;if(hitStop>0){hitStop-=dt;g=dt*.06}update(g)}
  shake*=Math.pow(.004,dt);if(shake<.2)shake=0;flashA=Math.max(0,flashA-dt*2);
  if(use3D()){try{render3D(dt)}catch(err){console.error(err);if(++R3.errN>4){R3.ok=false;R3.failed=true;applyGfx();toast(t("gfxFail"))}}}else render();
@@ -2568,7 +2598,7 @@ function hud(){
  const nn=bag.filter(x=>x.nw).length,ib=$("invBdg");ib.textContent=nn>9?"9+":nn;ib.classList.toggle("on",nn>0);
  $("luckBdg").classList.toggle("on",!luck.until&&luck.lvl<LUCK_MAX&&P.gold>=luckCost(luck.lvl));
  const hpr=clamp((P.hp||0)/(P.maxhp||1),0,1);$("hpBar").style.width=(hpr*100)+"%";$("hpTxt").textContent=Math.ceil(P.hp)+" / "+P.maxhp;
- document.querySelectorAll(".sk").forEach(b=>{const a=b.dataset.a;if(a==="attack"||a==="turn")return;b.style.setProperty("--cd",clamp((hero.cd[a]||0)/(CD[a]*cdMul(a)),0,1));const locked=P.level<(SKLV[a]||1);b.classList.toggle("locked",locked);const em=b.querySelector("em");if(em){if(locked){if(!em.dataset.key)em.dataset.key=em.textContent;em.textContent="🔒"+SKLV[a]}else if(em.dataset.key){em.textContent=em.dataset.key;delete em.dataset.key}}});
+ document.querySelectorAll(".sk").forEach(b=>{const a=b.dataset.a;if(a==="attack"||a==="turn")return;b.style.setProperty("--cd",clamp((hero.cd[a]||0)/(CD[a]*cdMul(a)),0,1));const locked=P.level<(SKLV[a]||1);b.classList.toggle("locked",locked);if(locked)b.dataset.lv="🔒 "+t("lv")+" "+SKLV[a];});
  const boss=enemies.find(e=>e.boss&&e.state!=="dead"&&e.delay<=0);
  if(boss){$("bossbar").style.display="block";$("bossName").textContent="👑 "+L(boss.cfg.n);$("bossHp").style.width=(boss.hp/boss.maxhp*100)+"%"}else $("bossbar").style.display="none";
 }
@@ -2599,6 +2629,9 @@ function statChips(){$("statList").innerHTML=`<span>❤ <b>${P.maxhp}</b></span>
 function renderTree(){statChips();renderTalents();renderTrain();if(!renderTree.did){renderTree.did=1;requestAnimationFrame(()=>{const w=$("twrap");w.scrollLeft=(w.scrollWidth-w.clientWidth)/2;w.scrollTop=(w.scrollHeight-w.clientHeight)/2})}}
 const talAvail=id=>!tal.includes(id)&&TALN[id].nb.some(n=>n==="c"||tal.includes(n));
 let prevVis=null,justBought=null,treeExt=0;
+const SWD="M-6.5 6.5L8-8M6.5 6.5L-8-8M-9.5 3.5L-3.5 9.5M9.5 3.5L3.5 9.5M-6.5 6.5L-10 10M6.5 6.5L10 10";
+const swdG=(x,y,s,c,ol)=>`<g transform="translate(${x} ${y}) scale(${s})" fill="none" stroke-linecap="round">${ol?`<path stroke="${ol}" stroke-width="6.5" d="${SWD}"/>`:""}<path stroke="${c}" stroke-width="2.7" d="${SWD}"/></g>`;
+const icoH=S=>S.icon==="⚔"?`<svg width="1.05em" height="1.05em" viewBox="-12 -12 24 24" style="vertical-align:-.15em">${swdG(0,0,1,S.col)}</svg>`:S.icon;
 function renderTalents(){
  const own=new Set(tal),cs=Math.cos,sn=Math.sin;
  const vis=new Set(TALL.filter(n=>own.has(n.id)||talAvail(n.id)).map(n=>n.id));
@@ -2610,7 +2643,8 @@ function renderTalents(){
  SECT.forEach((S,i)=>{const a0=(-120+i*60)*PI/180,a1=(-60+i*60)*PI/180,R=E-25,am=(-90+i*60)*PI/180;
   o+=`<path d="M0 0 L${cs(a0)*R} ${sn(a0)*R} A${R} ${R} 0 0 1 ${cs(a1)*R} ${sn(a1)*R} Z" fill="url(#wg${i})"/><line x1="0" y1="0" x2="${cs(a0)*R}" y2="${sn(a0)*R}" stroke="#4a2632" stroke-width="2"/>`;
   const lr=Math.max(secR[i],RING_R[0])+95,la=am+Math.min(.36,40/lr*2.2),lx=cs(la)*lr,ly=sn(la)*lr;const anc=lx>60?"end":lx<-60?"start":"middle";
-  o+=`<text x="${lx}" y="${ly+6}" text-anchor="${anc}" font-family="Cinzel,Georgia,serif" font-weight="700" font-size="22" fill="${S.col}" style="paint-order:stroke" stroke="#0a060b" stroke-width="6">${S.icon} ${L(S.n)}</text>`});
+  const mc=renderTalents.mc||(renderTalents.mc=document.createElement("canvas").getContext("2d"));mc.font="700 22px Cinzel,Georgia,serif";const tw=28+mc.measureText(L(S.n)).width,sx=anc==="start"?lx:anc==="end"?lx-tw:lx-tw/2,ts=`font-family="Cinzel,Georgia,serif" font-weight="700" font-size="22" fill="${S.col}" style="paint-order:stroke" stroke="#0a060b" stroke-width="6"`;
+  o+=(S.icon==="⚔"?swdG(sx+11,ly-1.5,.95,S.col,"#0a060b"):`<text x="${sx+11}" y="${ly+6}" text-anchor="middle" ${ts}>${S.icon}</text>`)+`<text x="${sx+28}" y="${ly+6}" text-anchor="start" ${ts}>${L(S.n)}</text>`});
  RING_R.forEach(r=>{if(r<=maxR+80)o+=`<circle r="${r}" fill="none" stroke="#2a1822" stroke-width="1.5" stroke-dasharray="4 8"/>`});
  for(const n of TALL){if(!vis.has(n.id)){for(const p of n.par)if(p!=="c"&&vis.has(p)&&!own.has(p)){const P2=TALN[p],mx=lerp(P2.x,n.x,.32),my=lerp(P2.y,n.y,.32);o+=`<line x1="${P2.x}" y1="${P2.y}" x2="${mx}" y2="${my}" stroke="${SECT[n.si].col}" stroke-opacity=".22" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"/>`}continue}
   for(const p of n.par){if(p!=="c"&&!vis.has(p))continue;const P2=p==="c"?{x:0,y:0}:TALN[p],a=own.has(n.id),b=p==="c"||own.has(p),col=SECT[n.si].col;
@@ -2626,7 +2660,7 @@ function renderTalents(){
   if(ow)o+=`<circle r="${r}" fill="${S.col}" stroke="#fff3d6" stroke-width="3" filter="url(#gl)"/>`;
   else o+=`<circle r="${r}" fill="#1e121b" stroke="${S.col}" stroke-width="4"><animate attributeName="stroke-opacity" values="1;.35;1" dur="1.6s" repeatCount="indefinite"/></circle>`;
   if(justBought===n.id)o+=`<circle r="${r}" fill="none" stroke="${S.col}" stroke-width="5"><animate attributeName="r" from="${r}" to="${r+50}" dur=".7s" fill="freeze"/><animate attributeName="stroke-opacity" from="1" to="0" dur=".7s" fill="freeze"/></circle><circle r="${r}" fill="#fff" opacity="0"><animate attributeName="opacity" values=".9;0" dur=".45s" fill="freeze"/></circle>`;
-  o+=`<text y="${n.cap?9:7}" text-anchor="middle" font-size="${n.cap?24:17}" opacity="${ow?1:.9}">${n.cap?"★":S.icon}</text><circle r="${r+8}" fill="transparent"/>`;
+  o+=!n.cap&&S.icon==="⚔"?swdG(0,0,.66,ow?"#fff8e8":S.col):`<text y="${n.cap?9:7}" text-anchor="middle" font-size="${n.cap?24:17}" opacity="${ow?1:.95}" fill="${ow?"#fff8e8":S.col}">${n.cap?"★":S.icon}</text><circle r="${r+8}" fill="transparent"/>`;
   const lbl=ow?"✓":"🪙 "+n.cost,lc=ow?"#fff3d6":(P.gold>=n.cost?"#ffd98a":"#ff8a8a");
   o+=`<text y="${r+19}" text-anchor="middle" font-size="15" font-weight="700" fill="${lc}" style="paint-order:stroke" stroke="#0a060b" stroke-width="5" pointer-events="none">${lbl}</text></g></g>`}
  o+=`</svg>`;
@@ -2644,7 +2678,7 @@ function renderTInfo(){
  const n=TALN[tSel],S=SECT[n.si],ow=tal.includes(n.id),av=talAvail(n.id);
  box.style.setProperty("--c",S.col);
  let act;if(ow)act=`<span class="ok">✓ ${t("owned")}</span>`;else if(!av)act=`<small>🔒 ${t("needLink")}</small>`;else act=`<button class="btn main" id="tBuy" ${P.gold<n.cost?"disabled":""}>${t("unlock",{n:n.cost})}</button>`;
- box.innerHTML=`<div><b>${n.cap?"★":S.icon} ${talName(n)}</b><div class="m">${talDesc(n)}</div><small>${L(S.n)}</small></div>${act}`;
+ box.innerHTML=`<div><b>${n.cap?"★":icoH(S)} ${talName(n)}</b><div class="m">${talDesc(n)}</div><small>${L(S.n)}</small></div>${act}`;
  const b=$("tBuy");if(b)b.onclick=()=>buyTalent(n.id);
 }
 $("tsvg").addEventListener("click",e=>{const g=e.target.closest("[data-id]");if(!g)return;tSel=g.dataset.id;renderTalents();if(lastPtrType!=="mouse"){showTip(g.dataset.id,e.clientX,e.clientY);const box=$("tinfo");if(box)box.scrollIntoView({behavior:"smooth",block:"nearest"})}});
@@ -2806,7 +2840,7 @@ async function hashPw(pw,salt){
  try{if(window.crypto&&crypto.subtle){const enc=new TextEncoder(),key=await crypto.subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveBits"]);const bits=await crypto.subtle.deriveBits({name:"PBKDF2",salt:enc.encode(salt),iterations:120000,hash:"SHA-256"},key,256);return"p2$"+bufHex(bits)}}catch(e){}
  let h1=0xdeadbeef,h2=0x41c6ce57;const str=salt+"|"+pw;for(let r=0;r<2000;r++)for(let i=0;i<str.length;i++){const ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}return"f1$"+(h1>>>0).toString(16)+(h2>>>0).toString(16)}
 function resetWorld(){enemies=[];projs=[];coins=[];bolts=[];parts=[];texts=[];stains=[];loots=[];hero.slow=0;setHero("idle");hero.inv=1;hero.x=LW*.3;hero.z=60;camX=0;arenaX=0;locked=false;cleared=false;tSel=null;renderTree.did=0;startWave()}
-function switchTo(email,fresh){save();session=email;if(fresh){P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};itemSeq=1;nickname=LS.get(PK("r2_nick"),"Rostogen")}else loadState();prevVis=null;iSel=null;recalc();if(!(P.hp>0))P.hp=P.maxhp;save();resetWorld();hud()}
+function switchTo(email,fresh){save();session=email;if(fresh){P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};itemSeq=1;nickname=LS.get(PK("r2_nick"),"")}else loadState();prevVis=null;iSel=null;recalc();if(!(P.hp>0))P.hp=P.maxhp;save();resetWorld();hud()}
 $("aGo").onclick=async()=>{
  const err=m=>{$("aErr").textContent=m};
  const email=$("aEmail").value.trim().toLowerCase(),pw=$("aPass").value;
@@ -2833,7 +2867,7 @@ $("aGo").onclick=async()=>{
 };
 function logOut(){switchTo(null,false);toast(t("loggedOut"));fillSettings()}
 function fillSettings(){fillAccount();$("nickIn").value=nickname;$("langSel").value=lang;$("sfxR").value=S.sfx;$("musR").value=S.music;$("musB").textContent=S.musicOn?"⏸ "+t("on"):"▶ "+t("off");$("gfxSel").innerHTML=[["hi","gfxHi"],["lo","gfxLo"],["2d","gfx2d"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("gfxSel").value=gfxMode();$("viewSel").innerHTML=[["fp","viewFP"],["tp","viewTP"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("viewSel").value=S.view==="tp"?"tp":"fp";$("viewSel").disabled=gfxMode()==="2d";$("bloodB").textContent=bloodOn()?"🩸 "+t("on"):"✕ "+t("off")}
-$("nickOk").onclick=()=>{nickname=($("nickIn").value.trim()||"Rostogen").slice(0,18);save();hud();toast(t("saved"))};
+$("nickOk").onclick=()=>{nickname=$("nickIn").value.trim().slice(0,18);save();hud();toast(t("saved"))};
 $("nickIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("nickOk").click()});
 $("langSel").innerHTML=LANGS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
 $("langSel").onchange=e=>{lang=e.target.value;applyLang();fillSettings();save()};
@@ -2848,7 +2882,7 @@ $("resetB").onclick=()=>{if(Date.now()-resetArm>3000){resetArm=Date.now();$("res
  resetArm=0;$("resetB").textContent=t("reset");P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};itemSeq=1;tSel=null;prevVis=null;iSel=null;recalc();P.hp=P.maxhp;save();closeModal(true);enemies=[];projs=[];coins=[];loots=[];hero.x=150;hero.z=60;setHero("idle");camX=0;arenaX=0;startWave()};
 function applyLang(){LX=Math.max(0,LANGS.findIndex(l=>l[0]===lang));document.documentElement.lang=lang;document.querySelectorAll("[data-i]").forEach(el=>el.textContent=t(el.dataset.i));
  document.querySelectorAll("[data-tk]").forEach(el=>{const em=el.querySelector("em"),lab=t(el.dataset.tk)+(em?" ("+em.textContent+")":"");el.dataset.tip=lab;el.setAttribute("aria-label",lab)});
- $("pTree").textContent="🌳 "+t("tree");$("pInv").textContent="🎒 "+t("inv");$("pDrops").textContent="🎲 "+t("drops");$("pBest").textContent="📖 "+t("best");
+ $("nickIn").placeholder=t("nickPh");$("pTree").textContent="🌳 "+t("tree");$("pInv").textContent="🎒 "+t("inv");$("pDrops").textContent="🎲 "+t("drops");$("pBest").textContent="📖 "+t("best");
  if(modalOpen==="mTree")renderTree();if(modalOpen==="mInv")renderInv();if(modalOpen==="mDrops")renderDrops();if(modalOpen==="mBest")buildBestiary()}
 
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&!modalOpen&&hero.state!=="dead"){openModal("mPause")}});
