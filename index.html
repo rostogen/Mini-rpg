@@ -3032,8 +3032,67 @@ function animGhost(M,e){
  for(let i=0;i<a.count;i++){const y=B[i*3+1];if(y<14){const x=B[i*3],z=B[i*3+2],an=Math.atan2(z,x),w=Math.sin(tNow*6+an*4+sd)*3*(14-y)/8;a.setY(i,y+w);a.setX(i,x*(1+w*.02));a.setZ(i,z*(1+w*.02))}}
  a.needsUpdate=true;
 }
+/* --- voxel monsters: every body part is rebuilt from chunky cubes on one grid per bone, with corner shading in the creases --- */
+const VOX={cache:new WeakMap(),FACES:[[0,1,[[1,0,0],[1,1,0],[1,1,1],[1,0,1]]],[0,-1,[[0,0,0],[0,0,1],[0,1,1],[0,1,0]]],[1,1,[[0,1,0],[0,1,1],[1,1,1],[1,1,0]]],[1,-1,[[0,0,0],[1,0,0],[1,0,1],[0,0,1]]],[2,1,[[0,0,1],[1,0,1],[1,1,1],[0,1,1]]],[2,-1,[[0,0,0],[0,1,0],[1,1,0],[1,0,0]]]],AO:[.5,.68,.85,1]};
+function voxCell(){return G3&&G3.hi?(G3.ultra?1.25:1.45):1.8}
+function voxBuild(list,cs){
+ // list: [{g,m4,mi}] sampled into one occupancy grid; returns [{mi,geo}]
+ const occ=new Map(),K=(i,j,k)=>((i+600)*1200+(j+600))*1200+(k+600),va=new T3.Vector3(),vb=new T3.Vector3(),vc=new T3.Vector3();
+ let i0=1e9,j0=1e9,k0=1e9,i1=-1e9,j1=-1e9,k1=-1e9;
+ for(const {g,m4,mi} of list){const P=g.attributes.position,ix=g.index,nt=ix?ix.count/3:P.count/3;
+  for(let t=0;t<nt;t++){const a=ix?ix.getX(t*3):t*3,b=ix?ix.getX(t*3+1):t*3+1,c=ix?ix.getX(t*3+2):t*3+2;
+   va.fromBufferAttribute(P,a).applyMatrix4(m4);vb.fromBufferAttribute(P,b).applyMatrix4(m4);vc.fromBufferAttribute(P,c).applyMatrix4(m4);
+   const ax=va.x/cs[0],ay=va.y/cs[1],az=va.z/cs[2],bx=vb.x/cs[0]-ax,by=vb.y/cs[1]-ay,bz=vb.z/cs[2]-az,cx=vc.x/cs[0]-ax,cy=vc.y/cs[1]-ay,cz=vc.z/cs[2]-az;
+   const n=Math.max(1,Math.ceil(Math.max(Math.hypot(bx,by,bz),Math.hypot(cx,cy,cz),Math.hypot(bx-cx,by-cy,bz-cz))*1.6));
+   for(let u=0;u<=n;u++)for(let v=0;v<=n-u;v++){const p=u/n,q=v/n,i=Math.floor(ax+bx*p+cx*q),j=Math.floor(ay+by*p+cy*q),k=Math.floor(az+bz*p+cz*q);
+    if(i<-590||i>590||j<-590||j>590||k<-590||k>590)continue;occ.set(K(i,j,k),mi);if(i<i0)i0=i;if(i>i1)i1=i;if(j<j0)j0=j;if(j>j1)j1=j;if(k<k0)k0=k;if(k>k1)k1=k}}}
+ if(!occ.size)return[];
+ // flood the outside so faces inside closed shells are never built
+ i0--;j0--;k0--;i1++;j1++;k1++;const X=i1-i0+1,Y=j1-j0+1,Z=k1-k0+1,N=X*Y*Z;
+ if(N>4e6)return[];const out=new Uint8Array(N),idx=(i,j,k)=>((i-i0)*Y+(j-j0))*Z+(k-k0),qu=new Int32Array(N);let qh=0,qt=0;
+ out[0]=1;qu[qt++]=0;
+ while(qh<qt){const c=qu[qh++],k=c%Z,j=((c-k)/Z)%Y,i=(c-k-j*Z)/(Y*Z);
+  for(const [di,dj,dk] of [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]){const ni=i+di,nj=j+dj,nk=k+dk;if(ni<0||nj<0||nk<0||ni>=X||nj>=Y||nk>=Z)continue;const nc=(ni*Y+nj)*Z+nk;if(out[nc])continue;if(occ.has(K(ni+i0,nj+j0,nk+k0)))continue;out[nc]=1;qu[qt++]=nc}}
+ const isOut=(i,j,k)=>i<i0||j<j0||k<k0||i>i1||j>j1||k>k1?1:out[idx(i,j,k)],solid=(i,j,k)=>occ.has(K(i,j,k))?1:0;
+ const per=new Map();
+ for(const [key,mi] of occ){const k=key%1200-600,j=Math.floor(key/1200)%1200-600,i=Math.floor(key/1440000)-600,jit=.88+hash(i*12.9898+j*78.233+k*37.719)*.2;
+  for(const [ax,sg,C] of VOX.FACES){const n=[0,0,0];n[ax]=sg;if(!isOut(i+n[0],j+n[1],k+n[2]))continue;
+   let B=per.get(mi);if(!B)per.set(mi,B={p:[],n:[],c:[],ix:[]});const base=B.p.length/3,ao=[];
+   for(const cc of C){B.p.push((i+cc[0])*cs[0],(j+cc[1])*cs[1],(k+cc[2])*cs[2]);B.n.push(n[0],n[1],n[2]);
+    const o=[0,0,0],L=[i+n[0],j+n[1],k+n[2]];const t=[0,1,2].filter(a=>a!==ax);const s1=solid(L[0]+(t[0]===0?(cc[0]?1:-1):0),L[1]+(t[0]===1?(cc[1]?1:-1):0),L[2]+(t[0]===2?(cc[2]?1:-1):0)),
+     s2=solid(L[0]+(t[1]===0?(cc[0]?1:-1):0),L[1]+(t[1]===1?(cc[1]?1:-1):0),L[2]+(t[1]===2?(cc[2]?1:-1):0)),
+     cr=solid(L[0]+(ax!==0?(cc[0]?1:-1):0),L[1]+(ax!==1?(cc[1]?1:-1):0),L[2]+(ax!==2?(cc[2]?1:-1):0)),a=s1&&s2?0:3-(s1+s2+cr);ao.push(a);
+    const f=jit*VOX.AO[a];B.c.push(f,f,f)}
+   if(ao[0]+ao[2]<ao[1]+ao[3])B.ix.push(base+1,base+2,base+3,base+1,base+3,base);else B.ix.push(base,base+1,base+2,base,base+2,base+3)}}
+ const res=[];for(const [mi,B] of per){const g=new T3.BufferGeometry();g.setAttribute("position",new T3.Float32BufferAttribute(B.p,3));g.setAttribute("normal",new T3.Float32BufferAttribute(B.n,3));g.setAttribute("color",new T3.Float32BufferAttribute(B.c,3));g.setIndex(B.ix);g.computeBoundingSphere();res.push({mi,geo:g})}
+ return res;
+}
+function voxelizeModel(M,L){
+ const T=T3,c=voxCell();
+ // meshes the animation code moves one by one keep their own transform; the rest merge into their bone
+ const own=new Set();for(const k in M){const v=M[k];if(v&&v.isMesh)own.add(v);else if(Array.isArray(v))for(const x of v)if(x&&x.isMesh)own.add(x)}
+ const ent=new Map();M.root.updateMatrixWorld(true);
+ M.root.traverse(o=>{if(!o.isMesh||o.isInstancedMesh||!o.visible||o===M.trail||o===M.thrust||Array.isArray(o.material))return;const m=o.material;
+  if(!m||m.blending===T.AdditiveBlending||(m.userData.o0!=null&&m.userData.o0<1)||!o.geometry.attributes.position)return;
+  const key=own.has(o)||o.children.length?o:o.parent;if(!ent.has(key))ent.set(key,[]);ent.get(key).push(o)});
+ const sig=[...ent.values()].map(a=>a.length+":"+a.map(o=>o.geometry.type+o.geometry.attributes.position.count).join(",")).join("|")+"@"+c;
+ let C=VOX.cache.get(L);if(!C||C.sig!==sig){C={sig,res:null};VOX.cache.set(L,C)}
+ const first=!C.res;if(first)C.res=[];let ei=0;
+ for(const [key,ms] of ent){const mats=[];for(const o of ms)if(!mats.includes(o.material))mats.push(o.material);
+  let res;if(first){
+   if(key.isMesh){const sc=key.scale;res=voxBuild([{g:key.geometry,m4:new T.Matrix4(),mi:0}],[c/Math.max(.05,Math.abs(sc.x)),c/Math.max(.05,Math.abs(sc.y)),c/Math.max(.05,Math.abs(sc.z))])}
+   else res=voxBuild(ms.map(o=>{o.updateMatrix();return{g:o.geometry,m4:o.matrix.clone(),mi:mats.indexOf(o.material)}}),[c,c,c]);
+   C.res.push(res)}else res=C.res[ei];
+  ei++;if(!res||!res.length)continue;
+  for(const m of mats)if(!m.vertexColors){m.vertexColors=true;m.normalMap=null;m.needsUpdate=true}
+  if(key.isMesh){key.geometry=res[0].geo;key.castShadow=true}
+  else{const sh=ms.some(o=>o.castShadow);for(const o of ms)key.remove(o);for(const r of res){const m=new T.Mesh(r.geo,mats[r.mi]);m.castShadow=sh;m.receiveShadow=true;key.add(m)}}}
+ // anything left smooth but sharing a voxel material still needs a colour channel
+ M.root.traverse(o=>{if(o.isMesh&&o.material&&o.material.vertexColors&&o.geometry&&!o.geometry.attributes.color){const n=o.geometry.attributes.position.count;o.geometry.setAttribute("color",new T.Float32BufferAttribute(new Float32Array(n*3).fill(1),3))}});
+}
 function buildModel(C,L){
  const b=C.body;L=L||C.look;const M=b==="human"?buildHuman(L):b==="wolf"?buildWolf(L):b==="dragon"?buildDragon(L):b==="bat"?buildBat(L):b==="slime"?buildSlime(L):b==="spider"?buildSpider(L):buildGhost(L);
+ if(b!=="slime"&&b!=="ghost")try{voxelizeModel(M,L)}catch(err){console.warn("voxel",err)}
  M.cfg=C;M.seed=Math.random()*9;M.root.traverse(o=>{if(o.isMesh&&!o.material.isMeshStandardMaterial)o.castShadow=false});return M;
 }
 function disposeModel(M){M.root.parent&&M.root.parent.remove(M.root);M.mats.concat(M.glows).forEach(m=>m.dispose());M.root.traverse(o=>{if(o.isSprite||o.isLine||o===M.trail)o.material.dispose();if((o===M.trail||o.isLine||o===M.robe)&&o.geometry)o.geometry.dispose()})}
