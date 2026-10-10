@@ -285,6 +285,40 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .toast.show{opacity:1;transform:translate(-50%,0)}
 @media (max-width:520px){.me{width:168px}.ibs{gap:4px}.ib{width:32px;height:32px;font-size:15px;border-radius:9px}.ibl{font-size:8px}.bossbar{top:124px}.rrow{grid-template-columns:88px 1fr auto;gap:6px}}
 @media (prefers-reduced-motion:reduce){.banner.show{animation-duration:2.6s;animation-name:banFade}@keyframes banFade{0%,100%{opacity:0}10%,80%{opacity:1}}}
+/* graphics: soft vignette on High (Ultra does it in the colour grade) */
+.vig{position:fixed;inset:0;pointer-events:none;z-index:1;display:none;background:radial-gradient(ellipse 75% 70% at 50% 45%,transparent 55%,rgba(8,2,10,.38))}
+body[data-gfx="hi"] .vig{display:block}
+/* HUD buttons: glossy, pressable; pause stands out in gold */
+.ib{background:linear-gradient(180deg,rgba(66,38,58,.95),rgba(20,11,20,.95));border:1px solid rgba(255,222,176,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -2px 0 rgba(0,0,0,.42),0 4px 12px rgba(0,0,0,.5);transition:transform .14s cubic-bezier(.3,1.7,.5,1),filter .15s,box-shadow .2s}
+.ib::before{content:"";position:absolute;left:3px;right:3px;top:2px;height:44%;border-radius:8px 8px 5px 5px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,0));pointer-events:none}
+.ib:active{transform:scale(.86) translateY(1px);filter:brightness(1.25)}
+#bPause{background:linear-gradient(180deg,#f3c869,#b5791f 62%,#8d5513);border-color:#ffe4a6;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -2px 0 rgba(0,0,0,.28),0 0 14px -3px rgba(243,190,90,.75),0 4px 12px rgba(0,0,0,.5)}
+.pzI{display:flex;gap:4px}.pzI::before,.pzI::after{content:"";width:4px;height:15px;border-radius:2px;background:#2b1406;box-shadow:0 1px 0 rgba(255,255,255,.35)}
+@media (max-width:520px){.pzI{gap:3px}.pzI::before,.pzI::after{width:3.5px;height:12px}}
+.sk{border-color:rgba(255,236,214,.3);box-shadow:inset 0 2px 1px rgba(255,255,255,.17),inset 0 -5px 9px rgba(0,0,0,.45),0 6px 16px rgba(0,0,0,.45);transition:transform .12s cubic-bezier(.3,1.7,.5,1)}
+.sk.atk{box-shadow:inset 0 3px 2px rgba(255,200,200,.25),inset 0 -7px 12px rgba(0,0,0,.5),0 0 0 4px rgba(225,75,90,.16),0 8px 20px rgba(0,0,0,.5)}
+/* settings: custom language button + popup, graphics tiles */
+.row.colr{flex-direction:column;align-items:stretch;gap:9px}
+.pickB{display:flex;align-items:center;gap:9px;min-width:170px;justify-content:space-between;padding:9px 12px;border-radius:12px;background:linear-gradient(180deg,#2c1a27,#1a0f18);border:1px solid var(--line);font-weight:700;font-size:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.pickB .fl{font-size:20px;line-height:1}.pickB i{font-style:normal;color:var(--gold);font-size:20px;line-height:1;margin-left:auto}
+.pickB:active{transform:scale(.96)}
+.gfxT{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.gt{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 6px 10px;border-radius:13px;background:linear-gradient(180deg,#22141f,#140b13);border:1px solid var(--line);text-align:center;transition:transform .14s,border-color .2s,box-shadow .2s}
+.gt .gi{font-size:24px;line-height:1.1}.gt b{font-size:14px}.gt small{font-size:10.5px;line-height:1.25;color:var(--muted);min-height:2.5em}
+.gt .gq{display:flex;gap:3px;margin-top:3px}.gt .gq u{width:12px;height:4px;border-radius:2px;background:#3a2632}.gt .gq u.f{background:var(--gold)}
+.gt.on{border-color:var(--gold);background:linear-gradient(180deg,#3d2614,#1d110a);box-shadow:0 0 0 1px var(--gold) inset,0 0 18px -6px var(--gold)}
+.gt.on::after{content:"✓";position:absolute;top:5px;right:7px;color:var(--gold);font-weight:900;font-size:13px}
+.gt.gultra.on{border-color:#c79cff;background:linear-gradient(180deg,#2e1a44,#140b1e);box-shadow:0 0 0 1px #c79cff inset,0 0 20px -6px #c79cff}.gt.gultra.on::after{color:#c79cff}.gt.gultra .gq u.f{background:#c79cff}
+.gt:active{transform:scale(.95)}
+.pop{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(4,1,6,.62);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:16px}
+.pop.on{display:flex;animation:fadeIn .2s}
+.popIn{width:min(430px,100%);max-height:92%;overflow:auto;background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:18px;padding:14px 14px 16px;box-shadow:0 20px 50px rgba(0,0,0,.8);animation:sheetIn .32s cubic-bezier(.2,.9,.3,1.1)}
+.popIn h2{font-family:Cinzel,Georgia,serif;color:var(--gold);margin:0;font-size:20px}
+.lgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.lgrid button{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;background:linear-gradient(180deg,#22141f,#170d15);border:1px solid var(--line);font-weight:700;font-size:14.5px;text-align:left;transition:transform .12s,border-color .15s}
+.lgrid button .fl{font-size:22px;line-height:1}
+.lgrid button.on{border-color:var(--gold);background:linear-gradient(180deg,#3d2614,#1d110a);box-shadow:0 0 0 1px var(--gold) inset}
+.lgrid button:active{transform:scale(.95)}
 </style>
 </head>
 <body>
@@ -307,7 +341,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         <button class="ib" id="bDrops" data-tk="drops">🎲<i class="bdg dot" id="luckBdg"></i><small class="ibl" data-i="hbDrops">Дропи</small></button>
         <button class="ib" id="bBest" data-tk="best">📖<small class="ibl" data-i="hbBest">Індекс</small></button>
         <button class="ib" id="bFull" data-tk="fullscreen">⛶<small class="ibl" data-i="hbFull">Екран</small></button>
-        <button class="ib" id="bPause" data-tk="pause">⏸<small class="ibl" data-i="hbPause">Пауза</small></button>
+        <button class="ib" id="bPause" data-tk="pause"><i class="pzI"></i><small class="ibl" data-i="hbPause">Пауза</small></button>
       </div>
     </div>
   </div>
@@ -378,18 +412,20 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     <h3 class="h3" data-i="settings">Налаштування</h3>
     <div class="row"><div><b data-i="acc">Акаунт</b><div class="m" id="accWho"></div></div><div class="accb" id="accBtns"></div></div>
     <div class="row"><div><b data-i="nick">Нікнейм</b><div class="m" data-i="nickHint">Показується над героєм</div></div><div><input id="nickIn" class="inp" maxlength="18" placeholder="…"> <button class="btn" id="nickOk" data-i="save">Зберегти</button></div></div>
-    <div class="row"><b data-i="lang">Мова</b><select id="langSel" class="sel"></select></div>
+    <div class="row"><b data-i="lang">Мова</b><button class="pickB" id="langB" type="button"></button><select id="langSel" class="sel" hidden></select></div>
     <div class="row"><b data-i="sfx">Звукові ефекти</b><input id="sfxR" class="rng" type="range" min="0" max="100"></div>
     <div class="row"><b data-i="music">Гучність музики</b><input id="musR" class="rng" type="range" min="0" max="100"></div>
     <div class="row"><b data-i="musicOn">Фонова музика</b><button class="btn" id="musB">▶</button></div>
-    <div class="row"><b data-i="gfx">Графіка</b><select id="gfxSel" class="sel"></select></div>
+    <div class="row colr"><b data-i="gfx">Графіка</b><div class="gfxT" id="gfxT"></div><select id="gfxSel" class="sel" hidden></select></div>
     <div class="row"><div><b data-i="fpsL">Лічильник FPS</b><div class="m" data-i="fpsHint">Показує кадри за секунду вгорі екрана</div></div><button class="btn" id="fpsB">✕</button></div>
     <div class="row"><b data-i="resetL">Прогрес</b><button class="btn warn" id="resetB" data-i="reset">Скинути прогрес</button></div>
     <p class="ctrlText" data-i="ctrl"></p>
     <div class="donate"><div><b>💛 <span data-i="donate">Підтримати автора</span></b><div class="m"><span data-i="donateBank">монобанк</span> · <span class="card" id="donCard">4441114438533190</span></div></div><button class="btn" id="donCopy">📋 <span data-i="copy">Копіювати</span></button></div>
   </div></div>
 
-  <div class="modal" id="mAuth"><div class="sheet auth">
+  <div class="pop" id="langPop"><div class="popIn"><div class="shead"><h2 data-i="langPick">Обери мову</h2><button class="x" id="langX" type="button" aria-label="✕">✕</button></div><div class="lgrid" id="lgrid"></div></div></div>
+<div class="vig" id="vig"></div>
+<div class="modal" id="mAuth"><div class="sheet auth">
     <div class="shead"><h2 id="authT">Створити акаунт</h2><button class="x" id="authX" aria-label="Закрити">✕</button></div>
     <div class="tabs"><button class="tab atab on" data-m="up" data-i="signUp">Створити акаунт</button><button class="tab atab" data-m="in" data-i="logIn">Увійти</button></div>
     <label class="fl"><span data-i="email">Імейл</span><input id="aEmail" class="inp" type="email" autocomplete="email" inputmode="email" maxlength="80" placeholder="name@example.com"></label>
@@ -439,6 +475,13 @@ hbDrops:"Дропи|Drops|Butin|Drops|掉落|Botín|Bottino|Dropy|Drops|ドロ�
 hbBest:"Індекс|Index|Index|Index|图鉴|Índice|Indice|Indeks|Índice|図鑑|도감",
 hbFull:"Екран|Screen|Écran|Vollbild|全屏|Pantalla|Schermo|Ekran|Tela|全画面|화면",
 hbPause:"Пауза|Pause|Pause|Pause|暂停|Pausa|Pausa|Pauza|Pausa|一時停止|일시정지",
+gfxLoN:"Швидка|Fast|Rapide|Schnell|流畅|Rápida|Veloce|Szybka|Rápida|軽量|빠름",
+gfxHiN:"Висока|High|Haute|Hoch|高|Alta|Alta|Wysoka|Alta|高|높음",
+gfxUlN:"Ультра|Ultra|Ultra|Ultra|极致|Ultra|Ultra|Ultra|Ultra|ウルトラ|울트라",
+gfxLoD:"Більше FPS, без тіней|More FPS, no shadows|Plus de FPS, sans ombres|Mehr FPS, keine Schatten|更高帧率，无阴影|Más FPS, sin sombras|Più FPS, niente ombre|Więcej FPS, bez cieni|Mais FPS, sem sombras|FPS優先・影なし|FPS 우선, 그림자 없음",
+gfxHiD:"Тіні, трава, деталі|Shadows, grass, details|Ombres, herbe, détails|Schatten, Gras, Details|阴影、草地、细节|Sombras, hierba, detalles|Ombre, erba, dettagli|Cienie, trawa, detale|Sombras, grama, detalhes|影・草・ディテール|그림자, 풀, 디테일",
+gfxUlD:"Сяйво, соковиті кольори, макс. деталі|Glow, rich colors, max detail|Halo, couleurs riches, détails max|Leuchten, satte Farben, max. Details|辉光、鲜艳色彩、最高细节|Brillo, colores vivos, máximo detalle|Bagliore, colori vivi, dettagli max|Poświata, żywe kolory, maks. detale|Brilho, cores vivas, detalhe máx.|グロー・鮮やかな色・最高ディテール|글로우, 선명한 색, 최고 디테일",
+langPick:"Обери мову|Choose language|Choisir la langue|Sprache wählen|选择语言|Elige idioma|Scegli la lingua|Wybierz język|Escolha o idioma|言語を選択|언어 선택",
 gfxLo:"3D — швидка|3D — fast|3D — rapide|3D — schnell|3D — 流畅|3D — rápido|3D — veloce|3D — szybka|3D — rápido|3D — 軽量|3D — 빠름",
 gfx2d:"2D — класична|2D — classic|2D — classique|2D — klassisch|2D — 经典|2D — clásico|2D — classica|2D — klasyczna|2D — clássico|2D — クラシック|2D — 클래식",
 impL:"Ударні кадри|Impact frames|Images d'impact|Impact-Frames|冲击帧|Fotogramas de impacto|Fotogrammi d'impatto|Klatki uderzenia|Quadros de impacto|インパクトフレーム|임팩트 프레임",
@@ -1190,7 +1233,7 @@ const KEYACT={KeyZ:"attack",KeyX:"heavy",KeyC:"fire",KeyV:"bolt",KeyB:"heal",Key
 window.addEventListener("keydown",e=>{
  if(e.target&&e.target.tagName==="INPUT"){if(e.code==="Escape")e.target.blur();return}
  if(e.ctrlKey||e.metaKey||e.altKey)return;
- if(e.code==="Escape"||e.code==="KeyP"){e.preventDefault();if(modalOpen){if(modalOpen!=="mDead")closeModal()}else if(hero.state!=="dead")openModal("mPause");return}
+ if(e.code==="Escape"||e.code==="KeyP"){e.preventDefault();if(langPopOn()){closeLangPop();return}if(modalOpen){if(modalOpen!=="mDead")closeModal()}else if(hero.state!=="dead")openModal("mPause");return}
  if(modalOpen)return;
  keys[e.code]=true;
  if(e.code==="Home"){hero.pitch=0;return}
@@ -2257,13 +2300,13 @@ function load3D(){
  next();
 }
 /* --- adaptive resolution: keeps the frame rate near 60 by lowering the render scale when frames run long --- */
-function applyPR3(){if(!G3)return;const P=G3.perf||(G3.perf={acc:0,n:0,cool:3,good:0,scale:G3.hi?1:.8,fps:60});const base=Math.min(G3.ultra?2.5:G3.hi?2:1.5,window.devicePixelRatio||1);G3.rr.setPixelRatio(base*P.scale);resize3D()}
+function applyPR3(){if(!G3)return;const P=G3.perf||(G3.perf={acc:0,n:0,cool:3,good:0,scale:G3.hi?1:.8,fps:60});const base=Math.min(G3.ultra?2.5:G3.hi?2:1.15,window.devicePixelRatio||1);G3.rr.setPixelRatio(base*P.scale);resize3D()}
 function perf3(dt){const P=G3.perf;if(!P)return;P.acc+=dt;P.n++;P.cool-=dt;if(P.acc<1)return;const avg=P.acc/P.n;P.fps=P.n/P.acc;P.acc=0;P.n=0;
  if(paused||document.hidden||modalOpen)return;const mn=G3.ultra?.75:G3.hi?.6:.5;
  if(avg>1/50){P.good=0;if(P.scale>mn&&P.cool<=0){P.scale=Math.max(mn,P.scale*(avg>1/30?.8:.9));P.cool=1.5;applyPR3()}}
  else if(avg<1/56){if(++P.good>=4&&P.scale<1){P.scale=Math.min(1,P.scale*1.08);P.good=0;P.cool=2;applyPR3()}}else P.good=0}
 function applyGfx(){
- if(G3){const on=use3D(),md=gfxMode(),hi=md!=="lo",ul=md==="ultra";G3.rr.domElement.style.display=on?"block":"none";G3.hi=hi;G3.sun.castShadow=hi;
+ if(G3){const on=use3D(),md=gfxMode(),hi=md!=="lo",ul=md==="ultra";G3.rr.domElement.style.display=on?"block":"none";G3.hi=hi;G3.sun.castShadow=hi;document.body.dataset.gfx=md;if(G3.chunks&&G3.gfxB!==md){const was=G3.gfxB;G3.gfxB=md;if(was)rebuildWorld3()}
   const ms=ul?4096:2048;if(G3.sun.shadow.mapSize.x!==ms){G3.sun.shadow.mapSize.set(ms,ms);if(G3.sun.shadow.map){G3.sun.shadow.map.dispose();G3.sun.shadow.map=null}}
   if(G3.ultra!==ul){G3.ultra=ul;if(G3.perf)G3.perf.scale=1;if(ul)initBloom3()}applyPR3()}
  if(!R3.ok)load3D();
@@ -2368,12 +2411,13 @@ function resize3D(){
  if(G3.ptMats)for(const m of G3.ptMats)m.uniforms.uScale.value=G3.ptScale;
 }
 window.addEventListener("resize",()=>{if(G3)resize3D()});
-function bloomFit3(){const B=BIOMES[G3.biome];if(!G3.bloom||!B)return;G3.bloom.threshold=B.day?1.6:.82;G3.bloom.strength=B.day?.32:.55}
+function bloomFit3(){const B=BIOMES[G3.biome];if(!G3.bloom||!B)return;G3.bloom.threshold=B.day?1.4:.8;G3.bloom.strength=B.day?.3:.6}
 /* --- ultra quality: bloom on bright and glowing things (post-processing from the three.js add-ons) --- */
 function initBloom3(){
  if(G3.comp||G3.bloomLoading||!R3.jsd)return;G3.bloomLoading=true;const B="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/postprocessing/";
- Promise.all(["EffectComposer","RenderPass","UnrealBloomPass","OutputPass"].map(n=>import(B+n+".js"))).then(([a,b,c,d])=>{const T=T3,cp=new a.EffectComposer(G3.rr);cp.addPass(new b.RenderPass(G3.scene,G3.cam));
-  const bl=new c.UnrealBloomPass(new T.Vector2(G3.W,G3.H),.55,.45,.82);cp.addPass(bl);cp.addPass(new d.OutputPass());G3.comp=cp;G3.bloom=bl;bloomFit3();resize3D()}).catch(err=>{console.warn("bloom off",err)}).finally(()=>{G3.bloomLoading=false})}
+ Promise.all(["EffectComposer","RenderPass","UnrealBloomPass","OutputPass","ShaderPass"].map(n=>import(B+n+".js"))).then(([a,b,c,d,e])=>{const T=T3,cp=new a.EffectComposer(G3.rr);cp.addPass(new b.RenderPass(G3.scene,G3.cam));
+  const bl=new c.UnrealBloomPass(new T.Vector2(G3.W,G3.H),.7,.5,.8);cp.addPass(bl);cp.addPass(new d.OutputPass());
+  cp.addPass(new e.ShaderPass({uniforms:{tDiffuse:{value:null}},vertexShader:"varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}",fragmentShader:"uniform sampler2D tDiffuse;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);vec3 col=c.rgb;float l=dot(col,vec3(.2126,.7152,.0722));float sat=max(col.r,max(col.g,col.b))-min(col.r,min(col.g,col.b));col=mix(vec3(l),col,1.2+.3*(1.-sat));col=clamp(col,0.,1.);col=mix(col,col*col*(3.-2.*col),.42);col+=vec3(.045,.02,-.03)*smoothstep(.45,1.,l)+vec3(-.015,.0,.04)*(1.-smoothstep(.0,.4,l));vec2 d=vUv-.5;col*=1.-dot(d,d)*.85;gl_FragColor=vec4(clamp(col,0.,1.),c.a);}"}));G3.comp=cp;G3.bloom=bl;bloomFit3();resize3D()}).catch(err=>{console.warn("bloom off",err)}).finally(()=>{G3.bloomLoading=false})}
 
 /* --- camera --- */
 function updateCam3(){
@@ -2405,7 +2449,7 @@ function updateCamFP(){
  cam.updateProjectionMatrix();cam.updateMatrixWorld();G3.ptScale=H*G3.rr.getPixelRatio()/(2*Math.tan(fv*PI/360));
  G3.sky.position.copy(cam.position);G3.stars.position.copy(cam.position);
  const v=new T3.Vector3(.86,.26,-.44).normalize();G3.skyU.mDir.value.copy(v);G3.moon.position.copy(cam.position).addScaledVector(v,7000);G3.moonGlow.position.copy(G3.moon.position);
- const f=G3.scene.fog,dk=(BIOMES[G3.biome]||BIOMES[0]).day?1.35:1;f.near=(G3.hi?260:200)*dk;f.far=(G3.hi?1650:1250)*dk;
+ const f=G3.scene.fog,dk=(BIOMES[G3.biome]||BIOMES[0]).day?1.35:1;f.near=(G3.ultra?320:G3.hi?260:180)*dk;f.far=(G3.ultra?2100:G3.hi?1650:1150)*dk;
  const cx=h.x+fx*240,sun=G3.sun;sun.target.position.set(cx,0,zC);sun.position.set(cx+340,780,zC-420);Object.assign(sun.shadow.camera,{left:-560,right:560,top:450,bottom:-450});sun.shadow.camera.updateProjectionMatrix();
  G3.rim.target.position.set(cx,30,zC);G3.rim.position.set(cx-500,260,zC-300);G3.fill.target.position.set(px+fx*120,30,pz+fz*120);G3.fill.position.set(px-fx*60,py+160,pz-fz*60);
 }
@@ -2630,7 +2674,7 @@ function buildChunk(i){
  if(B.flw){const n=Math.round((G3.hi?64:32)*(B.flwK||1)),im=new T.InstancedMesh(geo("flw2",()=>new T.IcosahedronGeometry(1,0).scale(1,.6,1)),B.day?M.flw:M.flwG,n),m4=new T.Matrix4(),q4=new T.Quaternion(),v=new T.Vector3(),sc=new T.Vector3(),cc=new T.Color();
   for(let q=0;q<n;q++){const nr=q%3===0,x=x0+h(q+800)*CHW,z=nr?DEPTH*ZS+22+Math.pow(h(q+820),1.5)*260:-22-Math.pow(h(q+820),1.5)*280,k=1.3+h(q+840)*1.4;v.set(x,terrH(x,z)+k*.6+2.4,z);sc.set(k,k,k);m4.compose(v,q4,sc);im.setMatrixAt(q,m4);im.setColorAt(q,cc.set(B.flw[Math.floor(h(q+850)*B.flw.length)]))}
   im.castShadow=false;g.add(im)}
- if(B.grass){const n=G3.hi?(G3.ultra?240:160):70,im=new T.InstancedMesh(G3.tuftGeo,M.grassI,n),m4=new T.Matrix4(),q4=new T.Quaternion(),e=new T.Euler(),v=new T.Vector3(),sc=new T.Vector3(),cc=new T.Color(),gc=new T.Color(B.grass);
+ if(B.grass){const n=G3.hi?(G3.ultra?300:160):50,im=new T.InstancedMesh(G3.tuftGeo,M.grassI,n),m4=new T.Matrix4(),q4=new T.Quaternion(),e=new T.Euler(),v=new T.Vector3(),sc=new T.Vector3(),cc=new T.Color(),gc=new T.Color(B.grass);
   for(let q=0;q<n;q++){const nr=q%5<2,x=x0+h(q+900)*CHW,z=nr?DEPTH*ZS+20+Math.pow(h(q+910),1.7)*320:-20-Math.pow(h(q+910),1.7)*340,k=.8+h(q+920)*.9;e.set(0,h(q+930)*6,0);q4.setFromEuler(e);v.set(x,terrH(x,z)-.5,z);sc.set(k,k*(.75+h(q+940)*.7),k);m4.compose(v,q4,sc);im.setMatrixAt(q,m4);im.setColorAt(q,cc.copy(gc).multiplyScalar(.82+h(q+950)*.36))}
   im.castShadow=false;im.receiveShadow=true;g.add(im)}
  if(!B.flw){const n=18,im=new T.InstancedMesh(geo("flw",()=>new T.IcosahedronGeometry(1,0)),bi===3?M.snow:M.glow,n),m4=new T.Matrix4(),q4=new T.Quaternion(),v=new T.Vector3(),sc=new T.Vector3();
@@ -2659,7 +2703,7 @@ function buildChunk(i){
   const im=new T.InstancedMesh(SG,M.cob,list.length),m4=new T.Matrix4(),q4=new T.Quaternion(),e=new T.Euler(),v=new T.Vector3(),sc=new T.Vector3(),cc=new T.Color(),base=new T.Color(B.stone),moss=new T.Color(B.grass||B.near);
   list.forEach(([x,z,sx,sz,sy,hk],i)=>{e.set((hash(hk*77)-.5)*.05,(hash(hk*31)-.5)*.12,(hash(hk*53)-.5)*.05);q4.setFromEuler(e);v.set(x,0,z);sc.set(sx,sy,sz);m4.compose(v,q4,sc);im.setMatrixAt(i,m4);
    cc.copy(base).multiplyScalar(.78+hash(hk*13)*.4);if(hash(hk*19)<.12)cc.lerp(moss,.35);im.setColorAt(i,cc)});
-  im.castShadow=false;im.receiveShadow=true;g.add(im)}
+  im.castShadow=false;im.receiveShadow=true;im.renderOrder=-.5;if(!M.cob.transparent){M.cob.transparent=true;M.cob.needsUpdate=true}g.add(im)}
  // broken pillars behind the far curb
  for(let j=0;j<2;j++)if(h(j+580)<.45){const x=x0+h(j+590)*CHW,ph=26+h(j+600)*50;mesh(geo("pil",()=>new T.CylinderGeometry(6.5,7.5,1,8).translate(0,.5,0)),M.stone2,x,0,-30-h(j+610)*16,[1,ph,1]);mesh(geo("pcap",()=>new T.BoxGeometry(18,5,18)),M.stone,x,ph+2,-30-h(j+610)*16).rotation.set(h(j)*.3,h(j+1)*2,h(j+2)*.3)}
  // near side (only seen in first person): torch, trees, rocks, arches over the road
@@ -2679,8 +2723,9 @@ function buildChunk(i){
  fp.visible=isFP();
  return{g,fp};
 }
+function rebuildWorld3(){if(!G3||!G3.chunks)return;for(const [i,ch] of G3.chunks){G3.decor.remove(ch.g);ch.g.traverse(o=>{if(o.isSprite)o.material.dispose();else if(o.isInstancedMesh)o.dispose();else if(o.userData.own)o.geometry.dispose()})}G3.chunks.clear();G3.torches=[]}
 function updateChunks3(){
- const FP=isFP(),R=FP?(G3.hi?1900:1300):900,a=Math.floor((Math.min(camX,FP?hero.x:camX)-R)/CHW),b=Math.floor((Math.max(camX+LW,FP?hero.x:0)+R)/CHW);
+ const FP=isFP(),R=FP?(G3.ultra?2300:G3.hi?1900:1200):900,a=Math.floor((Math.min(camX,FP?hero.x:camX)-R)/CHW),b=Math.floor((Math.max(camX+LW,FP?hero.x:0)+R)/CHW);
  {const need=[];for(let i=a;i<=b;i++)if(!G3.chunks.has(i))need.push(i);
   if(need.length){const c0=(FP?hero.x:camX+LW/2)/CHW,v0=Math.floor((camX-60)/CHW),v1=Math.floor((camX+LW+60)/CHW);need.sort((x,y)=>Math.abs(x+.5-c0)-Math.abs(y+.5-c0));let n=0;
    for(const i of need){const urgent=G3.chunks.size<3||(!FP&&i>=v0&&i<=v1)||(FP&&Math.abs(i+.5-c0)<1.6);if(n>=1&&!urgent)break;const ch=buildChunk(i);G3.chunks.set(i,ch);G3.decor.add(ch.g);if(++n>=4)break}}}
@@ -3940,12 +3985,22 @@ $("aGo").onclick=async()=>{
  }finally{$("aGo").disabled=false}
 };
 function logOut(){switchTo(null,false);toast(t("loggedOut"));fillSettings()}
-function fillSettings(){fillAccount();$("nickIn").value=nickname;$("langSel").value=lang;$("sfxR").value=S.sfx;$("musR").value=S.music;$("musB").textContent=S.musicOn?"⏸ "+t("on"):"▶ "+t("off");$("gfxSel").innerHTML=[["ultra","gfxUltra"],["hi","gfxHi"],["lo","gfxLo"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("gfxSel").value=gfxMode();$("fpsB").textContent=S.fps?"📈 "+t("on"):"✕ "+t("off")}
+function fillSettings(){fillAccount();$("nickIn").value=nickname;$("langSel").value=lang;$("sfxR").value=S.sfx;$("musR").value=S.music;$("musB").textContent=S.musicOn?"⏸ "+t("on"):"▶ "+t("off");$("gfxSel").innerHTML=[["ultra","gfxUltra"],["hi","gfxHi"],["lo","gfxLo"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("gfxSel").value=gfxMode();$("fpsB").textContent=S.fps?"📈 "+t("on"):"✕ "+t("off");if(typeof fillPickers==="function")fillPickers()}
 $("donCopy").onclick=()=>{const v=$("donCard").textContent.trim();const ok=()=>{toast("✓ "+t("copied"),"#d6a24a");SFX.cash()};try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(ok,()=>{selCard();ok()});else{selCard();document.execCommand("copy");ok()}}catch(e){selCard()}};
 function selCard(){try{const r=document.createRange();r.selectNodeContents($("donCard"));const sl=getSelection();sl.removeAllRanges();sl.addRange(r)}catch(e){}}
 $("nickOk").onclick=()=>{nickname=$("nickIn").value.trim().slice(0,18);save();hud();toast(t("saved"))};
 $("nickIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("nickOk").click()});
 $("langSel").innerHTML=LANGS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
+const FLAG={uk:"🇺🇦",en:"🇬🇧",fr:"🇫🇷",de:"🇩🇪",zh:"🇨🇳",es:"🇪🇸",it:"🇮🇹",pl:"🇵🇱",pt:"🇵🇹",ja:"🇯🇵",ko:"🇰🇷"};
+function fillPickers(){const ln=LANGS.find(x=>x[0]===lang)||LANGS[0];$("langB").innerHTML=`<span class="fl">${FLAG[ln[0]]||"🌐"}</span><span>${ln[1]}</span><i>›</i>`;
+ const md=gfxMode();$("gfxT").innerHTML=[["lo","🔋","gfxLoN","gfxLoD",1],["hi","✨","gfxHiN","gfxHiD",2],["ultra","💎","gfxUlN","gfxUlD",3]].map(([k,ic,n,d,q])=>`<button type="button" class="gt g${k}${k===md?" on":""}" data-g="${k}"><span class="gi">${ic}</span><b>${t(n)}</b><small>${t(d)}</small><span class="gq">${[1,2,3].map(j=>`<u class="${j<=q?"f":""}"></u>`).join("")}</span></button>`).join("");
+ $("lgrid").innerHTML=LANGS.map(([k,n])=>`<button type="button" data-l="${k}" class="${k===lang?"on":""}"><span class="fl">${FLAG[k]||"🌐"}</span>${n}</button>`).join("")}
+const langPopOn=()=>$("langPop").classList.contains("on");
+function closeLangPop(){$("langPop").classList.remove("on")}
+$("langB").onclick=()=>{fillPickers();$("langPop").classList.add("on");SFX.open()};
+$("langX").onclick=()=>{closeLangPop();SFX.close()};
+$("langPop").onclick=e=>{if(e.target===$("langPop")){closeLangPop();return}const b=e.target.closest("[data-l]");if(!b)return;lang=b.dataset.l;$("langSel").value=lang;applyLang();fillSettings();save();SFX.ui();setTimeout(closeLangPop,140)};
+$("gfxT").onclick=e=>{const b=e.target.closest("[data-g]");if(!b||b.dataset.g===gfxMode())return;S.gfx=b.dataset.g;$("gfxSel").value=S.gfx;applyGfx();save();fillPickers();SFX.ui()};
 $("langSel").onchange=e=>{lang=e.target.value;applyLang();fillSettings();save()};
 $("sfxR").oninput=e=>{S.sfx=+e.target.value};
 $("fpsB").onclick=()=>{S.fps=!S.fps;fillSettings();save()};
