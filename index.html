@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mini RPG 3D — Тіньові землі</title>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,7 +63,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 @keyframes nwPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.35);opacity:.7}}
 .cell .nw{animation:nwPulse 1.3s ease-in-out infinite}
 
-.bossbar{position:absolute;left:50%;transform:translateX(-50%);top:calc(10px + 58px);width:min(420px,70vw);text-align:center;z-index:5;pointer-events:none;display:none}
+.bossbar{position:absolute;left:50%;transform:translateX(-50%);top:calc(10px + 74px);width:min(420px,70vw);text-align:center;z-index:5;pointer-events:none;display:none}
 .bossbar b{font-family:Cinzel,Georgia,serif;color:var(--gold);font-size:14px;text-shadow:0 2px 6px #000}
 .bossbar .bar{height:12px;border-color:#6b4a1c}
 .bossbar .bar i{background:linear-gradient(90deg,#7a1020,#e14b5a,#ffb35a)}
@@ -105,6 +106,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .sk.fir{right:102px}.sk.blt{right:60px}
 .hpw{display:none}#stage.fp .hpw{display:block}
 .ib{position:relative}
+.ibl{position:absolute;top:calc(100% + 2px);left:50%;transform:translateX(-50%);font:700 9.5px/1.1 system-ui,sans-serif;color:#eadbe2;text-shadow:0 1px 2px #000,0 0 4px #000;white-space:nowrap;pointer-events:none;letter-spacing:.01em}
+.ibs{margin-bottom:12px}
 @media (hover:hover){[data-tip]:hover::after{content:attr(data-tip);position:absolute;white-space:nowrap;z-index:50;pointer-events:none;background:rgba(14,8,14,.96);color:#f3e9ee;border:1px solid var(--line);border-radius:8px;padding:4px 9px;font:700 12px system-ui,sans-serif;animation:tipIn .15s ease-out}
 .ib[data-tip]:hover::after{top:calc(100% + 6px);right:0}
 .sk[data-tip]:hover::after{bottom:calc(100% + 8px);right:50%;transform:translateX(50%)}}
@@ -118,8 +121,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .cine i{position:absolute;left:0;right:0;height:0;background:#000;z-index:4;pointer-events:none;transition:height .45s cubic-bezier(.3,.8,.3,1)}.cine i:first-child{top:0}.cine i:last-child{bottom:0}.cine.on i{height:9vh}
 .gflyW{position:absolute;right:96px;top:44px;z-index:6;pointer-events:none}.gfly{position:absolute;right:0;top:0;white-space:nowrap;font:800 13px system-ui,sans-serif;color:#ffd98a;text-shadow:0 1px 3px #000;animation:gflyA 1.1s ease-out forwards}@keyframes gflyA{0%{transform:translateY(16px) scale(.6);opacity:0}20%{transform:translateY(0) scale(1.15);opacity:1}100%{transform:translateY(-26px) scale(1);opacity:0}}
 @media (hover:hover){.btn,.buy,.ib{transition:filter .15s,box-shadow .2s}.btn:hover,.buy:hover:not(:disabled),.ib:hover{filter:brightness(1.18);box-shadow:0 0 0 1px rgba(214,162,74,.35),0 0 16px -3px rgba(214,162,74,.55)}}
-.banner.show h1{background:linear-gradient(100deg,#f7e3c0 30%,#ffffff 44%,#ffd98a 50%,#f7e3c0 62%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:banShine 2.6s ease-out}@keyframes banShine{0%{background-position:120% 0}60%,100%{background-position:-60% 0}}
-@media (prefers-reduced-motion:reduce){.banner.show h1{animation:none}.gfly{animation-duration:.01s}}
+@media (prefers-reduced-motion:reduce){.gfly{animation-duration:.01s}}
 .modal.on{animation:fadeIn .2s}
 @keyframes sheetIn{from{transform:perspective(900px) rotateX(16deg) translateY(26px) scale(.94);opacity:0}65%{transform:perspective(900px) rotateX(-2deg) translateY(-2px) scale(1.01);opacity:1}}
 @keyframes fadeIn{from{opacity:0}}
@@ -267,7 +269,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .defeat .acts{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
 .toast{position:absolute;left:50%;top:84px;transform:translate(-50%,-10px);opacity:0;background:var(--gold);color:#1a1108;padding:8px 16px;border-radius:99px;font-weight:700;transition:.22s;z-index:30;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-@media (max-width:520px){.me{width:168px}.ibs{gap:4px}.ib{width:32px;height:32px;font-size:15px;border-radius:9px}.bossbar{top:112px}.rrow{grid-template-columns:88px 1fr auto;gap:6px}}
+@media (max-width:520px){.me{width:168px}.ibs{gap:4px}.ib{width:32px;height:32px;font-size:15px;border-radius:9px}.ibl{font-size:8px}.bossbar{top:124px}.rrow{grid-template-columns:88px 1fr auto;gap:6px}}
 @media (prefers-reduced-motion:reduce){.banner.show{animation-duration:2.6s;animation-name:banFade}@keyframes banFade{0%,100%{opacity:0}10%,80%{opacity:1}}}
 </style>
 </head>
@@ -286,12 +288,12 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     <div class="rightHud">
       <div class="plate res"><span class="g">🪙 <b id="hGold">0</b></span><span>⚔ <b id="hWave">#1</b></span></div>
       <div class="ibs">
-        <button class="ib" id="bTree" data-tk="tree">🌳</button>
-        <button class="ib" id="bInv" data-tk="inv">🎒<i class="bdg" id="invBdg"></i></button>
-        <button class="ib" id="bDrops" data-tk="drops">🎲<i class="bdg dot" id="luckBdg"></i></button>
-        <button class="ib" id="bBest" data-tk="best">📖</button>
-        <button class="ib" id="bFull" data-tk="fullscreen">⛶</button>
-        <button class="ib" id="bPause" data-tk="pause">⏸</button>
+        <button class="ib" id="bTree" data-tk="tree">🌳<small class="ibl" data-i="hbTree">Навички</small></button>
+        <button class="ib" id="bInv" data-tk="inv">🎒<i class="bdg" id="invBdg"></i><small class="ibl" data-i="hbInv">Речі</small></button>
+        <button class="ib" id="bDrops" data-tk="drops">🎲<i class="bdg dot" id="luckBdg"></i><small class="ibl" data-i="hbDrops">Дропи</small></button>
+        <button class="ib" id="bBest" data-tk="best">📖<small class="ibl" data-i="hbBest">Індекс</small></button>
+        <button class="ib" id="bFull" data-tk="fullscreen">⛶<small class="ibl" data-i="hbFull">Екран</small></button>
+        <button class="ib" id="bPause" data-tk="pause">⏸<small class="ibl" data-i="hbPause">Пауза</small></button>
       </div>
     </div>
   </div>
@@ -367,9 +369,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     <div class="row"><b data-i="music">Гучність музики</b><input id="musR" class="rng" type="range" min="0" max="100"></div>
     <div class="row"><b data-i="musicOn">Фонова музика</b><button class="btn" id="musB">▶</button></div>
     <div class="row"><b data-i="gfx">Графіка</b><select id="gfxSel" class="sel"></select></div>
-    <div class="row"><b data-i="view">Камера</b><select id="viewSel" class="sel"></select></div>
-    <div class="row"><div><b data-i="bloodL">Кров</b><div class="m" data-i="bloodHint">Бризки та плями крові (13+)</div></div><button class="btn" id="bloodB">🩸</button></div>
-    <div class="row"><div><b data-i="impL">Ударні кадри</b><div class="m" data-i="impHint">Чорно-білі спалахи й стоп-кадр на сильних ударах</div></div><button class="btn" id="impB">⚡</button></div>
     <div class="row"><div><b data-i="fpsL">Лічильник FPS</b><div class="m" data-i="fpsHint">Показує кадри за секунду вгорі екрана</div></div><button class="btn" id="fpsB">✕</button></div>
     <div class="row"><b data-i="resetL">Прогрес</b><button class="btn warn" id="resetB" data-i="reset">Скинути прогрес</button></div>
     <p class="ctrlText" data-i="ctrl"></p>
@@ -417,6 +416,13 @@ music:"Гучність музики|Music volume|Volume de la musique|Musiklaut
 musicOn:"Фонова музика|Background music|Musique de fond|Hintergrundmusik|背景音乐|Música de fondo|Musica di sottofondo|Muzyka w tle|Música de fundo|BGM|배경 음악",
 gfx:"Графіка|Graphics|Graphismes|Grafik|画面|Gráficos|Grafica|Grafika|Gráficos|グラフィック|그래픽",
 gfxHi:"3D — висока якість|3D — high quality|3D — haute qualité|3D — hohe Qualität|3D — 高画质|3D — alta calidad|3D — alta qualità|3D — wysoka jakość|3D — alta qualidade|3D — 高画質|3D — 고품질",
+gfxUltra:"3D — ультра|3D — ultra|3D — ultra|3D — Ultra|3D — 极致|3D — ultra|3D — ultra|3D — ultra|3D — ultra|3D — ウルトラ|3D — 울트라",
+hbTree:"Навички|Skills|Talents|Talente|技能|Talentos|Talenti|Talenty|Talentos|スキル|스킬",
+hbInv:"Речі|Items|Objets|Items|物品|Objetos|Oggetti|Rzeczy|Itens|アイテム|아이템",
+hbDrops:"Дропи|Drops|Butin|Drops|掉落|Botín|Bottino|Dropy|Drops|ドロップ|드롭",
+hbBest:"Індекс|Index|Index|Index|图鉴|Índice|Indice|Indeks|Índice|図鑑|도감",
+hbFull:"Екран|Screen|Écran|Vollbild|全屏|Pantalla|Schermo|Ekran|Tela|全画面|화면",
+hbPause:"Пауза|Pause|Pause|Pause|暂停|Pausa|Pausa|Pauza|Pausa|一時停止|일시정지",
 gfxLo:"3D — швидка|3D — fast|3D — rapide|3D — schnell|3D — 流畅|3D — rápido|3D — veloce|3D — szybka|3D — rápido|3D — 軽量|3D — 빠름",
 gfx2d:"2D — класична|2D — classic|2D — classique|2D — klassisch|2D — 经典|2D — clásico|2D — classica|2D — klasyczna|2D — clássico|2D — クラシック|2D — 클래식",
 impL:"Ударні кадри|Impact frames|Images d'impact|Impact-Frames|冲击帧|Fotogramas de impacto|Fotogrammi d'impatto|Klatki uderzenia|Quadros de impacto|インパクトフレーム|임팩트 프레임",
@@ -516,7 +522,7 @@ vsEq:"Порівняно з вдягнутим|Compared to equipped|Comparé à 
 eqBonus:"Бонуси спорядження|Bonuses from equipment|Bonus de l'équipement|Boni durch Ausrüstung|装备加成|Bonos del equipo|Bonus dall'equipaggiamento|Premie z wyposażenia|Bônus do equipamento|装備ボーナス|장비 보너스",
 found:"Знайдено: {n}|Found: {n}|Trouvé : {n}|Gefunden: {n}|获得：{n}|Encontrado: {n}|Trovato: {n}|Znaleziono: {n}|Encontrado: {n}|入手：{n}|획득: {n}",
 bagFull:"Сумка повна — річ продано за 🪙 {n}|Bag full, item sold for 🪙 {n}|Sac plein, objet vendu 🪙 {n}|Tasche voll, verkauft für 🪙 {n}|背包已满，物品已出售 🪙 {n}|Bolsa llena, vendido por 🪙 {n}|Borsa piena, venduto a 🪙 {n}|Torba pełna, sprzedano za 🪙 {n}|Bolsa cheia, item vendido por 🪙 {n}|バッグがいっぱい。アイテムを🪙 {n}で売却しました|가방이 가득 차서 🪙 {n}에 팔았습니다",
-drops:"Шанси здобичі|Drop chances|Chances de butin|Dropchancen|掉落概率|Probabilidad de botín|Probabilità di bottino|Szanse na łup|Chances de saque|ドロップ率|드롭 확률",
+drops:"Шанси дропів|Drop chances|Chances de butin|Dropchancen|掉落概率|Probabilidad de botín|Probabilità di bottino|Szanse na łup|Chances de saque|ドロップ率|드롭 확률",
 tabChance:"Шанси|Chances|Chances|Chancen|概率|Probabilidades|Probabilità|Szanse|Chances|確率|확률",
 tabLuck:"Удача|Luck|Chance|Glück|幸运|Suerte|Fortuna|Szczęście|Sorte|運|행운",
 dropsHint:"Коли ворог гине, з нього може випасти річ. Нижче шанс кожної рідкості.|When an enemy dies it may drop an item. Below is the chance of each rarity.|Quand un ennemi meurt, il peut lâcher un objet. Voici la chance de chaque rareté.|Besiegte Gegner können einen Gegenstand fallen lassen. Unten die Chance jeder Seltenheit.|敌人死亡时可能掉落物品。下面是各稀有度的概率。|Al morir, un enemigo puede soltar un objeto. Abajo está la probabilidad de cada rareza.|Quando un nemico muore può lasciare un oggetto. Sotto la probabilità di ogni rarità.|Pokonany wróg może upuścić przedmiot. Poniżej szansa na każdą rzadkość.|Quando um inimigo morre, pode deixar um item. Abaixo está a chance de cada raridade.|敵を倒すとアイテムを落とすことがあります。下はレア度ごとの確率です。|적이 죽으면 아이템을 떨어뜨릴 수 있습니다. 아래는 희귀도별 확률입니다.",
@@ -585,17 +591,17 @@ const ETYPES=[
  look:{skin:"#7f913e",cloth:"#5a2e1c",cloth2:"#3e1f12",boot:"#24130b",head:"orc",weapon:"axe",tw:16,limbW:7.5,wOff:1.0}},
 {k:"necro",n:S8("Некромант|Necromancer|Nécromancien|Nekromant|死灵法师|Nigromante|Negromante|Nekromanta|Necromante|ネクロマンサー|강령술사"),hp:150,atk:18,tier:"rare",spd:48,range:190,wind:.85,act:.25,rec:1.1,style:"cast",body:"human",size:1.05,rad:10,hgt:62,summon:true,
  look:{skin:"#b8c4a8",cloth:"#2b2140",cloth2:"#1c152b",boot:"#120d1c",cape:"#3d2a5c",head:"hood",weapon:"staff",wOff:1.2}},
-{k:"troll",n:S8("Болотний троль|Swamp Troll|Troll des marais|Sumpftroll|沼泽巨魔|Trol del pantano|Troll di palude|Bagienny troll|Troll do pântano|沼トロル|늪 트롤"),hp:210,atk:22,tier:"elite",spd:44,range:42,wind:.72,act:.18,rec:.75,style:"swing",body:"human",size:1.35,rad:14,hgt:66,heavy:true,regen:true,
+{k:"troll",n:S8("Болотний троль|Swamp Troll|Troll des marais|Sumpftroll|沼泽巨魔|Trol del pantano|Troll di palude|Bagienny troll|Troll do pântano|沼トロル|늪 트롤"),hp:210,atk:22,tier:"epic",spd:44,range:42,wind:.72,act:.18,rec:.75,style:"swing",body:"human",size:1.35,rad:14,hgt:66,heavy:true,regen:true,
  look:{skin:"#6f8f7a",cloth:"#4e3b28",cloth2:"#3a2c1d",boot:"#2a2016",head:"troll",weapon:"club",tw:18,limbW:9,wOff:1.0}},
-{k:"golem",n:S8("Кам'яний голем|Stone Golem|Golem de pierre|Steingolem|石魔像|Gólem de piedra|Golem di pietra|Kamienny golem|Golem de pedra|ストーンゴーレム|돌 골렘"),hp:190,atk:17,tier:"elite",spd:30,range:40,wind:.9,act:.2,rec:.8,style:"slam",body:"human",size:1.38,rad:15,hgt:66,heavy:true,
+{k:"golem",n:S8("Кам'яний голем|Stone Golem|Golem de pierre|Steingolem|石魔像|Gólem de piedra|Golem di pietra|Kamienny golem|Golem de pedra|ストーンゴーレム|돌 골렘"),hp:190,atk:17,tier:"epic",spd:30,range:40,wind:.9,act:.2,rec:.8,style:"slam",body:"human",size:1.38,rad:15,hgt:66,heavy:true,
  look:{skin:"#7b7a82",cloth:"#62616a",cloth2:"#4d4c55",boot:"#44434b",head:"golem",weapon:"fists",tw:19,limbW:9,armL:11,legL:11,eye:"#5ec8ff"}},
-{k:"spiderq",n:S8("Королева павуків|Spider Matriarch|Matriarche araignée|Spinnenmatriarchin|蜘蛛女王|Matriarca araña|Matriarca ragno|Pajęcza matriarchini|Matriarca aranha|蜘蛛の女王|거미 여왕"),hp:205,atk:21,tier:"elite",spd:95,range:76,wind:.52,act:.3,rec:.6,style:"lunge",body:"spider",size:1.3,rad:20,hgt:34,web:true,
+{k:"spiderq",n:S8("Королева павуків|Spider Matriarch|Matriarche araignée|Spinnenmatriarchin|蜘蛛女王|Matriarca araña|Matriarca ragno|Pajęcza matriarchini|Matriarca aranha|蜘蛛の女王|거미 여왕"),hp:205,atk:21,tier:"epic",spd:95,range:76,wind:.52,act:.3,rec:.6,style:"lunge",body:"spider",size:1.3,rad:20,hgt:34,web:true,
  look:{body:"#241820",body2:"#4a1f30",mark:"#ffb03a",eye:"#ff2a3a"}},
-{k:"mino",n:S8("Мінотавр|Minotaur|Minotaure|Minotaurus|牛头人|Minotauro|Minotauro|Minotaur|Minotauro|ミノタウロス|미노타우로스"),hp:240,atk:26,tier:"epic",spd:62,range:130,wind:.75,act:.6,rec:.9,style:"charge",body:"human",size:1.3,rad:14,hgt:68,heavy:true,
+{k:"mino",n:S8("Мінотавр|Minotaur|Minotaure|Minotaurus|牛头人|Minotauro|Minotauro|Minotaur|Minotauro|ミノタウロス|미노타우로스"),hp:240,atk:26,tier:"elite",spd:62,range:130,wind:.75,act:.6,rec:.9,style:"charge",body:"human",size:1.3,rad:14,hgt:68,heavy:true,
  look:{skin:"#6b4a33",cloth:"#3d2a1c",cloth2:"#5a3d28",boot:"#2a1c12",head:"bull",weapon:"axe2",tw:17,limbW:8.5,wOff:1.0}},
-{k:"dragon",n:S8("Молодий дракон|Lesser Drake|Petit dragon|Kleiner Drache|幼龙|Dragón menor|Drago minore|Mały smok|Dragão menor|レッサードレイク|작은 드레이크"),hp:230,atk:27,tier:"epic",spd:55,range:165,wind:.75,act:.4,rec:1.1,style:"breath",body:"dragon",size:1.05,rad:18,hgt:40,fly:true,flyH:44,
+{k:"dragon",n:S8("Молодий дракон|Lesser Drake|Petit dragon|Kleiner Drache|幼龙|Dragón menor|Drago minore|Mały smok|Dragão menor|レッサードレイク|작은 드레이크"),hp:230,atk:27,tier:"elite",spd:55,range:165,wind:.75,act:.4,rec:1.1,style:"breath",body:"dragon",size:1.05,rad:18,hgt:40,fly:true,flyH:44,
  look:{scale:"#2f7a45",belly:"#c9b36a",wing:"#4a2f5c",eye:"#ffd34e"}},
-{k:"knight",n:S8("Пекельний лицар|Hell Knight|Chevalier infernal|Höllenritter|地狱骑士|Caballero infernal|Cavaliere infernale|Piekielny rycerz|Cavaleiro infernal|ヘルナイト|지옥 기사"),hp:280,atk:31,tier:"epic",spd:56,range:38,wind:.48,act:.14,rec:.55,style:"combo",body:"human",size:1.15,rad:12,hgt:64,heavy:true,
+{k:"knight",n:S8("Пекельний лицар|Hell Knight|Chevalier infernal|Höllenritter|地狱骑士|Caballero infernal|Cavaliere infernale|Piekielny rycerz|Cavaleiro infernal|ヘルナイト|지옥 기사"),hp:280,atk:31,tier:"elite",spd:56,range:38,wind:.48,act:.14,rec:.55,style:"combo",body:"human",size:1.15,rad:12,hgt:64,heavy:true,
  look:{skin:"#3a1a1e",cloth:"#4a1c22",cloth2:"#2e1014",boot:"#1a080a",armor:"#5a2c31",arm2:"#5a2c31",head:"hknight",weapon:"hsword",cape:"#1a0508",wOff:.8}},
 {k:"imp",n:S8("Біс|Imp|Diablotin|Wichtel|小恶魔|Diablillo|Diavoletto|Chochlik|Diabrete|インプ|임프"),hp:58,atk:9,tier:"common",spd:105,range:26,wind:.36,act:.14,rec:.45,style:"claw",body:"human",size:.72,rad:8,hgt:46,blink:true,aura:"#ff7a3a",
  look:{skin:"#c8402e",cloth:"#3a1410",cloth2:"#2a0d0a",boot:"#1a0806",head:"imp",weapon:"claw",legL:9,armL:8,torso:13,tw:10,headR:8,wOff:0}},
@@ -623,9 +629,9 @@ const ETYPES=[
  look:{skin:"#9aa87a",cloth:"#3a4a2a",cloth2:"#2a361e",boot:"#1a2214",head:"hag",hair:"#d8d8c8",weapon:"staff",wOff:1.2}},
 {k:"banshee",n:S8("Банші|Banshee|Banshee|Banshee|女妖|Banshee|Banshee|Banshee|Banshee|バンシー|밴시"),hp:130,atk:18,tier:"rare",spd:82,range:32,wind:.4,act:.14,rec:.5,style:"claw",body:"ghost",size:1,rad:10,hgt:62,blink:true,aura:"#f0c8ff",
  look:{robe:"#d8d0f0",robe2:"#7a6aa8",eye:"#ff9ad8"}},
-{k:"ogre",n:S8("Огр-громила|Ogre Brute|Ogre brute|Oger-Schläger|食人魔暴徒|Ogro bruto|Orco bruto|Ogr osiłek|Ogro brutamontes|オーガの暴れ者|오거 난폭자"),hp:220,atk:23,tier:"elite",spd:40,range:44,wind:.8,act:.2,rec:.8,style:"slam",body:"human",size:1.45,rad:15,hgt:68,heavy:true,
+{k:"ogre",n:S8("Огр-громила|Ogre Brute|Ogre brute|Oger-Schläger|食人魔暴徒|Ogro bruto|Orco bruto|Ogr osiłek|Ogro brutamontes|オーガの暴れ者|오거 난폭자"),hp:220,atk:23,tier:"epic",spd:40,range:44,wind:.8,act:.2,rec:.8,style:"slam",body:"human",size:1.45,rad:15,hgt:68,heavy:true,
  look:{skin:"#a08a5a",cloth:"#5a3a22",cloth2:"#3e2816",boot:"#2a1a10",head:"ogre",weapon:"club",tw:20,limbW:9.5,wOff:1.0}},
-{k:"wyvern",n:S8("Вогняна віверна|Fire Wyvern|Wyverne de feu|Feuerwyvern|火焰飞龙|Guiverno de fuego|Viverna di fuoco|Ognista wiwerna|Serpe de fogo|ファイアワイバーン|화염 와이번"),hp:250,atk:28,tier:"epic",spd:60,range:165,wind:.7,act:.4,rec:1,style:"breath",body:"dragon",size:1.1,rad:18,hgt:42,fly:true,flyH:46,aura:"#ff8a2a",
+{k:"wyvern",n:S8("Вогняна віверна|Fire Wyvern|Wyverne de feu|Feuerwyvern|火焰飞龙|Guiverno de fuego|Viverna di fuoco|Ognista wiwerna|Serpe de fogo|ファイアワイバーン|화염 와이번"),hp:250,atk:28,tier:"elite",spd:60,range:165,wind:.7,act:.4,rec:1,style:"breath",body:"dragon",size:1.1,rad:18,hgt:42,fly:true,flyH:46,aura:"#ff8a2a",
  look:{scale:"#a8321e",belly:"#f0b050",wing:"#5a1a12",eye:"#fff2a0"}},
 {k:"gking",bossOnly:true,n:S8("Король гоблінів|Goblin King|Roi gobelin|Goblinkönig|哥布林之王|Rey goblin|Re dei goblin|Król goblinów|Rei goblin|ゴブリンキング|고블린 왕"),hp:150,atk:13,tier:"boss",spd:80,range:34,wind:.5,act:.16,rec:.5,style:"combo",body:"human",size:1.25,rad:12,hgt:60,summon:true,summonK:"goblin",
  look:{skin:"#6f9e3f",cloth:"#7a1a2a",cloth2:"#4a1018",boot:"#2a1a10",head:"goblin",weapon:"axe",cape:"#a82a3a",trim:"#e6b84e",legL:11,armL:10,torso:17,tw:15,headR:9.5,wOff:.8}},
@@ -637,21 +643,21 @@ const ETYPES=[
  look:{fur:"#c8d0e0",fur2:"#6a7a9a",eye:"#7ff5ff"}},
 {k:"eldrake",bossOnly:true,n:S8("Древній дракон|Elder Dragon|Dragon ancestral|Urdrache|远古巨龙|Dragón anciano|Drago antico|Pradawny smok|Dragão ancião|エルダードラゴン|고룡"),hp:280,atk:26,tier:"boss",spd:55,range:175,wind:.7,act:.45,rec:1,style:"breath",body:"dragon",size:1.6,rad:24,hgt:50,fly:true,flyH:54,aura:"#ff4d3d",
  look:{scale:"#1a1a2a",belly:"#8a2a3a",wing:"#3a0a1a",eye:"#ff3b3b"}},
-{k:"deathknight",n:S8("Лицар смерті|Death Knight|Chevalier de la mort|Todesritter|死亡骑士|Caballero de la muerte|Cavaliere della morte|Rycerz śmierci|Cavaleiro da morte|死の騎士|죽음의 기사"),hp:300,atk:32,tier:"epic",spd:58,range:46,wind:.5,act:.14,rec:.55,style:"combo",body:"human",size:1.2,rad:12,hgt:66,heavy:true,chill:true,aura:"#7ff5ff",
+{k:"deathknight",n:S8("Лицар смерті|Death Knight|Chevalier de la mort|Todesritter|死亡骑士|Caballero de la muerte|Cavaliere della morte|Rycerz śmierci|Cavaleiro da morte|死の騎士|죽음의 기사"),hp:300,atk:32,tier:"elite",spd:58,range:46,wind:.5,act:.14,rec:.55,style:"combo",body:"human",size:1.2,rad:12,hgt:66,heavy:true,chill:true,aura:"#7ff5ff",
  look:{skin:"#1a1e2a",cloth:"#20263a",cloth2:"#151a28",boot:"#0c0f18",armor:"#3a4a66",arm2:"#3a4a66",head:"dknight",weapon:"scythe",cape:"#0e1a2c",trim:"#7ff5ff",blade:"#bfe9ff",glowIdle:.6,glowCol:"#7ff5ff",tw:15,limbW:7,wOff:.9,dry:true,blood:"#7ff5ff"}},
 {k:"frostwolf",n:S8("Крижаний вовк|Frost Wolf|Loup de givre|Frostwolf|冰霜狼|Lobo de escarcha|Lupo del gelo|Mroźny wilk|Lobo gélido|フロストウルフ|서리 늑대"),hp:118,atk:15,tier:"rare",spd:132,range:76,wind:.45,act:.3,rec:.55,style:"lunge",body:"wolf",size:1.1,rad:16,hgt:36,chill:true,aura:"#bff8ff",
  look:{fur:"#d8e6f0",fur2:"#7f9ab4",eye:"#5ecbff"}},
-{k:"gargoyle",n:S8("Горгулья|Gargoyle|Gargouille|Gargoyle|石像鬼|Gárgola|Gargoyle|Gargulec|Gárgula|ガーゴイル|가고일"),hp:200,atk:21,tier:"elite",spd:70,range:70,wind:.55,act:.45,rec:.8,style:"swoop",body:"dragon",size:.95,rad:16,hgt:40,fly:true,flyH:50,heavy:true,
+{k:"gargoyle",n:S8("Горгулья|Gargoyle|Gargouille|Gargoyle|石像鬼|Gárgola|Gargoyle|Gargulec|Gárgula|ガーゴイル|가고일"),hp:200,atk:21,tier:"epic",spd:70,range:70,wind:.55,act:.45,rec:.8,style:"swoop",body:"dragon",size:.95,rad:16,hgt:40,fly:true,flyH:50,heavy:true,
  look:{scale:"#6b6a72",belly:"#8a8990",wing:"#4a4a52",eye:"#ff9a3a",dry:true,blood:"#9a99a2"}},
 {k:"assassin",n:S8("Тіньовий убивця|Shadow Assassin|Assassin des ombres|Schattenassassine|暗影刺客|Asesino sombrío|Assassino d'ombra|Cienisty zabójca|Assassino sombrio|影の暗殺者|그림자 암살자"),hp:105,atk:17,tier:"rare",spd:110,range:30,wind:.32,act:.12,rec:.45,style:"combo",body:"human",size:.95,rad:9,hgt:58,blink:true,stealth:true,
  look:{skin:"#c9a68a",cloth:"#1a1622",cloth2:"#110e18",boot:"#0a080e",head:"ninja",weapon:"dagger",cape:"#4a1030",wOff:.2}},
-{k:"shaman",n:S8("Орк-шаман|Orc Shaman|Chaman orc|Ork-Schamane|兽人萨满|Chamán orco|Sciamano orco|Ork szaman|Xamã orc|オークシャーマン|오크 주술사"),hp:190,atk:19,tier:"elite",spd:46,range:190,wind:.8,act:.25,rec:1,style:"cast",body:"human",size:1.15,rad:12,hgt:64,summon:true,summonK:"wolf",healer:true,aura:"#8aff6a",orbCol:"#8aff6a",
+{k:"shaman",n:S8("Орк-шаман|Orc Shaman|Chaman orc|Ork-Schamane|兽人萨满|Chamán orco|Sciamano orco|Ork szaman|Xamã orc|オークシャーマン|오크 주술사"),hp:190,atk:19,tier:"epic",spd:46,range:190,wind:.8,act:.25,rec:1,style:"cast",body:"human",size:1.15,rad:12,hgt:64,summon:true,summonK:"wolf",healer:true,aura:"#8aff6a",orbCol:"#8aff6a",
  look:{skin:"#7f913e",cloth:"#4a3a2a",cloth2:"#3a2a1a",boot:"#24130b",head:"shaman",weapon:"staff",cape:"#5a3a1a",tw:15,limbW:7,wOff:1.2}},
-{k:"scorpion",n:S8("Гігантський скорпіон|Giant Scorpion|Scorpion géant|Riesenskorpion|巨型蝎子|Escorpión gigante|Scorpione gigante|Olbrzymi skorpion|Escorpião gigante|巨大サソリ|거대 전갈"),hp:210,atk:20,tier:"elite",spd:92,range:74,wind:.5,act:.3,rec:.6,style:"lunge",body:"spider",size:1.25,rad:18,hgt:30,poison:true,
+{k:"scorpion",n:S8("Гігантський скорпіон|Giant Scorpion|Scorpion géant|Riesenskorpion|巨型蝎子|Escorpión gigante|Scorpione gigante|Olbrzymi skorpion|Escorpião gigante|巨大サソリ|거대 전갈"),hp:210,atk:20,tier:"epic",spd:92,range:74,wind:.5,act:.3,rec:.6,style:"lunge",body:"spider",size:1.25,rad:18,hgt:30,poison:true,
  look:{body:"#6a4220",body2:"#9a6a30",mark:"#c8ff5a",eye:"#ff3a2a",tail:true,blood:"#8fd13a"}},
-{k:"phoenix",n:S8("Вогняний фенікс|Fire Phoenix|Phénix de feu|Feuerphönix|火凤凰|Fénix de fuego|Fenice di fuoco|Ognisty feniks|Fênix de fogo|炎の不死鳥|화염 불사조"),hp:230,atk:26,tier:"epic",spd:105,range:70,wind:.5,act:.4,rec:.8,style:"swoop",body:"bat",size:1.7,rad:16,hgt:26,fly:true,flyH:64,explode:true,aura:"#ffb03a",
+{k:"phoenix",n:S8("Вогняний фенікс|Fire Phoenix|Phénix de feu|Feuerphönix|火凤凰|Fénix de fuego|Fenice di fuoco|Ognisty feniks|Fênix de fogo|炎の不死鳥|화염 불사조"),hp:230,atk:26,tier:"elite",spd:105,range:70,wind:.5,act:.4,rec:.8,style:"swoop",body:"bat",size:1.7,rad:16,hgt:26,fly:true,flyH:64,explode:true,aura:"#ffb03a",
  look:{fur:"#ff7a2a",wing:"#ffb03a",eye:"#fff2a0",phoenix:true,blood:"#ffb03a"}},
-{k:"stormsp",n:S8("Грозовий дух|Storm Spirit|Esprit de l'orage|Sturmgeist|风暴之灵|Espíritu de la tormenta|Spirito della tempesta|Duch burzy|Espírito da tempestade|嵐の精霊|폭풍의 정령"),hp:220,atk:25,tier:"epic",spd:80,range:190,wind:.7,act:.25,rec:.9,style:"cast",body:"ghost",size:1.1,rad:10,hgt:64,blink:true,aura:"#9fd8ff",orbCol:"#9fd8ff",orbSp:175,
+{k:"stormsp",n:S8("Грозовий дух|Storm Spirit|Esprit de l'orage|Sturmgeist|风暴之灵|Espíritu de la tormenta|Spirito della tempesta|Duch burzy|Espírito da tempestade|嵐の精霊|폭풍의 정령"),hp:220,atk:25,tier:"elite",spd:80,range:190,wind:.7,act:.25,rec:.9,style:"cast",body:"ghost",size:1.1,rad:10,hgt:64,blink:true,aura:"#9fd8ff",orbCol:"#9fd8ff",orbSp:175,
  look:{robe:"#6a8ad8",robe2:"#2a3a7a",eye:"#fff27a"}},
 {k:"mimic",n:S8("Мімік|Mimic|Mimique|Mimik|宝箱怪|Mímico|Mimic|Mimik|Mímico|ミミック|미믹"),hp:140,atk:18,tier:"rare",spd:60,range:70,wind:.5,act:.5,rec:.7,style:"hop",body:"slime",size:1,rad:13,hgt:28,lootX:2,
  look:{goo:"#7a4a22",goo2:"#3a2210",eye:"#ffd34e",chest:true,blood:"#7a0c12"}},
@@ -694,7 +700,7 @@ speed:["Легкий крок|Light Step|Pas léger|Leichter Schritt|轻盈步�
 cdr:["Потік мани|Mana Flow|Flux de mana|Manafluss|法力涌流|Flujo de maná|Flusso di mana|Przepływ many|Fluxo de mana|マナの流れ|마나의 흐름","Усі вміння відновлюються на {v}% швидше|All cooldowns −{v}%|Toutes les recharges −{v}%|Alle Abklingzeiten −{v}%|所有冷却 −{v}%|Todas las recargas −{v}%|Tutte le ricariche −{v}%|Wszystkie odnowienia −{v}%|Todas as recargas −{v}%|全クールダウン −{v}%|모든 재사용 대기시간 −{v}%"],
 spinBonus:["Сталевий вихор|Steel Cyclone|Cyclone d'acier|Stahlzyklon|钢铁旋风|Ciclón de acero|Ciclone d'acciaio|Stalowy cyklon|Ciclone de aço|鋼の旋風|강철 회오리","Вихор: +{v}% шкоди|Whirlwind +{v}% damage|Tourbillon +{v}% de dégâts|Wirbelwind +{v}% Schaden|旋风斩伤害 +{v}%|Torbellino +{v}% de daño|Turbine +{v}% danni|Wir +{v}% obrażeń|Redemoinho +{v}% de dano|旋風ダメージ +{v}%|회오리 피해 +{v}%"],
 spinCd:["Нестримність|Momentum|Élan|Schwung|势不可挡|Impulso|Slancio|Rozpęd|Ímpeto|勢い|기세","Вихор відновлюється на {v}% швидше|Whirlwind −{v}% cooldown|Tourbillon −{v}% de recharge|Wirbelwind −{v}% Abklingzeit|旋风斩冷却 −{v}%|Torbellino −{v}% de recarga|Turbine −{v}% ricarica|Wir −{v}% odnowienia|Redemoinho −{v}% de recarga|旋風のクールダウン −{v}%|회오리 재사용 대기시간 −{v}%"],
-dropBonus:["Нюх на скарби|Treasure Sense|Flair du trésor|Schatzgespür|寻宝嗅觉|Olfato del tesoro|Fiuto per i tesori|Węch do skarbów|Faro do tesouro|宝の嗅覚|보물 감각","+{v}% до шансу здобичі|+{v}% drop chance|+{v}% chance de butin|+{v}% Dropchance|掉落率 +{v}%|+{v}% prob. de botín|+{v}% prob. di bottino|+{v}% szansy na łup|+{v}% de chance de saque|ドロップ率 +{v}%|드롭 확률 +{v}%"],
+dropBonus:["Нюх на скарби|Treasure Sense|Flair du trésor|Schatzgespür|寻宝嗅觉|Olfato del tesoro|Fiuto per i tesori|Węch do skarbów|Faro do tesouro|宝の嗅覚|보물 감각","+{v}% до шансу дропу|+{v}% drop chance|+{v}% chance de butin|+{v}% Dropchance|掉落率 +{v}%|+{v}% prob. de botín|+{v}% prob. di bottino|+{v}% szansy na łup|+{v}% de chance de saque|ドロップ率 +{v}%|드롭 확률 +{v}%"],
 rarBonus:["Благословення|Blessing|Bénédiction|Segen|祝福|Bendición|Benedizione|Błogosławieństwo|Bênção|祝福|축복","+{v} до удачі на рідкісні речі|+{v} luck level for rarity|+{v} niveau de chance (rareté)|+{v} Glücksstufe für Seltenheit|稀有度幸运等级 +{v}|+{v} nivel de suerte para rareza|+{v} livello fortuna per rarità|+{v} poziom szczęścia dla rzadkości|+{v} nível de sorte para raridade|レア度の運レベル +{v}|희귀도 행운 레벨 +{v}"],
 heavyBonus:["Важкий молот|Heavy Hammer|Marteau lourd|Schwerer Hammer|重锤|Martillo pesado|Martello pesante|Ciężki młot|Martelo pesado|重き槌|무거운 망치","Сильний удар: +{v}% шкоди|Heavy strike +{v}% damage|Coup puissant +{v}% de dégâts|Schwerer Schlag +{v}% Schaden|重击伤害 +{v}%|Golpe fuerte +{v}% de daño|Colpo pesante +{v}% danni|Mocny cios +{v}% obrażeń|Golpe pesado +{v}% de dano|強打 +{v}% ダメージ|강타 피해 +{v}%"],
 blazeBonus:["Розпечене лезо|Searing Edge|Tranchant brûlant|Glühende Schneide|灼热之刃|Filo abrasador|Filo rovente|Rozżarzone ostrze|Fio escaldante|灼熱の刃|작열하는 칼날","Палаючий клинок: +{v}% шкоди|Blazing Blade +{v}% damage|Lame ardente +{v}% de dégâts|Flammenklinge +{v}% Schaden|烈焰之刃伤害 +{v}%|Hoja ardiente +{v}% de daño|Lama infuocata +{v}% danni|Płonące ostrze +{v}% obrażeń|Lâmina ardente +{v}% de dano|炎刃 +{v}% ダメージ|불타는 검 피해 +{v}%"],
@@ -774,7 +780,7 @@ const TRAIN=[
  {id:"storm",cat:"mag",fx:[["lightningBonus",8]],ic:"⚡",n:S8("Громовержець|Thunderlord|Seigneur du tonnerre|Donnerherr|雷霆之主|Señor del trueno|Signore del tuono|Władca gromów|Senhor do trovão|雷神|천둥의 군주"),d:S8("+8% шкоди блискавки за рівень|+8% lightning damage per level|+8% dégâts d'éclair par niveau|+8% Blitzschaden pro Stufe|每级闪电伤害 +8%|+8% daño del rayo por nivel|+8% danni del fulmine per livello|+8% obrażeń błyskawicy na poziom|+8% de dano do raio por nível|レベルごとに雷ダメージ +8%|레벨당 번개 피해 +8%"),per:8,base:75,grow:1.18,max:0},
  {id:"blazeT",cat:"mag",fx:[["blazeBonus",8]],ic:"🗡️",n:S8("Вогняний клинок|Flame Blade|Lame de flammes|Flammenschwert|炎之刃|Hoja de llamas|Lama di fiamme|Ognisty miecz|Lâmina de chamas|炎の刃|화염검"),d:S8("+8% шкоди палаючого клинка за рівень|+8% Blazing Blade damage per level|+8% dégâts de lame ardente par niveau|+8% Flammenklingen-Schaden pro Stufe|每级烈焰之刃伤害 +8%|+8% daño de hoja ardiente por nivel|+8% danni della lama infuocata per livello|+8% obrażeń płonącego ostrza na poziom|+8% de dano da lâmina ardente por nível|レベルごとに炎刃ダメージ +8%|레벨당 불타는 검 피해 +8%"),per:8,base:75,grow:1.18,max:0},
  {id:"xpT",cat:"wealth",fx:[["xpBonus",4]],ic:"📘",n:S8("Учень|Scholar|Érudit|Gelehrter|学者|Erudito|Studioso|Uczony|Erudito|学者|학자"),d:S8("+4% досвіду за рівень|+4% experience per level|+4% d'expérience par niveau|+4% Erfahrung pro Stufe|每级经验 +4%|+4% de experiencia por nivel|+4% esperienza per livello|+4% doświadczenia na poziom|+4% de experiência por nível|レベルごとに経験値 +4%|레벨당 경험치 +4%"),per:4,base:80,grow:1.22,max:50},
- {id:"dropT",cat:"wealth",fx:[["dropBonus",3]],ic:"🔍",n:S8("Нюх шукача|Seeker's Nose|Flair du chercheur|Spürnase|寻宝直觉|Olfato del buscador|Fiuto del cercatore|Nos poszukiwacza|Faro do caçador|探索者の勘|탐색자의 감"),d:S8("+3% до шансу здобичі за рівень|+3% drop chance per level|+3% chance de butin par niveau|+3% Dropchance pro Stufe|每级掉落率 +3%|+3% prob. de botín por nivel|+3% prob. di bottino per livello|+3% szansy na łup na poziom|+3% de chance de saque por nível|レベルごとにドロップ率 +3%|레벨당 드롭 확률 +3%"),per:3,base:100,grow:1.22,max:30}
+ {id:"dropT",cat:"wealth",fx:[["dropBonus",3]],ic:"🔍",n:S8("Нюх шукача|Seeker's Nose|Flair du chercheur|Spürnase|寻宝直觉|Olfato del buscador|Fiuto del cercatore|Nos poszukiwacza|Faro do caçador|探索者の勘|탐색자의 감"),d:S8("+3% до шансу дропу за рівень|+3% drop chance per level|+3% chance de butin par niveau|+3% Dropchance pro Stufe|每级掉落率 +3%|+3% prob. de botín por nivel|+3% prob. di bottino per livello|+3% szansy na łup na poziom|+3% de chance de saque por nível|レベルごとにドロップ率 +3%|레벨당 드롭 확률 +3%"),per:3,base:100,grow:1.22,max:30}
 ];
 const TCAT=[["str","⚔",S8("Сила|Strength|Force|Stärke|力量|Fuerza|Forza|Siła|Força|筋力|힘")],["spd","💨",S8("Швидкість|Speed|Vitesse|Tempo|速度|Velocidad|Velocità|Szybkość|Velocidade|スピード|속도")],["hp","❤",S8("Здоров'я|Health|Santé|Leben|生命|Salud|Salute|Zdrowie|Vida|体力|체력")],["mag","✨",S8("Магія|Magic|Magie|Magie|魔法|Magia|Magia|Magia|Magia|魔法|마법")],["wealth","🪙",S8("Багатство|Wealth|Richesse|Reichtum|财富|Riqueza|Ricchezza|Bogactwo|Riqueza|富|부")]];
 const trainCost=(T,l)=>Math.round(T.base*Math.pow(T.grow,l)/5)*5;
@@ -804,9 +810,9 @@ const SLOTS=[
 const SLOTI={};SLOTS.forEach((s,i)=>SLOTI[s.k]=i);
 // stat: [base, per item level, cap per item (0 = none), decimals]
 const ISTAT={atk:[2,.6,0,0],maxhp:[10,4,0,0],armor:[1,.25,0,0],crit:[1,.08,12,0],critDmg:[5,.6,60,0],atkSpd:[2,.12,15,0],speed:[2,.1,12,0],fireBonus:[5,.8,0,0],lightningBonus:[5,.8,0,0],healBonus:[5,.8,0,0],regen:[.3,.04,0,1],lifesteal:[.5,.04,6,1],goldBonus:[3,.3,60,0],xpBonus:[3,.3,60,0],dmgRed:[1,.06,10,0],cdr:[1,.05,8,0],thorns:[3,.3,40,0],dropBonus:[2,.15,25,0],evade:[1,.05,10,0],killHeal:[1,.15,0,0],execute:[4,.3,40,0],bossDmg:[4,.3,40,0]};
-const LUCK_MAX=10;
-const luckCost=l=>1500*(l+1)*(l+2)/2;
-const luckTime=l=>60*(l+1)*(l+2)/2;
+const LUCK_MAX=20;
+const luckCost=l=>Math.round(250*(l+1)*(1+l*.3)/10)*10;
+const luckTime=l=>Math.round(10*(l+1)*(1+l*.15));
 const BIOMES=[
  {sky:["#170914","#3b1426","#6e2434"],moon:"#f4d9c4",far:"#2a1020",far2:"#210c19",mid:"#1a0a14",near:"#10060c",ground:["#2e1b1d","#1a0f11"],stone:"#3f2a2d",accent:"#ff6a5a",fog:"rgba(170,40,60,0.16)"},
  {sky:["#080d1a","#18223c","#33405c"],moon:"#dfe8f5",far:"#1c2436",far2:"#161c2b",mid:"#121826",near:"#0a0e17",ground:["#20262a","#121619"],stone:"#2f363c",accent:"#8fb4ff",fog:"rgba(120,150,210,0.12)"},
@@ -1005,7 +1011,6 @@ window.addEventListener("keydown",e=>{
  if(e.ctrlKey||e.metaKey||e.altKey)return;
  if(e.code==="Escape"||e.code==="KeyP"){e.preventDefault();if(modalOpen){if(modalOpen!=="mDead")closeModal()}else if(hero.state!=="dead")openModal("mPause");return}
  if(modalOpen)return;
- if(e.code==="KeyF"&&!e.repeat&&use3D()){e.preventDefault();S.view=S.view==="tp"?"fp":"tp";applyView();save();toast(t(S.view==="tp"?"viewTP":"viewFP"));return}
  keys[e.code]=true;
  if(KEYACT[e.code]){e.preventDefault();if(!e.repeat)tryAction(KEYACT[e.code]);if(KEYACT[e.code]==="attack")attackHeld=true}
  if(e.code.startsWith("Arrow"))e.preventDefault();
@@ -1312,7 +1317,7 @@ function killEnemy(e,dir){
  e.hp=0;e.state="dead";e.st=0;e.kb=dir*170;e.burn=null;
  {const bc=bloodCol(C),lq=bloodLiquid(C);blood(e.x,e.z,e.h+C.hgt*e.s*.5,dir,24,bc,1.2,lq);if(lq)stain(e.x+dir*6,e.z,C.rad*e.s*rnd(1.4,1.9),bc,true)}
  kills[C.k]=(kills[C.k]||0)+1;
- const tm={common:1,uncommon:1.2,rare:1.45,elite:1.7,epic:2}[C.tier]||1;
+ const tm={common:1,uncommon:1.2,rare:1.45,epic:1.7,elite:2}[C.tier]||1;
  const rm=e.summoned?.3:e.small?.35:1;
  const xp=Math.max(1,Math.round(((12+battleNo*4)*tm*(e.boss?4:1)+(e.boss?100:0))*(1+P.xpBonus/100)*rm));
  const gold=Math.max(1,Math.round(((6+battleNo*2)*tm*(e.boss?5:1)+(e.boss?120:0))*(1+P.goldBonus/100)*rm));
@@ -1343,7 +1348,7 @@ function rarProbs(minR,LL){const w=rarWeights(minR||0,LL),tot=w.reduce((a,b)=>a+
 function rollRarity(minR){const w=rarWeights(minR);const tot=w.reduce((a,b)=>a+b,0);let x=Math.random()*tot;for(let i=0;i<w.length;i++){x-=w[i];if(x<=0&&w[i]>0)return i}return w.length-1}
 function tryDrop(e){
  if(e.boss){spawnLoot(e,makeItem(rollRarity(e.cfg.bossOnly?3:2)));setTimeout(()=>spawnLoot(e,makeItem(rollRarity(e.cfg.bossOnly?2:1))),260);if(e.cfg.bossOnly)setTimeout(()=>spawnLoot(e,makeItem(rollRarity(1))),520);return}
- let ch=dropChance()+({common:0,uncommon:.02,rare:.04,elite:.07,epic:.1}[e.cfg.tier]||0);
+ let ch=dropChance()+({common:0,uncommon:.02,rare:.04,epic:.07,elite:.1}[e.cfg.tier]||0);
  if(e.summoned||e.small)ch*=.3;
  if(e.cfg.lootX){for(let i=0;i<e.cfg.lootX;i++)setTimeout(()=>spawnLoot(e,makeItem(rollRarity(i?1:2))),i*180);return}
  if(Math.random()<ch){spawnLoot(e,makeItem(rollRarity(0)));if((e.cfg.tier==="elite"||e.cfg.tier==="epic")&&Math.random()<.25)setTimeout(()=>spawnLoot(e,makeItem(rollRarity(0))),220)}
@@ -1401,7 +1406,7 @@ function luckTick(){
 }
 
 /* ============ FX ============ */
-const bloodOn=()=>S.blood!==false;
+const bloodOn=()=>true;
 function bloodCol(C){const L=C.look;if(L.blood)return L.blood;if(C.body==="slime")return L.goo;if(C.body==="ghost")return L.eye;if(L.bones)return"#e6dfcc";if(L.head==="golem")return"#8a8992";if(C.body==="spider")return"#8fd13a";if(L.head==="zombie")return"#5a2418";if(C.body==="dragon")return"#7a0c12";return"#a30f1f"}
 const bloodLiquid=C=>!(C.look.bones||C.look.head==="golem"||C.look.dry);
 function blood(x,z,h,dir,n,col,spd,liq){if(!bloodOn())return;spd=spd||1;for(let i=0;i<n;i++)parts.push({x,z,h,vx:(dir||rnd(-1,1))*rnd(30,170)*spd+rnd(-40,40),vz:rnd(-35,35),vh:rnd(10,150)*spd,g:440,life:rnd(.6,1),max:1,col,size:rnd(1.4,3.2),t:"blood",liq:liq!==false})}
@@ -1417,7 +1422,7 @@ function updateFx(dt){
   if(p.t==="soul"){p.age=(p.age||0)+dt;if(p.age<.4||hero.state==="dead"){p.x+=p.vx*dt;p.z+=p.vz*dt;p.h+=p.vh*dt;p.vh-=70*dt;p.vx*=.96}else{const dx=hero.x-p.x,dz=hero.z-p.z,dh=36-p.h,d=Math.hypot(dx,dz,dh)||1,sp=110+p.age*460;p.x+=dx/d*sp*dt;p.z+=dz/d*sp*dt;p.h+=dh/d*sp*dt;
    if(d<10){p.life=0;for(let i=0;i<4;i++)parts.push({x:hero.x+rnd(-6,6),z:hero.z,h:rnd(25,45),vx:rnd(-30,30),vz:0,vh:rnd(10,50),g:0,life:.35,max:.35,col:p.col,size:rnd(1.2,2),t:"dot"});if(realT-soulT>.06){soulT=realT;SFX.soul()}}}
    if(Math.random()<.45)parts.push({x:p.x,z:p.z,h:p.h,vx:0,vz:0,vh:0,g:0,life:.25,max:.25,col:p.col,size:p.size*.6,t:"dot"});continue}p.x+=p.vx*dt;p.z+=p.vz*dt;p.h+=p.vh*dt;p.vh-=p.g*dt;if(p.h<0&&p.t==="spark"){p.h=0;p.vh*=-.3}else if(p.h<0&&p.t==="blood"){p.life=0;if(p.liq&&Math.random()<.45)stain(p.x,p.z,p.size*rnd(1.6,3),p.col)}if(p.t==="smoke"){p.vx*=.95;p.size+=dt*6}}
- parts=parts.filter(p=>p.life>0);{const MX=use3D()?(G3&&G3.hi?3000:1800):1200;if(parts.length>MX)parts.splice(0,parts.length-MX)}
+ parts=parts.filter(p=>p.life>0);{const MX=use3D()?(G3&&G3.ultra?4000:G3&&G3.hi?3000:1800):1200;if(parts.length>MX)parts.splice(0,parts.length-MX)}
  for(const d of decals)d.life-=dt;decals=decals.filter(d=>d.life>0);for(const b of beams)b.life-=dt;beams=beams.filter(b=>b.life>0);
  for(const st of stains){st.life-=dt;if(st.g<1)st.g=Math.min(1,st.g+dt*1.8)}stains=stains.filter(st=>st.life>0);
  for(const q of texts){q.life-=dt;q.h+=38*dt;q.x+=q.vx*dt}texts=texts.filter(q=>q.life>0);
@@ -2044,26 +2049,28 @@ function drawOverlay(){
 const ZS=2.2,CHS=1.18,CURVE=.000028,CAM={pitch:.3,fov:30,th:.38,zoom:1,ox:0,fpFov:88,fpPitch:-.07,fpBack:30};
 let T3=null,G3=null;
 const R3={ok:false,failed:false,loading:false,errN:0};
-const gfxMode=()=>S.gfx==="lo"||S.gfx==="2d"||S.gfx==="hi"?S.gfx:(window.matchMedia&&matchMedia("(hover:none)").matches?"lo":"hi");
-const use3D=()=>R3.ok&&gfxMode()!=="2d";
-const isFP=()=>use3D()&&S.view!=="tp";
+const gfxMode=()=>S.gfx==="lo"||S.gfx==="hi"||S.gfx==="ultra"?S.gfx:(window.matchMedia&&matchMedia("(hover:none)").matches?"lo":"hi");
+const use3D=()=>R3.ok;
+const isFP=()=>use3D();
 function applyView(){stage.classList.toggle("fp",isFP())}
 const THREE_URLS=["https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","https://unpkg.com/three@0.160.0/build/three.module.min.js"];
 function load3D(){
- if(R3.ok||R3.loading||R3.failed||gfxMode()==="2d")return;R3.loading=true;let i=0;
+ if(R3.ok||R3.loading||R3.failed)return;R3.loading=true;let i=0;
  const next=()=>{if(i>=THREE_URLS.length){R3.loading=false;R3.failed=true;toast(t("gfxFail"));return}
-  import(THREE_URLS[i++]).then(m=>{T3=m;try{init3D();R3.ok=true}catch(err){console.error(err);R3.failed=true}R3.loading=false;applyGfx()}).catch(next)};
+  import(THREE_URLS[i++]).then(m=>{T3=m;R3.jsd=i===1;try{init3D();R3.ok=true}catch(err){console.error(err);R3.failed=true}R3.loading=false;applyGfx()}).catch(next)};
  next();
 }
 /* --- adaptive resolution: keeps the frame rate near 60 by lowering the render scale when frames run long --- */
-function applyPR3(){if(!G3)return;const P=G3.perf||(G3.perf={acc:0,n:0,cool:3,good:0,scale:G3.hi?1:.8,fps:60});const base=Math.min(G3.hi?2:1.5,window.devicePixelRatio||1);G3.rr.setPixelRatio(base*P.scale);resize3D()}
+function applyPR3(){if(!G3)return;const P=G3.perf||(G3.perf={acc:0,n:0,cool:3,good:0,scale:G3.hi?1:.8,fps:60});const base=Math.min(G3.ultra?2.5:G3.hi?2:1.5,window.devicePixelRatio||1);G3.rr.setPixelRatio(base*P.scale);resize3D()}
 function perf3(dt){const P=G3.perf;if(!P)return;P.acc+=dt;P.n++;P.cool-=dt;if(P.acc<1)return;const avg=P.acc/P.n;P.fps=P.n/P.acc;P.acc=0;P.n=0;
- if(paused||document.hidden||modalOpen)return;const mn=G3.hi?.6:.5;
+ if(paused||document.hidden||modalOpen)return;const mn=G3.ultra?.75:G3.hi?.6:.5;
  if(avg>1/50){P.good=0;if(P.scale>mn&&P.cool<=0){P.scale=Math.max(mn,P.scale*(avg>1/30?.8:.9));P.cool=1.5;applyPR3()}}
  else if(avg<1/56){if(++P.good>=4&&P.scale<1){P.scale=Math.min(1,P.scale*1.08);P.good=0;P.cool=2;applyPR3()}}else P.good=0}
 function applyGfx(){
- if(G3){const on=use3D(),hi=gfxMode()==="hi";G3.rr.domElement.style.display=on?"block":"none";G3.hi=hi;G3.sun.castShadow=hi;applyPR3()}
- if(gfxMode()!=="2d"&&!R3.ok)load3D();
+ if(G3){const on=use3D(),md=gfxMode(),hi=md!=="lo",ul=md==="ultra";G3.rr.domElement.style.display=on?"block":"none";G3.hi=hi;G3.sun.castShadow=hi;
+  const ms=ul?4096:2048;if(G3.sun.shadow.mapSize.x!==ms){G3.sun.shadow.mapSize.set(ms,ms);if(G3.sun.shadow.map){G3.sun.shadow.map.dispose();G3.sun.shadow.map=null}}
+  if(G3.ultra!==ul){G3.ultra=ul;if(G3.perf)G3.perf.scale=1;if(ul)initBloom3()}applyPR3()}
+ if(!R3.ok)load3D();
  applyView();
 }
 /* --- round world: the ground bends away with distance (applied to every lit/basic material and sprites) --- */
@@ -2101,9 +2108,9 @@ function W3(o,x,z,h){o.position.set(x,h||0,z*ZS);return o}
 
 /* --- init --- */
 function init3D(){
- const T=T3,hi=gfxMode()==="hi";
+ const T=T3,hi=gfxMode()!=="lo";
  curveWorld3();
- const rr=new T.WebGLRenderer({antialias:gfxMode()==="hi",powerPreference:"high-performance"});
+ const rr=new T.WebGLRenderer({antialias:gfxMode()!=="lo",powerPreference:"high-performance"});
  rr.outputColorSpace=T.SRGBColorSpace;rr.toneMapping=T.ACESFilmicToneMapping;rr.toneMappingExposure=1.25;
  rr.shadowMap.enabled=true;rr.shadowMap.type=T.PCFSoftShadowMap;
  const el=rr.domElement;el.id="gl3";el.style.cssText="position:absolute;inset:0;width:100%;height:100%;display:block";
@@ -2152,11 +2159,16 @@ function init3D(){
 }
 function resize3D(){
  if(!G3)return;const r=stage.getBoundingClientRect();G3.W=Math.max(1,r.width);G3.H=Math.max(1,r.height);
- G3.rr.setSize(G3.W,G3.H,false);G3.cam.aspect=G3.W/G3.H;
+ G3.rr.setSize(G3.W,G3.H,false);G3.cam.aspect=G3.W/G3.H;if(G3.comp){G3.comp.setPixelRatio(G3.rr.getPixelRatio());G3.comp.setSize(G3.W,G3.H)}
  const pr=G3.rr.getPixelRatio();G3.ptScale=G3.H*pr/(2*Math.tan(CAM.fov*PI/360));
  if(G3.ptMats)for(const m of G3.ptMats)m.uniforms.uScale.value=G3.ptScale;
 }
 window.addEventListener("resize",()=>{if(G3)resize3D()});
+/* --- ultra quality: bloom on bright and glowing things (post-processing from the three.js add-ons) --- */
+function initBloom3(){
+ if(G3.comp||G3.bloomLoading||!R3.jsd)return;G3.bloomLoading=true;const B="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/postprocessing/";
+ Promise.all(["EffectComposer","RenderPass","UnrealBloomPass","OutputPass"].map(n=>import(B+n+".js"))).then(([a,b,c,d])=>{const T=T3,cp=new a.EffectComposer(G3.rr);cp.addPass(new b.RenderPass(G3.scene,G3.cam));
+  const bl=new c.UnrealBloomPass(new T.Vector2(G3.W,G3.H),.55,.45,.82);cp.addPass(bl);cp.addPass(new d.OutputPass());G3.comp=cp;G3.bloom=bl;resize3D()}).catch(err=>{console.warn("bloom off",err)}).finally(()=>{G3.bloomLoading=false})}
 
 /* --- camera --- */
 function updateCam3(){
@@ -2177,12 +2189,12 @@ function updateCam3(){
 }
 function updateCamFP(){
  const cam=G3.cam,M=G3.hero,h=hero,W=G3.W,H=G3.H,asp=W/H,zC=DEPTH*ZS*.5;
- const portrait=H>W*1.05,fv=clamp(2*Math.atan(Math.tan(CAM.fpFov*PI/360)/asp)*180/PI,58,portrait?92:76);cam.fov=fv*(1-IMP.p*.16);cam.near=1;
+ const portrait=H>W*1.05,fv=clamp(2*Math.atan(Math.tan(CAM.fpFov*PI/360)/asp)*180/PI,58,portrait?92:76);cam.fov=fv*(1-IMP.p*.05);cam.near=1;
  if(portrait){const yT=Math.max(H*.3,(H-225)*.52);cam.setViewOffset(W,H,0,H/2-yT,W,H)}else cam.clearViewOffset();
  const yaw=M.yawC||0,fx=Math.cos(yaw),fz=-Math.sin(yaw),E=G3.eye||{x:0,y:50},fwd=E.x*CHS-CAM.fpBack-(H>W*1.05?14:0);
  let px=h.x+fx*fwd,pz=h.z*ZS+fz*fwd,py=E.y*CHS+5,pitch=CAM.fpPitch,roll=0;
  if(h.state==="dead"){const k=Math.min(1,h.st*1.6);py=lerp(py,12,eo(k));pitch=lerp(pitch,.3,k);roll=k*.55}
- if(shake>.2){px+=rnd(-shake,shake)*.35;py+=rnd(-shake,shake)*.35;pz+=rnd(-shake,shake)*.35}
+ if(shake>.2){const k=Math.min(shake,5)*.09;px+=rnd(-k,k);py+=rnd(-k,k);pz+=rnd(-k,k)}
  cam.position.set(px,py,pz);cam.up.set(0,1,0);const cp=Math.cos(pitch);cam.lookAt(px+fx*cp*100,py+Math.sin(pitch)*100,pz+fz*cp*100);if(roll)cam.rotateZ(roll);
  cam.updateProjectionMatrix();cam.updateMatrixWorld();G3.ptScale=H*G3.rr.getPixelRatio()/(2*Math.tan(fv*PI/360));
  G3.sky.position.copy(cam.position);G3.stars.position.copy(cam.position);
@@ -2811,9 +2823,9 @@ function syncHero3(dt){
  const fp=isFP();if(fp)turnTo(M,h.ang,dt,26);else yawTo(M,h.face,mv.z*.45,dt);if(h.state==="spin")M.yaw.rotation.y=M.yawC-clamp(h.st/.62,0,1)*PI*4;
  const r=poseHuman(M,p,HERO_LOOK.glowCol,h.flash>0&&!fp);setLook3(M,h.flash>0&&!fp,fp?1:alpha);
  if(M.blade){if(!M.bladeBase)M.bladeBase=M.blade.color.clone();M.blade.color.copy(M.bladeBase).lerp(G3.bloodC||(G3.bloodC=new T3.Color("#5a0a12")),(bloodOn()?h.bloody||0:0)*.8)}
- M.inner.position.x=fp?Math.sin(tNow*1.1)*.6:0;if(fp)M.inner.position.y+=Math.sin(tNow*2.2)*.7;
+ M.inner.position.x=0;
  M.root.visible=!fp;
- if(fp){if(h.state==="dodge")M.pivot.rotation.z=0;const hipY=2*M.legL-p.crouch+p.bob,sx=Math.sin(p.lean)*M.tor,sy=hipY+Math.cos(p.lean)*M.tor,ha=p.lean+p.headTilt;G3.eye={x:sx+Math.sin(ha)*(M.hr+3),y:sy+Math.cos(ha)*(M.hr+3)+1}}
+ if(fp){if(h.state==="dodge")M.pivot.rotation.z=0;const ty=2*M.legL+M.tor+M.hr+4-p.crouch*.3+p.bob*.35,E=G3.eyeS||(G3.eyeS={x:0,y:ty}),k=Math.min(1,dt*9);E.x=0;if(h.state!=="dead")E.y=lerp(E.y,ty,k);G3.eye=E}
  blob3(h.x,h.z,0,15);
  // spin ring
  const sr=G3.spinRing;if(h.state==="spin"){const k=clamp(h.st/.62,0,1);sr.visible=true;W3(sr,h.x,h.z,24);sr.scale.set(1,1,ZS/2);sr.material.opacity=(1-k)*.85;sr.material.color.set(HERO_LOOK.glowCol||"#ffe9c7");G3.tDash.offset.x=-tNow*6}else sr.visible=false;
@@ -2931,7 +2943,7 @@ function render3D(dt){
  syncEnemies3(dt);syncStains3();syncDecals3();syncProj3();syncLoot3();syncCoins3();syncBolts3();syncParts3(dt);syncLights3();
  G3.stars.material.opacity=.55+.2*Math.sin(tNow*.7);syncBarrier3();
  if(modalOpen==="mBest")drawBestiary3();
- G3.rr.render(G3.scene,G3.cam);if(isFP()&&G3.vm)vmRender();
+ if(G3.comp&&G3.ultra)G3.comp.render();else G3.rr.render(G3.scene,G3.cam);if(isFP()&&G3.vm)vmRender();
  G3.odt=dt;overlay3();
 }
 /* --- 2D overlay on top of the 3D view --- */
@@ -3147,7 +3159,7 @@ function update(dt){
 const fpsS={a:0,n:0,on:null};function fpsTick(dt){fpsS.a+=dt;fpsS.n++;if(fpsS.on!==!!S.fps){fpsS.on=!!S.fps;$("fpsBox").style.display=S.fps?"block":"none"}if(fpsS.a<.5)return;const f=Math.round(fpsS.n/fpsS.a);fpsS.a=0;fpsS.n=0;if(S.fps){const sc=use3D()&&G3&&G3.perf?" · "+Math.round(G3.perf.scale*100)+"%":"";setTx("fpsBox",f+" FPS"+sc)}}
 /* --- impact frames: hit-stop, a few stark negative / red frames, speed lines and a camera punch --- */
 const IMP={t:0,max:0,lv:0,x:0,z:0,h:0,cool:0,p:0,r:[],f:""};let lastHitE=null;
-function impact(lv,e){if(S.imp===false||!e)return;if(IMP.cool>0&&IMP.t>0&&lv<=IMP.lv)return;
+function impact(lv,e){if(!e)return;if(IMP.cool>0&&IMP.t>0&&lv<=IMP.lv)return;
  IMP.lv=lv;IMP.max=IMP.t=[0,.12,.2,.42][lv];IMP.cool=.25;IMP.x=e.x;IMP.z=e.z;IMP.h=e.h+(e.cfg?e.cfg.hgt*e.s*.55:30);IMP.p=Math.min(1,IMP.p+lv*.34);
  IMP.r=[];for(let i=0;i<60;i++)IMP.r.push(Math.random());hitStop=Math.max(hitStop,[0,.07,.11,.32][lv]);shake+=[0,1.5,3.5,8][lv];if(SFX.impact)SFX.impact(lv)}
 function impTick(dt){IMP.cool-=dt;IMP.p*=Math.exp(-dt*9);if(IMP.p<.002)IMP.p=0;let f="";
@@ -3167,7 +3179,7 @@ function frame(ts){
  const rdt=Math.min(1,Math.max(0,(ts-last)/1000)),dt=Math.min(.05,rdt);last=ts;realT+=dt;
  requestAnimationFrame(frame);
  try{
- if(booting){if(R3.ok||R3.failed||gfxMode()==="2d"||realT>12){booting=false;$("boot").classList.add("off");last=performance.now()}else return}
+ if(booting){if(R3.ok||R3.failed||realT>12){booting=false;$("boot").classList.add("off");last=performance.now()}else return}
  if(!paused){tNow+=dt;let g=dt;if(hitStop>0){hitStop-=dt;g=dt*.06}update(g)}
  shake*=Math.pow(.004,dt);if(shake<.2)shake=0;flashA=Math.max(0,flashA-dt*2);
  if(use3D()){if(G3)perf3(rdt);try{render3D(dt)}catch(err){console.error(err);if(++R3.errN>4){R3.ok=false;R3.failed=true;applyGfx();toast(t("gfxFail"))}}}else render();
@@ -3468,7 +3480,7 @@ $("aGo").onclick=async()=>{
  }finally{$("aGo").disabled=false}
 };
 function logOut(){switchTo(null,false);toast(t("loggedOut"));fillSettings()}
-function fillSettings(){fillAccount();$("nickIn").value=nickname;$("langSel").value=lang;$("sfxR").value=S.sfx;$("musR").value=S.music;$("musB").textContent=S.musicOn?"⏸ "+t("on"):"▶ "+t("off");$("gfxSel").innerHTML=[["hi","gfxHi"],["lo","gfxLo"],["2d","gfx2d"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("gfxSel").value=gfxMode();$("viewSel").innerHTML=[["fp","viewFP"],["tp","viewTP"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("viewSel").value=S.view==="tp"?"tp":"fp";$("viewSel").disabled=gfxMode()==="2d";$("bloodB").textContent=bloodOn()?"🩸 "+t("on"):"✕ "+t("off");$("fpsB").textContent=S.fps?"📈 "+t("on"):"✕ "+t("off");$("impB").textContent=S.imp!==false?"⚡ "+t("on"):"✕ "+t("off")}
+function fillSettings(){fillAccount();$("nickIn").value=nickname;$("langSel").value=lang;$("sfxR").value=S.sfx;$("musR").value=S.music;$("musB").textContent=S.musicOn?"⏸ "+t("on"):"▶ "+t("off");$("gfxSel").innerHTML=[["ultra","gfxUltra"],["hi","gfxHi"],["lo","gfxLo"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("gfxSel").value=gfxMode();$("fpsB").textContent=S.fps?"📈 "+t("on"):"✕ "+t("off")}
 $("donCopy").onclick=()=>{const v=$("donCard").textContent.trim();const ok=()=>{toast("✓ "+t("copied"),"#d6a24a");SFX.cash()};try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(ok,()=>{selCard();ok()});else{selCard();document.execCommand("copy");ok()}}catch(e){selCard()}};
 function selCard(){try{const r=document.createRange();r.selectNodeContents($("donCard"));const sl=getSelection();sl.removeAllRanges();sl.addRange(r)}catch(e){}}
 $("nickOk").onclick=()=>{nickname=$("nickIn").value.trim().slice(0,18);save();hud();toast(t("saved"))};
@@ -3476,11 +3488,8 @@ $("nickIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("nickOk").click(
 $("langSel").innerHTML=LANGS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
 $("langSel").onchange=e=>{lang=e.target.value;applyLang();fillSettings();save()};
 $("sfxR").oninput=e=>{S.sfx=+e.target.value};
-$("impB").onclick=()=>{S.imp=S.imp===false;fillSettings();save()};
 $("fpsB").onclick=()=>{S.fps=!S.fps;fillSettings();save()};
-$("bloodB").onclick=()=>{S.blood=!bloodOn();if(!S.blood){stains=[];parts=parts.filter(p=>p.t!=="blood")}fillSettings();save()};
-$("viewSel").onchange=e=>{S.view=e.target.value;applyView();save()};
-$("gfxSel").onchange=e=>{S.gfx=e.target.value;if(S.gfx!=="2d"&&!R3.ok&&!G3)R3.failed=false;applyGfx();save();$("viewSel").disabled=gfxMode()==="2d"};
+$("gfxSel").onchange=e=>{S.gfx=e.target.value;applyGfx();save()};
 $("musR").oninput=e=>{S.music=+e.target.value};
 $("musB").onclick=()=>{S.musicOn=!S.musicOn;if(S.musicOn)musicStart();else musicStop();fillSettings();save()};
 let resetArm=0;
