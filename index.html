@@ -319,6 +319,10 @@ body[data-gfx="hi"] .vig{display:block}
 .lgrid button .fl{font-size:22px;line-height:1}
 .lgrid button.on{border-color:var(--gold);background:linear-gradient(180deg,#3d2614,#1d110a);box-shadow:0 0 0 1px var(--gold) inset}
 .lgrid button:active{transform:scale(.95)}
+.tgl{position:relative;width:54px;height:30px;border-radius:16px;background:#2a1822;border:1px solid var(--line);padding:0;flex:none;transition:background .2s,border-color .2s;box-shadow:inset 0 2px 4px rgba(0,0,0,.4)}
+.tgl i{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#bfa9b4;box-shadow:0 2px 4px rgba(0,0,0,.5);transition:transform .22s cubic-bezier(.3,1.5,.5,1),background .2s}
+.tgl.on{background:linear-gradient(180deg,#3fbf86,#24865a);border-color:#6fe0a8}
+.tgl.on i{transform:translateX(24px);background:#fff}
 </style>
 </head>
 <body>
@@ -1028,7 +1032,7 @@ function whiteLook(L){if(_wl.has(L))return _wl.get(L);const o={};for(const k in 
 /* ============ AUDIO ============ */
 let AC=null,noiseBuf=null;
 let sfxIn=null,SBUF=null;const sLast={};
-function bus(){const a=AC;if(!a)return null;if(!sfxIn){try{const c=a.createDynamicsCompressor();c.threshold.value=-16;c.knee.value=12;c.ratio.value=4;c.attack.value=.003;c.release.value=.18;c.connect(a.destination);const dry=a.createGain();dry.connect(c);const cv=a.createConvolver(),len=a.sampleRate*.9|0,ir=a.createBuffer(2,len,a.sampleRate);for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.4)*(i<a.sampleRate*.012?i/(a.sampleRate*.012):1)}cv.buffer=ir;const wet=a.createGain();wet.gain.value=.14;dry.connect(cv);cv.connect(wet);wet.connect(c);sfxIn=dry}catch(e){sfxIn=a.destination}}return sfxIn}
+function bus(){const a=AC;if(!a)return null;if(!sfxIn){try{const c=a.createDynamicsCompressor();c.threshold.value=-16;c.knee.value=12;c.ratio.value=4;c.attack.value=.003;c.release.value=.18;c.connect(a.destination);const dry=a.createGain();dry.connect(c);const cv=a.createConvolver(),len=a.sampleRate*.6|0,ir=a.createBuffer(2,len,a.sampleRate);for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.4)*(i<a.sampleRate*.012?i/(a.sampleRate*.012):1)}cv.buffer=ir;const wet=a.createGain();wet.gain.value=.14;dry.connect(cv);cv.connect(wet);wet.connect(c);sfxIn=dry}catch(e){sfxIn=a.destination}}return sfxIn}
 function sndLoad(){if(SBUF||!AC)return;SBUF={};let raw;try{const el=document.getElementById("sndData");raw=JSON.parse(el.textContent);el.textContent=""}catch(e){return}for(const k in raw){const L=SBUF[k]=[];raw[k].forEach(b64=>{try{const bin=atob(b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);const p=AC.decodeAudioData(u.buffer,b=>{if(L.indexOf(b)<0)L.push(b)},()=>{});if(p&&p.catch)p.catch(()=>{})}catch(e){}})}}
 function smp(n,vol,rate,delay){if(!S.sfx)return true;const a=ac();if(!a)return true;const L=SBUF&&SBUF[n];if(!L||!L.length)return false;const t=a.currentTime+(delay||0);if(Math.abs(t-(sLast[n]||-9))<.025)return true;sLast[n]=t;try{const s=a.createBufferSource(),g=a.createGain();s.buffer=L[Math.random()*L.length|0];s.playbackRate.value=(rate||1)*(.95+Math.random()*.1);g.gain.value=(vol==null?1:vol)*S.sfx/100;s.connect(g);g.connect(bus());s.start(t)}catch(e){return false}return true}
 function whoosh(d,vol,f1,f2,delay){const a=ac();if(!a||!S.sfx)return;const t0=a.currentTime+(delay||0),s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=noiseBuf;s.loop=true;f.type="bandpass";f.Q.value=1.3;f.frequency.setValueAtTime(f1,t0);f.frequency.exponentialRampToValueAtTime(f2,t0+d*.45);f.frequency.exponentialRampToValueAtTime(Math.max(80,f1*.7),t0+d);g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(vol*S.sfx/100,t0+d*.38);g.gain.exponentialRampToValueAtTime(.0001,t0+d);s.connect(f);f.connect(g);g.connect(bus());s.start(t0,Math.random()*.5);s.stop(t0+d+.02)}
@@ -2696,8 +2700,8 @@ function buildChunk(i){
   for(let j=0;j<n;j++){if(h(j+500+z0)<.2)continue;eu.set(0,(h(j+520+z0)-.5)*.3,(h(j+530+z0)-.5)*.14);q.setFromEuler(eu);m4.compose(new T.Vector3(x0+j*CHW/n+h(j+510)*6,-1,z0+(h(j+540)-.5)*4),q,new T.Vector3(16+h(j+550)*6,5+h(j+560+z0)*6,9+h(j+570)*3));im.setMatrixAt(k++,m4)}
   im.count=k;im.castShadow=G3.hi;im.receiveShadow=true;par.add(im)};
  curb(-17,g);curb(DEPTH*ZS+17,fp);
- {const SG=geo("cobG",()=>{const w=19,d=22,r=4,sh=new T.Shape();sh.moveTo(-w/2+r,-d/2);sh.lineTo(w/2-r,-d/2);sh.quadraticCurveTo(w/2,-d/2,w/2,-d/2+r);sh.lineTo(w/2,d/2-r);sh.quadraticCurveTo(w/2,d/2,w/2-r,d/2);sh.lineTo(-w/2+r,d/2);sh.quadraticCurveTo(-w/2,d/2,-w/2,d/2-r);sh.lineTo(-w/2,-d/2+r);sh.quadraticCurveTo(-w/2,-d/2,-w/2+r,-d/2);
-   return new T.ExtrudeGeometry(sh,{depth:1.2,curveSegments:2,bevelEnabled:true,bevelThickness:.9,bevelSize:2.4,bevelSegments:2}).rotateX(-PI/2).translate(0,-.8,0)});
+ {const lo=!G3.hi,SG=geo(lo?"cobGL":"cobG",()=>{const w=19,d=22,r=4,sh=new T.Shape();sh.moveTo(-w/2+r,-d/2);sh.lineTo(w/2-r,-d/2);sh.quadraticCurveTo(w/2,-d/2,w/2,-d/2+r);sh.lineTo(w/2,d/2-r);sh.quadraticCurveTo(w/2,d/2,w/2-r,d/2);sh.lineTo(-w/2+r,d/2);sh.quadraticCurveTo(-w/2,d/2,-w/2,d/2-r);sh.lineTo(-w/2,-d/2+r);sh.quadraticCurveTo(-w/2,-d/2,-w/2+r,-d/2);
+   return new T.ExtrudeGeometry(sh,{depth:1.2,curveSegments:lo?1:2,bevelEnabled:true,bevelThickness:.9,bevelSize:2.4,bevelSegments:lo?1:2}).rotateX(-PI/2).translate(0,-.8,0)});
   const R=COB_ROWS(),list=[];for(let r=0;r<R.length;r++){const [z0,dz]=R[r],cw=24+hash(r*7.1+.3)*12,off=hash(r*3.3+.7)*cw,k0=Math.ceil((x0-off)/cw-.5),k1=Math.floor((x0+CHW-off)/cw-.5);
    for(let k=k0;k<=k1;k++){const cx=off+(k+.5)*cw,hk=hash(k*1.37+r*91.7);list.push([cx+(hk-.5)*2,z0+dz/2+(hash(k*2.9+r*13.3)-.5)*2,(cw-2.6-hk*1.8)/23.8,(dz-2.6-hash(k*5.1+r*3.7)*1.8)/26.8,.75+hash(k*.71+r*5.9)*.45,hk])}}
   const im=new T.InstancedMesh(SG,M.cob,list.length),m4=new T.Matrix4(),q4=new T.Quaternion(),e=new T.Euler(),v=new T.Vector3(),sc=new T.Vector3(),cc=new T.Color(),base=new T.Color(B.stone),moss=new T.Color(B.grass||B.near);
@@ -3315,6 +3319,9 @@ function syncEnemies3(dt){
   if(e.burn&&e.burn.t>0&&e.state!=="dead"){const b=pool3("burn",()=>{const s=sprite(G3.tGlow,0xff6a1a,1,.5);G3.fx.add(s);return s});W3(b,e.x,e.z,e.h+C.hgt*e.s*CHS*.45);b.scale.set(C.rad*e.s*CHS*3.2,C.hgt*e.s*CHS*1.3,1);b.material.opacity=.35+.15*Math.sin(tNow*20)}
   if(!(e.state==="dead"&&e.st>1))blob3(e.x,e.z,e.h,C.rad*e.s*1.3)}
  for(const [e,M] of G3.emap)if(!seen.has(e)){G3.emap.delete(e);freeModel3(M)}
+ if(tNow>(G3.preT||0)&&!enemies.some(e=>e.state!=="dead"&&e.delay<=0)){G3.preT=tNow+.3;const pd=G3.preDone||(G3.preDone=new Set()),N=REGT.length;
+  for(const n of [battleNo,battleNo+1]){const w=[REGT[(n-1)%N]];if(n%7===0&&(n/7)%2===1&&BOSST.length)w.push(BOSST[((n/7-1)/2)%BOSST.length]);
+   const C=w.map(i=>ETYPES[i]).find(C=>C&&!pd.has(C.k));if(C){pd.add(C.k);const P=G3.pools["m_"+C.k];if(!P||!P.free.length)freeModel3(takeModel3(C));break}}}
 }
 function syncProj3(){
  const T=T3,seen=new Set();
@@ -3985,7 +3992,8 @@ $("aGo").onclick=async()=>{
  }finally{$("aGo").disabled=false}
 };
 function logOut(){switchTo(null,false);toast(t("loggedOut"));fillSettings()}
-function fillSettings(){fillAccount();$("nickIn").value=nickname;$("langSel").value=lang;$("sfxR").value=S.sfx;$("musR").value=S.music;$("musB").textContent=S.musicOn?"⏸ "+t("on"):"▶ "+t("off");$("gfxSel").innerHTML=[["ultra","gfxUltra"],["hi","gfxHi"],["lo","gfxLo"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("gfxSel").value=gfxMode();$("fpsB").textContent=S.fps?"📈 "+t("on"):"✕ "+t("off");if(typeof fillPickers==="function")fillPickers()}
+function tglSet(id,on){const b=$(id);b.className="tgl"+(on?" on":"");b.setAttribute("aria-pressed",on?"true":"false");if(!b.firstChild||b.firstChild.tagName!=="I")b.innerHTML="<i></i>"}
+function fillSettings(){fillAccount();$("nickIn").value=nickname;$("langSel").value=lang;$("sfxR").value=S.sfx;$("musR").value=S.music;tglSet("musB",S.musicOn);$("gfxSel").innerHTML=[["ultra","gfxUltra"],["hi","gfxHi"],["lo","gfxLo"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("gfxSel").value=gfxMode();tglSet("fpsB",S.fps);if(typeof fillPickers==="function")fillPickers()}
 $("donCopy").onclick=()=>{const v=$("donCard").textContent.trim();const ok=()=>{toast("✓ "+t("copied"),"#d6a24a");SFX.cash()};try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(ok,()=>{selCard();ok()});else{selCard();document.execCommand("copy");ok()}}catch(e){selCard()}};
 function selCard(){try{const r=document.createRange();r.selectNodeContents($("donCard"));const sl=getSelection();sl.removeAllRanges();sl.addRange(r)}catch(e){}}
 $("nickOk").onclick=()=>{nickname=$("nickIn").value.trim().slice(0,18);save();hud();toast(t("saved"))};
