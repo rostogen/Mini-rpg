@@ -248,8 +248,15 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .buy:disabled{opacity:.5;cursor:default}
 .ok{color:var(--green);font-weight:700;flex:none}
 .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
-.bcard{background:#100a11;border:1px solid var(--line);border-radius:13px;padding:10px;text-align:center}
-.bcard canvas{width:100%;height:110px;display:block;border-radius:9px;background:radial-gradient(circle at 50% 80%,#2a1420,#0b060c 70%)}
+.bcard{--tc:#c9a0b4;position:relative;background:linear-gradient(180deg,color-mix(in srgb,var(--tc) 9%,#100a11),#100a11 60%);border:1px solid color-mix(in srgb,var(--tc) 28%,transparent);border-radius:13px;padding:10px;text-align:center;cursor:pointer;animation:bIn .45s cubic-bezier(.2,1.2,.4,1) both;transition:transform .18s,box-shadow .18s,border-color .18s;-webkit-tap-highlight-color:transparent}
+.bcard:hover{transform:translateY(-3px);box-shadow:0 8px 22px -10px var(--tc);border-color:color-mix(in srgb,var(--tc) 55%,transparent)}
+.bcard:active{transform:scale(.97)}
+.bcard.tapd{animation:bTap .5s ease-out}
+.bcard.unknown canvas{animation:bQ 2.4s ease-in-out infinite}
+@keyframes bIn{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes bTap{0%{box-shadow:0 0 0 0 var(--tc)}40%{box-shadow:0 0 0 6px color-mix(in srgb,var(--tc) 35%,transparent)}100%{box-shadow:0 0 0 12px transparent}}
+@keyframes bQ{50%{filter:brightness(1.6) drop-shadow(0 0 6px #6a4a64)}}
+.bcard canvas{width:100%;height:110px;display:block;border-radius:9px;background:radial-gradient(ellipse 60% 45% at 50% 82%,color-mix(in srgb,var(--tc) 22%,#2a1420),#0b060c 72%)}
 .bcard b{display:block;margin-top:6px;font-size:14.5px}
 .bcard .m{color:var(--muted);font-size:12.5px}
 .tag{display:inline-block;margin-top:5px;padding:2px 9px;border-radius:99px;font-size:11px;border:1px solid var(--line);background:#1d121c;color:#d4bfc9}
@@ -1430,12 +1437,13 @@ function enemyUpdate(e,dt){
  if(!e.entered&&e.x>arenaX+8&&e.x<arenaX+LW-8)e.entered=true;
  if(e.entered&&locked)e.x=clamp(e.x,arenaX+8,arenaX+LW-8);
 }
+function voice(C,kind){const snd={lunge:C.body==="spider"?"hiss":"growl",swoop:"screech",claw:C.body==="ghost"?"wail":null,cast:"chant",charge:"charge",web:"hiss"}[kind];
+ const ks={imp:"cackle",hag:"cackle",banshee:"shriek",hound:"bark",fenrir:"bark",ogre:"bellow",gking:"bellow",skelwar:"rattle",lich:"rattle",myconid:"spore",magma:"sizzle",slimek:"squish",eldrake:"roar",wyvern:"screech",deathknight:"scythe",frostwolf:"frost",gargoyle:"stoneWing",assassin:"shadowStep",scorpion:"hiss",phoenix:"screech",mimic:"chomp",demonlord:"demonRoar",pumpkin:"cackle",jelly:"squish",scarab:"hiss",beetle:"hiss",werewolf:"bark",werelord:"bark",yeti:"bellow",yetiking:"bellow",cyclops:"bellow",frostgiant:"bellow",treeking:"bellow",samurai:"shadowStep",shogun:"shadowStep",valkyrie:"shriek",thunderbird:"screech",icegolem:"frost",lavagolem:"sizzle",pharaoh:"rattle",anubis:"growl"}[C.k];
+ if(ks)SFX[ks]();else if(C.k==="troll")SFX.grunt();else if(snd)SFX[snd]();}
 function startEnemyAttack(e,kind){
  const C=e.cfg;e.state="windup";e.st=0;e.face=hero.x>e.x?1:-1;e.atkKind=kind||C.style;
  if(C.blink&&Math.random()<.55){const col=C.body==="ghost"?"#7fa3c9":"#5a2a3a";puff(e.x,e.z,col);{const fd=hdir();e.x=hero.x-fd.x*30;e.z=clamp(hero.z-fd.z*30/ZS+rnd(-4,4),4,DEPTH-4)}e.face=hero.x>e.x?1:-1;puff(e.x,e.z,col);SFX.blink()}
- const snd={lunge:C.body==="spider"?"hiss":"growl",swoop:"screech",claw:C.body==="ghost"?"wail":null,cast:"chant",charge:"charge",web:"hiss"}[e.atkKind];
- const ks={imp:"cackle",hag:"cackle",banshee:"shriek",hound:"bark",fenrir:"bark",ogre:"bellow",gking:"bellow",skelwar:"rattle",lich:"rattle",myconid:"spore",magma:"sizzle",slimek:"squish",eldrake:"roar",wyvern:"screech",deathknight:"scythe",frostwolf:"frost",gargoyle:"stoneWing",assassin:"shadowStep",scorpion:"hiss",phoenix:"screech",mimic:"chomp",demonlord:"demonRoar",pumpkin:"cackle",jelly:"squish",scarab:"hiss",beetle:"hiss",werewolf:"bark",werelord:"bark",yeti:"bellow",yetiking:"bellow",cyclops:"bellow",frostgiant:"bellow",treeking:"bellow",samurai:"shadowStep",shogun:"shadowStep",valkyrie:"shriek",thunderbird:"screech",icegolem:"frost",lavagolem:"sizzle",pharaoh:"rattle",anubis:"growl"}[C.k];
- if(ks)SFX[ks]();else if(C.k==="troll")SFX.grunt();else if(snd)SFX[snd]();
+ voice(C,e.atkKind);
  if(e.state==="windup"){parts.push({x:e.x,z:e.z,h:0,life:C.wind,max:C.wind,t:"ring",col:e.boss?"#ffb03a":"#ff4d62",size:C.rad*e.s*.9});for(let i=0;i<5;i++)parts.push({x:e.x+e.face*C.rad*e.s*1.1,z:e.z,h:C.hgt*e.s*.62,vx:Math.cos(i*1.26)*70,vz:0,vh:Math.sin(i*1.26)*70,g:0,life:.22,max:.22,col:"#ffffff",size:2.2,t:"spark"})}
  if(C.summon&&e.summons<2&&aliveCount()<7&&Math.random()<.45){
   e.summons++;const sk=makeEnemy(EIDX[C.summonK||"skel"],false,clamp(e.x-e.face*26,arenaX+20,arenaX+LW-20),clamp(e.z+rnd(-22,22),8,DEPTH-8),0,{summoned:true});sk.entered=true;sk.cd=1.2;enemies.push(sk);
@@ -1655,7 +1663,7 @@ function limb(x,y,a1,l1,b,l2,w,col,col2,O){
 }
 function basePose(){return{lf:[.08,.05],lb:[-.08,.05],af:[.4,.6],ab:[-.15,.3],lean:.04,bob:0,crouch:0,wa:null,rot:0,pivot:-14,trail:null,thrust:0,headTilt:0,capeFlow:2,glow:0}}
 function idlePose(tt,p){const b=Math.sin(tt*2.6);p.bob=b*.8;p.af=[.4+b*.03,.8];p.ab=[-.18-b*.03,.4];return p}
-function walkPose(ph,p,amp){amp=amp||.55;const s=Math.sin(ph);p.lf=[s*amp,Math.max(0,-Math.cos(ph))*.9];p.lb=[-s*amp,Math.max(0,Math.cos(ph))*.9];p.af=[-s*.45+.2,.6];p.ab=[s*.45,.4];p.bob=Math.abs(Math.sin(ph))*1.8;p.lean=.1+Math.sin(ph*2)*.025;p.headTilt=Math.sin(ph*2)*.05;return p}
+function walkPose(ph,p,amp){amp=amp||.55;const s=Math.sin(ph),c=Math.cos(ph),k=amp/.55;p.lf=[s*amp,Math.max(0,-c)*1.05+.06];p.lb=[-s*amp,Math.max(0,c)*1.05+.06];p.af=[-s*.5+.2,.45+Math.max(0,-s)*.45];p.ab=[s*.5,.35+Math.max(0,s)*.4];p.bob=Math.abs(s)*1.9;p.lean=.1+Math.sin(ph*2)*.03;p.headTilt=Math.sin(ph*2)*.05-s*.03;p.roll=c*.07*k;p.twist=s*.13*k;return p}
 function stance(p){p.lf=[.42,.25];p.lb=[-.38,.15];p.crouch=2}
 function drawHuman(x,y,s,face,p,L,alpha){
  const legL=L.legL||12,armL=L.armL||10,tor=L.torso||18,tw=L.tw||13,hr=L.headR||8,lw=L.limbW||6,O=L.out||"#140a10";
@@ -2391,6 +2399,7 @@ function updateCamFP(){
  const yaw=M.yawC||0,fx=Math.cos(yaw),fz=-Math.sin(yaw),E=G3.eye||{x:0,y:50},fwd=E.x*CHS-CAM.fpBack-(H>W*1.05?14:0);
  let px=h.x+fx*fwd,pz=h.z*ZS+fz*fwd,py=E.y*CHS+5,pitch=CAM.fpPitch+(h.pitch||0),roll=0;
  if(h.state==="dead"){const k=Math.min(1,h.st*1.6);py=lerp(py,12,eo(k));pitch=lerp(pitch,.3,k);roll=k*.55}
+ {const wk=G3.wk||0;if(wk>.01&&h.state!=="dead"){const sw=Math.sin(h.anim||0)*.9*wk;px-=fz*sw;pz+=fx*sw;roll+=Math.sin(h.anim||0)*.006*wk}}
  if(shake>.2){const k=Math.min(shake,5)*.09;px+=rnd(-k,k);py+=rnd(-k,k);pz+=rnd(-k,k)}
  cam.position.set(px,py,pz);cam.up.set(0,1,0);const cp=Math.cos(pitch);cam.lookAt(px+fx*cp*100,py+Math.sin(pitch)*100,pz+fz*cp*100);if(roll)cam.rotateZ(roll);
  cam.updateProjectionMatrix();cam.updateMatrixWorld();G3.ptScale=H*G3.rr.getPixelRatio()/(2*Math.tan(fv*PI/360));
@@ -2922,7 +2931,7 @@ function buildWeapon(M,w,L){
 }
 function poseHuman(M,p,glowCol,flash){
  const L=M.L,{legL,armL,tor,hr,sw}=M;
- M.pivot.position.y=-(p.pivot||0);M.pivot.rotation.z=-(p.rot||0);M.inner.position.y=p.pivot||0;
+ M.pivot.position.y=-(p.pivot||0);M.pivot.rotation.set(p.roll||0,p.twist||0,-(p.rot||0));M.inner.position.y=p.pivot||0;
  const hipY=2*legL-p.crouch+p.bob;
  M.legF.g.position.set(1,hipY,M.hp);M.legF.g.rotation.z=p.lf[0];M.legF.k.rotation.z=-p.lf[1];
  M.legB.g.position.set(-1,hipY,-M.hp);M.legB.g.rotation.z=p.lb[0];M.legB.k.rotation.z=-p.lb[1];
@@ -3409,14 +3418,15 @@ function drawBestiary3(){
  const saveT=tNow;tNow=realT;
  bestCv.forEach((cv2,i)=>{{const rc=cv2.getBoundingClientRect();if(rc.bottom<0||rc.top>innerHeight)return}const C=ETYPES[i],known=(kills[C.k]||0)>0;let M=G3.bModels[i];
   if(!M||G3.bKnown[i]!==known){if(M)disposeModel(M);M=buildModel(C);if(!known)M.root.traverse(o=>{if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>{if(m.color)m.color.set(o.isSprite?"#000000":"#2c1a26");if(m.emissive){m.emissive.set(0);m.userData.e0&&m.userData.e0.set(0)}})}});G3.bModels[i]=M;G3.bKnown[i]=known;G3.bScene.add(M.root)}
-  const e=fakeE[i],cyc=(realT+i*.7)%4;
-  if(cyc<2.4){e.state="chase";e.moving=true;e.anim=realT*(C.spd*.12)+i}else{const k=cyc-2.4;if(k<C.wind){e.state="windup";e.st=k}else if(k<C.wind+C.act){e.state="strike";e.st=k-C.wind}else{e.state="recover";e.st=k-C.wind-C.act}}
+  const e=fakeE[i],cyc=(realT+i*.9)%6,tp=G3.bTap&&G3.bTap[i]!=null?realT-G3.bTap[i]:99;
+  const atk=k=>{if(k<C.wind){e.state="windup";e.st=k}else if(k<C.wind+C.act){e.state="strike";e.st=k-C.wind}else{e.state="recover";e.st=k-C.wind-C.act}};
+  if(tp<C.wind+C.act+.5)atk(tp);else if(cyc<2.6){e.state="chase";e.moving=true;e.anim=realT*(C.spd*.12)+i}else if(cyc<3.7){e.state="chase";e.moving=false}else atk(cyc-3.7);
   if(C.fly)e.anim=realT*(C.body==="bat"?16:9)+i;e.atkKind=C.style;e.hopT=(realT*1.1+i)%.9;e.h=0;e.face=1;
   if(C.style==="hop"){if(e.state==="chase"){const k=e.hopT/.55;e.h=k<1?Math.sin(PI*k)*14:0}else if(e.state==="strike")e.h=Math.sin(PI*clamp(e.st/C.act,0,1))*40}
   if(C.style==="swoop")e.dive=e.state==="strike"?clamp(e.st/(C.act*.55),0,1):0;
   e.seed=e.seed||i;
   G3.bModels.forEach((m,j)=>m.root.visible=j===i);
-  M.root.position.set(0,C.fly?e.h*.3:e.h*.6,0);M.yaw.rotation.y=-.55;M.body.scale.setScalar(C.size);animModel3(M,e);setLook3(M,false,1);
+  M.root.position.set(0,C.fly?e.h*.3:e.h*.6,0);M.yaw.rotation.y=-.55+Math.sin(realT*.45+i)*.5+(tp<.7?eo(tp/.7)*PI*2:0);M.body.scale.setScalar(C.size);animModel3(M,e);setLook3(M,false,1);
   if(!M.bb){M.root.updateMatrixWorld(true);const bb=new T.Box3(),tb=new T.Box3();M.root.traverse(o=>{if(o.isMesh&&o.visible&&o!==M.trail&&o!==M.thrust){if(!o.geometry.boundingBox)o.geometry.computeBoundingBox();tb.copy(o.geometry.boundingBox).applyMatrix4(o.matrixWorld);bb.union(tb)}});M.bb=bb}
   const bb=M.bb,cyy=(bb.min.y+bb.max.y)/2,bh=bb.max.y-bb.min.y,bw=Math.max(bb.max.x-bb.min.x,bb.max.z-bb.min.z),dist=Math.max(bh*1.25,bw*.85)/(2*Math.tan(15*PI/180))+bw*.3;G3.bCam.position.set((bb.min.x+bb.max.x)/2,cyy+dist*.18,(bb.min.z+bb.max.z)/2+dist);G3.bCam.lookAt((bb.min.x+bb.max.x)/2,cyy,(bb.min.z+bb.max.z)/2);
   const pr=G3.rr.getPixelRatio(),w=Math.min(340,Math.floor(G3.W)),hh=Math.round(w*220/340);
@@ -3492,12 +3502,12 @@ function vmSync(dt){
   case "hurt":{const k=Math.sin(clamp(q0/.3,0,1)*PI);R=vmKeys([[0,R],[1,[8.5,-10,-9.5,.75,.25,.45]]],k)}break;
   case "dead":{const k=Math.min(1,q0*1.4);R[1]-=22*k;Lf[1]-=10*k}break;
  }
- const walk=h.state==="walk",sp=walk?Math.sin(h.anim):0;
+ const walk=h.state==="walk";M.wk=lerp(M.wk||0,walk?1:0,Math.min(1,dt*7));const wk=M.wk,sp=Math.sin(h.anim||0);G3.wk=wk;
  const da=((h.ang-(M.angP==null?h.ang:M.angP)+PI)%(2*PI)+2*PI)%(2*PI)-PI;M.angP=h.ang;M.lag=lerp(M.lag||0,clamp(da/Math.max(dt,.001)*.9,-2.5,2.5),Math.min(1,dt*8));
- const bx=Math.sin(tNow*.9)*.15+(walk?Math.cos(h.anim*.5)*.55:0)+M.lag,by=Math.sin(tNow*1.7)*.22-(walk?Math.abs(sp)*.7:0);
+ const bx=Math.sin(tNow*.9)*.15+Math.cos((h.anim||0)*.5)*.6*wk+M.lag,by=Math.sin(tNow*1.7)*.22-(1-Math.abs(sp))*.75*wk;
  {const asp=G3.W/G3.H,k=clamp((asp-.45)/1.1,0,1);M.root.position.set(lerp(-2.4,.6,k),lerp(-1.8,-1.2,k),lerp(-9,-8,k))}
  const put=(A,v)=>{A.g.position.set(v[0]+bx,v[1]+by,v[2]);A.g.rotation.set(v[3],v[4],v[5])};
- put(M.R,R);put(M.L,Lf);M.L.g.visible=Lf[1]>-16.5;
+ put(M.R,R);put(M.L,Lf);if(wk>.01){M.R.g.rotation.z+=Math.cos((h.anim||0)*.5)*.06*wk;M.R.g.rotation.x+=(1-Math.abs(sp))*.04*wk;M.L.g.rotation.z+=Math.cos((h.anim||0)*.5)*.05*wk}M.L.g.visible=Lf[1]>-16.5;
  const B=M.blade,gc=HERO_LOOK.glowCol||"#ffe6a8",gg=Math.max(glow,HERO_LOOK.glowIdle||0);
  if(h.state==="blaze"){B.emissive.set("#ff6a1a");B.emissiveIntensity=1.2*Math.max(.4,gg)}else if(gg>0){B.emissive.set(gc);B.emissiveIntensity=gg*.75}else B.emissiveIntensity=0;
  if(!M.bladeBase)M.bladeBase=B.color.clone();B.color.copy(M.bladeBase).lerp(G3.bloodC||(G3.bloodC=new T3.Color("#5a0a12")),(bloodOn()?h.bloody||0:0)*.8);
@@ -3852,10 +3862,13 @@ function luckLive(){if(modalOpen!=="mDrops"||!luck.until)return;const l=luck.lvl
 
 
 let bestCv=[];
+const TIERCOL={common:"#b9a6b0",uncommon:"#7fe0a8",rare:"#8fc6ff",epic:"#c79cff",elite:"#e6c46a",boss:"#ffd98a"};
 function buildBestiary(){
  const g=$("bGrid");g.innerHTML="";bestCv=[];
  ETYPES.forEach((C,i)=>{const known=(kills[C.k]||0)>0;const d=document.createElement("div");d.className="bcard"+(known?"":" unknown");
   d.innerHTML=`<canvas width="340" height="220"></canvas><b>${known?L(C.n):"???"}</b><div class="m">❤ ${C.hp}  ⚔ ${C.atk}</div><div class="m">${t("kills")}: ${kills[C.k]||0}</div><span class="tag ${C.tier}">${L(TIERS[C.tier])}</span>`;
+  d.style.animationDelay=Math.min(i,24)*28+"ms";d.style.setProperty("--tc",TIERCOL[C.tier]||"#c9a0b4");
+  d.onclick=()=>{(G3.bTap||(G3.bTap=[]))[i]=realT;d.classList.remove("tapd");void d.offsetWidth;d.classList.add("tapd");if(known)voice(C,C.style);else SFX.ui()};
   g.appendChild(d);bestCv.push(d.querySelector("canvas"))});
 }
 const fakeE=ETYPES.map((C,i)=>({cfg:C,state:"chase",st:0,anim:i,seed:i*1.3,moving:true,h:0,s:C.size,hopT:0,dive:0,atkKind:C.style,stun:0,small:false}));
