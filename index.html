@@ -2241,10 +2241,10 @@ function init3D(){
  G3.rimU={value:new T.Color(1,.85,.75)};
  G3.pl=[];for(let i=0;i<(hi?5:3);i++){const l=new T.PointLight(0xffaa55,0,300,1.15);scene.add(l);G3.pl.push(l)}
  // sky
- const skyU={cTop:{value:new T.Vector3()},cMid:{value:new T.Vector3()},cLow:{value:new T.Vector3()},cBot:{value:new T.Vector3()},mDir:{value:new T.Vector3(.4,.25,-.88).normalize()},mCol:{value:new T.Vector3(1,.9,.8)},uDay:{value:0},uCloud:{value:0},uT:{value:0}};
+ const skyU={cTop:{value:new T.Vector3()},cMid:{value:new T.Vector3()},cLow:{value:new T.Vector3()},cBot:{value:new T.Vector3()},mDir:{value:new T.Vector3(.4,.25,-.88).normalize()},mCol:{value:new T.Vector3(1,.9,.8)},uDay:{value:0},uCloud:{value:0},uT:{value:0},uLin:{value:0}};
  const sky=new T.Mesh(new T.SphereGeometry(9000,32,16),new T.ShaderMaterial({uniforms:skyU,side:T.BackSide,depthWrite:false,fog:false,
   vertexShader:"varying vec3 vD;void main(){vD=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}",
-  fragmentShader:"varying vec3 vD;uniform vec3 cTop,cMid,cLow,cBot,mDir,mCol;uniform float uDay,uCloud,uT;"+
+  fragmentShader:"varying vec3 vD;uniform vec3 cTop,cMid,cLow,cBot,mDir,mCol;uniform float uDay,uCloud,uT,uLin;"+
    "float hh(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}float ns(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hh(i),hh(i+vec2(1.,0.)),f.x),mix(hh(i+vec2(0.,1.)),hh(i+vec2(1.,1.)),f.x),f.y);}"+
    "float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<5;i++){s+=a*ns(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return s;}"+
    "void main(){vec3 d=normalize(vD);float y=d.y;vec3 c=mix(cBot,cLow,smoothstep(-.03,.07,y));c=mix(c,cMid,smoothstep(.05,.24,y));c=mix(c,cTop,smoothstep(.2,.6,y));float m=max(0.,dot(d,mDir));"+
@@ -2252,7 +2252,7 @@ function init3D(){
    "if(uCloud>0.&&y>-.02){vec2 uv=d.xz/(max(y,0.)+.13)*1.25+vec2(uT*.012,uT*.004);float n=fbm(uv),n2=fbm(uv+mDir.xz*.35);"+
    "float cl=smoothstep(.74-uCloud*.2,.9-uCloud*.1,n)*smoothstep(-.02,.16,y);float sh=clamp((n2-n)*3.+.45,0.,1.);"+
    "vec3 cc=mix(vec3(1.,.99,.97),mix(cMid,vec3(.72,.76,.86),.55),sh*.6)+mCol*pow(m,6.)*.25;c=mix(c,cc,cl*.96);}"+
-   "gl_FragColor=vec4(c,1.);}"}));
+   "if(uLin>.5)c=pow(c,vec3(2.2));gl_FragColor=vec4(c,1.);}"}));
  sky.renderOrder=-10;sky.frustumCulled=false;scene.add(sky);G3.sky=sky;G3.skyU=skyU;
  {const n=700,pa=new Float32Array(n*3);for(let i=0;i<n;i++){const a=hash(i*3.1)*PI*2,y=.03+Math.pow(hash(i*7.7),1.4)*.9,r=Math.sqrt(1-y*y);pa.set([Math.cos(a)*r*8500,y*8500,Math.sin(a)*r*8500],i*3)}
   const sg=new T.BufferGeometry();sg.setAttribute("position",new T.BufferAttribute(pa,3));
@@ -2277,11 +2277,12 @@ function resize3D(){
  if(G3.ptMats)for(const m of G3.ptMats)m.uniforms.uScale.value=G3.ptScale;
 }
 window.addEventListener("resize",()=>{if(G3)resize3D()});
+function bloomFit3(){const B=BIOMES[G3.biome];if(!G3.bloom||!B)return;G3.bloom.threshold=B.day?1.6:.82;G3.bloom.strength=B.day?.32:.55}
 /* --- ultra quality: bloom on bright and glowing things (post-processing from the three.js add-ons) --- */
 function initBloom3(){
  if(G3.comp||G3.bloomLoading||!R3.jsd)return;G3.bloomLoading=true;const B="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/postprocessing/";
  Promise.all(["EffectComposer","RenderPass","UnrealBloomPass","OutputPass"].map(n=>import(B+n+".js"))).then(([a,b,c,d])=>{const T=T3,cp=new a.EffectComposer(G3.rr);cp.addPass(new b.RenderPass(G3.scene,G3.cam));
-  const bl=new c.UnrealBloomPass(new T.Vector2(G3.W,G3.H),.55,.45,.82);cp.addPass(bl);cp.addPass(new d.OutputPass());G3.comp=cp;G3.bloom=bl;resize3D()}).catch(err=>{console.warn("bloom off",err)}).finally(()=>{G3.bloomLoading=false})}
+  const bl=new c.UnrealBloomPass(new T.Vector2(G3.W,G3.H),.55,.45,.82);cp.addPass(bl);cp.addPass(new d.OutputPass());G3.comp=cp;G3.bloom=bl;bloomFit3();resize3D()}).catch(err=>{console.warn("bloom off",err)}).finally(()=>{G3.bloomLoading=false})}
 
 /* --- camera --- */
 function updateCam3(){
@@ -2321,7 +2322,7 @@ function updateCamFP(){
 function setBiome3(bi){
  const T=T3,B=BIOMES[bi];G3.biome=bi;
  const fogH=B.day?"#"+new T.Color(B.sky[2]).lerp(new T.Color(B.sky[1]),.3).getHexString():shade(B.sky[2],-.22);G3.skyU.uDay.value=B.day?1:0;G3.skyU.uCloud.value=B.cloud||0;G3.stars.visible=!B.day;
- G3.hemi.intensity=B.day?1.3:1.1;G3.amb.intensity=B.day?.45:.6;G3.sun.intensity=B.day?2.8:2.2;G3.rim.intensity=B.day?.45:.9;G3.rr.toneMappingExposure=B.day?1.1:1.25;G3.skyU.cTop.value.set(...hx3(B.sky[0]));G3.skyU.cMid.value.set(...hx3(B.sky[1]));G3.skyU.cLow.value.set(...hx3(B.sky[2]));G3.skyU.cBot.value.set(...hx3(fogH));G3.skyU.mCol.value.set(...hx3(B.moon));
+ G3.hemi.intensity=B.day?1.3:1.1;G3.amb.intensity=B.day?.45:.6;G3.sun.intensity=B.day?2.8:2.2;G3.rim.intensity=B.day?.45:.9;G3.rr.toneMappingExposure=B.day?1.1:1.25;bloomFit3();G3.skyU.cTop.value.set(...hx3(B.sky[0]));G3.skyU.cMid.value.set(...hx3(B.sky[1]));G3.skyU.cLow.value.set(...hx3(B.sky[2]));G3.skyU.cBot.value.set(...hx3(fogH));G3.skyU.mCol.value.set(...hx3(B.moon));
  const fogC=new T.Color(fogH);G3.scene.fog.color.copy(fogC);
  G3.hemi.color.set(shade(B.sky[2],.25));G3.hemi.groundColor.set(B.ground[1]);
  G3.sun.color.set(shade(B.moon,-.05));G3.rim.color.set(shade(B.accent,-.1));G3.rimU.value.set(shade(B.moon,.1)).multiplyScalar(B.day?.14:.38);
@@ -3196,7 +3197,7 @@ function render3D(dt){
  const bi=biomeIdx();if(G3.biome!==bi)setBiome3(bi);
  poolReset();syncHero3(dt);if(isFP()){updateCamFP();vmSync(dt)}else updateCam3();G3.ptMats.forEach(m=>m.uniforms.uScale.value=G3.ptScale);updateMtn3();updateChunks3();
  syncEnemies3(dt);syncStains3();syncDecals3();syncDebris3();syncProj3();syncLoot3();syncCoins3();syncBolts3();syncParts3(dt);syncLights3();
- G3.stars.material.opacity=.55+.2*Math.sin(tNow*.7);G3.skyU.uT.value=tNow;syncBarrier3();
+ G3.stars.material.opacity=.55+.2*Math.sin(tNow*.7);G3.skyU.uT.value=tNow;G3.skyU.uLin.value=G3.comp&&G3.ultra?1:0;syncBarrier3();
  if(modalOpen==="mBest")drawBestiary3();
  if(G3.comp&&G3.ultra)G3.comp.render();else G3.rr.render(G3.scene,G3.cam);if(isFP()&&G3.vm)vmRender();
  G3.odt=dt;overlay3();
