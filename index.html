@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.11-f",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.11-g",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -327,6 +327,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .tag{display:inline-block;margin-top:5px;padding:2px 9px;border-radius:99px;font-size:11px;border:1px solid var(--line);background:#1d121c;color:#d4bfc9}
 .tag.rare{color:#8fc6ff}.tag.elite{color:#e6c46a}.tag.boss{color:#ffd98a;border-color:#e6b84e;background:rgba(230,184,78,.16)}
 .tag.epic{color:#c79cff}.tag.uncommon{color:#7fe0a8}
+.tag.mythic{color:#ff4d6d;border-color:#ff4d6d88}.tag.ancient{color:#2ff0c8;border-color:#2ff0c888}.tag.divine{color:#fff1a0;border-color:#fff1a0aa;background:rgba(255,241,160,.12)}.tag.eclipse{color:#ff5a5a;border-color:#ff2a2a;background:rgba(255,42,42,.12)}.tag.ancientone{color:#e0c48e;border-color:#c2a272;background:rgba(194,162,114,.14)}.tag.eternal{color:#1a0f1a;border:1px solid #fff8;font-weight:800;background:linear-gradient(90deg,#ff7a7a,#ffc86a,#fff27a,#7aeaa0,#7ab8ff,#c89aff,#ff7ad9)}
 
 .set{max-width:640px;margin:auto}
 .row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid #2a1720}
@@ -472,7 +473,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-f</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-g</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -804,10 +805,11 @@ fgBuy:"Купити · 🪙 {n}|Buy · 🪙 {n}|Acheter · 🪙 {n}|Kaufen · �
 fgBought:"Куплено: {n}|Bought: {n}|Acheté : {n}|Gekauft: {n}|已购买：{n}|Comprado: {n}|Acquistato: {n}|Kupiono: {n}|Comprado: {n}|購入：{n}|구매: {n}",
 fgSold:"Продано|Sold|Vendu|Verkauft|已售出|Vendido|Venduto|Sprzedane|Vendido|売り切れ|품절",
 fgFull:"Сумка повна|Bag is full|Sac plein|Tasche voll|背包已满|Mochila llena|Borsa piena|Torba pełna|Mochila cheia|バッグがいっぱい|가방이 가득 참",
+rarMob:"Рідкісний ворог!|Rare enemy!|Ennemi rare !|Seltener Gegner!|稀有敌人！|¡Enemigo raro!|Nemico raro!|Rzadki wróg!|Inimigo raro!|レアな敵！|희귀한 적!",
 aShield:"Щит духу|Spirit Shield|Bouclier spirituel|Geisterschild|灵魂护盾|Escudo espiritual|Scudo dello spirito|Tarcza ducha|Escudo espiritual|魂の盾|영혼 방패"
 };
 const T8={};for(const k in T8src)T8[k]=S8(T8src[k]);
-const TIERS={common:S8("Звичайний|Common|Commun|Gewöhnlich|普通|Común|Comune|Zwykły|Comum|コモン|일반"),uncommon:S8("Незвичайний|Uncommon|Peu commun|Ungewöhnlich|罕见|Poco común|Non comune|Niezwykły|Incomum|アンコモン|고급"),rare:S8("Рідкісний|Rare|Rare|Selten|稀有|Raro|Raro|Rzadki|Raro|レア|희귀"),elite:S8("Легендарний|Legendary|Légendaire|Legendär|传说|Legendario|Leggendario|Legendarny|Lendário|レジェンダリー|전설"),epic:S8("Епічний|Epic|Épique|Episch|史诗|Épico|Epico|Epicki|Épico|エピック|에픽"),boss:S8("Бос|Boss|Boss|Boss|首领|Jefe|Boss|Boss|Chefe|ボス|보스")};
+const TIERS={common:S8("Звичайний|Common|Commun|Gewöhnlich|普通|Común|Comune|Zwykły|Comum|コモン|일반"),uncommon:S8("Незвичайний|Uncommon|Peu commun|Ungewöhnlich|罕见|Poco común|Non comune|Niezwykły|Incomum|アンコモン|고급"),rare:S8("Рідкісний|Rare|Rare|Selten|稀有|Raro|Raro|Rzadki|Raro|レア|희귀"),elite:S8("Легендарний|Legendary|Légendaire|Legendär|传说|Legendario|Leggendario|Legendarny|Lendário|レジェンダリー|전설"),epic:S8("Епічний|Epic|Épique|Episch|史诗|Épico|Epico|Epicki|Épico|エピック|에픽"),boss:S8("Бос|Boss|Boss|Boss|首领|Jefe|Boss|Boss|Chefe|ボス|보스"),mythic:S8("Міфічний|Mythic|Mythique|Mythisch|神话|Mítico|Mitico|Mityczny|Mítico|ミシック|신화"),ancient:S8("Стародавній|Ancient|Ancestral|Uralt|远古|Ancestral|Ancestrale|Pradawny|Ancestral|エンシェント|고대"),divine:S8("Божественний|Divine|Divin|Göttlich|神圣|Divino|Divino|Boski|Divino|ディバイン|신성"),eclipse:S8("Затемнення|Eclipse|Éclipse|Finsternis|日蚀|Eclipse|Eclissi|Zaćmienie|Eclipse|エクリプス|일식"),ancientone:S8("Предвічний|Ancient One|Primordial|Urahn|太古|Primigenio|Primordiale|Prastary|Primordial|エンシェントワン|태초의 존재"),eternal:S8("Вічний|Eternal|Éternel|Ewig|永恒|Eterno|Eterno|Wieczny|Eterno|エターナル|영원")};
 const BIOME_N=[S8("Багряний ліс|Crimson Wood|Bois écarlate|Karmesinwald|猩红森林|Bosque carmesí|Bosco cremisi|Szkarłatny las|Bosque carmesim|深紅の森|진홍의 숲"),S8("Мертві болота|Dead Marsh|Marais mort|Totes Moor|死亡沼泽|Pantano muerto|Palude morta|Martwe bagna|Pântano morto|死の沼|죽음의 늪"),S8("Попелясті пустища|Ashen Wastes|Terres de cendre|Aschenöde|灰烬荒原|Páramo de ceniza|Lande di cenere|Popielne pustkowia|Ermos de cinzas|灰の荒野|잿빛 황무지"),S8("Крижаний перевал|Frozen Pass|Col gelé|Gefrorener Pass|冰封山口|Paso helado|Passo ghiacciato|Zamarznięta przełęcz|Passo congelado|凍てつく峠|얼어붙은 고개"),S8("Смарагдові руїни|Emerald Ruins|Ruines d'émeraude|Smaragdruinen|翡翠遗迹|Ruinas esmeralda|Rovine di smeraldo|Szmaragdowe ruiny|Ruínas esmeralda|翠玉の遺跡|에메랄드 유적"),S8("Сонячна долина|Sunny Vale|Val ensoleillé|Sonnental|阳光谷地|Valle soleado|Valle soleggiata|Słoneczna dolina|Vale ensolarado|陽だまりの谷|햇살 골짜기"),S8("Осінній ліс|Autumn Forest|Forêt d'automne|Herbstwald|秋日森林|Bosque otoñal|Foresta autunnale|Jesienny las|Floresta outonal|秋の森|가을 숲"),S8("Сакуровий сад|Sakura Garden|Jardin de sakura|Kirschblütengarten|樱花庭园|Jardín de sakura|Giardino dei ciliegi|Ogród sakury|Jardim de sakura|桜の庭|벚꽃 정원"),S8("Піщаний каньйон|Sand Canyon|Canyon de sable|Sandschlucht|沙岩峡谷|Cañón de arena|Canyon di sabbia|Piaskowy kanion|Cânion de areia|砂の峡谷|모래 협곡"),S8("Тропічні джунглі|Tropic Jungle|Jungle tropicale|Tropendschungel|热带丛林|Selva tropical|Giungla tropicale|Tropikalna dżungla|Selva tropical|熱帯ジャングル|열대 정글"),S8("Грибний гай|Mushroom Grove|Bosquet des champignons|Pilzhain|蘑菇林|Arboleda de hongos|Boschetto dei funghi|Grzybowy gaj|Bosque de cogumelos|キノコの森|버섯 숲"),S8("Лавандові поля|Lavender Fields|Champs de lavande|Lavendelfelder|薰衣草花田|Campos de lavanda|Campi di lavanda|Lawendowe pola|Campos de lavanda|ラベンダー畑|라벤더 들판"),S8("Готичний собор|Gothic Cathedral|Cathédrale gothique|Gotische Kathedrale|哥特大教堂|Catedral gótica|Cattedrale gotica|Gotycka katedra|Catedral gótica|ゴシック大聖堂|고딕 대성당"),S8("Неонова прірва|Neon Abyss|Abysse néon|Neon-Abgrund|霓虹深渊|Abismo de neón|Abisso neon|Neonowa otchłań|Abismo neon|ネオンの深淵|네온 심연"),S8("Золоті поля|Golden Fields|Champs dorés|Goldene Felder|金色田野|Campos dorados|Campi dorati|Złote pola|Campos dourados|黄金の野|황금 들판")];
 let lang=LS.get("r2_lang","uk");if(!LANGS.some(l=>l[0]===lang))lang="uk";
 let LX=LANGS.findIndex(l=>l[0]===lang);
@@ -1033,12 +1035,135 @@ const ETYPES=[
 {k:"stormdrake",bossOnly:true,n:S8("Грозовий дракон|Storm Drake|Drake de l'orage|Sturmdrache|风暴飞龙|Draco tormentoso|Drago della tempesta|Smok burzy|Draco da tempestade|嵐の竜|폭풍 드레이크"),hp:275,atk:25,tier:"boss",spd:56,range:175,wind:.7,act:.45,rec:1,style:"breath",body:"dragon",size:1.6,rad:24,hgt:50,fly:true,flyH:54,summon:true,summonK:"wisp",aura:"#7fd8ff",
  look:{scale:"#2a4a8a",belly:"#8ac8ff",wing:"#1a2a5a",eye:"#fff27a",blood:"#7fd8ff"}},
 {k:"voidseer",bossOnly:true,n:S8("Провидець порожнечі|Void Seer|Voyant du vide|Leerenseher|虚空先知|Vidente del vacío|Veggente del vuoto|Widzący pustki|Vidente do vazio|虚空の予見者|공허의 예언자"),hp:310,atk:29,tier:"boss",spd:70,range:200,wind:.7,act:.25,rec:.9,style:"cast",body:"ghost",size:1.5,rad:12,hgt:72,blink:true,summon:true,summonK:"phantomknight",orbCol:"#e05aff",orbSp:170,aura:"#a05aff",
- look:{robe:"#2a1a4a",robe2:"#0a0418",eye:"#e05aff"}}
+ look:{robe:"#2a1a4a",robe2:"#0a0418",eye:"#e05aff"}},
+{k:"chimera",n:S8("Химера|Chimera|Chimère|Chimäre|奇美拉|Quimera|Chimera|Chimera|Quimera|キマイラ|키메라"),hp:360,atk:36,tier:"mythic",spd:128,range:80,wind:.45,act:.3,rec:.55,style:"lunge",body:"wolf",size:1.55,rad:20,hgt:44,blood:"#ff7a3a",
+ look:{fur:"#c8782a",fur2:"#6a3a1a",eye:"#ffd84a",blood:"#ff7a3a"}},
+{k:"medusa",n:S8("Медуза|Medusa|Méduse|Medusa|美杜莎|Medusa|Medusa|Meduza|Medusa|メデューサ|메두사"),hp:330,atk:37,tier:"mythic",spd:58,range:190,wind:.8,act:.25,rec:1,style:"cast",body:"human",size:1.2,rad:11,hgt:64,poison:true,orbCol:"#8aff5a",
+ look:{skin:"#7fbf6a",cloth:"#2a5a3a",cloth2:"#163a24",boot:"#102a18",head:"hag",hair:"#3a8a3a",weapon:"staff",trim:"#c8e86a",wOff:1.1}},
+{k:"cerberus",n:S8("Цербер|Cerberus|Cerbère|Zerberus|地狱三头犬|Cerbero|Cerbero|Cerber|Cérbero|ケルベロス|케르베로스"),hp:400,atk:37,tier:"mythic",spd:118,range:78,wind:.5,act:.3,rec:.6,style:"lunge",body:"wolf",size:1.75,rad:23,hgt:50,heavy:true,blood:"#ff6a2a",
+ look:{fur:"#2a1a1a",fur2:"#120a0a",eye:"#ff6a2a",blood:"#ff6a2a"}},
+{k:"hydra",n:S8("Гідра|Hydra|Hydre|Hydra|九头蛇|Hidra|Idra|Hydra|Hidra|ヒュドラ|히드라"),hp:420,atk:34,tier:"mythic",spd:70,range:80,wind:.55,act:.35,rec:.7,style:"lunge",body:"spider",size:1.6,rad:24,hgt:38,poison:true,regen:true,
+ look:{body:"#2f6a4a",body2:"#5ab08a",mark:"#e8ff5a",eye:"#ffe14e",tail:true,blood:"#8fd13a"}},
+{k:"sphinx",n:S8("Сфінкс|Sphinx|Sphinx|Sphinx|狮身人面像|Esfinge|Sfinge|Sfinks|Esfinge|スフィンクス|스핑크스"),hp:350,atk:36,tier:"mythic",spd:100,range:76,wind:.5,act:.4,rec:.8,style:"lunge",body:"wolf",size:1.6,rad:21,hgt:46,blood:"#e0b040",
+ look:{fur:"#d8b050",fur2:"#8a6a22",eye:"#7ff5ff",blood:"#e0b040"}},
+{k:"centaur",n:S8("Кентавр-стрілець|Centaur Archer|Centaure archer|Zentaurenschütze|半人马弓手|Centauro arquero|Centauro arciere|Centaur łucznik|Centauro arqueiro|ケンタウロスの射手|켄타우로스 궁수"),hp:330,atk:38,tier:"mythic",spd:96,range:190,wind:.65,act:.2,rec:.8,style:"shoot",body:"human",size:1.5,rad:13,hgt:70,
+ look:{skin:"#c89a6a",cloth:"#5a3a22",cloth2:"#3a2412",boot:"#24160c",head:"bandit",hair:"#3a2412",weapon:"bow",trim:"#d6a24a",tw:15,limbW:7,wOff:.4}},
+{k:"talos",n:S8("Бронзовий Талос|Bronze Talos|Talos de bronze|Bronze-Talos|青铜塔洛斯|Talos de bronce|Talos di bronzo|Brązowy Talos|Talos de bronze|青銅のタロス|청동 탈로스"),hp:410,atk:35,tier:"mythic",spd:36,range:52,wind:.85,act:.2,rec:.85,style:"slam",body:"human",size:1.8,rad:18,hgt:78,heavy:true,
+ look:{skin:"#b87a3a",cloth:"#8a5a26",cloth2:"#5a3a18",boot:"#3a2410",head:"golem",eye:"#ffb03a",weapon:"fists",tw:22,limbW:11,armL:12,legL:12,blood:"#e0a050"}},
+{k:"kraken",n:S8("Кракен|Kraken|Kraken|Kraken|克拉肯|Kraken|Kraken|Kraken|Kraken|クラーケン|크라켄"),hp:390,atk:33,tier:"mythic",spd:52,range:80,wind:.6,act:.5,rec:.75,style:"hop",body:"slime",size:1.7,rad:22,hgt:40,
+ look:{goo:"#5a3a9a",goo2:"#2a1a5a",eye:"#ffe14e",blood:"#7a5ac8"}},
+{k:"siren",n:S8("Сирена|Siren|Sirène|Sirene|海妖塞壬|Sirena|Sirena|Syrena|Sereia|セイレーン|세이렌"),hp:320,atk:36,tier:"mythic",spd:66,range:195,wind:.75,act:.25,rec:1,style:"cast",body:"ghost",size:1.2,rad:10,hgt:66,blink:true,orbCol:"#7ae8ff",
+ look:{robe:"#3ac8d8",robe2:"#1a5a8a",eye:"#ffffff"}},
+{k:"nemean",n:S8("Немейський лев|Nemean Lion|Lion de Némée|Nemeischer Löwe|涅墨亚狮子|León de Nemea|Leone di Nemea|Lew nemejski|Leão da Nemeia|ネメアの獅子|네메아의 사자"),hp:380,atk:38,tier:"mythic",spd:122,range:78,wind:.42,act:.3,rec:.55,style:"lunge",body:"wolf",size:1.6,rad:21,hgt:46,heavy:true,blood:"#c84a2a",
+ look:{fur:"#e0b040",fur2:"#a07018",eye:"#fff0a0",blood:"#c84a2a"}},
+{k:"runesentinel",n:S8("Рунний вартовий|Rune Sentinel|Sentinelle runique|Runenwächter|符文哨兵|Centinela rúnico|Sentinella runica|Runiczny strażnik|Sentinela rúnica|ルーンの番人|룬 파수꾼"),hp:470,atk:40,tier:"ancient",spd:40,range:50,wind:.85,act:.2,rec:.85,style:"slam",body:"human",size:1.75,rad:17,hgt:76,heavy:true,
+ look:{skin:"#6a7a78",cloth:"#4a5a58",cloth2:"#34403f",boot:"#222b2a",head:"golem",eye:"#2ff0c8",moss:"#2ff0c8",weapon:"fists",tw:21,limbW:10,armL:11,legL:11,blood:"#2ff0c8"}},
+{k:"tombwarden",n:S8("Страж гробниці|Tomb Warden|Gardien du tombeau|Grabwächter|墓穴守卫|Guardián de la tumba|Guardiano della tomba|Strażnik grobowca|Guardião da tumba|墓守|무덤 파수꾼"),hp:440,atk:41,tier:"ancient",spd:54,range:46,wind:.5,act:.14,rec:.55,style:"combo",body:"human",size:1.3,rad:12,hgt:70,
+ look:{skin:"#c8b080",cloth:"#6a5a2a",cloth2:"#3a3018",boot:"#2a2412",head:"pharaoh",weapon:"axe",armor:"#c8a040",arm2:"#c8a040",trim:"#2ff0c8",cape:"#1a4a4a",tw:15,limbW:7.5,wOff:.6}},
+{k:"fossildrake",n:S8("Скам'янілий дракон|Fossil Drake|Drake fossile|Fossildrache|化石飞龙|Draco fósil|Drago fossile|Skamieniały smok|Draco fóssil|化石の竜|화석 드레이크"),hp:480,atk:42,tier:"ancient",spd:52,range:165,wind:.72,act:.4,rec:1,style:"breath",body:"dragon",size:1.4,rad:22,hgt:48,fly:true,flyH:50,
+ look:{scale:"#d8cfa8",belly:"#f0e8c8",wing:"#8a7a52",eye:"#2ff0c8",dry:true,blood:"#e6dfcc"}},
+{k:"elderent",n:S8("Прадавній ент|Elder Ent|Ent ancestral|Uralter Ent|远古树人|Ent anciano|Ent antico|Prastary ent|Ent ancestral|古代のエント|태고의 엔트"),hp:500,atk:38,tier:"ancient",spd:34,range:52,wind:.8,act:.2,rec:.9,style:"slam",body:"human",size:1.9,rad:19,hgt:80,heavy:true,regen:true,
+ look:{skin:"#5a4a2a",cloth:"#3a5a2a",cloth2:"#244018",boot:"#1c2a12",head:"treant",cap:"#2f9a5a",weapon:"fists",tw:22,limbW:11,armL:12,legL:12,blood:"#7ac84a"}},
+{k:"sabertooth",n:S8("Шаблезубий тигр|Saber-tooth|Smilodon|Säbelzahntiger|剑齿虎|Dientes de sable|Dente a sciabola|Szablozęby|Dentes-de-sabre|サーベルタイガー|검치호"),hp:450,atk:44,tier:"ancient",spd:138,range:80,wind:.4,act:.3,rec:.5,style:"lunge",body:"wolf",size:1.55,rad:21,hgt:42,blood:"#c84a2a",
+ look:{fur:"#d8a050",fur2:"#6a4a22",eye:"#2ff0c8",blood:"#c84a2a"}},
+{k:"scarabprime",n:S8("Священний скарабей|Sacred Scarab|Scarabée sacré|Heiliger Skarabäus|神圣圣甲虫|Escarabajo sagrado|Scarabeo sacro|Święty skarabeusz|Escaravelho sagrado|聖なるスカラベ|신성한 스카라베"),hp:440,atk:40,tier:"ancient",spd:104,range:76,wind:.45,act:.3,rec:.6,style:"lunge",body:"spider",size:1.7,rad:22,hgt:34,heavy:true,
+ look:{body:"#1a5a6a",body2:"#2ff0c8",mark:"#ffe14e",eye:"#ffe14e",blood:"#2ff0c8"}},
+{k:"glyphwraith",n:S8("Привид ієрогліфів|Glyph Wraith|Spectre des glyphes|Glyphengeist|符文幽灵|Espectro de glifos|Spettro dei glifi|Upiór glifów|Espectro de glifos|グリフの亡霊|문양 망령"),hp:420,atk:43,tier:"ancient",spd:80,range:34,wind:.4,act:.14,rec:.5,style:"claw",body:"ghost",size:1.25,rad:10,hgt:66,blink:true,
+ look:{robe:"#2ff0c8",robe2:"#0a3a3a",eye:"#ffffff"}},
+{k:"obsidianguard",n:S8("Обсидіановий вартовий|Obsidian Guardian|Gardien d'obsidienne|Obsidianwächter|黑曜石守护者|Guardián de obsidiana|Guardiano d'ossidiana|Obsydianowy strażnik|Guardião de obsidiana|黒曜石の守護者|흑요석 수호자"),hp:490,atk:41,tier:"ancient",spd:44,range:48,wind:.8,act:.2,rec:.8,style:"slam",body:"human",size:1.8,rad:18,hgt:78,heavy:true,
+ look:{skin:"#1a1a24",cloth:"#24242e",cloth2:"#14141c",boot:"#0c0c12",head:"golem",eye:"#ff6a3a",weapon:"fists",tw:21,limbW:10.5,armL:12,legL:12,blood:"#ff6a3a"}},
+{k:"sunpriest",n:S8("Жрець сонця|Sun Priest|Prêtre du soleil|Sonnenpriester|太阳祭司|Sacerdote del sol|Sacerdote del sole|Kapłan słońca|Sacerdote do sol|太陽の神官|태양 사제"),hp:430,atk:42,tier:"ancient",spd:56,range:195,wind:.8,act:.25,rec:1,style:"cast",body:"human",size:1.25,rad:11,hgt:68,summon:true,summonK:"mummy",healer:true,orbCol:"#ffe14e",
+ look:{skin:"#c8a070",cloth:"#c8a040",cloth2:"#7a5a1a",boot:"#4a3412",head:"pharaoh",weapon:"staff",trim:"#2ff0c8",cape:"#1a4a4a",wOff:1.2}},
+{k:"behemoth",n:S8("Прадавній бегемот|Primeval Behemoth|Béhémoth primitif|Urzeit-Behemoth|太古巨兽|Behemot primigenio|Behemoth primordiale|Prastary behemot|Beemote primitivo|太古のベヒモス|태고의 베히모스"),hp:520,atk:43,tier:"ancient",spd:70,range:70,wind:.75,act:.45,rec:.8,style:"lunge",body:"wolf",size:2,rad:26,hgt:54,heavy:true,blood:"#7a5a3a",
+ look:{fur:"#6a5a4a",fur2:"#3a3028",eye:"#2ff0c8",blood:"#7a5a3a"}},
+{k:"seraph",n:S8("Серафим|Seraph|Séraphin|Seraph|炽天使|Serafín|Serafino|Serafin|Serafim|セラフィム|세라핌"),hp:540,atk:46,tier:"divine",spd:108,range:76,wind:.45,act:.4,rec:.8,style:"swoop",body:"bat",size:1.9,rad:18,hgt:28,fly:true,flyH:70,
+ look:{wingS:2.1,fur:"#fff1c0",wing:"#ffffff",eye:"#ffd34e",blood:"#fff1a0"}},
+{k:"archangel",n:S8("Архангел|Archangel|Archange|Erzengel|大天使|Arcángel|Arcangelo|Archanioł|Arcanjo|大天使|대천사"),hp:580,atk:47,tier:"divine",spd:78,range:48,wind:.4,act:.12,rec:.5,style:"combo",body:"human",size:1.35,rad:12,hgt:72,blink:true,
+ look:{skin:"#f0d8b8",cloth:"#f0f0f8",cloth2:"#c8c8e0",boot:"#a8a8c0",head:"hknight",weapon:"sword",wings:true,cape:"#ffffff",armor:"#f0e0a0",arm2:"#f0e0a0",trim:"#ffd34e",blade:"#fff8d0",glowIdle:.6,glowCol:"#fff1a0",tw:15,limbW:7,wOff:.5}},
+{k:"paladin",n:S8("Сяйний паладин|Radiant Paladin|Paladin radieux|Strahlender Paladin|辉光圣骑士|Paladín radiante|Paladino radioso|Promienny paladyn|Paladino radiante|光輝の聖騎士|빛나는 성기사"),hp:600,atk:45,tier:"divine",spd:54,range:46,wind:.5,act:.14,rec:.55,style:"combo",body:"human",size:1.4,rad:13,hgt:72,heavy:true,
+ look:{skin:"#f0d0b0",cloth:"#d8d8e8",cloth2:"#a0a0b8",boot:"#707088",armor:"#e8e0b0",arm2:"#e8e0b0",head:"hknight",weapon:"hsword",shield:"#f0e0a0",trim:"#ffd34e",blade:"#fff8d0",glowIdle:.5,glowCol:"#fff1a0",tw:17,limbW:8.5,wOff:.5}},
+{k:"sundragon",n:S8("Сонячний дракон|Sun Dragon|Dragon solaire|Sonnendrache|太阳飞龙|Dragón solar|Drago solare|Słoneczny smok|Dragão solar|太陽の竜|태양 드래곤"),hp:600,atk:48,tier:"divine",spd:58,range:175,wind:.7,act:.45,rec:1,style:"breath",body:"dragon",size:1.7,rad:24,hgt:52,fly:true,flyH:58,
+ look:{scale:"#f0d070",belly:"#fff8d0",wing:"#ffffff",eye:"#ffffff",blood:"#ffd34e"}},
+{k:"haloguard",n:S8("Вартовий німба|Halo Guardian|Gardien du halo|Heiligenschein-Wächter|光环守卫|Guardián del halo|Guardiano dell'aureola|Strażnik aureoli|Guardião da auréola|光輪の守護者|후광 수호자"),hp:620,atk:44,tier:"divine",spd:42,range:50,wind:.8,act:.2,rec:.85,style:"slam",body:"human",size:1.8,rad:18,hgt:80,heavy:true,
+ look:{skin:"#e8e0d0",cloth:"#d8d0c0",cloth2:"#a8a090",boot:"#78705e",head:"golem",eye:"#ffd34e",moss:"#ffd34e",weapon:"fists",tw:21,limbW:10.5,armL:12,legL:12,blood:"#fff1a0"}},
+{k:"judicator",n:S8("Суддя світла|Light Judicator|Juge de lumière|Lichtrichter|光明裁决者|Juez de luz|Giudice della luce|Sędzia światła|Juiz da luz|光の裁定者|빛의 심판관"),hp:540,atk:49,tier:"divine",spd:60,range:200,wind:.7,act:.25,rec:.9,style:"cast",body:"human",size:1.3,rad:11,hgt:70,blink:true,orbCol:"#fff1a0",
+ look:{skin:"#f0d8b8",cloth:"#f8f0d0",cloth2:"#d8c890",boot:"#a89868",head:"hood",weapon:"staff",trim:"#ffd34e",cape:"#fff8e0",wOff:1.2}},
+{k:"dawnbird",n:S8("Птах світанку|Dawn Phoenix|Phénix de l'aube|Morgenphönix|黎明凤凰|Fénix del alba|Fenice dell'alba|Feniks świtu|Fênix da aurora|暁の不死鳥|새벽 불사조"),hp:520,atk:47,tier:"divine",spd:112,range:74,wind:.48,act:.4,rec:.8,style:"swoop",body:"bat",size:1.9,rad:17,hgt:26,fly:true,flyH:68,
+ look:{wingS:2,fur:"#ffb03a",wing:"#ffe08a",eye:"#ffffff",phoenix:true,flA:"#ffd34e",flB:"#fff8d0",blood:"#ffd34e"}},
+{k:"stag",n:S8("Небесний олень|Celestial Stag|Cerf céleste|Himmelshirsch|天界雄鹿|Ciervo celestial|Cervo celeste|Niebiański jeleń|Cervo celestial|天界の牡鹿|천상의 수사슴"),hp:560,atk:45,tier:"divine",spd:124,range:80,wind:.42,act:.3,rec:.55,style:"lunge",body:"wolf",size:1.7,rad:21,hgt:52,blood:"#fff1a0",
+ look:{fur:"#f8f0d8",fur2:"#d8c890",eye:"#ffd34e",blood:"#fff1a0"}},
+{k:"lightwisp",n:S8("Дух сяйва|Radiant Wisp|Feu follet radieux|Strahlendes Irrlicht|辉光之灵|Fuego fatuo radiante|Fuoco fatuo radioso|Promienny ognik|Fogo-fátuo radiante|輝く鬼火|빛나는 도깨비불"),hp:500,atk:46,tier:"divine",spd:72,range:195,wind:.7,act:.25,rec:.9,style:"cast",body:"ghost",size:1.3,rad:10,hgt:68,blink:true,orbCol:"#fff1a0",healer:true,summon:true,summonK:"wisp",
+ look:{robe:"#fff8d0",robe2:"#e8c860",eye:"#ffffff"}},
+{k:"cherub",n:S8("Херувим-лучник|Cherub Archer|Chérubin archer|Cherubim-Schütze|小天使弓手|Querubín arquero|Cherubino arciere|Cherubin łucznik|Querubim arqueiro|ケルビムの射手|케루빔 궁수"),hp:480,atk:50,tier:"divine",spd:84,range:195,wind:.6,act:.2,rec:.8,style:"shoot",body:"human",size:1.1,rad:10,hgt:62,
+ look:{skin:"#f8e0c8",cloth:"#f0f0f8",cloth2:"#c8c8e0",boot:"#a8a8c0",head:"bandit",hair:"#f0d060",weapon:"bow",wings:true,cape:"#ffffff",trim:"#ffd34e",tw:12,limbW:5.5,wOff:.4}},
+{k:"eclipseknight",n:S8("Лицар затемнення|Eclipse Knight|Chevalier de l'éclipse|Finsternisritter|日蚀骑士|Caballero del eclipse|Cavaliere dell'eclissi|Rycerz zaćmienia|Cavaleiro do eclipse|日蝕の騎士|일식 기사"),hp:720,atk:52,tier:"eclipse",spd:60,range:48,wind:.45,act:.14,rec:.5,style:"combo",body:"human",size:1.45,rad:13,hgt:74,heavy:true,
+ look:{skin:"#2a1a1a",cloth:"#1a0a0a",cloth2:"#0e0606",boot:"#080303",head:"dknight",weapon:"hsword",armor:"#2a2024",arm2:"#2a2024",cape:"#4a0a0a",trim:"#ff2a2a",blade:"#ff6a6a",glowIdle:.7,glowCol:"#ff2a2a",tw:17,limbW:8.5,wOff:.6}},
+{k:"umbralwraith",n:S8("Примара тіні|Umbral Wraith|Spectre ombral|Schattenwesen|幽影怨灵|Espectro umbrío|Spettro d'ombra|Cienisty upiór|Espectro umbrático|影の怨霊|그림자 망령"),hp:650,atk:54,tier:"eclipse",spd:90,range:34,wind:.38,act:.14,rec:.45,style:"claw",body:"ghost",size:1.35,rad:10,hgt:68,blink:true,
+ look:{robe:"#1a0a14",robe2:"#05020a",eye:"#ff2a2a"}},
+{k:"bloodmoonwolf",n:S8("Вовк кривавого місяця|Blood Moon Wolf|Loup de la lune de sang|Blutmondwolf|血月之狼|Lobo de luna de sangre|Lupo della luna di sangue|Wilk krwawego księżyca|Lobo da lua de sangue|血月の狼|혈월 늑대"),hp:680,atk:55,tier:"eclipse",spd:146,range:82,wind:.38,act:.3,rec:.5,style:"lunge",body:"wolf",size:1.6,rad:21,hgt:44,blood:"#c8101a",
+ look:{fur:"#3a1216",fur2:"#16060a",eye:"#ff2a2a",blood:"#c8101a"}},
+{k:"voiddrake",n:S8("Дракон порожнечі|Void Drake|Drake du vide|Leerendrache|虚空飞龙|Draco del vacío|Drago del vuoto|Smok pustki|Draco do vazio|虚空の竜|공허 드레이크"),hp:760,atk:56,tier:"eclipse",spd:60,range:178,wind:.7,act:.45,rec:1,style:"breath",body:"dragon",size:1.7,rad:24,hgt:52,fly:true,flyH:60,
+ look:{scale:"#1a0a1e",belly:"#5a1a3a",wing:"#2a0a2e",eye:"#ff2a2a",blood:"#ff2a2a"}},
+{k:"lunarpriest",n:S8("Жрець чорного сонця|Black Sun Priest|Prêtre du soleil noir|Priester der schwarzen Sonne|黑日祭司|Sacerdote del sol negro|Sacerdote del sole nero|Kapłan czarnego słońca|Sacerdote do sol negro|黒き太陽の神官|검은 태양 사제"),hp:640,atk:56,tier:"eclipse",spd:56,range:200,wind:.75,act:.25,rec:1,style:"cast",body:"human",size:1.3,rad:11,hgt:70,summon:true,summonK:"wraith",orbCol:"#ff2a2a",blink:true,
+ look:{skin:"#8a7a7a",cloth:"#2a0a14",cloth2:"#14050a",boot:"#0c0306",head:"hood",weapon:"staff",trim:"#ff2a2a",cape:"#4a0a14",wOff:1.2}},
+{k:"reaper",n:S8("Жнець сутінків|Dusk Reaper|Faucheur du crépuscule|Dämmerungsschnitter|黄昏收割者|Segador del ocaso|Mietitore del crepuscolo|Żniwiarz zmierzchu|Ceifador do crepúsculo|黄昏の死神|황혼의 죽음의 신"),hp:700,atk:58,tier:"eclipse",spd:76,range:52,wind:.5,act:.14,rec:.55,style:"swing",body:"human",size:1.4,rad:12,hgt:74,blink:true,
+ look:{skin:"#d8d0c0",cloth:"#14101a",cloth2:"#08060c",boot:"#040306",head:"skull",weapon:"scythe",cape:"#1a0a14",trim:"#ff2a2a",hoodOn:true,tw:14,limbW:6,wOff:.8}},
+{k:"voidslime",n:S8("Чорний слиз|Black Slime|Slime noir|Schwarzschleim|黑色史莱姆|Limo negro|Melma nera|Czarny szlam|Gosma negra|黒スライム|검은 슬라임"),hp:780,atk:50,tier:"eclipse",spd:52,range:72,wind:.55,act:.5,rec:.75,style:"hop",body:"slime",size:1.8,rad:22,hgt:46,poison:true,
+ look:{goo:"#1a0a1a",goo2:"#05020a",eye:"#ff2a2a",blood:"#ff2a2a"}},
+{k:"duskbat",n:S8("Кажан сутінок|Dusk Bat|Chauve-souris du crépuscule|Dämmerungsfledermaus|黄昏蝙蝠|Murciélago del ocaso|Pipistrello del crepuscolo|Nietoperz zmierzchu|Morcego do crepúsculo|黄昏のコウモリ|황혼 박쥐"),hp:640,atk:57,tier:"eclipse",spd:138,range:76,wind:.38,act:.4,rec:.7,style:"swoop",body:"bat",size:1.9,rad:17,hgt:26,fly:true,flyH:64,
+ look:{wingS:2,fur:"#2a0e18",wing:"#5a1428",eye:"#ff2a2a",blood:"#c8101a"}},
+{k:"umbrawidow",n:S8("Тіньова вдова|Umbral Widow|Veuve ombrale|Schattenwitwe|幽影寡妇|Viuda umbría|Vedova d'ombra|Cienista wdowa|Viúva umbral|影の女郎蜘蛛|그림자 과부"),hp:690,atk:55,tier:"eclipse",spd:120,range:78,wind:.42,act:.3,rec:.5,style:"lunge",body:"spider",size:1.7,rad:22,hgt:32,web:true,poison:true,
+ look:{body:"#14080e",body2:"#2a0e18",mark:"#ff2a2a",eye:"#ff2a2a",tail:true,blood:"#c8101a"}},
+{k:"eclipsegiant",n:S8("Велетень затемнення|Eclipse Giant|Géant de l'éclipse|Finsternisriese|日蚀巨人|Gigante del eclipse|Gigante dell'eclissi|Olbrzym zaćmienia|Gigante do eclipse|日蝕の巨人|일식 거인"),hp:800,atk:52,tier:"eclipse",spd:36,range:56,wind:.88,act:.2,rec:.9,style:"slam",body:"human",size:2,rad:20,hgt:86,heavy:true,
+ look:{skin:"#3a2a2e",cloth:"#24161a",cloth2:"#140a0e",boot:"#0c0608",head:"cyclops",eye:"#ff2a2a",weapon:"club",tw:23,limbW:11.5,armL:13,legL:13,wOff:1,blood:"#c8101a"}},
+{k:"formless",n:S8("Безформна маса|Formless Mass|Masse informe|Formlose Masse|无形之物|Masa informe|Massa informe|Bezkształtna masa|Massa disforme|形なき塊|형체 없는 덩어리"),hp:900,atk:56,tier:"ancientone",spd:50,range:74,wind:.55,act:.5,rec:.75,style:"hop",body:"slime",size:2,rad:24,hgt:50,poison:true,
+ look:{goo:"#4a3a2a",goo2:"#1a1410",eye:"#ffe9a0",blood:"#c2a272"}},
+{k:"deeppriest",n:S8("Глибинний жрець|Deep Priest|Prêtre des profondeurs|Tiefenpriester|深渊祭司|Sacerdote abisal|Sacerdote degli abissi|Kapłan głębin|Sacerdote das profundezas|深淵の司祭|심연의 사제"),hp:820,atk:60,tier:"ancientone",spd:62,range:195,wind:.7,act:.25,rec:1,style:"cast",body:"human",size:1.4,rad:12,hgt:72,summon:true,summonK:"slime",orbCol:"#7ae8c8",
+ look:{skin:"#5a8a7a",cloth:"#1a3a3a",cloth2:"#0e2424",boot:"#081616",head:"lizard",weapon:"staff",trim:"#c2a272",cape:"#0e2a2a",wOff:1.2}},
+{k:"starspawn",n:S8("Зоряний вилупок|Starspawn|Rejeton stellaire|Sternenbrut|星之子|Engendro estelar|Prole stellare|Gwiezdny pomiot|Cria estelar|星の落とし子|별의 자식"),hp:800,atk:61,tier:"ancientone",spd:110,range:78,wind:.42,act:.4,rec:.7,style:"swoop",body:"bat",size:2.1,rad:19,hgt:28,fly:true,flyH:72,
+ look:{wingS:2.3,fur:"#2a1a4a",wing:"#6a4aa8",eye:"#ffe9a0",blood:"#c2a272"}},
+{k:"cosmicserpent",n:S8("Космічний змій|Cosmic Serpent|Serpent cosmique|Kosmische Schlange|宇宙巨蛇|Serpiente cósmica|Serpente cosmico|Kosmiczny wąż|Serpente cósmica|宇宙の大蛇|우주 뱀"),hp:900,atk:62,tier:"ancientone",spd:60,range:180,wind:.7,act:.45,rec:1,style:"breath",body:"dragon",size:1.9,rad:26,hgt:54,fly:true,flyH:62,
+ look:{scale:"#2a2a6a",belly:"#c2a272",wing:"#4a3a8a",eye:"#ffe9a0",blood:"#c2a272"}},
+{k:"dreamer",n:S8("Сновидець|The Dreamer|Le Rêveur|Der Träumer|梦者|El Soñador|Il Sognatore|Śniący|O Sonhador|夢見る者|꿈꾸는 자"),hp:840,atk:60,tier:"ancientone",spd:54,range:200,wind:.8,act:.25,rec:1,style:"cast",body:"ghost",size:1.6,rad:12,hgt:76,blink:true,orbCol:"#c2a8ff",summon:true,summonK:"banshee",orbSp:150,
+ look:{robe:"#4a3a7a",robe2:"#14102a",eye:"#ffe9a0"}},
+{k:"hollowking",n:S8("Порожній король|Hollow King|Roi creux|Hohler König|空心之王|Rey hueco|Re cavo|Pusty król|Rei oco|虚ろの王|텅 빈 왕"),hp:880,atk:62,tier:"ancientone",spd:56,range:50,wind:.5,act:.14,rec:.55,style:"combo",body:"human",size:1.55,rad:14,hgt:78,heavy:true,blink:true,
+ look:{skin:"#d8d0b8",cloth:"#2a2418",cloth2:"#14100a",boot:"#0a0804",head:"lich",weapon:"hsword",cape:"#3a2a14",armor:"#5a4a2a",arm2:"#5a4a2a",trim:"#c2a272",blade:"#e8d8a8",glowIdle:.6,glowCol:"#c2a272",tw:18,limbW:8.5,wOff:.6}},
+{k:"voidmother",n:S8("Мати порожнечі|Void Mother|Mère du vide|Leerenmutter|虚空之母|Madre del vacío|Madre del vuoto|Matka pustki|Mãe do vazio|虚空の母|공허의 어머니"),hp:860,atk:59,tier:"ancientone",spd:100,range:80,wind:.45,act:.3,rec:.55,style:"lunge",body:"spider",size:2,rad:26,hgt:36,summon:true,summonK:"spider",web:true,
+ look:{body:"#2a1a3a",body2:"#5a3a7a",mark:"#c2a272",eye:"#ffe9a0",tail:true,blood:"#c2a272"}},
+{k:"primtitan",n:S8("Первісний титан|Primordial Titan|Titan primordial|Urtitan|原初泰坦|Titán primordial|Titano primordiale|Pierwotny tytan|Titã primordial|原初の巨人|원초의 타이탄"),hp:960,atk:58,tier:"ancientone",spd:34,range:58,wind:.9,act:.2,rec:.9,style:"slam",body:"human",size:2.2,rad:22,hgt:92,heavy:true,
+ look:{skin:"#8a7a5a",cloth:"#5a4a30",cloth2:"#3a2e1c",boot:"#24190e",head:"golem",eye:"#ffe9a0",moss:"#c2a272",weapon:"fists",tw:24,limbW:12,armL:14,legL:14,blood:"#c2a272"}},
+{k:"eyeofvoid",n:S8("Око безодні|Eye of the Abyss|Œil de l'abîme|Auge des Abgrunds|深渊之眼|Ojo del abismo|Occhio dell'abisso|Oko otchłani|Olho do abismo|深淵の眼|심연의 눈"),hp:780,atk:64,tier:"ancientone",spd:66,range:205,wind:.65,act:.25,rec:.9,style:"cast",body:"ghost",size:1.5,rad:11,hgt:74,blink:true,orbCol:"#ffe9a0",orbSp:190,
+ look:{robe:"#1a1410",robe2:"#05030a",eye:"#ffe9a0"}},
+{k:"tidecaller",n:S8("Володар припливів|Tide Sovereign|Souverain des marées|Gezeitenherrscher|潮汐君主|Soberano de las mareas|Sovrano delle maree|Władca przypływów|Soberano das marés|潮の君主|조류의 군주"),hp:850,atk:60,tier:"ancientone",spd:64,range:195,wind:.75,act:.25,rec:1,style:"cast",body:"human",size:1.5,rad:13,hgt:74,chill:true,summon:true,summonK:"crab",orbCol:"#7ae8ff",
+ look:{skin:"#6a9ab0",cloth:"#1a4a6a",cloth2:"#0e2a40",boot:"#081a2a",head:"shaman",weapon:"staff",trim:"#c2a272",cape:"#0e3a5a",wOff:1.2}},
+{k:"prismdragon",n:S8("Призматичний дракон|Prism Dragon|Dragon prismatique|Prismadrache|棱彩飞龙|Dragón prismático|Drago prismatico|Pryzmatyczny smok|Dragão prismático|プリズムドラゴン|프리즘 드래곤"),hp:1150,atk:68,tier:"eternal",spd:60,range:180,wind:.7,act:.45,rec:1,style:"breath",body:"dragon",size:2,rad:26,hgt:56,fly:true,flyH:64,
+ look:{scale:"#b36bff",belly:"#7ae8ff",wing:"#ff7ad9",eye:"#ffffff",blood:"#ffffff"}},
+{k:"spectrumphoenix",n:S8("Райдужний фенікс|Spectrum Phoenix|Phénix spectral|Spektrum-Phönix|虹彩凤凰|Fénix espectral|Fenice spettrale|Widmowy feniks|Fênix espectral|虹の不死鳥|무지개 불사조"),hp:1000,atk:70,tier:"eternal",spd:118,range:76,wind:.42,act:.4,rec:.75,style:"swoop",body:"bat",size:2.1,rad:18,hgt:28,fly:true,flyH:74,
+ look:{wingS:2.2,fur:"#ff7ad9",wing:"#7ae8ff",eye:"#ffffff",phoenix:true,flA:"#ffe14e",flB:"#7ae8ff",blood:"#ffffff"}},
+{k:"timeweaver",n:S8("Ткач часу|Time Weaver|Tisseur du temps|Zeitweber|时间编织者|Tejedor del tiempo|Tessitore del tempo|Tkacz czasu|Tecelão do tempo|時の織り手|시간의 직조자"),hp:960,atk:72,tier:"eternal",spd:64,range:205,wind:.7,act:.25,rec:.9,style:"cast",body:"human",size:1.5,rad:12,hgt:74,blink:true,summon:true,summonK:"archmage",orbCol:"#b36bff",orbSp:180,
+ look:{skin:"#e8d8f8",cloth:"#4a2a8a",cloth2:"#2a1450",boot:"#180a30",head:"hood",weapon:"staff",trim:"#ffe14e",cape:"#7a3ad8",wOff:1.2,glowIdle:.6,glowCol:"#b36bff"}},
+{k:"chronoknight",n:S8("Лицар вічності|Knight of Eternity|Chevalier de l'éternité|Ritter der Ewigkeit|永恒骑士|Caballero de la eternidad|Cavaliere dell'eternità|Rycerz wieczności|Cavaleiro da eternidade|永遠の騎士|영원의 기사"),hp:1120,atk:70,tier:"eternal",spd:66,range:50,wind:.4,act:.12,rec:.45,style:"combo",body:"human",size:1.6,rad:14,hgt:78,blink:true,heavy:true,
+ look:{skin:"#f0e0d0",cloth:"#e8e8f8",cloth2:"#a8a8d0",boot:"#6a6a98",head:"dknight",weapon:"hsword",armor:"#d8d0f0",arm2:"#d8d0f0",cape:"#7a3ad8",trim:"#ffe14e",blade:"#ffffff",glowIdle:.8,glowCol:"#ffe14e",tw:18,limbW:9,wOff:.6}},
+{k:"aurorawolf",n:S8("Вовк полярного сяйва|Aurora Wolf|Loup d'aurore|Polarlichtwolf|极光之狼|Lobo de aurora|Lupo d'aurora|Wilk zorzy|Lobo da aurora|オーロラの狼|오로라 늑대"),hp:1020,atk:72,tier:"eternal",spd:150,range:84,wind:.36,act:.3,rec:.5,style:"lunge",body:"wolf",size:1.8,rad:22,hgt:48,blood:"#7ae8ff",
+ look:{fur:"#7ae8c8",fur2:"#b36bff",eye:"#ffffff",blood:"#7ae8ff"}},
+{k:"infinitygolem",n:S8("Голем безкінечності|Infinity Golem|Golem de l'infini|Unendlichkeitsgolem|无限魔像|Gólem del infinito|Golem dell'infinito|Golem nieskończoności|Golem do infinito|無限のゴーレム|무한의 골렘"),hp:1250,atk:66,tier:"eternal",spd:38,range:58,wind:.88,act:.2,rec:.85,style:"slam",body:"human",size:2.3,rad:23,hgt:94,heavy:true,
+ look:{skin:"#3a3a58",cloth:"#2a2a48",cloth2:"#1a1a30",boot:"#0e0e1e",head:"golem",eye:"#ffffff",moss:"#ff7ad9",weapon:"fists",tw:25,limbW:12.5,armL:14,legL:14,blood:"#b36bff"}},
+{k:"worldserpent",n:S8("Світовий змій|World Serpent|Serpent-monde|Weltenschlange|世界之蛇|Serpiente del mundo|Serpente del mondo|Wąż świata|Serpente do mundo|世界蛇|세계뱀"),hp:1180,atk:70,tier:"eternal",spd:62,range:185,wind:.7,act:.45,rec:1,style:"breath",body:"dragon",size:2.2,rad:28,hgt:58,fly:true,flyH:60,
+ look:{scale:"#2ff0c8",belly:"#ffe14e",wing:"#4f9dff",eye:"#ffffff",blood:"#2ff0c8"}},
+{k:"starwarden",n:S8("Зоряний вартовий|Star Warden|Gardien des étoiles|Sternenwächter|星辰守望者|Guardián de las estrellas|Custode delle stelle|Strażnik gwiazd|Guardião das estrelas|星の番人|별의 파수꾼"),hp:1060,atk:69,tier:"eternal",spd:70,range:52,wind:.42,act:.14,rec:.5,style:"combo",body:"human",size:1.55,rad:13,hgt:76,blink:true,
+ look:{skin:"#d8e8ff",cloth:"#1a2a5a",cloth2:"#0e1a3a",boot:"#080e24",head:"samurai",weapon:"spear",armor:"#4a6aa8",arm2:"#4a6aa8",cape:"#2a1a6a",wings:true,trim:"#ffe14e",blade:"#e8f4ff",glowIdle:.7,glowCol:"#7ae8ff",tw:16,limbW:7.5,wOff:.5}},
+{k:"prismslime",n:S8("Призматичний слиз|Prismatic Slime|Slime prismatique|Prismaschleim|棱彩史莱姆|Limo prismático|Melma prismatica|Pryzmatyczny szlam|Gosma prismática|プリズムスライム|프리즘 슬라임"),hp:1100,atk:64,tier:"eternal",spd:56,range:74,wind:.55,act:.5,rec:.7,style:"hop",body:"slime",size:2,rad:24,hgt:50,regen:true,
+ look:{goo:"#ff7ad9",goo2:"#7ae8ff",eye:"#ffffff",blood:"#ffffff"}},
+{k:"eternalchampion",n:S8("Вічний чемпіон|Eternal Champion|Champion éternel|Ewiger Champion|永恒冠军|Campeón eterno|Campione eterno|Wieczny czempion|Campeão eterno|永遠の覇者|영원한 챔피언"),hp:1200,atk:74,tier:"eternal",spd:72,range:48,wind:.38,act:.12,rec:.45,style:"combo",body:"human",size:1.7,rad:15,hgt:80,heavy:true,blink:true,
+ look:{skin:"#f8e0c0",cloth:"#ffd34e",cloth2:"#c8901a",boot:"#7a5410",head:"hknight",weapon:"axe2",armor:"#ffe08a",arm2:"#ffe08a",cape:"#ff4d6d",trim:"#ffffff",glowIdle:.9,glowCol:"#ffffff",tw:19,limbW:9.5,wOff:1}}
 ];
-{const ORD=["goblin","imp","rat","pumpkin","peasant","zombie","mummy","kobold","scarecrow","sapling","skel","gobarcher","bandit","scarab","moth","bat","slug","skelwar","wolf","boar","icebat","ghoul","wisp","slime","jelly","myconid","harpy","cactoid","crab","spider","wasp","monk","cultist","pirate","spirit","mimic","vamp","bonehound","hound","frostwolf","werewolf","wraith","phantomknight","assassin","samurai","gladiator","magma","salamander","orc","beetle","widow","djinn","druid","necro","lizard","yeti","hag","shaman","hexweaver","banshee","troll","treant","golem","icegolem","ironbrute","ogre","warchief","cyclops","gargoyle","griffon","manticore","basilisk","spiderq","warlock","scorpion","mino","anubis","dragon","sanddrake","phoenix","thunderbird","wyvern","frostgiant","stormsp","archmage","valkyrie","knight","blackknight","lavagolem","stonetitan","deathknight","shadowdrake","gking","ratking","pharaoh","slimek","treeking","bogmother","lich","werelord","fenrir","yetiking","ironwarlord","eldrake","stormdrake","shogun","demonlord","voidseer"];
+{const ORD=["goblin","imp","rat","pumpkin","peasant","zombie","mummy","kobold","scarecrow","sapling","skel","gobarcher","bandit","scarab","moth","bat","slug","skelwar","wolf","boar","icebat","ghoul","wisp","slime","jelly","myconid","harpy","cactoid","crab","spider","wasp","monk","cultist","pirate","spirit","mimic","vamp","bonehound","hound","frostwolf","werewolf","wraith","phantomknight","assassin","samurai","gladiator","magma","salamander","orc","beetle","widow","djinn","druid","necro","lizard","yeti","hag","shaman","hexweaver","banshee","troll","treant","golem","icegolem","ironbrute","ogre","warchief","cyclops","gargoyle","griffon","manticore","basilisk","spiderq","warlock","scorpion","mino","anubis","dragon","sanddrake","phoenix","thunderbird","wyvern","frostgiant","stormsp","archmage","valkyrie","knight","blackknight","lavagolem","stonetitan","deathknight","shadowdrake","gking","ratking","pharaoh","slimek","treeking","bogmother","lich","werelord","fenrir","yetiking","ironwarlord","eldrake","stormdrake","shogun","demonlord","voidseer","chimera","medusa","cerberus","hydra","sphinx","centaur","talos","kraken","siren","nemean","runesentinel","tombwarden","fossildrake","elderent","sabertooth","scarabprime","glyphwraith","obsidianguard","sunpriest","behemoth","seraph","archangel","paladin","sundragon","haloguard","judicator","dawnbird","stag","lightwisp","cherub","eclipseknight","umbralwraith","bloodmoonwolf","voiddrake","lunarpriest","reaper","voidslime","duskbat","umbrawidow","eclipsegiant","formless","deeppriest","starspawn","cosmicserpent","dreamer","hollowking","voidmother","primtitan","eyeofvoid","tidecaller","prismdragon","spectrumphoenix","timeweaver","chronoknight","aurorawolf","infinitygolem","worldserpent","starwarden","prismslime","eternalchampion"];
  ETYPES.sort((a,b)=>ORD.indexOf(a.k)-ORD.indexOf(b.k))}
 const EIDX={};ETYPES.forEach((C,i)=>EIDX[C.k]=i);
-const REGT=ETYPES.map((C,i)=>i).filter(i=>!ETYPES[i].bossOnly),BOSST=ETYPES.map((C,i)=>i).filter(i=>ETYPES[i].bossOnly);
+/* rarity enemies: one tier per drop rarity. hp/atk = multiple of the wave's main enemy, bh/ba = nominal base stats of the tier (for the per-enemy ratio), g = coin/xp multiplier, sig = chance of a guaranteed drop of its own rarity, gate = first battle they can appear in, w = pick weight */
+const RARM={mythic:{i:5,hp:2.6,atk:1.5,bh:360,ba:36,g:2.4,sig:.45,gate:8,w:26},ancient:{i:6,hp:3.2,atk:1.65,bh:450,ba:40,g:2.9,sig:.4,gate:16,w:22},divine:{i:7,hp:3.9,atk:1.8,bh:560,ba:45,g:3.5,sig:.35,gate:26,w:18},eclipse:{i:8,hp:4.6,atk:1.95,bh:700,ba:51,g:4.2,sig:.3,gate:38,w:14},ancientone:{i:9,hp:5.4,atk:2.1,bh:860,ba:58,g:5,sig:.28,gate:52,w:11},eternal:{i:10,hp:6.4,atk:2.3,bh:1080,ba:66,g:6,sig:.25,gate:68,w:9}};
+const RARK=Object.keys(RARM),RARIDS={};RARK.forEach(k=>RARIDS[k]=ETYPES.map((C,i)=>i).filter(i=>ETYPES[i].tier===k));
+const REGT=ETYPES.map((C,i)=>i).filter(i=>!ETYPES[i].bossOnly&&!RARM[ETYPES[i].tier]),BOSST=ETYPES.map((C,i)=>i).filter(i=>ETYPES[i].bossOnly);
 const STNsrc={
 atk:["Гострий клинок|Keen Edge|Lame affûtée|Scharfe Klinge|锋利之刃|Filo agudo|Lama affilata|Ostre ostrze|Fio afiado|鋭い刃|날카로운 칼날","+{v} до атаки|+{v} attack|+{v} d'attaque|+{v} Angriff|攻击 +{v}|+{v} de ataque|+{v} attacco|+{v} ataku|+{v} de ataque|攻撃力 +{v}|공격력 +{v}"],
 critDmg:["Нищівний удар|Crushing Blow|Coup écrasant|Vernichtender Schlag|毁灭打击|Golpe demoledor|Colpo devastante|Miażdżący cios|Golpe esmagador|粉砕の一撃|분쇄의 일격","+{v}% до критичної шкоди|+{v}% crit damage|+{v}% dégâts critiques|+{v}% kritischer Schaden|暴击伤害 +{v}%|+{v}% daño crítico|+{v}% danno critico|+{v}% obrażeń krytycznych|+{v}% de dano crítico|クリティカルダメージ +{v}%|치명타 피해 +{v}%"],
@@ -1710,25 +1835,36 @@ function makeEnemy(ti,boss,x,z,delay,opt){
  const hpM=(1+(n-1)*.06)*(1+loop*.15),atkM=(1+(n-1)*.03)*(1+loop*.08);
  let hp=Math.round(C.hp*hpM*(opt.small?.35:1)),atk=Math.round(C.atk*atkM*(opt.small?.6:1));
  if(boss){hp=Math.round(hp*1.9);atk=Math.round(atk*1.3)}
- return{cfg:C,ti,boss,x,z,h:C.fly?(C.flyH||44):0,face:-1,hp,maxhp:hp,atk,state:"chase",st:0,anim:rnd(0,6),seed:rnd(0,9),flash:0,kb:0,cd:rnd(.4,1.2),delay,entered:false,moving:false,
+ const rm0=RARM[C.tier];
+ if(rm0&&opt.ref!=null){const R0=ETYPES[opt.ref];hp=Math.round(R0.hp*hpM*rm0.hp*C.hp/rm0.bh);atk=Math.round(R0.atk*atkM*rm0.atk*C.atk/rm0.ba)}
+ return{cfg:C,ti,boss,rarI:rm0?rm0.i:0,x,z,h:C.fly?(C.flyH||44):0,face:-1,hp,maxhp:hp,atk,state:"chase",st:0,anim:rnd(0,6),seed:rnd(0,9),flash:0,kb:0,cd:rnd(.4,1.2),delay,entered:false,moving:false,
   s:C.size*(boss?1.3:1)*(opt.small?.6:1),combo2:false,shots:0,hopT:rnd(0,.9),dive:0,webCd:rnd(.6,1.6),summons:0,lastHit:9,regenT:0,small:!!opt.small,summoned:!!opt.summoned,atkKind:C.style,stun:0,chargeV:0};
+}
+/* every normal battle can bring one rarity enemy; the rarer the tier, the later it unlocks and the less often it shows up */
+function rarPick(n){
+ const av=RARK.filter(k=>n>=RARM[k].gate);if(!av.length||Math.random()>=Math.min(.16,.06+n*.0015))return-1;
+ let x=Math.random()*av.reduce((a,k)=>a+RARM[k].w,0),tk=av[av.length-1];for(const k of av){x-=RARM[k].w;if(x<=0){tk=k;break}}
+ const ids=RARIDS[tk];return ids[rint(0,ids.length-1)];
 }
 function waveList(n){
  const N=REGT.length,mi=(n-1)%N,main=REGT[mi],loop=Math.floor((n-1)/N),list=[],prev=k=>REGT[Math.max(0,mi-k)];
  // every 7th battle is a boss fight: odd ones bring one of the five dedicated bosses, even ones a crowned champion
  if(n%7===0){const bw=n/7;if(bw%2===1&&BOSST.length){list.push({t:BOSST[((bw-1)/2)%BOSST.length],boss:true});list.push({t:main});if(n>14)list.push({t:prev(1)})}
   else{list.push({t:main,boss:true});list.push({t:prev(1)});if(n>14)list.push({t:prev(2)})}}
- else{const cnt=Math.min(6,2+Math.floor(n/3)+loop);for(let i=0;i<cnt;i++)list.push({t:i%2===0?main:REGT[rint(0,Math.max(0,mi-1))]})}
+ else{const cnt=Math.min(6,2+Math.floor(n/3)+loop);for(let i=0;i<cnt;i++)list.push({t:i%2===0?main:REGT[rint(0,Math.max(0,mi-1))]});
+  const rt=rarPick(n);if(rt>=0)list.push({t:rt,rar:true,ref:main})}
  return list;
 }
 function startWave(){
  locked=true;cleared=false;usedRevive=false;
  arenaX=Math.max(0,hero.x-LW*.35);
  const list=waveList(battleNo);enemies=[];
- list.forEach((w,i)=>{const left=list.length>=3&&i%3===2;const x=left?arenaX-40-i*14:arenaX+LW+40+i*26;enemies.push(makeEnemy(w.t,!!w.boss,x,rnd(15,DEPTH-15),i*.55))});
+ list.forEach((w,i)=>{const left=list.length>=3&&i%3===2;const x=left?arenaX-40-i*14:arenaX+LW+40+i*26;enemies.push(makeEnemy(w.t,!!w.boss,x,rnd(15,DEPTH-15),i*.55,w.rar?{ref:w.ref}:null))});
  const boss=enemies.find(e=>e.boss);
  if(boss){banner(t("bossWave"),L(boss.cfg.n));setTimeout(()=>SFX.roar(),500)}
  else{banner(t("wave",{n:battleNo}),L(BIOME_N[biomeIdx()]));SFX.horn()}
+ const re=enemies.find(o=>o.rarI);
+ if(re)setTimeout(()=>{if(!enemies.includes(re)||re.state==="dead")return;banner(t("rarMob"),L(TIERS[re.cfg.tier])+" · "+L(re.cfg.n));flashA=.3;flashCol=RAR[re.rarI].col;re.rarI>=7?SFX.divine():SFX.unlock()},1500);
  save();
 }
 const aliveCount=()=>enemies.filter(o=>o.state!=="dead").length;
@@ -1739,6 +1875,8 @@ function enemyUpdate(e,dt){
  e.st+=dt;e.lastHit+=dt;
  if(e.boss&&!e.intro&&e.x>arenaX+20&&e.x<arenaX+LW-20){e.intro=true;shake+=7;dustRing(e.x,e.z,34);parts.push({x:e.x,z:e.z,h:0,life:.8,max:.8,t:"ring",col:"#ffb03a",size:26});parts.push({x:e.x,z:e.z,h:0,life:1.1,max:1.1,t:"ring",col:"#ffe0a0",size:40});SFX.bossIntro();decal("rune",e.x,e.z,70,2.6,"#ffb03a");cine()}
  if(C.aura&&e.state!=="dead"&&Math.random()<dt*(e.boss?22:12))parts.push({x:e.x+rnd(-C.rad,C.rad)*e.s,z:e.z+rnd(-3,3),h:e.h+rnd(2,C.hgt*e.s*.9),vx:rnd(-8,8),vz:0,vh:rnd(18,42),g:0,life:rnd(.5,.9),max:.9,col:C.aura,size:rnd(1.2,2.4),t:"dot"});
+ if(e.rarI&&e.state!=="dead"){const rc=RAR[e.rarI].col;if(Math.random()<dt*16)parts.push({x:e.x+rnd(-C.rad,C.rad)*e.s,z:e.z+rnd(-3,3),h:e.h+rnd(0,C.hgt*e.s),vx:rnd(-10,10),vz:0,vh:rnd(24,60),g:0,life:rnd(.6,1),max:1,col:rc,size:rnd(1.5,3),t:"dot"});
+  e.rarT=(e.rarT||0)-dt;if(e.rarT<=0){e.rarT=1.1;parts.push({x:e.x,z:e.z,h:0,life:.9,max:.9,t:"ring",col:rc,size:C.rad*e.s*1.1+8})}}
  if(C.fly){e.anim+=dt*(C.body==="bat"?16:9);const base=(C.flyH||44)+Math.sin(e.anim*.3)*5;e.h=lerp(base,10,e.dive)}
  else if(C.body==="ghost"){e.anim+=dt*3;e.h=7+Math.sin(e.anim)*3}
  if(e.kb){e.x+=e.kb*dt;e.kb*=Math.pow(.002,dt);if(Math.abs(e.kb)<4)e.kb=0}
@@ -1849,12 +1987,12 @@ function killEnemy(e,dir){
  e.hp=0;e.state="dead";e.st=0;e.kb=dir*170;e.burn=null;
  {const bc=bloodCol(C),lq=bloodLiquid(C);blood(e.x,e.z,e.h+C.hgt*e.s*.5,dir,11,bc,1.1,lq);if(lq){stain(e.x+dir*6,e.z,C.rad*e.s*rnd(1,1.35),bc,true);if(Math.random()<.6)stain(e.x+dir*rnd(14,30),e.z+rnd(-6,6),C.rad*e.s*rnd(.45,.7),bc,false,dir)}}
  kills[C.k]=(kills[C.k]||0)+1;
- const tm={common:1,uncommon:1.2,rare:1.45,epic:1.7,elite:2}[C.tier]||1;
+ const tm=RARM[C.tier]?RARM[C.tier].g:({common:1,uncommon:1.2,rare:1.45,epic:1.7,elite:2}[C.tier]||1);
  const rm=e.summoned?.3:e.small?.35:1;
  const xp=Math.max(1,Math.round(((12+battleNo*4)*tm*(e.boss?4:1)+(e.boss?100:0))*(1+P.xpBonus/100)*rm+P.xpFlat*rm));
  const gold=Math.max(1,Math.round(((6+battleNo*2)*tm*(e.boss?5:1)+(e.boss?120:0))*(1+P.goldBonus/100)*goldGrow()*rm+P.goldFlat*rm));
  addText(e.x,e.z,e.h+C.hgt*e.s+18,"+"+xp+" XP","#b59cff",11);
- {const n=e.boss?14:Math.round((3+({uncommon:1,rare:2,elite:3,epic:4}[C.tier]||0))*rm+.4);for(let i=0;i<n;i++){const an=rnd(0,PI*2);parts.push({x:e.x,z:e.z,h:e.h+C.hgt*e.s*.5,vx:Math.cos(an)*rnd(30,80),vz:Math.sin(an)*rnd(10,30),vh:rnd(40,110),g:0,life:3,max:3,col:i%3?"#b59cff":"#e6d8ff",size:rnd(2.2,3.2),t:"soul"})}}
+ {const n=e.boss?14:Math.round((3+(RARM[C.tier]?RARM[C.tier].i-1:({uncommon:1,rare:2,elite:3,epic:4}[C.tier]||0)))*rm+.4);for(let i=0;i<n;i++){const an=rnd(0,PI*2);parts.push({x:e.x,z:e.z,h:e.h+C.hgt*e.s*.5,vx:Math.cos(an)*rnd(30,80),vz:Math.sin(an)*rnd(10,30),vh:rnd(40,110),g:0,life:3,max:3,col:i%3?"#b59cff":"#e6d8ff",size:rnd(2.2,3.2),t:"soul"})}}
  spawnCoins(e.x,e.z,e.h,gold);gainXP(xp);
  if(P.killCdr>0&&!e.summoned&&!e.small)for(const k in hero.cd)if(hero.cd[k]>0)hero.cd[k]*=1-P.killCdr/100;
  if(P.killHeal>0&&hero.state!=="dead"&&P.hp<P.maxhp){const g=Math.min(P.maxhp-P.hp,Math.round(P.killHeal*(e.summoned||e.small?.4:1)));if(g>0){P.hp+=g;addText(hero.x,hero.z,62,"+"+g,"#6bf0ae",11)}}
@@ -1864,7 +2002,7 @@ function killEnemy(e,dir){
  if(C.look.bones){scatter(e,"bone",11);SFX.rattle()}else if(C.look.head==="golem"){scatter(e,"rock",8)}
  tryDrop(e);
  if(C.explode){projs.push({k:"boom",x:e.x,z:e.z,h:0,life:.8,max:.8,r:82,dmg:Math.round(e.atk*1.4),owner:null});SFX.charge()}
- if(e.boss)impact(3,e);else if(C.tier==="elite"||C.tier==="epic"||C.heavy)impact(2,e);
+ if(e.boss)impact(3,e);else if(e.rarI){impact(e.rarI>=7?3:2,e);hitStop=Math.max(hitStop,.14);flashA=.3;flashCol=RAR[e.rarI].col}else if(C.tier==="elite"||C.tier==="epic"||C.heavy)impact(2,e);
  if(e.boss){SFX.bossDie();setTimeout(()=>SFX.jackpot(),450);for(let i=0;i<60;i++)parts.push({x:e.x+rnd(-8,8),z:e.z,h:rnd(10,40),vx:rnd(-90,90),vz:rnd(-20,20),vh:rnd(120,260),g:300,life:rnd(.8,1.4),max:1.4,col:i%3?"#ffd34e":"#fff6d0",size:rnd(1.6,3.2),t:"spark"});
   hitStop=.32;shake+=10;flashA=.5;flashCol="#ffe0a0";setTimeout(()=>banner(t("bossDown"),"+"+gold+" 🪙"),300)}
 }
@@ -1884,6 +2022,7 @@ function rarWeights(minR,LLo){const LL=LLo!=null?LLo:luckLevel();return RAR.map(
 function rarProbs(minR,LL){const w=rarWeights(minR||0,LL),tot=w.reduce((a,b)=>a+b,0);return w.map(x=>x/tot)}
 function rollRarity(minR){const w=rarWeights(minR);const tot=w.reduce((a,b)=>a+b,0);let x=Math.random()*tot;for(let i=0;i<w.length;i++){x-=w[i];if(x<=0&&w[i]>0)return i}return w.length-1}
 function tryDrop(e){
+ if(e.rarI&&!e.summoned&&!e.small){const rm=RARM[e.cfg.tier];spawnLoot(e,makeItem(Math.random()<rm.sig?rm.i:rollRarity(2)));setTimeout(()=>spawnLoot(e,makeItem(rollRarity(1))),240);if(Math.random()<.5)setTimeout(()=>spawnLoot(e,makeItem(rollRarity(0))),480);return}
  if(e.boss){spawnLoot(e,makeItem(rollRarity(e.cfg.bossOnly?3:2)));setTimeout(()=>spawnLoot(e,makeItem(rollRarity(e.cfg.bossOnly?2:1))),260);if(e.cfg.bossOnly)setTimeout(()=>spawnLoot(e,makeItem(rollRarity(1))),520);return}
  let ch=dropChance()+({common:0,uncommon:.02,rare:.04,epic:.07,elite:.1}[e.cfg.tier]||0);
  if(e.summoned||e.small)ch*=.3;
@@ -2541,7 +2680,7 @@ function drawEnemy(e){
  if(e.stun>0&&e.state==="recover"&&e.st<0&&head){for(let i=0;i<3;i++){const a=tNow*5+i*2.1;c.fillStyle="#ffe07a";c.font="10px system-ui";c.textAlign="center";c.fillText("★",head[0]+Math.cos(a)*12,head[1]-14+Math.sin(a)*4)}}
  const top=sy-C.hgt*ds-(C.body==="human"?4:8);
  if(e.boss&&head){const hx=head[0],hy=head[1]-(C.body==="human"?11*ds:10*ds);c.fillStyle="#e6b84e";c.strokeStyle="#3a2408";c.lineWidth=1.5;c.beginPath();c.moveTo(hx-7,hy);c.lineTo(hx-7,hy-7);c.lineTo(hx-3.5,hy-3.5);c.lineTo(hx,hy-9);c.lineTo(hx+3.5,hy-3.5);c.lineTo(hx+7,hy-7);c.lineTo(hx+7,hy);c.closePath();c.fill();c.stroke()}
- if(!e.boss&&e.hp<e.maxhp){const w=30,x=sx-w/2;c.fillStyle="rgba(10,4,8,.85)";c.fillRect(x-1,top-1,w+2,5);c.fillStyle="#e14b5a";c.fillRect(x,top,w*e.hp/e.maxhp,3)}
+ if(!e.boss&&(e.hp<e.maxhp||e.rarI)){const w=e.rarI?44:30,x=sx-w/2;c.fillStyle="rgba(10,4,8,.85)";c.fillRect(x-1,top-1,w+2,5);c.fillStyle=e.rarI?RAR[e.rarI].col:"#e14b5a";c.fillRect(x,top,w*e.hp/e.maxhp,3)}
  if(e.state==="windup"){const k=e.st/C.wind;c.font="900 16px system-ui,sans-serif";c.textAlign="center";c.fillStyle=k>.6?"#ff4d62":"#ffd34e";c.strokeStyle="#1a0508";c.lineWidth=3;const y=top-8-Math.abs(Math.sin(e.st*14))*3;c.strokeText("!",sx,y);c.fillText("!",sx,y)}
 }
 function drawEnemyBody(e,sx,sy,ds,face,L,alpha){
@@ -3766,7 +3905,7 @@ function overlay3(){
   c.restore()}
  for(const e of enemies){if(e.delay>0||e.state==="dead")continue;const C=e.cfg,M=G3.emap.get(e);const [sx,top,sz]=pj(e.x,e.z,e.h+C.hgt*e.s*CHS+(C.body==="human"?6:10));if(sz>1)continue;
   if(e.stun>0&&e.state==="recover"&&e.st<0&&M){const [hx,hy]=pjO(M.headObj,10);for(let i=0;i<3;i++){const a=tNow*5+i*2.1;c.fillStyle="#ffe07a";c.font="10px system-ui";c.textAlign="center";c.fillText("★",hx+Math.cos(a)*12,hy-6+Math.sin(a)*4)}}
-  if(!e.boss&&e.hp<e.maxhp){const w=30,x=sx-w/2;c.fillStyle="rgba(10,4,8,.85)";c.fillRect(x-1,top-1,w+2,5);c.fillStyle="#e14b5a";c.fillRect(x,top,w*e.hp/e.maxhp,3)}
+  if(!e.boss&&(e.hp<e.maxhp||e.rarI)){const w=e.rarI?44:30,x=sx-w/2;c.fillStyle="rgba(10,4,8,.85)";c.fillRect(x-1,top-1,w+2,5);c.fillStyle=e.rarI?RAR[e.rarI].col:"#e14b5a";c.fillRect(x,top,w*e.hp/e.maxhp,3)}
   if(e.state==="windup"){const k=e.st/C.wind;c.font="900 16px system-ui,sans-serif";c.textAlign="center";c.fillStyle=k>.6?"#ff4d62":"#ffd34e";c.strokeStyle="#1a0508";c.lineWidth=3;const y=top-8-Math.abs(Math.sin(e.st*14))*3;c.strokeText("!",sx,y);c.fillText("!",sx,y)}}
  for(const q of texts){const [x,y,z]=pj(q.x,q.z,q.h);if(z>1)continue;const a=Math.min(1,q.life*2.2);c.globalAlpha=a;c.font=`800 ${Math.round(q.size*(1+Math.max(0,q.life-.75)*4.5))}px system-ui,sans-serif`;c.textAlign="center";c.lineWidth=3;c.strokeStyle="rgba(10,4,8,.9)";c.strokeText(q.s,x,y);c.fillStyle=q.col;c.fillText(q.s,x,y)}c.globalAlpha=1;
  if(!fp&&h.state!=="dead"){const [sx,ny]=pj(h.x,h.z,64*CHS+8);c.font="700 9px Cinzel,Georgia,serif";c.textAlign="center";c.fillStyle="rgba(243,233,238,.85)";c.strokeStyle="rgba(0,0,0,.7)";c.lineWidth=2.5;c.strokeText(nickname,sx,ny);c.fillText(nickname,sx,ny);
@@ -4318,7 +4457,7 @@ function luckLive(){if(modalOpen!=="mDrops"||!luck.until)return;const l=luck.lvl
 
 
 let bestCv=[];
-const TIERCOL={common:"#b9a6b0",uncommon:"#7fe0a8",rare:"#8fc6ff",epic:"#c79cff",elite:"#e6c46a",boss:"#ffd98a"};
+const TIERCOL={common:"#b9a6b0",uncommon:"#7fe0a8",rare:"#8fc6ff",epic:"#c79cff",elite:"#e6c46a",boss:"#ffd98a",mythic:"#ff4d6d",ancient:"#2ff0c8",divine:"#fff1a0",eclipse:"#ff2a2a",ancientone:"#c2a272",eternal:"#ff7ad9"};
 function buildBestiary(){
  const g=$("bGrid");g.innerHTML="";bestCv=[];
  ETYPES.forEach((C,i)=>{const known=(kills[C.k]||0)>0;const d=document.createElement("div");d.className="bcard"+(known?"":" unknown");
