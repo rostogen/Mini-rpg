@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.11-b",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.11-c",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -382,7 +382,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-b</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-c</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -1054,6 +1054,7 @@ let S=Object.assign({sfx:70,music:30,musicOn:false},LS.get("r2_set",{}));
 {const n=(+LS.get("r2_boot",0)||0)+1;LS.set("r2_boot",n);BOOT.safe=n>=3?2:n===2?1:0;if(BOOT.safe&&S.gfx!=="lo"){S.gfx="lo";LS.set("r2_set",S)}}
 function save(){LS.set(PK("r2_hero"),{level:P.level,xp:P.xp,gold:P.gold,hp:P.hp});LS.set(PK("r2_tal"),tal);LS.set(PK("r2_train"),train);LS.set(PK("r2_kills"),kills);LS.set(PK("r2_nick"),nickname);LS.set(PK("r2_battle"),battleNo);LS.set(PK("r2_bag"),bag);LS.set(PK("r2_eq"),eq);LS.set(PK("r2_luck"),luck);LS.set(PK("r2_iseq"),itemSeq);LS.set("r2_session",session);LS.set("r2_lang",lang);LS.set("r2_set",S)}
 
+var _sh={}; // colour cache for shade(); must exist before the first recalc() runs at start-up
 function recalc(){
  const lv=P.level,s={maxhp:100+14*(lv-1),atk:15+3*(lv-1),armor:0,crit:8,critDmg:0,atkSpd:0,dmgMul:0,dmgRed:0,thorns:0,dodgeCd:0,fireBonus:0,fireRad:0,fireCd:0,burn:0,burnDmg:0,fireMulti:0,lightningBonus:0,chain:1,boltCd:0,boltTwice:0,healBonus:0,regen:0,lifesteal:0,healCd:0,revive:0,goldBonus:0,xpBonus:0,speed:0,cdr:0,spinBonus:0,spinCd:0,dropBonus:0,rarBonus:0,heavyBonus:0,blazeBonus:0,bossDmg:0,execute:0,killHeal:0,evade:0,shieldCd:0,heavyCd:0};
  for(const id of tal){const n=TALN[id];if(n)for(const [k,v] of n.fx)s[k]+=v}
@@ -1081,7 +1082,6 @@ recalc();
 const PI=Math.PI;
 const lerp=(a,b,k)=>a+(b-a)*k, clamp=(v,a,b)=>v<a?a:v>b?b:v, eo=k=>1-(1-k)*(1-k), rnd=(a,b)=>a+Math.random()*(b-a), rint=(a,b)=>Math.floor(rnd(a,b+1));
 function hash(n){const s=Math.sin(n*127.1+311.7)*43758.5453;return s-Math.floor(s)}
-var _sh={};
 function shade(hex,amt){const k=hex+amt;if(_sh[k])return _sh[k];const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;const tt=amt<0?0:255,p=Math.abs(amt);r=Math.round((tt-r)*p+r);g=Math.round((tt-g)*p+g);b=Math.round((tt-b)*p+b);return _sh[k]="#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1)}
 function hexA(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${n>>16},${n>>8&255},${n&255},${a})`}
 const _wl=new WeakMap();
