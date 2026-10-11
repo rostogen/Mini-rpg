@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.11-j",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.11-k",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -520,7 +520,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-j</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-k</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -1723,9 +1723,9 @@ const ist=it=>it.up?it.st.map(([k,v])=>[k,svAt(k,v,it.up)]):it.st;
 function loadForge(){const f=LS.get(PK("r2_forge"),null),o={seed:-1,stock:[],rr:0};if(f&&typeof f==="object"){o.seed=f.seed|0;o.rr=clampN(f.rr|0,0,50);if(Array.isArray(f.stock))o.stock=f.stock.slice(0,4).map(x=>x&&x.sold?{sold:1,id:x.id|0}:(validItem(x)&&x.s===SLOTI.weapon?x:null))}return o}
 // stat: [base, per item level, cap per item (0 = none), decimals]
 const ISTAT={atk:[2,.6,0,0],maxhp:[10,4,0,0],armor:[1,.25,0,0],crit:[1,.08,12,0],critDmg:[5,.6,60,0],atkSpd:[2,.12,15,0],speed:[2,.1,12,0],fireBonus:[5,.8,0,0],lightningBonus:[5,.8,0,0],healBonus:[5,.8,0,0],regen:[.3,.04,0,1],lifesteal:[.5,.04,6,1],goldBonus:[3,.3,60,0],xpBonus:[3,.3,60,0],dmgRed:[1,.06,10,0],cdr:[1,.05,8,0],thorns:[3,.3,40,0],dropBonus:[2,.15,25,0],evade:[1,.05,10,0],killHeal:[1,.15,0,0],execute:[4,.3,40,0],bossDmg:[4,.3,40,0]};
-const LUCK_MAX=20;
-const luckCost=l=>Math.round(250*(l+1)*(1+l*.3)/10)*10;
-const luckTime=l=>Math.round(10*(l+1)*(1+l*.15));
+const LUCK_MAX=30;
+const luckCost=l=>Math.round(120*(l+1)*(1+l*.22)/10)*10;
+const luckTime=l=>Math.max(5,Math.round(6*(l+1)*(1+l*.1)));
 const BIOMES=[
  {sky:["#170914","#3b1426","#6e2434"],moon:"#f4d9c4",far:"#2a1020",far2:"#210c19",mid:"#1a0a14",near:"#10060c",ground:["#2e1b1d","#1a0f11"],stone:"#3f2a2d",accent:"#ff6a5a",fog:"rgba(170,40,60,0.16)"},
  {sky:["#080d1a","#18223c","#33405c"],moon:"#dfe8f5",far:"#1c2436",far2:"#161c2b",mid:"#121826",near:"#0a0e17",ground:["#20262a","#121619"],stone:"#2f363c",accent:"#8fb4ff",fog:"rgba(120,150,210,0.12)"},
@@ -2348,8 +2348,8 @@ function killEnemy(e,dir){
  kills[C.k]=(kills[C.k]||0)+1;
  const tm=RARM[C.tier]?RARM[C.tier].g:({common:1,uncommon:1.2,rare:1.45,epic:1.7,elite:2}[C.tier]||1);
  const rm=e.summoned?.3:e.small?.35:1;
- const xp=Math.max(1,Math.round(((12+battleNo*4)*tm*(e.boss?4:1)+(e.boss?100:0))*(1+P.xpBonus/100)*rm+P.xpFlat*rm));
- const gold=Math.max(1,Math.round(((6+battleNo*2)*tm*(e.boss?5:1)+(e.boss?120:0))*(1+P.goldBonus/100)*goldGrow()*rm+P.goldFlat*rm));
+ const xp=Math.max(1,Math.round(((12+battleNo*4)*tm*(e.boss?4:1)+(e.boss?100:0))*1.25*(1+P.xpBonus/100)*rm+P.xpFlat*rm));
+ const gold=Math.max(1,Math.round(((6+battleNo*2)*tm*(e.boss?5:1)+(e.boss?120:0))*1.3*(1+P.goldBonus/100)*goldGrow()*rm+P.goldFlat*rm));
  addText(e.x,e.z,e.h+C.hgt*e.s+18,"+"+xp+" XP","#b59cff",11);
  {const n=e.boss?14:Math.round((3+(RARM[C.tier]?RARM[C.tier].i-1:({uncommon:1,rare:2,elite:3,epic:4}[C.tier]||0)))*rm+.4);for(let i=0;i<n;i++){const an=rnd(0,PI*2);parts.push({x:e.x,z:e.z,h:e.h+C.hgt*e.s*.5,vx:Math.cos(an)*rnd(30,80),vz:Math.sin(an)*rnd(10,30),vh:rnd(40,110),g:0,life:3,max:3,col:i%3?"#b59cff":"#e6d8ff",size:rnd(2.2,3.2),t:"soul"})}}
  spawnCoins(e.x,e.z,e.h,gold);gainXP(xp);
@@ -2375,7 +2375,8 @@ const BAG_MAX=40,AS_MAX=6;let asellN=0,asellG=0,asellT=null;
 function asMask(){if(S.asm==null)S.asm=S.asell!=null&&S.asell>=0?(1<<(Math.min(S.asell,AS_MAX)+1))-1:0;return S.asm|0}
 const asOn=r=>r<=AS_MAX&&!!(asMask()>>r&1);
 let loots=[],newItems=0;
-function dropChance(){return Math.min(.65,(.22+luck.lvl*.015)*(1+P.dropBonus/100))}
+const dropBase=l=>.27+l*.014;
+function dropChance(){return Math.min(.75,dropBase(luck.lvl)*(1+P.dropBonus/100))}
 function luckLevel(){return luck.lvl+(P.rarBonus||0)}
 function rarWeights(minR,LLo){const LL=LLo!=null?LLo:luckLevel();return RAR.map((r,i)=>i<minR?0:r.w*(1+LL*.35*i))}
 function rarProbs(minR,LL){const w=rarWeights(minR||0,LL),tot=w.reduce((a,b)=>a+b,0);return w.map(x=>x/tot)}
@@ -4140,6 +4141,11 @@ function syncEnemies3(dt){
   W3(M.root,e.x,e.z,e.h);M.body.scale.setScalar(e.s*CHS);if(isFP()){const dx=hero.x-e.x;turnTo(M,dx*e.face>0&&e.state!=="dead"?Math.atan2(-(hero.z-e.z)*ZS,dx):e.face>0?0:-PI,dt)}else yawTo(M,e.face,0,dt);animModel3(M,e);
   if(e.jolt){M.jolt=Math.max(M.jolt||0,e.jolt);e.jolt=0}const jo=M.jolt||0;M.body.position.x=-jo*5;M.body.rotation.z=jo*.22;M.jolt=jo>.01?jo*Math.pow(.0004,dt):0;
   M.spawnT=(M.spawnT||0)+dt;const sk=Math.min(1,M.spawnT/.4);if(sk<1)M.root.position.y-=(1-eo(sk))*14;
+  {/* a little extra life: spawn pop, breathing, anticipation squash before a strike, stretch on strike, squash when hit */
+   const live=e.state!=="dead",wk=live&&e.state==="windup"?eo(clamp(e.st/(C.wind||1),0,1)):0,sr=live&&e.state==="strike"?Math.max(0,1-e.st/(C.act||.3)):0,
+    br=live?Math.sin(tNow*3.2+e.seed)*.012*(e.state==="chase"&&e.moving?.4:1):0,pop=sk<1?Math.max(.05,easeBk(sk)):1,
+    sy=(1+br-wk*.07+sr*.09-jo*.1)*pop,sx=(1-br*.5+wk*.04-sr*.04+jo*.06)*pop;
+   M.body.scale.set(e.s*CHS*sx,e.s*CHS*sy,e.s*CHS*sx)}
   let a=alpha*sk;if(C.body==="ghost")a*=.75+.15*Math.sin(tNow*4+e.seed);if(C.stealth&&e.state==="chase")a*=.22+.1*Math.sin(tNow*6+e.seed);
   if(isFP()){const r=relH(e);if(r.a<8&&r.a>-CAM.fpBack-44&&r.l<70)a*=.15}
   setLook3(M,e.flash>0,a);
@@ -4873,7 +4879,7 @@ bindItemLongPress($("eqGrid"),tg=>{const b=tg.closest("[data-eq]");return b?eq[b
 /* ---- drops & luck ---- */
 function pct(x){x*=100;if(x>0&&x<.001)return"<0.001%";return(x>=10?x.toFixed(1):x>=1?x.toFixed(2):x.toFixed(3)).replace(/\.?0+$/,"")+"%"}
 function fmtT(sec){sec=Math.max(0,Math.ceil(sec));const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return h?`${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`:`${m}:${String(s).padStart(2,"0")}`}
-const dropChanceAt=l=>Math.min(.65,(.22+l*.015)*(1+P.dropBonus/100));
+const dropChanceAt=l=>Math.min(.75,dropBase(l)*(1+P.dropBonus/100));
 function rarRows(pr,cmp){return RAR.map((R,i)=>`<div class="rrow r${i}" style="--rc:${R.col}"><b${R.rainbow?' class="rbt"':""}>${L(R.n)}</b><div class="rbar"><i style="width:${Math.max(1.2,Math.cbrt(pr[i])*100).toFixed(1)}%"></i></div><span class="pc">${pct(pr[i])}${cmp?` <span class="${cmp[i]>pr[i]?"up":"dn"}" style="color:${cmp[i]>pr[i]?"#6bf0ae":"#ff8a8a"}">→ ${pct(cmp[i])}</span>`:""}</span></div>`).join("")}
 let dTab="dChance";
 function renderDrops(){
