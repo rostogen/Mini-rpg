@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.11-c",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.11-d",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -207,6 +207,11 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .bagHead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .btn.sm{padding:6px 10px;font-size:12px}
 .asw{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.asl{display:flex;gap:6px;align-items:center;font-size:12.5px;color:#d9c7cf;font-weight:700}.sel.sm{padding:5px 8px;font-size:12.5px}
+.asb{display:inline-flex;align-items:center;gap:7px}.asd{display:inline-flex;gap:3px;align-items:center;min-width:8px}.asd i{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 5px var(--c)}.asd em{font-style:normal;color:#8d7b86;font-weight:700}
+.asList{display:grid;gap:7px;margin:2px 0 12px}.asRow{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:12px;background:linear-gradient(180deg,#22141f,#170d15);border:1px solid var(--line);text-align:left;font-weight:700;font-size:14.5px;transition:transform .12s,border-color .15s,background .15s}.asRow:active{transform:scale(.97)}
+.asRow b{flex:1;color:var(--rc);font-weight:800}.asRow .asN{font-size:12px;color:#9b8893;font-weight:700}.asCk{width:24px;height:24px;border-radius:8px;border:2px solid #4a3844;display:grid;place-items:center;flex:none;font-style:normal;color:transparent;font-size:15px;line-height:1;transition:.15s}
+.asRow.on{border-color:var(--rc);background:linear-gradient(180deg,#2b1a26,#1a0f17);box-shadow:0 0 0 1px var(--rc) inset}.asRow.on .asCk{background:var(--rc);border-color:var(--rc);color:#120a0f}
+.asAct{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}.asAct .btn{flex:1;min-width:120px}.asAct .btn:disabled{opacity:.45}
 .eqSum{margin-top:10px;font-size:12.5px;color:#e6d8de;line-height:1.55}
 .eqSum b{color:var(--gold)}
 .idet{margin-top:12px;border:1px solid var(--line);border-top:3px solid var(--rc,#d6a24a);border-radius:12px;padding:10px 12px;background:#120b12;min-height:52px}
@@ -384,7 +389,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-c</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-d</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -452,7 +457,7 @@ body[data-gfx="hi"] .vig{display:block}
     <p class="sub" data-i="invHint"></p>
     <div class="invWrap">
       <div class="invL"><div class="bagHead"><h3 class="h3" data-i="equipTitle"></h3><button class="btn main sm" id="eqBest">⭐ <span data-i="eqBest">Вдягнути найкраще</span></button></div><div class="eqGrid" id="eqGrid"></div><div class="eqSum" id="eqSum"></div></div>
-      <div class="invR"><div class="bagHead"><h3 class="h3"><span data-i="bag"></span> <span id="bagCnt"></span></h3><div class="asw"><label class="asl"><span data-i="asell"></span> <select id="asell" class="sel sm"></select></label><button class="btn sm" id="sellCommon" data-i="sellCommon"></button></div></div><div class="bagGrid" id="bagGrid"></div></div>
+      <div class="invR"><div class="bagHead"><h3 class="h3"><span data-i="bag"></span> <span id="bagCnt"></span></h3><div class="asw"><button class="btn sm asb" id="asBtn" type="button"><span data-i="asell"></span> <span class="asd" id="asDots"></span></button><button class="btn sm" id="sellCommon" data-i="sellCommon"></button></div></div><div class="bagGrid" id="bagGrid"></div></div>
     </div>
     <div class="idet" id="idet"></div>
   </div></div>
@@ -482,6 +487,7 @@ body[data-gfx="hi"] .vig{display:block}
   </div></div>
 
   <div class="pop" id="langPop"><div class="popIn"><div class="shead"><h2 data-i="langPick">Обери мову</h2><button class="x" id="langX" type="button" aria-label="✕">✕</button></div><div class="lgrid" id="lgrid"></div></div></div>
+  <div class="pop" id="asPop"><div class="popIn"><div class="shead"><h2 data-i="asell"></h2><button class="x" id="asX" type="button" aria-label="✕">✕</button></div><p class="sub" data-i="asHint"></p><div class="asList" id="asList"></div><div class="asAct"><button class="btn sm" id="asNone" type="button" data-i="asNone"></button><button class="btn sm main" id="asNow" type="button"></button></div></div></div>
 <div class="vig" id="vig"></div>
 <div class="modal" id="mAuth"><div class="sheet auth">
     <div class="shead"><h2 id="authT">Створити акаунт</h2><button class="x" id="authX" aria-label="Закрити">✕</button></div>
@@ -666,6 +672,10 @@ aDodge:"Перекат|Roll|Roulade|Rolle|翻滚|Voltereta|Capriola|Przewrót|Ro
 aSpin:"Вихор|Whirlwind|Tourbillon|Wirbelwind|旋风斩|Torbellino|Turbine|Wir|Redemoinho|旋風|회오리",
 aBlaze:"Палаючий клинок|Blazing Blade|Lame ardente|Flammenklinge|烈焰之刃|Hoja ardiente|Lama infuocata|Płonące ostrze|Lâmina ardente|炎刃|불타는 검",
 asell:"Автопродаж|Auto-sell|Vente auto|Auto-Verkauf|自动出售|Venta automática|Vendita automatica|Autosprzedaż|Venda automática|自動売却|자동 판매",
+asHint:"Познач рідкості, які продаватимуться одразу, щойно випадуть.|Tick the rarities that get sold the moment they drop.|Coche les raretés vendues dès qu'elles tombent.|Wähle die Seltenheiten, die sofort beim Drop verkauft werden.|勾选掉落后立即自动出售的稀有度。|Marca las rarezas que se venderán al caer.|Spunta le rarità vendute appena cadono.|Zaznacz rzadkości sprzedawane od razu po wypadnięciu.|Marque as raridades vendidas assim que caírem.|ドロップ直後に売却するレア度を選択。|드롭 즉시 판매할 등급을 선택하세요.",
+goldGrow:"Монети за прогрес: +{v}%|Coins from progress: +{v}%|Pièces du progrès : +{v} %|Münzen durch Fortschritt: +{v}%|进度金币加成：+{v}%|Monedas por progreso: +{v}%|Monete dal progresso: +{v}%|Monety za postęp: +{v}%|Moedas por progresso: +{v}%|進行ボーナス：コイン +{v}%|진행 보너스: 코인 +{v}%",
+asNone:"Вимкнути все|Turn all off|Tout désactiver|Alle aus|全部关闭|Desactivar todo|Disattiva tutto|Wyłącz wszystko|Desativar tudo|すべてオフ|모두 끄기",
+asNow:"Продати з сумки: {n} шт. · 🪙 {g}|Sell from bag: {n} · 🪙 {g}|Vendre du sac : {n} · 🪙 {g}|Aus Tasche: {n} · 🪙 {g}|出售背包：{n} 件 · 🪙 {g}|Vender de la mochila: {n} · 🪙 {g}|Vendi dalla borsa: {n} · 🪙 {g}|Sprzedaj z torby: {n} · 🪙 {g}|Vender da bolsa: {n} · 🪙 {g}|バッグから売却：{n}個 · 🪙 {g}|가방에서 판매: {n}개 · 🪙 {g}",
 asOff:"Вимкнено|Off|Désactivée|Aus|关闭|Desactivada|Disattivata|Wyłączona|Desligada|オフ|끄기",
 asSold:"Автопродаж: {n} шт. за 🪙 {g}|Auto-sold {n} for 🪙 {g}|Vente auto : {n} pour 🪙 {g}|Auto-verkauft: {n} für 🪙 {g}|自动出售 {n} 件，获得 🪙 {g}|Venta automática: {n} por 🪙 {g}|Vendita automatica: {n} per 🪙 {g}|Autosprzedaż: {n} za 🪙 {g}|Venda automática: {n} por 🪙 {g}|自動売却 {n} 個：🪙 {g}|자동 판매 {n}개: 🪙 {g}",
 donate:"Підтримати автора|Support the author|Soutenir l'auteur|Den Autor unterstützen|支持作者|Apoyar al autor|Sostieni l'autore|Wesprzyj autora|Apoiar o autor|作者を応援する|제작자 후원하기",
@@ -1297,7 +1307,7 @@ const KEYACT={KeyZ:"attack",KeyX:"heavy",KeyC:"fire",KeyV:"bolt",KeyB:"heal",Key
 window.addEventListener("keydown",e=>{
  if(e.target&&e.target.tagName==="INPUT"){if(e.code==="Escape")e.target.blur();return}
  if(e.ctrlKey||e.metaKey||e.altKey)return;
- if(e.code==="Escape"||e.code==="KeyP"){e.preventDefault();if(langPopOn()){closeLangPop();return}if(modalOpen){if(modalOpen!=="mDead")closeModal()}else if(hero.state!=="dead")openModal("mPause");return}
+ if(e.code==="Escape"||e.code==="KeyP"){e.preventDefault();if(langPopOn()){closeLangPop();return}if(asPopOn()){closeAsPop();return}if(modalOpen){if(modalOpen!=="mDead")closeModal()}else if(hero.state!=="dead")openModal("mPause");return}
  if(modalOpen)return;
  keys[e.code]=true;
  if(e.code==="Home"){hero.pitch=0;return}
@@ -1611,7 +1621,7 @@ function killEnemy(e,dir){
  const tm={common:1,uncommon:1.2,rare:1.45,epic:1.7,elite:2}[C.tier]||1;
  const rm=e.summoned?.3:e.small?.35:1;
  const xp=Math.max(1,Math.round(((12+battleNo*4)*tm*(e.boss?4:1)+(e.boss?100:0))*(1+P.xpBonus/100)*rm));
- const gold=Math.max(1,Math.round(((6+battleNo*2)*tm*(e.boss?5:1)+(e.boss?120:0))*(1+P.goldBonus/100)*rm));
+ const gold=Math.max(1,Math.round(((6+battleNo*2)*tm*(e.boss?5:1)+(e.boss?120:0))*(1+P.goldBonus/100)*goldGrow()*rm));
  addText(e.x,e.z,e.h+C.hgt*e.s+18,"+"+xp+" XP","#b59cff",11);
  {const n=e.boss?14:Math.round((3+({uncommon:1,rare:2,elite:3,epic:4}[C.tier]||0))*rm+.4);for(let i=0;i<n;i++){const an=rnd(0,PI*2);parts.push({x:e.x,z:e.z,h:e.h+C.hgt*e.s*.5,vx:Math.cos(an)*rnd(30,80),vz:Math.sin(an)*rnd(10,30),vh:rnd(40,110),g:0,life:3,max:3,col:i%3?"#b59cff":"#e6d8ff",size:rnd(2.2,3.2),t:"soul"})}}
  spawnCoins(e.x,e.z,e.h,gold);gainXP(xp);
@@ -1631,7 +1641,10 @@ function gainXP(x){P.xp+=x;let up=false;while(P.xp>=100+P.level*45){P.xp-=100+P.
  if(up){setTimeout(()=>{banner(t("levelUp",{n:P.level}),t("lvlSub"));SFX.level()},250);for(let i=0;i<34;i++)parts.push({x:hero.x+rnd(-14,14),z:hero.z,h:rnd(0,20),vx:rnd(-30,30),vz:0,vh:rnd(60,140),g:-40,life:rnd(.8,1.3),max:1.3,col:i%2?"#ffd34e":"#b59cff",size:rnd(1.5,3.2),t:"dot"});parts.push({x:hero.x,z:hero.z,h:0,life:.8,max:.8,t:"ring",col:"#ffd34e",size:14});for(let i=0;i<48;i++){const a=i*.52;parts.push({x:hero.x+Math.cos(a)*16,z:hero.z+Math.sin(a)*5,h:i*1.6,vx:-Math.sin(a)*40,vz:Math.cos(a)*14,vh:70,g:0,life:1.1,max:1.1,col:i%3?"#ffd34e":"#fff6d0",size:2.2,t:"dot"})}[0,.25,.5].forEach(d=>setTimeout(()=>parts.push({x:hero.x,z:hero.z,h:0,life:.7,max:.7,t:"ring",col:"#ffe9a0",size:10+d*20}),d*1000));save()}}
 
 /* ============ LOOT ============ */
-const BAG_MAX=40;let asellN=0,asellG=0,asellT=null;
+const goldGrow=()=>1+Math.min(3,battleNo*.03);
+const BAG_MAX=40,AS_MAX=6;let asellN=0,asellG=0,asellT=null;
+function asMask(){if(S.asm==null)S.asm=S.asell!=null&&S.asell>=0?(1<<(Math.min(S.asell,AS_MAX)+1))-1:0;return S.asm|0}
+const asOn=r=>r<=AS_MAX&&!!(asMask()>>r&1);
 let loots=[],newItems=0;
 function dropChance(){return Math.min(.65,(.22+luck.lvl*.015)*(1+P.dropBonus/100))}
 function luckLevel(){return luck.lvl+(P.rarBonus||0)}
@@ -1665,7 +1678,7 @@ function spawnLoot(e,it){
  if(it.r>=4){setTimeout(()=>banner(L(RAR[it.r].n)+"!",SLOTS[it.s].ic+" "+itemName(it)),200);flashA=.45;flashCol=RAR[it.r].col}
 }
 function addItem(it){
- const as=S.asell==null?-1:S.asell;if(it.r<=as){const g=sellPrice(it);P.gold+=g;asellN++;asellG+=g;clearTimeout(asellT);asellT=setTimeout(()=>{toast("💰 "+t("asSold",{n:asellN,g:asellG}),"#d6a24a");asellN=0;asellG=0},350);SFX.cash();return}
+ if(asOn(it.r)){const g=sellPrice(it);P.gold+=g;asellN++;asellG+=g;clearTimeout(asellT);asellT=setTimeout(()=>{toast("💰 "+t("asSold",{n:asellN,g:asellG}),"#d6a24a");asellN=0;asellG=0},350);SFX.cash();return}
  if(bag.length>=BAG_MAX){const g=sellPrice(it);P.gold+=g;toast(t("bagFull",{n:g}),RAR[it.r].col);SFX.sell();return}
  bag.push(it);newItems++;toast(SLOTS[it.s].ic+" "+t("found",{n:itemName(it)}),RAR[it.r].col);SFX.pickup(it.r);save();
 }
@@ -3921,7 +3934,7 @@ function renderInv(){
  const es=P.eqStats||{},ks=Object.keys(es);
  $("eqSum").innerHTML=`<b>${t("eqBonus")}</b><br>`+(ks.length?ks.map(k=>statTxt(k,Math.round(es[k]*10)/10)).join("<br>"):"—");
  $("sellCommon").disabled=!bag.some(x=>x.r===0);
- {const a=$("asell"),as=S.asell==null?-1:S.asell,html=`<option value="-1">${t("asOff")}</option>`+[0,1,2,3,4,5,6].map(i=>`<option value="${i}">≤ ${L(RAR[i].n)}</option>`).join("");if(a._h!==html){a._h=html;a.innerHTML=html}a.value=String(as)}
+ fillAsDots()
  renderIDet();
 }
 function renderIDet(){
@@ -3945,7 +3958,18 @@ function equipBest(){let n=0;for(const S of SLOTS){const si=SLOTI[S.k],cur=eq[S.
  if(n){SFX.equip();SFX.unlock();toast("✓ "+t("eqBestDone",{n}),"#d6a24a");for(let j=0;j<30;j++)parts.push({x:hero.x+rnd(-14,14),z:hero.z,h:rnd(0,50),vx:rnd(-20,20),vz:0,vh:rnd(40,100),g:0,life:rnd(.5,.9),max:.9,col:j%2?"#ffd34e":"#ffffff",size:rnd(1.5,3),t:"dot"})}else{toast(t("eqBestNone"));SFX.buzz()}
  iSel=null;applyEq()}
 $("eqBest").onclick=equipBest;
-$("asell").onchange=e=>{S.asell=+e.target.value;save();toast(S.asell<0?t("asOff"):t("asell")+": ≤ "+L(RAR[S.asell].n),S.asell<0?null:RAR[S.asell].col)};
+function fillAsDots(){const m=asMask(),d=$("asDots");if(!d)return;let h="";for(let i=0;i<=AS_MAX;i++)if(m>>i&1)h+=`<i style="--c:${RAR[i].col}"></i>`;if(h!==d._h){d._h=h;d.innerHTML=h||`<em>${t("asOff")}</em>`}}
+function asMatch(){let n=0,g=0;for(const x of bag)if(asOn(x.r)){n++;g+=sellPrice(x)}return{n,g}}
+function renderAsPop(){const m=asMask(),cnt=new Array(AS_MAX+1).fill(0);bag.forEach(x=>{if(x.r<=AS_MAX)cnt[x.r]++});
+ $("asList").innerHTML=RAR.slice(0,AS_MAX+1).map((R,i)=>`<button type="button" class="asRow${m>>i&1?" on":""}" data-r="${i}" style="--rc:${R.col}"><i class="asCk">✓</i><b>${L(R.n)}</b><span class="asN">${cnt[i]?"🎒 "+cnt[i]:""}</span></button>`).join("");
+ const k=asMatch();$("asNow").textContent=t("asNow",{n:k.n,g:k.g});$("asNow").disabled=!k.n;fillAsDots()}
+const asPopOn=()=>$("asPop").classList.contains("on");
+function closeAsPop(){$("asPop").classList.remove("on")}
+$("asBtn").onclick=()=>{renderAsPop();$("asPop").classList.add("on");SFX.open()};
+$("asX").onclick=()=>{closeAsPop();SFX.close()};
+$("asPop").onclick=e=>{if(e.target===$("asPop")){closeAsPop();return}const b=e.target.closest(".asRow");if(!b)return;const r=+b.dataset.r;S.asm=asMask()^(1<<r);save();SFX.ui();renderAsPop()};
+$("asNone").onclick=()=>{S.asm=0;save();SFX.ui();renderAsPop()};
+$("asNow").onclick=()=>{let n=0,g=0;bag=bag.filter(x=>{if(asOn(x.r)){n++;g+=sellPrice(x);return false}return true});if(!n)return;P.gold+=g;if(iSel&&iSel.from==="bag"&&!findItem())iSel=null;toast("💰 "+t("asSold",{n,g}),"#d6a24a");SFX.coin();SFX.sell();applyEq();renderAsPop()};
 $("sellCommon").onclick=()=>{let g=0;bag=bag.filter(x=>{if(x.r===0){g+=sellPrice(x);return false}return true});if(!g)return;P.gold+=g;if(iSel&&iSel.from==="bag"&&!findItem())iSel=null;toast(t("sold",{n:g}));SFX.coin();SFX.sell();applyEq()};
 $("eqGrid").addEventListener("click",e=>{const b=e.target.closest("[data-eq]");if(!b)return;const k=b.dataset.eq;iSel=eq[k]?{from:"eq",k}:null;renderInv();const box=$("idet");if(box)box.scrollIntoView({behavior:"smooth",block:"nearest"})});
 $("bagGrid").addEventListener("click",e=>{const b=e.target.closest("[data-iid]");if(!b)return;const id=+b.dataset.iid;iSel={from:"bag",id};const it=findItem();renderInv();hideTip2();if(it&&e.detail===2)equipItem(id);const box=$("idet");if(box)box.scrollIntoView({behavior:"smooth",block:"nearest"})});
@@ -3968,7 +3992,7 @@ function rarRows(pr,cmp){return RAR.map((R,i)=>`<div class="rrow r${i}" style="-
 let dTab="dChance";
 function renderDrops(){
  const pr=rarProbs(0);
- $("dChance").innerHTML=`<p class="sub">${t("dropsHint")}</p><div class="lbox"><div class="m">${t("dropChance")}</div><div class="bigstat">${pct(dropChance())}</div><div class="m">👑 ${t("bossAlways")}</div></div><h3 class="h3">${t("rarity")}</h3>${rarRows(pr)}`;
+ $("dChance").innerHTML=`<p class="sub">${t("dropsHint")}</p><div class="lbox"><div class="m">${t("dropChance")}</div><div class="bigstat">${pct(dropChance())}</div><div class="m">👑 ${t("bossAlways")}</div><div class="m">🪙 ${t("goldGrow",{v:Math.round((goldGrow()-1)*100)})}</div></div><h3 class="h3">${t("rarity")}</h3>${rarRows(pr)}`;
  const l=luck.lvl,run=luck.until>Date.now(),cost=luckCost(l);
  let h=`<p class="sub">${t("luckHint")}</p><div class="lbox"><b>🍀 ${t("luckLvl",{n:l,m:LUCK_MAX})}</b><div class="lpips">${Array.from({length:LUCK_MAX},(_,i)=>`<i class="${i<l?"on":""}"></i>`).join("")}</div>`;
  if(run){const dur=(luck.dur||luckTime(l))*1000,left=luck.until-Date.now();h+=`<div id="lpT">⏳ ${t("luckRun",{t:fmtT(left/1000)})}</div><div class="lprog"><i id="lpI" style="width:${clamp(100-left/dur*100,0,100).toFixed(1)}%"></i></div>`}
