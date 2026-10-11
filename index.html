@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.11-g",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.11-h",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -280,15 +280,19 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .tinfo b{font-size:15px;color:var(--c,#fff)}
 .tinfo .m{color:#cdbac4;font-size:13px}
 .tinfo small{color:var(--muted);font-size:12px}
-.tcat{display:flex;align-items:baseline;gap:8px;margin:14px 0 8px}.tcat:first-child{margin-top:2px}.tcat small{font:700 12px system-ui,sans-serif;color:var(--gold)}
-.trgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
-@media(min-width:700px){.trgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px}}
-.trc{background:#0f0910;border:1px solid var(--line);border-radius:12px;padding:8px 7px 7px;display:flex;flex-direction:column;gap:4px;min-width:0;text-align:center}
+.trTable{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;align-items:start}
+.trCol{display:flex;flex-direction:column;gap:7px;min-width:0;--cc:#d6a24a}
+.trCol.c-str{--cc:#ff7a6a}.trCol.c-spd{--cc:#5fd0ff}.trCol.c-hp{--cc:#ff8fb0}.trCol.c-mag{--cc:#b98cff}.trCol.c-wealth{--cc:#ffd24a}
+.trHd{position:sticky;top:0;z-index:3;display:flex;flex-direction:column;align-items:center;gap:0;padding:5px 4px 4px;border-radius:10px;background:#1b101b;border:1px solid var(--line);border-top:3px solid var(--cc);box-shadow:0 7px 10px -6px rgba(0,0,0,.85);text-align:center;min-width:0}
+.trHd .r1{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0}.trHd .ci{font-size:16px;line-height:1.1}.trHd b{font:700 12px Cinzel,Georgia,serif;color:var(--cc);overflow-wrap:anywhere;line-height:1.15}.trHd small{font:700 10.5px system-ui,sans-serif;color:var(--gold)}
+@media(max-width:620px){.trTable{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(122px,1fr);overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:6px}.trCol{scroll-snap-align:start}.trHd{position:static}}
+.tab.fgBtn{margin-left:auto;color:var(--gold);border-color:#8a6424;background:linear-gradient(180deg,#3a2616,#1c1210)}
+.trc{background:#0f0910;border:1px solid var(--line);box-shadow:inset 0 2px 0 var(--cc,#d6a24a);border-radius:12px;padding:8px 7px 7px;display:flex;flex-direction:column;gap:4px;min-width:0;text-align:center}
 .trc .trh{display:flex;align-items:center;justify-content:space-between;gap:4px}
 .trc .ic{font-size:20px;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:#1d121c;border:1px solid var(--line);flex:none}
 .trc b{display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1.15;min-height:2.3em;overflow-wrap:anywhere}
 .trc .m{color:var(--muted);font-size:10.5px;line-height:1.25}
-.trc .m.dd{min-height:4.9em;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.trc .m.dd{min-height:3.8em;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .trc .m.nw{color:#bfe9d0;font-size:11px;font-weight:700}
 .trc .lvl{color:var(--gold);font-size:11px;font-weight:800;background:#1d121c;border:1px solid #3a2a1c;border-radius:99px;padding:2px 7px}
 .trc .buy{width:100%;padding:6px 4px;margin-top:auto}
@@ -473,7 +477,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-g</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-h</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -484,6 +488,7 @@ body[data-gfx="hi"] .vig{display:block}
       <div class="plate res"><span class="g">🪙 <b id="hGold">0</b></span><span>⚔ <b id="hWave">#1</b></span></div>
       <div class="ibs">
         <button class="ib" id="bTree" data-tk="tree">🌳<small class="ibl" data-i="hbTree">Навички</small></button>
+        <button class="ib" id="bForge" data-tk="forge">🔨<small class="ibl" data-i="forge">Кузня</small></button>
         <button class="ib" id="bInv" data-tk="inv">🎒<i class="bdg" id="invBdg"></i><small class="ibl" data-i="hbInv">Речі</small></button>
         <button class="ib" id="bDrops" data-tk="drops">🎲<i class="bdg dot" id="luckBdg"></i><small class="ibl" data-i="hbDrops">Дропи</small></button>
         <button class="ib" id="bBest" data-tk="best">📖<small class="ibl" data-i="hbBest">Індекс</small></button>
@@ -530,7 +535,7 @@ body[data-gfx="hi"] .vig{display:block}
 
   <div class="modal" id="mTree"><div class="sheet">
     <div class="shead"><h2 data-i="tree">Дерево навичок</h2><button class="x" data-close aria-label="✕">✕</button></div>
-    <div class="tabs"><button class="tab on" data-tab="tTal" data-i="tabTree">Дерево</button><button class="tab" data-tab="tTrain" data-i="tabTrain">Тренування</button></div>
+    <div class="tabs"><button class="tab on" data-tab="tTal" data-i="tabTree">Дерево</button><button class="tab" data-tab="tTrain" data-i="tabTrain">Покращення</button><button class="tab fgBtn" id="tForge" type="button">🔨 <span data-i="forge">Кузня</span></button></div>
     <div class="stats" id="statList"></div>
     <div class="tpane on" id="tTal">
       <p class="sub" data-i="treeHint"></p>
@@ -538,7 +543,7 @@ body[data-gfx="hi"] .vig{display:block}
       <div class="tinfo" id="tinfo"></div>
     </div>
     <div class="tpane" id="tTrain">
-      <p class="sub" data-i="trainHint">Тренування можна купувати безкінечно. Кожен рівень дорожчий за попередній.</p>
+      <p class="sub" data-i="trainHint">Покращення можна купувати безкінечно. Кожен рівень дорожчий за попередній.</p>
       <div id="trGrid"></div>
     </div>
   </div></div>
@@ -707,9 +712,9 @@ loggedOut:"Ти вийшов з акаунта|You logged out|Tu es déconnecté
 resume:"▶ Продовжити|▶ Resume|▶ Reprendre|▶ Weiter|▶ 继续|▶ Continuar|▶ Riprendi|▶ Wznów|▶ Continuar|▶ 再開|▶ 계속",
 tree:"Дерево навичок|Skill Tree|Arbre de compétences|Skillbaum|技能树|Árbol de habilidades|Albero delle abilità|Drzewko umiejętności|Árvore de habilidades|スキルツリー|스킬 트리",
 tabTree:"Дерево|Tree|Arbre|Baum|技能树|Árbol|Albero|Drzewko|Árvore|ツリー|트리",
-tabTrain:"Тренування|Training|Entraînement|Training|训练|Entrenamiento|Allenamento|Trening|Treino|トレーニング|훈련",
+tabTrain:"Покращення|Upgrades|Améliorations|Verbesserungen|强化|Mejoras|Potenziamenti|Ulepszenia|Melhorias|強化|강화",
 treeHint:"Починай із центру. Нові вузли з'являються, щойно купиш сусідній. Наведи курсор або затисни вузол, щоб побачити, що він дає. Ціна — під кожним вузлом.|Start from the center. New nodes appear when you buy a neighboring one. Hover or press and hold a node to see what it gives. Each node shows its price below it.|Commence au centre. De nouveaux nœuds apparaissent quand tu achètes un nœud voisin. Survole ou maintiens un nœud pour voir ce qu'il donne. Son prix est affiché dessous.|Beginne in der Mitte. Neue Knoten erscheinen, wenn du einen benachbarten kaufst. Fahre über einen Knoten oder halte ihn gedrückt, um seinen Effekt zu sehen. Der Preis steht darunter.|从中心开始。购买相邻节点后会出现新节点。悬停或长按节点查看效果，价格显示在下方。|Empieza por el centro. Aparecen nodos nuevos cuando compras uno vecino. Pasa el cursor o mantén pulsado un nodo para ver qué da. Su precio aparece debajo.|Inizia dal centro. Nuovi nodi compaiono quando ne compri uno vicino. Passa sopra o tieni premuto un nodo per vedere cosa dà. Il prezzo è sotto.|Zacznij od środka. Nowe węzły pojawiają się, gdy kupisz sąsiedni. Najedź lub przytrzymaj węzeł, aby zobaczyć, co daje. Cena jest pod nim.|Comece pelo centro. Novos nós aparecem quando você compra um vizinho. Passe o mouse ou segure um nó para ver o que ele dá. O preço fica abaixo de cada nó.|中央から始めよう。隣のノードを買うと新しいノードが現れます。ノードにカーソルを合わせるか長押しすると効果が見られます。価格は各ノードの下に表示されます。|중앙에서 시작하세요. 이웃 노드를 사면 새 노드가 나타납니다. 노드에 마우스를 올리거나 길게 누르면 효과를 볼 수 있습니다. 가격은 각 노드 아래에 있습니다.",
-trainHint:"Тренування можна купувати без обмежень. Кожен наступний рівень дорожчий.|Training can be bought forever. Each level costs more than the last.|L'entraînement s'achète à l'infini. Chaque niveau coûte plus cher.|Training ist unbegrenzt kaufbar. Jede Stufe kostet mehr.|训练可以无限购买，每级都比上一级更贵。|El entrenamiento se puede comprar sin límite. Cada nivel cuesta más.|L'allenamento si compra all'infinito. Ogni livello costa di più.|Trening można kupować bez końca. Każdy poziom kosztuje więcej.|O treino pode ser comprado sem limite. Cada nível custa mais que o anterior.|トレーニングは無制限に購入できます。レベルが上がるごとに高くなります。|훈련은 제한 없이 살 수 있습니다. 레벨마다 가격이 오릅니다.",
+trainHint:"Покращення можна купувати без обмежень. Кожен наступний рівень дорожчий.|Upgrades can be bought forever. Each level costs more than the last.|Les améliorations s'achètent à l'infini. Chaque niveau coûte plus cher.|Verbesserungen sind unbegrenzt kaufbar. Jede Stufe kostet mehr.|强化可以无限购买，每级都比上一级更贵。|Las mejoras se pueden comprar sin límite. Cada nivel cuesta más.|I potenziamenti si comprano all'infinito. Ogni livello costa di più.|Ulepszenia można kupować bez końca. Każdy poziom kosztuje więcej.|As melhorias podem ser compradas sem limite. Cada nível custa mais que o anterior.|強化は無制限に購入できます。レベルが上がるごとに高くなります。|강화는 제한 없이 살 수 있습니다. 레벨마다 가격이 오릅니다.",
 opened:"Відкрито|Unlocked|Débloqués|Freigeschaltet|已解锁|Desbloqueados|Sbloccati|Odblokowane|Desbloqueados|解放済み|해금됨",
 unlock:"Відкрити за 🪙 {n}|Unlock for 🪙 {n}|Débloquer : 🪙 {n}|Freischalten: 🪙 {n}|解锁 🪙 {n}|Desbloquear 🪙 {n}|Sblocca 🪙 {n}|Odblokuj za 🪙 {n}|Desbloquear por 🪙 {n}|🪙 {n}で解放|🪙 {n}에 해금",
 owned:"Відкрито|Unlocked|Débloqué|Freigeschaltet|已解锁|Desbloqueado|Sbloccato|Odblokowane|Desbloqueado|解放済み|해금됨",
@@ -3958,7 +3963,7 @@ function drawBestiary3(){
  tNow=saveT;
 }
 /* --- first person: short gloved forearms and the sword, drawn over the scene with their own camera --- */
-const VM={R0:[9,-9.5,-11,.5,.5,.6],L0:[-7,-17,-11,.4,-.1,-.2],LC:[-4.8,-6.8,-15,.3,-.1,-.25]};
+const VM={R0:[7,-9.5,-11,.5,.95,.6],L0:[-7,-17,-11,.4,-.1,-.2],LC:[-4.8,-6.8,-15,.3,-.1,-.25]};
 function vmKeys(K,q){if(q<=K[0][0])return K[0][1];for(let i=1;i<K.length;i++)if(q<=K[i][0]){const a=K[i-1],b=K[i],k=eo((q-a[0])/(b[0]-a[0]||1));return a[1].map((v,j)=>lerp(v,b[1][j],k))}return K[K.length-1][1]}
 function vmBuild(){
  const T=T3,L=HERO_LOOK;
@@ -3966,8 +3971,8 @@ function vmBuild(){
   G3.vmHemi=new T.HemisphereLight(0xd8c0d0,0x2a1820,1.15);sc.add(G3.vmHemi);const d=new T.DirectionalLight(0xfff0e0,2.1);d.position.set(-30,60,40);sc.add(d);G3.vmSun=d;const r=new T.DirectionalLight(0x9a7aff,1.1);r.position.set(40,10,-30);sc.add(r);G3.vmRim=r;
   G3.vmLight=new T.PointLight(0xff8a2a,0,90,1.1);sc.add(G3.vmLight);if(G3.scene.environment)sc.environment=G3.scene.environment;
   const N=12,tg=new T.BufferGeometry();tg.setAttribute("position",new T.BufferAttribute(new Float32Array(N*6),3));tg.setAttribute("color",new T.BufferAttribute(new Float32Array(N*8),4));const ix=[];for(let i=0;i<N-1;i++){const a=i*2;ix.push(a,a+1,a+2,a+1,a+3,a+2)}tg.setIndex(ix);
-  G3.vmTrail=new T.Mesh(tg,new T.MeshBasicMaterial({vertexColors:true,transparent:true,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide,toneMapped:false}));G3.vmTrail.frustumCulled=false;G3.vmTrail.visible=false;sc.add(G3.vmTrail);G3.vmTr=[];
-  G3.vmGlow=sprite(G3.tGlow,0xffffff,10,1);G3.vmGlow.visible=false;sc.add(G3.vmGlow)}
+  G3.vmTrail=new T.Mesh(tg,new T.MeshBasicMaterial({vertexColors:true,transparent:true,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide,toneMapped:false}));G3.vmTrail.frustumCulled=false;G3.vmTrail.visible=false;G3.vmTrail.layers.set(3);sc.add(G3.vmTrail);G3.vmTr=[];
+  G3.vmGlow=sprite(G3.tGlow,0xffffff,10,1);G3.vmGlow.visible=false;G3.vmGlow.layers.set(3);sc.add(G3.vmGlow)}
  if(G3.vm){G3.vmScene.remove(G3.vm.root);disposeModel(G3.vm)}
  const M=newModel("vm",L);G3.vm=M;G3.vmLook=L;G3.vmScene.add(M.root);M.root.position.set(0,-.6,-5);
  const sleeve=mm(M,L.cloth,"cloth"),met=mm(M,L.arm2&&L.arm2!==L.skin?L.arm2:"#a9b0bb","metal"),tr=mm(M,L.trim||"#d6a24a","metal"),glove=mm(M,L.glove||"#5a3a26"),glove2=mm(M,shade(L.glove||"#5a3a26",-.25)),leather=mm(M,"#3a2418"),steel=mm(M,"#c9ced8","metal");
@@ -3984,12 +3989,12 @@ function vmBuild(){
  const fist=(par,withGrip)=>{const f=new T.Group();par.add(f);
   ell(M,glove,f,1.25,0,-.2,1.25,2.35,2.05);ell(M,glove,f,0,0,1.1,2,2,1.4);
   for(let i=0;i<4;i++){const y=1.55-i*1.04,r=P3(M,geo("vmFg"+i,()=>new T.TorusGeometry(1.42-Math.abs(i-1.5)*.05,.6,8,16,PI*1.22)),glove,f,0,y,0);r.rotation.x=-PI/2;P3(M,SPg(.62),glove2,f,1.32,y,-.85)}
-  const th=new T.Group();th.position.set(-.6,2.2,.4);th.rotation.set(0,.7,-.25);f.add(th);P3(M,LMg(.62,1.8),glove,th).rotation.z=PI/2;
+  const th=new T.Group();if(withGrip){th.position.set(-1,2.15,.95);th.rotation.set(0,-.76,-.2)}else{th.position.set(-.6,2.2,.4);th.rotation.set(0,.7,-.25)}f.add(th);P3(M,LMg(.62,1.8),glove,th).rotation.z=PI/2;
   if(!withGrip)ell(M,glove2,f,0,0,0,.95,2.2,.95);
   return f};
  // the sword sits in the right fist; its blade points along the fist's +Y
- const sw=new T.Group();sw.position.set(0,.3,-2.6);sw.rotation.set(-.55,0,-.4);M.R.h.add(sw);M.sw=sw;
- fist(sw,true).position.y=-1.1;
+ const sw=new T.Group();sw.position.set(0,.3,-2.9);sw.rotation.set(-.55,0,-.4);M.R.h.add(sw);M.sw=sw;
+ {const fs=fist(sw,true);fs.position.y=-1.1;fs.rotation.y=1.83}
  P3(M,CYg(.85,.85,5.8,14),leather,sw);for(let i=0;i<5;i++)P3(M,geo("vmWr2",()=>new T.TorusGeometry(.87,.16,6,14).rotateX(PI/2)),mm(M,"#24140c"),sw,0,-2.5+i*1.2,0);
  P3(M,ICg(1.15,1),tr,sw,0,-3.6,0);P3(M,geo("vmPr",()=>new T.TorusGeometry(.75,.22,6,14)),tr,sw,0,-3.6,0);
  // cross-guard: steel block with curved quillons and gold caps
@@ -4001,7 +4006,9 @@ function vmBuild(){
  M.tip=new T.Object3D();M.tip.position.set(0,25,0);sw.add(M.tip);M.base=new T.Object3D();M.base.position.set(0,8,0);sw.add(M.base);
  // left hand: an empty fist that opens into a palm while casting
  M.lfist=fist(M.L.h,false);M.lfist.position.z=-1.6;
- M.root.traverse(o=>{if(o.isMesh)o.castShadow=false});
+ M.root.traverse(o=>{if(o.isMesh)o.castShadow=false;o.layers.set(1)});
+ // the fist and the sword are drawn in a 2nd pass over the sleeves, so a forearm that points at the camera can never hide the grip
+ M.R.h.traverse(o=>o.layers.set(2));M.L.h.traverse(o=>o.layers.set(2));
  return M}
 function vmSync(dt){
  const h=hero,M=(G3.vm&&G3.vmLook===HERO_LOOK)?G3.vm:vmBuild(),q0=h.st;let R=VM.R0.slice(),Lf=VM.L0.slice(),glow=0,cast=null,castK=0,trail=false;
@@ -4022,6 +4029,7 @@ function vmSync(dt){
   case "hurt":{const k=Math.sin(clamp(q0/.3,0,1)*PI);R=vmKeys([[0,R],[1,[8.5,-10,-9.5,.75,.25,.45]]],k)}break;
   case "dead":{const k=Math.min(1,q0*1.4);R[1]-=22*k;Lf[1]-=10*k}break;
  }
+ if(h.state==="fire"||h.state==="bolt"||h.state==="heal"||h.state==="shield"||h.state==="dodge"){const k=clamp((Lf[1]+17)/9.5,0,1);R[0]+=2.5*k;R[1]-=k;Lf[0]-=2.5*k}
  const walk=h.state==="walk";M.wk=lerp(M.wk||0,walk?1:0,Math.min(1,dt*7));const wk=M.wk,sp=Math.sin(h.anim||0);G3.wk=wk;
  const da=((h.ang-(M.angP==null?h.ang:M.angP)+PI)%(2*PI)+2*PI)%(2*PI)-PI;M.angP=h.ang;M.lag=lerp(M.lag||0,clamp(da/Math.max(dt,.001)*.9,-2.5,2.5),Math.min(1,dt*8));
  const bx=Math.sin(tNow*.9)*.15+Math.cos((h.anim||0)*.5)*.6*wk+M.lag,by=Math.sin(tNow*1.7)*.22-(1-Math.abs(sp))*.75*wk;
@@ -4045,7 +4053,10 @@ function vmSync(dt){
 function vmRender(){
  const rr=G3.rr,vc=G3.vmCam;vc.fov=Math.min(G3.cam.fov,80);vc.aspect=G3.W/G3.H;vc.updateProjectionMatrix();
  const B=BIOMES[G3.biome];if(G3.vmBi!==G3.biome){G3.vmBi=G3.biome;G3.vmHemi.color.set(shade(B.sky[2],.35));G3.vmHemi.groundColor.set(B.ground[1]);G3.vmRim.color.set(shade(B.accent,-.1));G3.vmSun.color.set(shade(B.moon,-.05))}
- rr.autoClear=false;rr.clearDepth();rr.render(G3.vmScene,vc);rr.autoClear=true}
+ rr.autoClear=false;rr.clearDepth();
+ vc.layers.set(0);vc.layers.enable(1);rr.render(G3.vmScene,vc);
+ rr.clearDepth();vc.layers.set(0);vc.layers.enable(2);vc.layers.enable(3);rr.render(G3.vmScene,vc);
+ rr.autoClear=true}
 /* --- first person: 360° look (used by the hero logic) --- */
 const MZ=125/(82*ZS);
 function hdir(){const a=hero.ang||0;return{x:Math.cos(a),z:-Math.sin(a)}}
@@ -4292,13 +4303,14 @@ function buyTalent(id){const n=TALN[id];if(!talAvail(id)){toast(t("needLink"));r
  P.gold-=n.cost;const old=P.maxhp;tal.push(id);recalc();P.hp=Math.min(P.maxhp,P.hp+Math.max(0,P.maxhp-old));toast(t("bought"));SFX.talent();justBought=id;save();statChips();hideTip2();renderTalents();hud()}
 function renderTrain(){
  const root=$("trGrid");root.innerHTML="";
+ const tb=document.createElement("div");tb.className="trTable";root.appendChild(tb);
  for(const [ck,ci,cn] of TCAT){const list=TRAIN.filter(T=>T.cat===ck);if(!list.length)continue;const lv=list.reduce((a,T)=>a+(train[T.id]||0),0);
-  const hd=document.createElement("h3");hd.className="h3 tcat";hd.innerHTML=`${ci} ${L(cn)} <small>${t("lv")} ${lv}</small>`;root.appendChild(hd);
-  const g=document.createElement("div");g.className="trgrid";root.appendChild(g);
+  const col=document.createElement("div");col.className="trCol c-"+ck;tb.appendChild(col);
+  const hd=document.createElement("div");hd.className="trHd";hd.innerHTML=`<div class="r1"><span class="ci">${ci}</span><b>${L(cn)}</b></div><small>${t("lv")} ${lv}</small>`;col.appendChild(hd);
   list.forEach(T=>{const l=train[T.id]||0,mx=T.max&&l>=T.max,cost=trainCost(T,l);const d=document.createElement("div");d.className="trc";
    const v=Math.round(l*T.per*10)/10,unit=T.u==="ps"?t("perSec"):T.u===""?"":"%";
    d.innerHTML=`<div class="trh"><div class="ic">${T.ic}</div><span class="lvl">${l}${T.max?"/"+T.max:""}</span></div><b>${L(T.n)}</b><div class="m dd">${L(T.d)}</div><div class="m nw">${t("now")}: ${T.neg?"−":"+"}${v}${unit}</div>`+(mx?`<span class="ok">${t("maxed")}</span>`:`<button class="buy" ${P.gold<cost?"disabled":""}>🪙 ${cost}</button>`);
-   const b=d.querySelector(".buy");if(b)b.onclick=()=>buyTrain(T.id);g.appendChild(d)})}
+   const b=d.querySelector(".buy");if(b)b.onclick=()=>buyTrain(T.id);col.appendChild(d)})}
 }
 function buyTrain(id){const T=TRAIN.find(x=>x.id===id),l=train[id]||0;if(T.max&&l>=T.max)return;const cost=trainCost(T,l);if(P.gold<cost){toast(t("need"));SFX.buzz();return}
  P.gold-=cost;const old=P.maxhp;train[id]=l+1;recalc();P.hp=Math.min(P.maxhp,P.hp+Math.max(0,P.maxhp-old));SFX.buy();save();statChips();renderTrain();renderTInfo();hud()}
@@ -4404,7 +4416,7 @@ function renderForge(){
  renderForgeUp();renderForgeShop();
 }
 document.querySelectorAll(".ftab").forEach(b=>b.addEventListener("click",()=>{SFX.tab();fgTab=b.dataset.ft;renderForge()}));
-$("invForge").onclick=$("pForge").onclick=()=>openModal("mForge");
+$("invForge").onclick=$("pForge").onclick=$("bForge").onclick=$("tForge").onclick=()=>openModal("mForge");
 function fillAsDots(){const m=asMask(),d=$("asDots");if(!d)return;let h="";for(let i=0;i<=AS_MAX;i++)if(m>>i&1)h+=`<i style="--c:${RAR[i].col}"></i>`;if(h!==d._h){d._h=h;d.innerHTML=h||`<em>${t("asOff")}</em>`}}
 function asMatch(){let n=0,g=0;for(const x of bag)if(asOn(x.r)){n++;g+=sellPrice(x)}return{n,g}}
 function renderAsPop(){const m=asMask(),cnt=new Array(AS_MAX+1).fill(0);bag.forEach(x=>{if(x.r<=AS_MAX)cnt[x.r]++});
