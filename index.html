@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.11-h",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.11-i",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -208,6 +208,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .bagHead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .btn.sm{padding:6px 10px;font-size:12px}
 .asw{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.asl{display:flex;gap:6px;align-items:center;font-size:12.5px;color:#d9c7cf;font-weight:700}.sel.sm{padding:5px 8px;font-size:12.5px}
+.bagTools{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 9px}.bagTools .btn{flex:1 1 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}.btn.sellAll{border-color:#7a3a3a;background:linear-gradient(180deg,#3a1a1e,#241015)}.btn.sellAll.armed{background:linear-gradient(180deg,#a3222f,#6a1019);border-color:#ff7a7a;color:#fff;animation:armP .7s ease-in-out infinite alternate}@keyframes armP{to{box-shadow:0 0 14px -2px #ff5a5a}}
 .asb{display:inline-flex;align-items:center;gap:7px}.asd{display:inline-flex;gap:3px;align-items:center;min-width:8px}.asd i{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 5px var(--c)}.asd em{font-style:normal;color:#8d7b86;font-weight:700}
 .asList{display:grid;gap:7px;margin:2px 0 12px}.asRow{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:12px;background:linear-gradient(180deg,#22141f,#170d15);border:1px solid var(--line);text-align:left;font-weight:700;font-size:14.5px;transition:transform .12s,border-color .15s,background .15s}.asRow:active{transform:scale(.97)}
 .asRow b{flex:1;color:var(--rc);font-weight:800}.asRow .asN{font-size:12px;color:#9b8893;font-weight:700}.asCk{width:24px;height:24px;border-radius:8px;border:2px solid #4a3844;display:grid;place-items:center;flex:none;font-style:normal;color:transparent;font-size:15px;line-height:1;transition:.15s}
@@ -297,6 +298,38 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .trc .lvl{color:var(--gold);font-size:11px;font-weight:800;background:#1d121c;border:1px solid #3a2a1c;border-radius:99px;padding:2px 7px}
 .trc .buy{width:100%;padding:6px 4px;margin-top:auto}
 .trc .ok{display:block;padding:6px 0;font-size:12px;font-weight:700;color:#6bf0ae}
+/* ---- skill tree: layout, zoom, short (phone landscape / fullscreen) screens ---- */
+.ici{display:inline-block;vertical-align:-.24em;flex:none;overflow:visible}
+#mTree .shead{flex-wrap:wrap}
+#mTree .shead .tabs{order:3;width:100%;margin:6px 0 0}
+.tbody{display:block}
+.tmain{position:relative}
+.twrap{overflow-anchor:none}
+.tzoom{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.tzoom button{width:36px;height:36px;border-radius:10px;border:1px solid #5a4020;background:rgba(22,12,20,.9);color:var(--gold);display:grid;place-items:center;padding:0}
+.tzoom button svg{width:18px;height:18px}
+.tzoom button:active{background:#3a2616}
+@media (max-height:560px) and (orientation:landscape){
+ #mTree{padding:4px calc(6px + env(safe-area-inset-right,0px)) 4px calc(6px + env(safe-area-inset-left,0px))}
+ #mTree .sheet{height:100%;display:flex;flex-direction:column;overflow:hidden;padding:7px 12px 9px;border-radius:14px}
+ #mTree .shead{flex-wrap:nowrap;margin-bottom:5px;gap:8px;flex:none}
+ #mTree .sheet h2{font-size:17px;white-space:nowrap}
+ #mTree .shead .tabs{order:0;width:auto;margin:0;flex:1}
+ #mTree .tab{padding:6px 11px;font-size:12.5px}
+ #mTree .x{width:32px;height:32px;font-size:14px}
+ #mTree .stats{flex-wrap:nowrap;overflow-x:auto;gap:5px;margin-bottom:6px;flex:none;scrollbar-width:none}
+ #mTree .stats::-webkit-scrollbar{display:none}
+ #mTree .stats span{white-space:nowrap;padding:3px 8px;font-size:11.5px}
+ #mTree .tpane.on{display:flex;flex-direction:column;flex:1;min-height:0}
+ #mTree #tTal .sub{display:none}
+ #mTree .tbody{display:grid;grid-template-columns:minmax(0,1fr) 212px;grid-template-rows:auto minmax(0,1fr);gap:5px 8px;flex:1;min-height:0}
+ #mTree .tmain{grid-column:1;grid-row:1/3;min-height:0}
+ #mTree .twrap{height:100%;max-height:none}
+ #mTree .tcount{grid-column:2;grid-row:1;margin:0;font-size:12px}
+ #mTree .tinfo{grid-column:2;grid-row:2;margin:0;flex-direction:column;align-items:stretch;justify-content:flex-start;flex-wrap:nowrap;overflow:auto;min-height:0;padding:8px 10px;gap:8px}
+ #mTree #tTrain{overflow:auto}
+ #mTree #tTrain .sub{font-size:11.5px;margin:0 0 6px}
+}
 .pacts{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 8px}
 .h3{font-family:Cinzel,Georgia,serif;color:#e8d6dc;font-size:16px;margin:16px 0 2px}
 .tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -477,7 +510,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-h</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-i</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -533,14 +566,19 @@ body[data-gfx="hi"] .vig{display:block}
     <button class="sk atk" data-a="attack" data-tk="aAttack"><svg class="ic" viewBox="0 0 24 24"><use href="#i-attack"/></svg><b class="cdn"></b><i class="lk"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg><b></b></i><em>Z</em><small class="skl" data-i="aAttack"></small></button>
   </div>
 
-  <div class="modal" id="mTree"><div class="sheet">
-    <div class="shead"><h2 data-i="tree">Дерево навичок</h2><button class="x" data-close aria-label="✕">✕</button></div>
-    <div class="tabs"><button class="tab on" data-tab="tTal" data-i="tabTree">Дерево</button><button class="tab" data-tab="tTrain" data-i="tabTrain">Покращення</button><button class="tab fgBtn" id="tForge" type="button">🔨 <span data-i="forge">Кузня</span></button></div>
+  <div class="modal" id="mTree"><div class="sheet treeSheet">
+    <div class="shead"><h2 data-i="tree">Дерево навичок</h2>
+      <div class="tabs"><button class="tab on" data-tab="tTal" data-i="tabTree">Дерево</button><button class="tab" data-tab="tTrain" data-i="tabTrain">Покращення</button><button class="tab fgBtn" id="tForge" type="button">🔨 <span data-i="forge">Кузня</span></button></div>
+      <button class="x" data-close aria-label="✕">✕</button></div>
     <div class="stats" id="statList"></div>
     <div class="tpane on" id="tTal">
       <p class="sub" data-i="treeHint"></p>
-      <div class="tcount" id="tcount"></div><div class="twrap" id="twrap"><div id="tsvg"></div></div>
-      <div class="tinfo" id="tinfo"></div>
+      <div class="tbody">
+        <div class="tcount" id="tcount"></div>
+        <div class="tmain"><div class="twrap" id="twrap"><div id="tsvg"></div></div>
+          <div class="tzoom"><button type="button" id="tzIn" aria-label="+"><svg viewBox="0 0 20 20"><path d="M10 3.5V16.5M3.5 10H16.5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg></button><button type="button" id="tzOut" aria-label="−"><svg viewBox="0 0 20 20"><path d="M3.5 10H16.5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg></button><button type="button" id="tzFit" aria-label="fit"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5V3.5H7.5M12.5 3.5H16.5V7.5M16.5 12.5V16.5H12.5M7.5 16.5H3.5V12.5"/></svg></button></div></div>
+        <div class="tinfo" id="tinfo"></div>
+      </div>
     </div>
     <div class="tpane" id="tTrain">
       <p class="sub" data-i="trainHint">Покращення можна купувати безкінечно. Кожен рівень дорожчий за попередній.</p>
@@ -558,8 +596,8 @@ body[data-gfx="hi"] .vig{display:block}
     <div class="shead"><h2 data-i="inv">Інвентар</h2><button class="x" data-close aria-label="✕">✕</button></div>
     <p class="sub" data-i="invHint"></p>
     <div class="invWrap">
-      <div class="invL"><div class="bagHead"><h3 class="h3" data-i="equipTitle"></h3><button class="btn main sm" id="eqBest">⭐ <span data-i="eqBest">Вдягнути найкраще</span></button><button class="btn sm" id="invForge" type="button">🔨 <span data-i="forge"></span></button></div><div class="eqGrid" id="eqGrid"></div><div class="eqSum" id="eqSum"></div></div>
-      <div class="invR"><div class="bagHead"><h3 class="h3"><span data-i="bag"></span> <span id="bagCnt"></span></h3><div class="asw"><button class="btn sm asb" id="asBtn" type="button"><span data-i="asell"></span> <span class="asd" id="asDots"></span></button><button class="btn sm" id="sellCommon" data-i="sellCommon"></button></div></div><div class="bagGrid" id="bagGrid"></div></div>
+      <div class="invL"><div class="bagHead"><h3 class="h3" data-i="equipTitle"></h3><button class="btn sm" id="invForge" type="button">🔨 <span data-i="forge"></span></button></div><div class="eqGrid" id="eqGrid"></div><div class="eqSum" id="eqSum"></div></div>
+      <div class="invR"><div class="bagHead"><h3 class="h3"><span data-i="bag"></span> <span id="bagCnt"></span></h3></div><div class="bagTools"><button class="btn main sm eqb" id="eqBest" type="button"><i data-ico="star|#ffd24a"></i> <span data-i="eqBest">Вдягнути найкраще</span></button><button class="btn sm asb" id="asBtn" type="button"><span data-i="asell"></span> <span class="asd" id="asDots"></span></button><button class="btn sm sellAll" id="sellAll" type="button"></button></div><div class="bagGrid" id="bagGrid"></div></div>
     </div>
     <div class="idet" id="idet"></div>
   </div></div>
@@ -748,7 +786,8 @@ bag:"Сумка|Bag|Sac|Tasche|物品栏|Bolsa|Borsa|Torba|Bolsa|バッグ|가�
 equip:"Вдягнути|Equip|Équiper|Anlegen|装备|Equipar|Equipaggia|Załóż|Equipar|装備する|장착",
 unequip:"Зняти|Unequip|Retirer|Ablegen|卸下|Quitar|Rimuovi|Zdejmij|Desequipar|外す|해제",
 sellFor:"Продати за 🪙 {n}|Sell for 🪙 {n}|Vendre : 🪙 {n}|Verkaufen: 🪙 {n}|出售 🪙 {n}|Vender por 🪙 {n}|Vendi a 🪙 {n}|Sprzedaj za 🪙 {n}|Vender por 🪙 {n}|🪙 {n}で売る|🪙 {n}에 판매",
-sellCommon:"Продати всі звичайні|Sell all common|Vendre tous les communs|Alle gewöhnlichen verkaufen|出售所有普通物品|Vender todos los comunes|Vendi tutti i comuni|Sprzedaj wszystkie zwykłe|Vender todos os comuns|コモンをすべて売る|일반 아이템 모두 판매",
+sellAll:"Продати все|Sell all|Tout vendre|Alles verkaufen|全部出售|Vender todo|Vendi tutto|Sprzedaj wszystko|Vender tudo|すべて売る|모두 판매",
+sellAllSure:"Точно? Продати {n} шт. за 🪙 {g}|Sure? Sell {n} for 🪙 {g}|Sûr ? Vendre {n} pour 🪙 {g}|Sicher? {n} für 🪙 {g} verkaufen|确定？出售 {n} 件，得 🪙 {g}|¿Seguro? Vender {n} por 🪙 {g}|Sicuro? Vendi {n} per 🪙 {g}|Na pewno? Sprzedaj {n} za 🪙 {g}|Certeza? Vender {n} por 🪙 {g}|本当に？{n}個を🪙 {g}で売る|확실해요? {n}개를 🪙 {g}에 판매",
 sold:"Продано: 🪙 {n}|Sold: 🪙 {n}|Vendu : 🪙 {n}|Verkauft: 🪙 {n}|已出售：🪙 {n}|Vendido: 🪙 {n}|Venduto: 🪙 {n}|Sprzedano: 🪙 {n}|Vendido: 🪙 {n}|売却：🪙 {n}|판매함: 🪙 {n}",
 equipped:"Вдягнуто|Equipped|Équipé|Angelegt|已装备|Equipado|Equipaggiato|Założone|Equipado|装備中|장착됨",
 emptySlot:"Порожньо|Empty|Vide|Leer|空|Vacío|Vuoto|Puste|Vazio|空き|비어 있음",
@@ -1223,6 +1262,70 @@ reach:["Довгий замах|Long Reach|Allonge|Lange Reichweite|长臂|Largo
 };
 const STN={};for(const k in STNsrc)STN[k]=[S8(STNsrc[k][0]),S8(STNsrc[k][1])];
 const statTxt=(k,v)=>L(STN[k][1]).split("{v}").join(v);
+/* ============ CUSTOM ICONS (SVG, 24x24) ============ */
+const IC_O="#0d070c";
+const icL=(d,c,w)=>`<path d="${d}" fill="none" stroke="${IC_O}" stroke-width="${w+2.4}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+const icF=(d,f,o)=>`<path d="${d}" fill="${f}" stroke="${IC_O}" stroke-width="${o||1.5}" stroke-linejoin="round" stroke-linecap="round"/>`;
+const icC=(x,y,r,f,o)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${IC_O}" stroke-width="${o||1.5}"/>`;
+const icStar=(cx,cy,ro,ri,n,rot)=>{let d="";for(let i=0;i<n*2;i++){const a=(rot||-90)*Math.PI/180+i*Math.PI/n,r=i%2?ri:ro;d+=(i?"L":"M")+(cx+Math.cos(a)*r).toFixed(2)+" "+(cy+Math.sin(a)*r).toFixed(2)}return d+"Z"};
+const IC={
+ sword:c=>`<g transform="rotate(45 12 12)">${icF("M12 1.6 L14.6 4.4 V14.4 H9.4 V4.4 Z",c.L)}<path d="M12 4.6 V13.2" stroke="${c.M}" stroke-width="1" opacity=".55"/>${icF("M6.2 14.4 H17.8 V16.8 H6.2 Z",c.F)}${icF("M10.8 16.8 H13.2 V20 H10.8 Z",c.M)}${icC(12,21,1.5,c.F,1.2)}</g>`,
+ crit:c=>`<circle cx="12" cy="12" r="8.2" fill="${c.D}" stroke="${IC_O}" stroke-width="4.6"/><circle cx="12" cy="12" r="8.2" fill="none" stroke="${c.F}" stroke-width="2.2"/>${icC(12,12,3,c.L,1.2)}${icL("M12 1.6 V6 M12 18 V22.4 M1.6 12 H6 M18 12 H22.4",c.F,1.8)}`,
+ burst:c=>icF(icStar(12,12,11,5.4,9,-90),c.F)+icF(icStar(12,12,5.6,2.8,9,-70),c.L,1),
+ fire:c=>icF("M12 1.8 C12.4 5.6 17.6 8 17.6 14.2 C17.6 18.6 15.2 22 12 22 C8.8 22 6.4 18.6 6.4 14.2 C6.4 11.8 7.4 10.4 8.4 8.8 C8.8 10.6 9.8 11.4 10.8 11.6 C10.4 8 10.6 5 12 1.8 Z",c.F)+icF("M12 22 C10 22 8.8 20 8.8 18 C8.8 15.8 10.8 14.8 12 12.4 C13.2 14.8 15.2 15.8 15.2 18 C15.2 20 14 22 12 22 Z",c.L,1.1),
+ bolt:c=>icF("M13.8 1.6 L4.8 13.4 H10.6 L9.2 22.4 L19.4 10 H13.4 Z",c.F)+`<path d="M13.2 4.8 L8.6 11.2 H12" fill="none" stroke="${c.L}" stroke-width="1.1" stroke-linecap="round" opacity=".85"/>`,
+ heart:c=>icF("M12 21.4 C5.2 15.8 2.4 12.4 2.4 8.4 C2.4 5.4 4.7 3.2 7.4 3.2 C9.3 3.2 11 4.2 12 6 C13 4.2 14.7 3.2 16.6 3.2 C19.3 3.2 21.6 5.4 21.6 8.4 C21.6 12.4 18.8 15.8 12 21.4 Z",c.F)+`<path d="M5.8 8.6 C5.8 7 6.9 5.9 8.4 5.9" fill="none" stroke="${c.L}" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>`,
+ heal:c=>icF("M9.2 2.6 H14.8 V9.2 H21.4 V14.8 H14.8 V21.4 H9.2 V14.8 H2.6 V9.2 H9.2 Z",c.F)+icF("M10.6 5 H13.4 V10.6 H19 V13.4 H13.4 V19 H10.6 V13.4 H5 V10.6 H10.6 Z",c.L,.8),
+ leaf:c=>icF("M4.2 19.8 C3.8 10 9.8 3.8 20.2 3.6 C20.6 13.2 15 20 4.2 19.8 Z",c.F)+`<path d="M4.6 19.4 L15.2 8.8" fill="none" stroke="${c.D}" stroke-width="1.3" stroke-linecap="round" opacity=".7"/><path d="M9.6 14.4 H13.6 M12 12 V8.6" fill="none" stroke="${c.D}" stroke-width="1" stroke-linecap="round" opacity=".5"/>`,
+ drop:c=>icF("M12 1.8 C12 1.8 5.4 9.6 5.4 14.8 C5.4 18.8 8.3 22 12 22 C15.7 22 18.6 18.8 18.6 14.8 C18.6 9.6 12 1.8 12 1.8 Z",c.F)+`<path d="M8.4 15 C8.4 17 9.6 18.6 11.2 19" fill="none" stroke="${c.L}" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>`,
+ shield:c=>icF("M12 2 L20.2 5.2 V11.4 C20.2 16.6 16.6 20.2 12 22.2 C7.4 20.2 3.8 16.6 3.8 11.4 V5.2 Z",c.F)+`<path d="M12 2 L20.2 5.2 V11.4 C20.2 16.6 16.6 20.2 12 22.2 Z" fill="${c.M}" opacity=".55"/><path d="M12 6.4 V17.4 M7.4 10.4 H16.6" fill="none" stroke="${c.L}" stroke-width="1.5" stroke-linecap="round" opacity=".9"/>`,
+ plate:c=>icF("M12 2 L20.2 5.2 V11.4 C20.2 16.6 16.6 20.2 12 22.2 C7.4 20.2 3.8 16.6 3.8 11.4 V5.2 Z",c.F)+`<path d="M12 2 L20.2 5.2 V11.4 C20.2 16.6 16.6 20.2 12 22.2 Z" fill="${c.M}" opacity=".55"/>${icC(12,10.6,3.2,c.L,1.1)}`,
+ wall:c=>icF("M2.8 4.6 H21.2 V19.4 H2.8 Z",c.F)+`<path d="M2.8 9.5 H21.2 M2.8 14.4 H21.2 M9 4.6 V9.5 M15 9.5 V14.4 M9 14.4 V19.4" fill="none" stroke="${c.D}" stroke-width="1.3" opacity=".75"/>`,
+ thorn:c=>icF(icStar(12,12,11,6.2,8,-90),c.F)+icC(12,12,4.4,c.M,1.2)+icC(10.8,10.8,1.5,c.L,0),
+ ankh:c=>`<ellipse cx="12" cy="7.4" rx="4.2" ry="4.9" fill="none" stroke="${IC_O}" stroke-width="5"/><ellipse cx="12" cy="7.4" rx="4.2" ry="4.9" fill="none" stroke="${c.F}" stroke-width="2.4"/>`+icL("M12 12.2 V22 M6.2 14.6 H17.8",c.F,2.6),
+ coin:c=>icC(12,12,9.4,c.F,1.6)+`<circle cx="12" cy="12" r="6.6" fill="none" stroke="${c.M}" stroke-width="1.3"/>`+icF(icStar(12,12.2,4.4,1.9,5,-90),c.L,.9),
+ coins:c=>[15.6,10.8,6].map(y=>`<path d="M4.2 ${y} V${y+2.7} A7.8 3.4 0 0 0 19.8 ${y+2.7} V${y} Z" fill="${c.M}" stroke="${IC_O}" stroke-width="1.3" stroke-linejoin="round"/><ellipse cx="12" cy="${y}" rx="7.8" ry="3.4" fill="${c.F}" stroke="${IC_O}" stroke-width="1.3"/>`).join("")+`<ellipse cx="12" cy="6" rx="4.4" ry="1.7" fill="none" stroke="${c.L}" stroke-width="1"/>`,
+ book:c=>icF("M2.6 5.2 C6.4 3.8 9.6 4.2 12 6.2 C14.4 4.2 17.6 3.8 21.4 5.2 V19.4 C17.6 18 14.4 18.4 12 20.4 C9.6 18.4 6.4 18 2.6 19.4 Z",c.F)+`<path d="M12 6.2 V20.4" fill="none" stroke="${c.D}" stroke-width="1.2" opacity=".7"/><path d="M5 8.4 C7 8 8.8 8.2 10 9 M5 11.6 C7 11.2 8.8 11.4 10 12.2 M14 9 C15.2 8.2 17 8 19 8.4 M14 12.2 C15.2 11.4 17 11.2 19 11.6" fill="none" stroke="${c.L}" stroke-width="1" stroke-linecap="round" opacity=".85"/>`,
+ notes:c=>icF("M5 2.6 H15 L19.4 7 V21.4 H5 Z",c.F)+icF("M15 2.6 V7 H19.4 Z",c.L,1)+`<path d="M8 11 H16.4 M8 14.4 H16.4 M8 17.8 H13.4" fill="none" stroke="${c.D}" stroke-width="1.4" stroke-linecap="round" opacity=".7"/>`,
+ clover:c=>icC(8.4,8.2,4.2,c.F,1.3)+icC(15.6,8.2,4.2,c.F,1.3)+icC(8.4,15,4.2,c.F,1.3)+icC(15.6,15,4.2,c.F,1.3)+icC(12,11.6,2,c.L,1)+icL("M12 14 C12 18 14 20.4 17.6 21.4",c.M,1.6),
+ gem:c=>icF("M6.4 3.4 H17.6 L22 9.4 L12 21.8 L2 9.4 Z",c.F)+`<path d="M2 9.4 H22 M9.2 3.4 L7.6 9.4 L12 21.8 L16.4 9.4 L14.8 3.4" fill="none" stroke="${c.L}" stroke-width="1.1" stroke-linejoin="round" opacity=".9"/><path d="M12 21.8 L16.4 9.4 L22 9.4 Z" fill="${c.M}" opacity=".5"/>`,
+ clock:c=>icC(12,12,9.6,c.F,1.6)+`<circle cx="12" cy="12" r="7.2" fill="${c.D}"/>`+icL("M12 6.6 V12 L15.8 14.2",c.L,1.7),
+ hourglass:c=>icF("M6.6 3.6 H17.4 C17.4 8 13.6 10.2 12 12 C10.4 10.2 6.6 8 6.6 3.6 Z",c.L,1.2)+icF("M12 12 C13.6 13.8 17.4 16 17.4 20.4 H6.6 C6.6 16 10.4 13.8 12 12 Z",c.F,1.2)+icF("M4.4 2 H19.6 V3.9 H4.4 Z",c.M,1.2)+icF("M4.4 20.1 H19.6 V22 H4.4 Z",c.M,1.2),
+ boot:c=>icF("M6.4 2.8 H13.2 V10.8 L18.4 13.2 C20.6 14.2 21.6 15.6 21.6 17.8 V20.6 H4.2 C3.4 20.6 2.8 20 2.8 19.2 V6.4 C2.8 4.4 4 2.8 6.4 2.8 Z",c.F)+icF("M2.8 17.4 H21.6 V20.6 H3.8 C3.2 20.6 2.8 20.2 2.8 19.6 Z",c.M,1.2)+`<path d="M6.6 6.6 H11 M6.6 9.6 H11" fill="none" stroke="${c.L}" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>`,
+ wind:c=>icL("M2.6 8.4 H13 C16.4 8.4 16.4 3.8 12.8 3.8",c.F,2.1)+icL("M2.6 12.6 H18.4 C21.8 12.6 21.8 17.4 18.2 17.4",c.L,2.1)+icL("M2.6 16.6 H9 C11.6 16.6 11.6 20.4 8.8 20.4",c.F,2.1),
+ chev:c=>icL("M3.8 4.2 L11 12 L3.8 19.8",c.F,3.2)+icL("M12.4 4.2 L19.6 12 L12.4 19.8",c.L,3.2),
+ skull:c=>icF("M12 2.2 C6.8 2.2 3.4 5.8 3.4 10.4 C3.4 13.4 4.9 15.4 7 16.5 V19.6 C7 20.6 7.6 21.2 8.6 21.2 H15.4 C16.4 21.2 17 20.6 17 19.6 V16.5 C19.1 15.4 20.6 13.4 20.6 10.4 C20.6 5.8 17.2 2.2 12 2.2 Z",c.L)+icC(8.6,11,2.5,c.D,1)+icC(15.4,11,2.5,c.D,1)+icF("M12 13.2 L10.9 15.4 H13.1 Z",c.D,.8)+`<path d="M10 17.2 V20.8 M12 17.2 V20.8 M14 17.2 V20.8" fill="none" stroke="${c.M}" stroke-width="1.1" opacity=".85"/>`,
+ crown:c=>icF("M2.8 19.4 L2.4 7 L8 12.2 L12 4.2 L16 12.2 L21.6 7 L21.2 19.4 Z",c.F)+icF("M2.8 15.6 H21.2 V19.8 H2.8 Z",c.M,1.2)+icC(2.8,6.6,1.7,c.L,1)+icC(12,3.8,1.7,c.L,1)+icC(21.2,6.6,1.7,c.L,1)+icC(12,17.7,1.3,c.L,.8),
+ ram:c=>icF("M2.6 5.4 H9.4 V18.6 H2.6 Z",c.F)+icL("M11.4 12 H21 M16.6 7 L21.4 12 L16.6 17",c.L,2.5),
+ reach:c=>icL("M3 12 H21 M7.4 7.2 L2.8 12 L7.4 16.8 M16.6 7.2 L21.2 12 L16.6 16.8",c.F,2.3)+icC(12,12,2,c.L,1),
+ axe:c=>`<g transform="rotate(35 12 12)">${icL("M12 3 V22",c.M,2.4)}${icF("M12 2.8 C18.2 2.4 22 6.4 22.4 11.6 C18.6 10.4 15 10.8 12 13.2 Z",c.F)}<path d="M13.6 5 C16.4 5 18.8 6.6 20 8.6" fill="none" stroke="${c.L}" stroke-width="1.2" stroke-linecap="round" opacity=".9"/></g>`,
+ spin:c=>icL("M20.6 11.4 A8.7 8.7 0 0 0 5.4 6",c.F,2.4)+icF("M3 3.4 L9.4 4.4 L5.6 9.8 Z",c.F,1.2)+icL("M3.4 12.6 A8.7 8.7 0 0 0 18.6 18",c.L,2.4)+icF("M21 20.6 L14.6 19.6 L18.4 14.2 Z",c.L,1.2),
+ star:c=>icF(icStar(12,12.6,10.8,4.6,5,-90),c.F)+icF(icStar(12,12.6,5,2.2,5,-90),c.L,.8),
+ sparkle:c=>icF("M12 1.4 C12.8 8 16 11.2 22.6 12 C16 12.8 12.8 16 12 22.6 C11.2 16 8 12.8 1.4 12 C8 11.2 11.2 8 12 1.4 Z",c.F)+icF("M12 7 C12.3 10 13.9 11.7 17 12 C13.9 12.3 12.3 14 12 17 C11.7 14 10.1 12.3 7 12 C10.1 11.7 11.7 10 12 7 Z",c.L,.8),
+ ring:c=>`<circle cx="12" cy="12" r="8" fill="none" stroke="${IC_O}" stroke-width="4.4" stroke-dasharray="3.4 3"/><circle cx="12" cy="12" r="8" fill="none" stroke="${c.F}" stroke-width="2" stroke-dasharray="3.4 3"/>`
+};
+/* badge glyphs drawn in the bottom-right corner */
+const ICB={
+ clock:c=>`<g transform="translate(14.6 14.6) scale(.46)">${icC(12,12,10.6,c.L,2.6)}<circle cx="12" cy="12" r="7.6" fill="${c.D}"/>${icL("M12 6 V12 L16.4 14.6",c.L,2.8)}</g>`,
+ plus:c=>`<g transform="translate(14.4 14.4) scale(.46)">${icC(12,12,10.6,c.L,2.6)}<path d="M12 5.6 V18.4 M5.6 12 H18.4" stroke="${c.D}" stroke-width="4" stroke-linecap="round"/></g>`,
+ up:c=>`<g transform="translate(14.4 14.4) scale(.46)">${icC(12,12,10.6,c.L,2.6)}<path d="M12 18.4 V6.6 M6.4 11.8 L12 5.8 L17.6 11.8" fill="none" stroke="${c.D}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></g>`
+};
+const icTok=(F,o)=>{o=o||{};return{F:F,L:o.L||shade(F,.5),M:o.M||shade(F,-.38),D:o.D||"#1a0e15"}};
+/* name like "fire+clock" -> markup (no wrapper) */
+function icoIn(name,c){const [b,bd]=String(name).split("+");return(IC[b]||IC.star)(c)+(bd&&ICB[bd]?ICB[bd](c):"")}
+function icoSvg(name,F,size,o){const c=icTok(F,o);return`<svg class="ici" viewBox="0 0 24 24" width="${size||"1.1em"}" height="${size||"1.1em"}" aria-hidden="true">${icoIn(name,c)}</svg>`}
+/* stat key -> icon name (talents + upgrades) */
+const ICK={atk:"sword",dmgMul:"sword+up",critDmg:"burst",crit:"crit",atkSpd:"chev",spinBonus:"spin",spinCd:"spin+clock",heavyBonus:"axe",heavyCd:"axe+clock",bossDmg:"crown",execute:"skull",opener:"sword+plus",knock:"ram",reach:"reach",
+ maxhp:"heart",maxhpPct:"heart+up",armor:"shield",armorPct:"plate",dmgRed:"wall",thorns:"thorn",dodgeCd:"wind+clock",evade:"wind",shieldCd:"shield+clock",
+ healBonus:"heal",regen:"leaf",lifesteal:"drop",healCd:"heal+clock",revive:"ankh",killHeal:"heart+plus",critHeal:"heart+plus",
+ goldBonus:"coin",goldFlat:"coins",xpBonus:"book",xpFlat:"notes",dropBonus:"clover",rarBonus:"gem",speed:"boot",cdr:"clock",killCdr:"hourglass",
+ fireBonus:"fire",fireRad:"fire+up",fireCd:"fire+clock",burn:"fire+plus",burnDmg:"fire+up",fireMulti:"fire+plus",blazeBonus:"sword",
+ lightningBonus:"bolt",chain:"bolt+plus",boltCd:"bolt+clock",boltTwice:"bolt+plus"};
+const TRIK={mag:"sparkle",fury:"sword+up",smolderT:"fire+up",blazeT:"fire+plus",wisdomT:"book+up",openT:"sword+plus",heavyT:"axe",slayer:"crown"};
+const trIk=T=>TRIK[T.id]||ICK[T.fx[0][0]]||"star";
+const TCOL={str:"#ff7a6a",spd:"#5fd0ff",hp:"#ff8fb0",mag:"#b98cff",wealth:"#ffd24a"},TCI={str:"sword",spd:"wind",hp:"heart",mag:"sparkle",wealth:"coin"};
+const ikOf=n=>n.cap?"star":ICK[n.fx[0][0]]||"star";
+
 const SECT=[
  {col:"#ff5f6f",icon:"⚔",n:S8("Сила|Might|Puissance|Macht|力量|Fuerza|Forza|Siła|Poder|力|힘"),cap1:S8("Майстер клинка|Blademaster|Maître lame|Klingenmeister|剑术大师|Maestro de la espada|Maestro di spada|Mistrz ostrza|Mestre da lâmina|剣聖|검의 달인"),cap2:S8("Бог війни|God of War|Dieu de la guerre|Kriegsgott|战神|Dios de la guerra|Dio della guerra|Bóg wojny|Deus da guerra|軍神|전쟁의 신"),
   nodes:[[["atk",3]],[["atk",4]],[["critDmg",15]],[["atk",6]],[["atkSpd",6]],[["crit",3]],[["atk",8]],[["critDmg",20]],[["atkSpd",8]],[["atk",10]],[["crit",5]],[["dmgMul",20],["atk",10]],
@@ -1249,6 +1352,7 @@ const SECT=[
    [["fireBonus",35]],[["fireRad",20]],[["fireCd",10]],[["fireBonus",35]],[["burnDmg",30]],[["fireBonus",40]],[["fireRad",20]],[["fireCd",10]],[["burnDmg",40]],[["fireBonus",45]],[["fireRad",25]],[["fireBonus",50]],[["burnDmg",50]],[["fireBonus",100],["fireMulti",1]],
     [["blazeBonus",25]],[["fireBonus",55]],[["burnDmg",50]],[["fireRad",25]],[["blazeBonus",35]],[["fireCd",10]],[["fireBonus",70]],[["burnDmg",60]],[["fireBonus",150],["blazeBonus",100],["burnDmg",100]]]}
 ];
+["sword","shield","heart","coin","bolt","fire"].forEach((k,i)=>SECT[i].ik=k);
 SECT.forEach((S,i)=>{S.nodes.push(...[[[["atk",28]],[["reach",5]],[["critDmg",40]],[["opener",20]],[["atkSpd",10]],[["atk",32]],[["knock",25]],[["crit",5]],[["dmgMul",30]],[["execute",25]],[["heavyBonus",40]],[["atk",36]],[["bossDmg",30]],[["opener",30]],[["critDmg",50]],[["atk",40]],[["dmgMul",60],["atk",50],["critDmg",80],["reach",10]]],[[["maxhpPct",4]],[["armor",14]],[["maxhp",140]],[["armorPct",5]],[["dmgRed",4]],[["thorns",35]],[["maxhpPct",5]],[["evade",4]],[["armor",16]],[["shieldCd",15]],[["maxhp",160]],[["armorPct",6]],[["dodgeCd",15]],[["maxhpPct",6]],[["thorns",40]],[["armor",20]],[["maxhpPct",12],["armorPct",10],["maxhp",300],["dmgRed",5]]],[[["regen",3]],[["healBonus",40]],[["lifesteal",3]],[["critHeal",5]],[["killHeal",8]],[["maxhpPct",4]],[["healCd",15]],[["regen",4]],[["lifesteal",3]],[["healBonus",50]],[["killHeal",10]],[["critHeal",8]],[["maxhpPct",5]],[["regen",5]],[["lifesteal",4]],[["healCd",15]],[["regen",10],["lifesteal",6],["healBonus",80],["critHeal",15],["killHeal",20]]],[[["goldFlat",8]],[["xpFlat",12]],[["goldBonus",40]],[["xpBonus",40]],[["dropBonus",30]],[["goldFlat",10]],[["rarBonus",1]],[["speed",6]],[["xpFlat",15]],[["goldBonus",45]],[["dropBonus",35]],[["cdr",6]],[["goldFlat",12]],[["xpBonus",50]],[["goldBonus",60]],[["dropBonus",40]],[["goldBonus",120],["xpBonus",80],["dropBonus",60],["rarBonus",3],["goldFlat",25]]],[[["lightningBonus",80]],[["chain",1]],[["boltCd",10]],[["lightningBonus",90]],[["killCdr",3]],[["chain",1]],[["lightningBonus",100]],[["boltCd",10]],[["lightningBonus",110]],[["cdr",6]],null,[["chain",1]],[["lightningBonus",120]],[["boltCd",10]],[["killCdr",4]],[["lightningBonus",140]],[["lightningBonus",300],["chain",3],["boltCd",15],["killCdr",8]]],[[["fireBonus",80]],[["fireRad",25]],[["burnDmg",60]],[["fireBonus",90]],[["fireCd",10]],[["blazeBonus",45]],[["fireBonus",100]],[["burnDmg",70]],[["fireRad",25]],[["fireBonus",110]],null,[["blazeBonus",50]],[["fireCd",10]],[["fireBonus",130]],[["burnDmg",90]],[["blazeBonus",60]],[["fireBonus",300],["blazeBonus",150],["burnDmg",150],["fireCd",15]]]][i])});
 [S8("Володар клинків|Lord of Blades|Seigneur des lames|Herr der Klingen|刃之王|Señor de las hojas|Signore delle lame|Pan Ostrzy|Senhor das Lâminas|刃の王|칼날의 군주"),S8("Незламна гора|Unshakable Mountain|Montagne inébranlable|Unerschütterlicher Berg|不动之山|Montaña inquebrantable|Montagna incrollabile|Niewzruszona Góra|Montanha Inabalável|不動の山|흔들리지 않는 산"),S8("Вічне джерело|Eternal Spring|Source éternelle|Ewige Quelle|永恒之泉|Manantial eterno|Sorgente eterna|Wieczne Źródło|Fonte Eterna|永遠の泉|영원한 샘"),S8("Король скарбів|King of Treasure|Roi des trésors|König der Schätze|宝藏之王|Rey del tesoro|Re dei tesori|Król Skarbów|Rei do Tesouro|財宝の王|보물의 왕"),S8("Серце бурі|Heart of the Storm|Cœur de la tempête|Herz des Sturms|风暴之心|Corazón de la tormenta|Cuore della tempesta|Serce Burzy|Coração da Tempestade|嵐の心臓|폭풍의 심장"),S8("Сонце війни|Sun of War|Soleil de guerre|Kriegssonne|战争之日|Sol de guerra|Sole di guerra|Słońce Wojny|Sol da Guerra|戦の太陽|전쟁의 태양")].forEach((c,i)=>SECT[i].cap4=c);
 const CAP3=[S8("Руйнівник світів|World Breaker|Briseur de mondes|Weltenbrecher|灭世者|Rompemundos|Spaccamondi|Niszczyciel światów|Quebra-mundos|世界を砕く者|세계 파괴자"),S8("Вічна фортеця|Eternal Fortress|Forteresse éternelle|Ewige Festung|永恒堡垒|Fortaleza eterna|Fortezza eterna|Wieczna forteca|Fortaleza eterna|永遠の要塞|영원한 요새"),S8("Джерело життя|Wellspring of Life|Source de vie|Quell des Lebens|生命之泉|Manantial de vida|Fonte della vita|Źródło życia|Fonte da vida|生命の泉|생명의 샘"),S8("Дотик Мідаса|Midas Touch|Toucher de Midas|Midas-Berührung|点石成金|Toque de Midas|Tocco di Mida|Dotyk Midasa|Toque de Midas|ミダスの手|미다스의 손"),S8("Око бурі|Eye of the Storm|Œil de la tempête|Auge des Sturms|风暴之眼|Ojo de la tormenta|Occhio del ciclone|Oko burzy|Olho da tempestade|嵐の目|폭풍의 눈"),S8("Серце вулкана|Heart of the Volcano|Cœur du volcan|Herz des Vulkans|火山之心|Corazón del volcán|Cuore del vulcano|Serce wulkanu|Coração do vulcão|火山の心臓|화산의 심장")];SECT.forEach((S,i)=>S.cap3=CAP3[i]);
@@ -1440,7 +1544,7 @@ function recalc(){
  if(eq.cloak)HL.cape=shade(rc("cloak"),-.45);
  if(eq.gloves){HL.glove=shade(rc("gloves"),-.3);HL.arm2=shade(rc("gloves"),-.45)}
  if(eq.necklace)HL.neck=rc("necklace");
- HERO_LOOK=HL;
+ {const hk=JSON.stringify(HL);if(hk!==recalc.hk){recalc.hk=hk;HERO_LOOK=HL}}
  for(const T of TRAIN){const l=train[T.id]||0;if(l)for(const [k,v] of T.fx)s[k]+=v*l}
  s.crit=Math.min(75,s.crit);s.dmgRed=Math.min(60,s.dmgRed);s.cdr=Math.min(.45,s.cdr/100);s.atkSpd=Math.min(80,s.atkSpd);s.speed=Math.min(80,s.speed);s.lifesteal=Math.min(25,s.lifesteal);s.evade=Math.min(40,s.evade);s.killCdr=Math.min(40,s.killCdr);s.reach=Math.min(60,s.reach);s.knock=Math.min(150,s.knock);
  if(s.maxhpPct)s.maxhp=Math.round(s.maxhp*(1+s.maxhpPct/100));if(s.armorPct)s.armor=Math.round(s.armor*(1+s.armorPct/100));
@@ -4160,6 +4264,7 @@ function drawImpact(){if(IMP.t<=0)return;const k=1-Math.max(0,IMP.t)/IMP.max;let
  c.strokeStyle=`rgba(255,255,255,${(1-k)*.9})`;c.lineWidth=(1-k)*6*IMP.lv;c.beginPath();c.arc(sx,sy,8+k*70*IMP.lv,0,7);c.stroke();
  if(k<.35){c.fillStyle=`rgba(255,255,255,${(.35-k)*1.6})`;c.beginPath();c.arc(sx,sy,14+IMP.lv*10,0,7);c.fill()}
  c.restore()}
+let bgAcc=0; /* while a menu covers the screen the 3D world is redrawn only ~4x/s (saves battery, removes menu lag) */
 function frame(ts){
  const rdt=Math.min(1,Math.max(0,(ts-last)/1000)),dt=Math.min(.05,rdt);last=ts;realT+=dt;
  requestAnimationFrame(frame);BOOT.fr++;
@@ -4168,7 +4273,7 @@ function frame(ts){
  if(BOOT.f<45&&++BOOT.f===45)LS.set("r2_boot",0);
  if(!paused){tNow+=dt;let g=dt;if(hitStop>0){hitStop-=dt;g=dt*.06}update(g)}
  shake*=Math.pow(.004,dt);if(shake<.2)shake=0;flashA=Math.max(0,flashA-dt*2);
- if(use3D()){if(G3)perf3(rdt);try{render3D(dt)}catch(err){console.error(err);if(++R3.errN>4){R3.ok=false;R3.failed=true;applyGfx();toast(t("gfxFail"))}}}else render();
+ if(use3D()){bgAcc+=rdt;if(!modalOpen||modalOpen==="mBest"||bgAcc>=.22){bgAcc=0;if(G3)perf3(rdt);try{render3D(dt)}catch(err){console.error(err);if(++R3.errN>4){R3.ok=false;R3.failed=true;applyGfx();toast(t("gfxFail"))}}}}else render();
  {const v3=use3D();if(frame.vg!==v3){frame.vg=v3;$("vig3").style.display=v3?"block":"none"}}
  fpsTick(rdt);
  impTick(rdt);drawImpact();
@@ -4222,69 +4327,103 @@ $("deadTree").onclick=()=>{retry(true);openModal("mTree")};
 function retry(){P.hp=P.maxhp;setHero("idle");hero.inv=1.2;hero.slow=0;hero.poison=null;enemies=[];projs=[];coins.forEach(k=>P.gold+=k.v);coins=[];const lt=loots;loots=[];lt.forEach(k=>addItem(k.it));hero.x=arenaX+LW*.3;hero.z=DEPTH/2;camX=arenaX;startWave()}
 
 let tSel=null;
-function statChips(){$("statList").innerHTML=`<span>❤ <b>${P.maxhp}</b></span><span>⚔ <b>${P.atk}</b></span><span>🛡 <b>${P.armor}</b></span><span>🎯 <b>${P.crit}%</b></span><span>💥 ${t("critDmg")} <b>×${(2+P.critDmg/100).toFixed(2)}</b></span><span>🔥 <b>+${P.fireBonus}%</b></span><span>⚡ <b>+${P.lightningBonus}%</b></span><span>💚 <b>+${P.healBonus}%</b></span>${P.dmgRed?`<span>🧱 ${t("dmgRed")} <b>−${P.dmgRed}%</b></span>`:""}${P.regen?`<span>♻ <b>${P.regen}${t("perSec")}</b></span>`:""}${P.evade?`<span>🌀 <b>${P.evade}%</b></span>`:""}<span>⏱ <b>−${Math.round(P.cdr*100)}%</b></span><span class="g">🪙 <b>${P.gold}</b></span>`}
+function statChips(){const I=(k,F)=>icoSvg(k,F,"1.2em");
+ $("statList").innerHTML=`<span class="g">${I("coin","#ffd24a")} <b>${P.gold}</b></span><span>${I("heart","#ff6b86")} <b>${P.maxhp}</b></span><span>${I("sword","#ff8a8a")} <b>${P.atk}</b></span><span>${I("shield","#9fb3c8")} <b>${P.armor}</b></span><span>${I("crit","#ff9a6a")} <b>${P.crit}%</b></span><span>${I("burst","#ffc24a")} ${t("critDmg")} <b>×${(2+P.critDmg/100).toFixed(2)}</b></span><span>${I("fire","#ff8a3d")} <b>+${P.fireBonus}%</b></span><span>${I("bolt","#7fb8ff")} <b>+${P.lightningBonus}%</b></span><span>${I("heal","#4fd67a")} <b>+${P.healBonus}%</b></span>${P.dmgRed?`<span>${I("wall","#d98a5a")} ${t("dmgRed")} <b>−${P.dmgRed}%</b></span>`:""}${P.regen?`<span>${I("leaf","#6bf0ae")} <b>${P.regen}${t("perSec")}</b></span>`:""}${P.evade?`<span>${I("wind","#9fe0ff")} <b>${P.evade}%</b></span>`:""}<span>${I("clock","#c8b4ff")} <b>−${Math.round(P.cdr*100)}%</b></span>`}
 function renderTree(){statChips();renderTalents();renderTrain();if(!renderTree.did){renderTree.did=1;requestAnimationFrame(()=>{const w=$("twrap");w.scrollLeft=(w.scrollWidth-w.clientWidth)/2;w.scrollTop=(w.scrollHeight-w.clientHeight)/2})}}
 const talAvail=id=>!tal.includes(id)&&TALN[id].nb.some(n=>n==="c"||tal.includes(n));
-let prevVis=null,justBought=null,treeExt=0;
-const SWD="M-6.5 6.5L8-8M6.5 6.5L-8-8M-9.5 3.5L-3.5 9.5M9.5 3.5L3.5 9.5M-6.5 6.5L-10 10M6.5 6.5L10 10";
-const swdG=(x,y,s,c,ol)=>`<g transform="translate(${x} ${y}) scale(${s})" fill="none" stroke-linecap="round">${ol?`<path stroke="${ol}" stroke-width="6.5" d="${SWD}"/>`:""}<path stroke="${c}" stroke-width="2.7" d="${SWD}"/></g>`;
-const icoH=S=>S.icon==="⚔"?`<svg width="1.05em" height="1.05em" viewBox="-12 -12 24 24" style="vertical-align:-.15em">${swdG(0,0,1,S.col)}</svg>`:S.icon;
+let prevVis=null,justBought=null,treeExt=0,treeMaxR=0,treeBox=[-300,300,-300,300];
+let tz=(()=>{const v=+LS.get("r2_tz",0);return v>=.15&&v<=2.6?v:(innerHeight<560&&innerWidth>innerHeight?.85:1)})();
+const tzClamp=z=>Math.max(.15,Math.min(2.6,z));
 function renderTalents(){
  const own=new Set(tal),cs=Math.cos,sn=Math.sin;
  const vis=new Set(TALL.filter(n=>own.has(n.id)||talAvail(n.id)).map(n=>n.id));
  let maxR=0;const secR=[0,0,0,0,0,0];for(const id of vis){const n=TALN[id],r=RING_R[n.r];if(r>maxR)maxR=r;if(r>secR[n.si])secR[n.si]=r}
- const E=Math.max(520,maxR+150),W=Math.round(E*2*.77),grew=treeExt&&E!==treeExt;treeExt=E;
- let o=`<svg viewBox="${-E} ${-E} ${E*2} ${E*2}" width="${W}" height="${W}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${t("tree")}"><defs>`;
- SECT.forEach((S,i)=>{o+=`<radialGradient id="wg${i}" cx="0" cy="0" r="${E}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${S.col}" stop-opacity="0"/><stop offset=".6" stop-color="${S.col}" stop-opacity=".12"/><stop offset="1" stop-color="${S.col}" stop-opacity=".03"/></radialGradient>`});
- o+=`<filter id="gl" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="cg"><stop offset="0" stop-color="#ffe7b0"/><stop offset=".6" stop-color="#d6a24a"/><stop offset="1" stop-color="#6b4a1c"/></radialGradient></defs>`;
+ treeMaxR=maxR;{let x0=0,x1=0,y0=0,y1=0;for(const id of vis){const n=TALN[id];x0=Math.min(x0,n.x);x1=Math.max(x1,n.x);y0=Math.min(y0,n.y);y1=Math.max(y1,n.y)}treeBox=[x0-75,x1+75,y0-75,y1+85]}
+ const E=Math.max(520,maxR+150),W=Math.round(E*2*.77*tz),grew=treeExt&&E!==treeExt;treeExt=E;
+ /* icons are defined once in <defs> and reused with <use> (keeps the SVG small = fast) */
+ const defs={};let dn=0;
+ const ik=(nm,col,ow)=>{const k=nm+"|"+col+"|"+(ow?1:0);return defs[k]||(defs[k]={id:"ik"+(dn++),nm,col,ow})};
+ const use=(d,x,y,s)=>`<use href="#${d.id}" transform="translate(${x} ${y}) scale(${s})"/>`;
+ let g=`<defs>`;
+ SECT.forEach((S,i)=>{g+=`<radialGradient id="wg${i}" cx="0" cy="0" r="${E}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${S.col}" stop-opacity="0"/><stop offset=".6" stop-color="${S.col}" stop-opacity=".12"/><stop offset="1" stop-color="${S.col}" stop-opacity=".03"/></radialGradient>`});
+ g+=`<radialGradient id="cg"><stop offset="0" stop-color="#ffe7b0"/><stop offset=".6" stop-color="#d6a24a"/><stop offset="1" stop-color="#6b4a1c"/></radialGradient>`;
+ let b="";
  SECT.forEach((S,i)=>{const a0=(-120+i*60)*PI/180,a1=(-60+i*60)*PI/180,R=E-25,am=(-90+i*60)*PI/180;
-  o+=`<path d="M0 0 L${cs(a0)*R} ${sn(a0)*R} A${R} ${R} 0 0 1 ${cs(a1)*R} ${sn(a1)*R} Z" fill="url(#wg${i})"/><line x1="0" y1="0" x2="${cs(a0)*R}" y2="${sn(a0)*R}" stroke="#4a2632" stroke-width="2"/>`;
+  b+=`<path d="M0 0 L${cs(a0)*R} ${sn(a0)*R} A${R} ${R} 0 0 1 ${cs(a1)*R} ${sn(a1)*R} Z" fill="url(#wg${i})"/><line x1="0" y1="0" x2="${cs(a0)*R}" y2="${sn(a0)*R}" stroke="#4a2632" stroke-width="2"/>`;
   const lr=Math.max(secR[i],RING_R[0])+95,la=am+Math.min(.36,40/lr*2.2),lx=cs(la)*lr,ly=sn(la)*lr;const anc=lx>60?"end":lx<-60?"start":"middle";
-  const mc=renderTalents.mc||(renderTalents.mc=document.createElement("canvas").getContext("2d"));mc.font="700 22px Cinzel,Georgia,serif";const tw=28+mc.measureText(L(S.n)).width,sx=anc==="start"?lx:anc==="end"?lx-tw:lx-tw/2,ts=`font-family="Cinzel,Georgia,serif" font-weight="700" font-size="22" fill="${S.col}" style="paint-order:stroke" stroke="#0a060b" stroke-width="6"`;
-  o+=(S.icon==="⚔"?swdG(sx+11,ly-1.5,.95,S.col,"#0a060b"):`<text x="${sx+11}" y="${ly+6}" text-anchor="middle" ${ts}>${S.icon}</text>`)+`<text x="${sx+28}" y="${ly+6}" text-anchor="start" ${ts}>${L(S.n)}</text>`});
- RING_R.forEach(r=>{if(r<=maxR+80)o+=`<circle r="${r}" fill="none" stroke="#2a1822" stroke-width="1.5" stroke-dasharray="4 8"/>`});
- for(const n of TALL){if(!vis.has(n.id)){for(const p of n.par)if(p!=="c"&&vis.has(p)&&!own.has(p)){const P2=TALN[p],mx=lerp(P2.x,n.x,.32),my=lerp(P2.y,n.y,.32);o+=`<line x1="${P2.x}" y1="${P2.y}" x2="${mx}" y2="${my}" stroke="${SECT[n.si].col}" stroke-opacity=".22" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"/>`}continue}
-  for(const p of n.par){if(p!=="c"&&!vis.has(p))continue;const P2=p==="c"?{x:0,y:0}:TALN[p],a=own.has(n.id),b=p==="c"||own.has(p),col=SECT[n.si].col;
-   if(a&&b)o+=`<line x1="${P2.x}" y1="${P2.y}" x2="${n.x}" y2="${n.y}" stroke="${col}" stroke-width="6" stroke-linecap="round" filter="url(#gl)"/>`;
-   else if(a||b)o+=`<line x1="${P2.x}" y1="${P2.y}" x2="${n.x}" y2="${n.y}" stroke="${col}" stroke-opacity=".55" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round"/>`;
-   else o+=`<line x1="${P2.x}" y1="${P2.y}" x2="${n.x}" y2="${n.y}" stroke="#3a2530" stroke-width="2.5"/>`}}
- o+=`<g data-id="c"><circle r="42" fill="url(#cg)" stroke="#fff1cf" stroke-width="3" filter="url(#gl)"/><text y="13" text-anchor="middle" font-size="36" fill="#3a2408">✦</text></g>`;
+  const mc=renderTalents.mc||(renderTalents.mc=document.createElement("canvas").getContext("2d"));mc.font="700 22px Cinzel,Georgia,serif";const tw=30+mc.measureText(L(S.n)).width,sx=anc==="start"?lx:anc==="end"?lx-tw:lx-tw/2,ts=`font-family="Cinzel,Georgia,serif" font-weight="700" font-size="22" fill="${S.col}" style="paint-order:stroke" stroke="#0a060b" stroke-width="6"`;
+  b+=use(ik(S.ik,S.col,0),sx-1,ly-13.5,1.05)+`<text x="${sx+30}" y="${ly+6}" text-anchor="start" ${ts}>${L(S.n)}</text>`});
+ RING_R.forEach(r=>{if(r<=maxR+80)b+=`<circle r="${r}" fill="none" stroke="#2a1822" stroke-width="1.5" stroke-dasharray="4 8"/>`});
+ for(const n of TALL){if(!vis.has(n.id)){for(const p of n.par)if(p!=="c"&&vis.has(p)&&!own.has(p)){const P2=TALN[p],mx=lerp(P2.x,n.x,.32),my=lerp(P2.y,n.y,.32);b+=`<line x1="${P2.x}" y1="${P2.y}" x2="${mx}" y2="${my}" stroke="${SECT[n.si].col}" stroke-opacity=".22" stroke-width="3" stroke-dasharray="2 6" stroke-linecap="round"/>`}continue}
+  for(const p of n.par){if(p!=="c"&&!vis.has(p))continue;const P2=p==="c"?{x:0,y:0}:TALN[p],a=own.has(n.id),bb=p==="c"||own.has(p),col=SECT[n.si].col;
+   if(a&&bb)b+=`<line x1="${P2.x}" y1="${P2.y}" x2="${n.x}" y2="${n.y}" stroke="${col}" stroke-opacity=".22" stroke-width="15" stroke-linecap="round"/><line x1="${P2.x}" y1="${P2.y}" x2="${n.x}" y2="${n.y}" stroke="${col}" stroke-width="6" stroke-linecap="round"/>`;
+   else if(a||bb)b+=`<line x1="${P2.x}" y1="${P2.y}" x2="${n.x}" y2="${n.y}" stroke="${col}" stroke-opacity=".55" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round"/>`;
+   else b+=`<line x1="${P2.x}" y1="${P2.y}" x2="${n.x}" y2="${n.y}" stroke="#3a2530" stroke-width="2.5"/>`}}
+ b+=`<g data-id="c"><circle r="52" fill="#d6a24a" opacity=".16"/><circle r="42" fill="url(#cg)" stroke="#fff1cf" stroke-width="3"/>${use(ik("star","#d6a24a",1),-21,-21,1.75)}</g>`;
  let delay=0;
- for(const n of TALL){if(!vis.has(n.id))continue;const S=SECT[n.si],ow=own.has(n.id),av=!ow,r=n.cap?26:19;
+ for(const n of TALL){if(!vis.has(n.id))continue;const S=SECT[n.si],ow=own.has(n.id),r=n.cap?26:19;
   const isNew=prevVis&&!prevVis.has(n.id);
-  o+=`<g data-id="${n.id}" transform="translate(${n.x} ${n.y})"><g${isNew?` class="tnode" style="animation-delay:${(.12+(delay++)*.08).toFixed(2)}s"`:""}>`;
-  if(tSel===n.id)o+=`<circle r="${r+10}" fill="none" stroke="#ffe7b0" stroke-width="3" stroke-dasharray="6 5"/>`;
-  if(ow)o+=`<circle r="${r}" fill="${S.col}" stroke="#fff3d6" stroke-width="3" filter="url(#gl)"/>`;
-  else o+=`<circle r="${r}" fill="#1e121b" stroke="${S.col}" stroke-width="4"><animate attributeName="stroke-opacity" values="1;.35;1" dur="1.6s" repeatCount="indefinite"/></circle>`;
-  if(justBought===n.id)o+=`<circle r="${r}" fill="none" stroke="${S.col}" stroke-width="5"><animate attributeName="r" from="${r}" to="${r+50}" dur=".7s" fill="freeze"/><animate attributeName="stroke-opacity" from="1" to="0" dur=".7s" fill="freeze"/></circle><circle r="${r}" fill="#fff" opacity="0"><animate attributeName="opacity" values=".9;0" dur=".45s" fill="freeze"/></circle>`;
-  o+=!n.cap&&S.icon==="⚔"?swdG(0,0,.66,ow?"#fff8e8":S.col):`<text y="${n.cap?9:7}" text-anchor="middle" font-size="${n.cap?24:17}" opacity="${ow?1:.95}" fill="${ow?"#fff8e8":S.col}">${n.cap?"★":S.icon}</text><circle r="${r+8}" fill="transparent"/>`;
-  const lbl=ow?"✓":"🪙 "+n.cost,lc=ow?"#fff3d6":(P.gold>=n.cost?"#ffd98a":"#ff8a8a");
-  o+=`<text y="${r+19}" text-anchor="middle" font-size="15" font-weight="700" fill="${lc}" style="paint-order:stroke" stroke="#0a060b" stroke-width="5" pointer-events="none">${lbl}</text></g></g>`}
- o+=`</svg>`;
- const w=$("twrap"),fx=justBought&&TALN[justBought],oldW=$("tsvg").firstChild?$("tsvg").firstChild.getAttribute("width")|0:0,sl=w.scrollLeft,st2=w.scrollTop,cw=w.clientWidth,ch=w.clientHeight;
+  b+=`<g data-id="${n.id}" transform="translate(${n.x} ${n.y})"><g${isNew?` class="tnode" style="animation-delay:${(.12+(delay++)*.08).toFixed(2)}s"`:""}>`;
+  if(ow)b+=`<circle r="${r+8}" fill="${S.col}" opacity=".16"/><circle r="${r}" fill="${S.col}" stroke="#fff3d6" stroke-width="3"/>`;
+  else b+=`<circle r="${r+5}" fill="none" stroke="${S.col}" stroke-opacity=".4" stroke-width="2" stroke-dasharray="3 5"/><circle r="${r}" fill="#1e121b" stroke="${S.col}" stroke-width="4"/>`;
+  if(justBought===n.id)b+=`<circle r="${r}" fill="none" stroke="${S.col}" stroke-width="5"><animate attributeName="r" from="${r}" to="${r+50}" dur=".7s" fill="freeze"/><animate attributeName="stroke-opacity" from="1" to="0" dur=".7s" fill="freeze"/></circle><circle r="${r}" fill="#fff" opacity="0"><animate attributeName="opacity" values=".9;0" dur=".45s" fill="freeze"/></circle>`;
+  const sz=r*1.2;
+  b+=`<g opacity="${ow?1:.95}">${use(ik(ikOf(n),S.col,ow),-sz/2,-sz/2,sz/24)}</g><circle r="${r+8}" fill="transparent"/>`;
+  if(ow)b+=`<path d="M-6.5 ${r+13} L-2 ${r+17.5} L7 ${r+8}" fill="none" stroke="#0a060b" stroke-width="6.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M-6.5 ${r+13} L-2 ${r+17.5} L7 ${r+8}" fill="none" stroke="#fff3d6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>`;
+  else{const cl=String(n.cost),tw=cl.length*8.6+19,lc=P.gold>=n.cost?"#ffd98a":"#ff8a8a";
+   b+=`${use(ik("coin","#ffd24a",0),-tw/2,r+6,.66)}<text x="${-tw/2+19}" y="${r+19}" text-anchor="start" font-size="15" font-weight="700" fill="${lc}" style="paint-order:stroke" stroke="#0a060b" stroke-width="5" pointer-events="none">${cl}</text>`}
+  b+=`</g></g>`}
+ for(const k in defs){const d=defs[k];g+=`<g id="${d.id}">${icoIn(d.nm,d.ow?icTok("#fff6e4",{L:"#ffffff",M:"#d9c9a8",D:shade(d.col,-.62)}):icTok(d.col))}</g>`}
+ g+=`</defs>`;
+ const o=`<svg viewBox="${-E} ${-E} ${E*2} ${E*2}" width="${W}" height="${W}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${t("tree")}">${g}${b}<circle id="tsr" r="0" fill="none" stroke="#ffe7b0" stroke-width="3" stroke-dasharray="6 5" display="none" pointer-events="none"/></svg>`;
+ const w=$("twrap"),fx=justBought&&TALN[justBought],oldW=$("tsvg").firstChild?parseFloat($("tsvg").firstChild.getAttribute("width"))||0:0,sl=w.scrollLeft,st2=w.scrollTop,cw=w.clientWidth,ch=w.clientHeight;
  $("tsvg").innerHTML=o;
  if(grew&&oldW){const k=W/oldW;w.scrollLeft=(sl+cw/2)*k-cw/2;w.scrollTop=(st2+ch/2)*k-ch/2;if(fx){const px=(fx.x+E)/(2*E)*W,py=(fx.y+E)/(2*E)*W;if(px<w.scrollLeft+40||px>w.scrollLeft+cw-40)w.scrollLeft=px-cw/2;if(py<w.scrollTop+40||py>w.scrollTop+ch-40)w.scrollTop=py-ch/2}}
+ else if(oldW){w.scrollLeft=sl;w.scrollTop=st2}
  prevVis=vis;justBought=null;
  $("tcount").textContent=t("opened")+": "+tal.length+"/"+TALL.length;
- renderTInfo();
+ placeSel();renderTInfo();
 }
+/* the dashed selection ring is moved, the tree is NOT redrawn on a tap (that was slow) */
+function placeSel(){const c=$("tsvg").querySelector("#tsr");if(!c)return;let x=0,y=0,r=0;
+ if(tSel==="c")r=54;else if(tSel&&TALN[tSel]){const n=TALN[tSel];x=n.x;y=n.y;r=(n.cap?26:19)+10}
+ if(!r){c.setAttribute("display","none");return}
+ c.setAttribute("cx",x);c.setAttribute("cy",y);c.setAttribute("r",r);c.removeAttribute("display")}
+/* zoom: scales the SVG size, keeps the point under the fingers where it is */
+function treeZoomTo(z,fx,fy){const w=$("twrap"),svg=$("tsvg").firstChild;if(!svg)return;z=tzClamp(z);if(Math.abs(z-tz)<.002)return;
+ const k=z/tz,W=Math.round(parseFloat(svg.getAttribute("width"))*k);if(fx==null){fx=w.clientWidth/2;fy=w.clientHeight/2}
+ const sl=w.scrollLeft,st=w.scrollTop;svg.setAttribute("width",W);svg.setAttribute("height",W);
+ w.scrollLeft=(sl+fx)*k-fx;w.scrollTop=(st+fy)*k-fy;tz=z;hideTip2()}
+function treeZoomSave(){LS.set("r2_tz",Math.round(tz*100)/100)}
+function treeCenter(){const w=$("twrap");w.scrollLeft=(w.scrollWidth-w.clientWidth)/2;w.scrollTop=(w.scrollHeight-w.clientHeight)/2}
+function treeFit(){const w=$("twrap"),[x0,x1,y0,y1]=treeBox,E=treeExt;treeZoomTo(Math.min(1.3,Math.min(w.clientWidth/((x1-x0)*.77),w.clientHeight/((y1-y0)*.77))));
+ const W=parseFloat($("tsvg").firstChild.getAttribute("width")),px=((x0+x1)/2+E)/(2*E)*W,py=((y0+y1)/2+E)/(2*E)*W;w.scrollLeft=px-w.clientWidth/2;w.scrollTop=py-w.clientHeight/2;treeZoomSave()}
+$("tzIn").onclick=()=>{treeZoomTo(tz*1.3);treeZoomSave()};
+$("tzOut").onclick=()=>{treeZoomTo(tz/1.3);treeZoomSave()};
+$("tzFit").onclick=treeFit;
+(function(){const w=$("twrap");let pz=null;const dist=e=>Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+ w.addEventListener("touchstart",e=>{if(e.touches.length===2){pz={d:dist(e),z:tz};hideTip2()}},{passive:true});
+ w.addEventListener("touchmove",e=>{if(e.touches.length!==2||!pz)return;e.preventDefault();const r=w.getBoundingClientRect();treeZoomTo(pz.z*dist(e)/pz.d,(e.touches[0].clientX+e.touches[1].clientX)/2-r.left,(e.touches[0].clientY+e.touches[1].clientY)/2-r.top)},{passive:false});
+ w.addEventListener("touchend",e=>{if(pz&&e.touches.length<2){pz=null;treeZoomSave()}},{passive:true});
+ w.addEventListener("touchcancel",()=>{pz=null},{passive:true});
+ w.addEventListener("wheel",e=>{if(!(e.ctrlKey||e.metaKey))return;e.preventDefault();const r=w.getBoundingClientRect();treeZoomTo(tz*Math.exp(-e.deltaY*.0025),e.clientX-r.left,e.clientY-r.top);treeZoomSave()},{passive:false})})();
 function renderTInfo(){
  const box=$("tinfo");
  if(!tSel){box.style.setProperty("--c","#d6a24a");box.innerHTML=`<div class="m">${t("pick")}</div>`;return}
- if(tSel==="c"){box.style.setProperty("--c","#d6a24a");box.innerHTML=`<div><b>✦ ${t("center")}</b><div class="m">${t("centerD")}</div></div>`;return}
+ if(tSel==="c"){box.style.setProperty("--c","#d6a24a");box.innerHTML=`<div><b>${icoSvg("star","#d6a24a","1.25em")} ${t("center")}</b><div class="m">${t("centerD")}</div></div>`;return}
  const n=TALN[tSel],S=SECT[n.si],ow=tal.includes(n.id),av=talAvail(n.id);
  box.style.setProperty("--c",S.col);
  let act;if(ow)act=`<span class="ok">✓ ${t("owned")}</span>`;else if(!av)act=`<small>🔒 ${t("needLink")}</small>`;else act=`<button class="btn main" id="tBuy" ${P.gold<n.cost?"disabled":""}>${t("unlock",{n:n.cost})}</button>`;
- box.innerHTML=`<div><b>${n.cap?"★":icoH(S)} ${talName(n)}</b><div class="m">${talDesc(n)}</div><small>${L(S.n)}</small></div>${act}`;
+ box.innerHTML=`<div><b>${icoSvg(ikOf(n),S.col,"1.25em")} ${talName(n)}</b><div class="m">${talDesc(n)}</div><small>${L(S.n)}</small></div>${act}`;
  const b=$("tBuy");if(b)b.onclick=()=>buyTalent(n.id);
 }
-$("tsvg").addEventListener("click",e=>{const g=e.target.closest("[data-id]");if(!g)return;tSel=g.dataset.id;renderTalents();if(lastPtrType!=="mouse"){showTip(g.dataset.id,e.clientX,e.clientY);const box=$("tinfo");if(box)box.scrollIntoView({behavior:"smooth",block:"nearest"})}});
+$("tsvg").addEventListener("click",e=>{const g=e.target.closest("[data-id]");if(!g)return;tSel=g.dataset.id;placeSel();renderTInfo();if(lastPtrType!=="mouse"){showTip(g.dataset.id,e.clientX,e.clientY);const box=$("tinfo");if(box)box.scrollIntoView({behavior:"smooth",block:"nearest"})}});
 const tip=$("ttip");let tipId=null,lpTimer=null,lpStart=null,lastPtrType="mouse";
 function tipHTML(id){
- if(id==="c")return{c:"#d6a24a",h:`<b>✦ ${t("center")}</b><div class="d">${t("centerD")}</div>`};
+ if(id==="c")return{c:"#d6a24a",h:`<b>${icoSvg("star","#d6a24a","1.2em")} ${t("center")}</b><div class="d">${t("centerD")}</div>`};
  const n=TALN[id],S=SECT[n.si],ow=tal.includes(id),av=talAvail(id);
  let k;if(ow)k=`<div class="k ok">✓ ${t("owned")}</div>`;else if(!av)k=`<div class="k lk">🔒 ${t("needLink")}</div><div class="k">🪙 ${n.cost}</div>`;else k=`<div class="k ${P.gold<n.cost?"no":""}">🪙 ${n.cost}${P.gold<n.cost?"  ("+t("need").toLowerCase()+")":""}</div>`;
- return{c:S.col,h:`<b>${n.cap?"★":S.icon} ${talName(n)}</b><div class="d">${talDesc(n)}</div>${k}`};
+ return{c:S.col,h:`<b>${icoSvg(ikOf(n),S.col,"1.2em")} ${talName(n)}</b><div class="d">${talDesc(n)}</div>${k}`};
 }
 function showTip(id,x,y){placeTip(id,null,x,y)}
 function placeTip(id,obj,x,y){const r=stage.getBoundingClientRect();if(tipId!==id){const o=obj||tipHTML(id);tip.style.setProperty("--c",o.c);tip.innerHTML=o.h;tipId=id}tip.classList.add("on");
@@ -4301,16 +4440,27 @@ tsvg.addEventListener("contextmenu",e=>e.preventDefault());
 $("twrap").addEventListener("scroll",()=>{if(tip.classList.contains("on"))hideTip2()},{passive:true});
 function buyTalent(id){const n=TALN[id];if(!talAvail(id)){toast(t("needLink"));return}if(P.gold<n.cost){toast(t("need"));SFX.buzz();return}
  P.gold-=n.cost;const old=P.maxhp;tal.push(id);recalc();P.hp=Math.min(P.maxhp,P.hp+Math.max(0,P.maxhp-old));toast(t("bought"));SFX.talent();justBought=id;save();statChips();hideTip2();renderTalents();hud()}
-function renderTrain(){
- const root=$("trGrid");root.innerHTML="";
+let trKey=null;const trUI={cards:{},cols:{}},cIc=n=>icoSvg(n,"#ffd24a","1em");
+const setT=(el,s)=>{if(el._t!==s){el._t=s;el.textContent=s}},setH=(el,s)=>{if(el._h!==s){el._h=s;el.innerHTML=s}};
+/* the Upgrades table is built once and only numbers/buttons are updated after a purchase,
+   so the scroll position (columns) is never lost and nothing is re-created */
+function buildTrain(){
+ const root=$("trGrid");root.innerHTML="";trUI.cards={};trUI.cols={};
  const tb=document.createElement("div");tb.className="trTable";root.appendChild(tb);
- for(const [ck,ci,cn] of TCAT){const list=TRAIN.filter(T=>T.cat===ck);if(!list.length)continue;const lv=list.reduce((a,T)=>a+(train[T.id]||0),0);
+ for(const [ck,ci,cn] of TCAT){const list=TRAIN.filter(T=>T.cat===ck);if(!list.length)continue;
   const col=document.createElement("div");col.className="trCol c-"+ck;tb.appendChild(col);
-  const hd=document.createElement("div");hd.className="trHd";hd.innerHTML=`<div class="r1"><span class="ci">${ci}</span><b>${L(cn)}</b></div><small>${t("lv")} ${lv}</small>`;col.appendChild(hd);
-  list.forEach(T=>{const l=train[T.id]||0,mx=T.max&&l>=T.max,cost=trainCost(T,l);const d=document.createElement("div");d.className="trc";
-   const v=Math.round(l*T.per*10)/10,unit=T.u==="ps"?t("perSec"):T.u===""?"":"%";
-   d.innerHTML=`<div class="trh"><div class="ic">${T.ic}</div><span class="lvl">${l}${T.max?"/"+T.max:""}</span></div><b>${L(T.n)}</b><div class="m dd">${L(T.d)}</div><div class="m nw">${t("now")}: ${T.neg?"−":"+"}${v}${unit}</div>`+(mx?`<span class="ok">${t("maxed")}</span>`:`<button class="buy" ${P.gold<cost?"disabled":""}>🪙 ${cost}</button>`);
-   const b=d.querySelector(".buy");if(b)b.onclick=()=>buyTrain(T.id);col.appendChild(d)})}
+  const hd=document.createElement("div");hd.className="trHd";hd.innerHTML=`<div class="r1"><span class="ci">${icoSvg(TCI[ck],TCOL[ck],"1.25em")}</span><b>${L(cn)}</b></div><small></small>`;col.appendChild(hd);trUI.cols[ck]=hd.querySelector("small");
+  list.forEach(T=>{const d=document.createElement("div");d.className="trc";
+   d.innerHTML=`<div class="trh"><div class="ic">${icoSvg(trIk(T),TCOL[ck],"22px")}</div><span class="lvl"></span></div><b>${L(T.n)}</b><div class="m dd">${L(T.d)}</div><div class="m nw"></div><button class="buy" type="button"></button><span class="ok"></span>`;
+   const u={lvl:d.querySelector(".lvl"),nw:d.querySelector(".nw"),buy:d.querySelector(".buy"),ok:d.querySelector(".ok")};u.buy.onclick=()=>buyTrain(T.id);trUI.cards[T.id]=u;col.appendChild(d)})}
+ trKey=lang}
+function renderTrain(){
+ if(trKey!==lang||!$("trGrid").firstChild)buildTrain();
+ for(const [ck] of TCAT){const el=trUI.cols[ck];if(el)setT(el,t("lv")+" "+TRAIN.reduce((a,T)=>a+(T.cat===ck?train[T.id]||0:0),0))}
+ for(const T of TRAIN){const u=trUI.cards[T.id];if(!u)continue;const l=train[T.id]||0,mx=T.max&&l>=T.max,cost=trainCost(T,l),v=Math.round(l*T.per*10)/10,unit=T.u==="ps"?t("perSec"):T.u===""?"":"%";
+  setT(u.lvl,l+(T.max?"/"+T.max:""));setT(u.nw,t("now")+": "+(T.neg?"−":"+")+v+unit);
+  if(mx){u.buy.style.display="none";u.ok.style.display="block";setT(u.ok,t("maxed"))}
+  else{u.ok.style.display="none";u.buy.style.display="";setH(u.buy,cIc()+" "+cost);u.buy.disabled=P.gold<cost}}
 }
 function buyTrain(id){const T=TRAIN.find(x=>x.id===id),l=train[id]||0;if(T.max&&l>=T.max)return;const cost=trainCost(T,l);if(P.gold<cost){toast(t("need"));SFX.buzz();return}
  P.gold-=cost;const old=P.maxhp;train[id]=l+1;recalc();P.hp=Math.min(P.maxhp,P.hp+Math.max(0,P.maxhp-old));SFX.buy();save();statChips();renderTrain();renderTInfo();hud()}
@@ -4335,7 +4485,7 @@ function renderInv(){
  $("bagGrid").innerHTML=g;
  const es=P.eqStats||{},ks=Object.keys(es);
  $("eqSum").innerHTML=`<b>${t("eqBonus")}</b><br>`+(ks.length?ks.map(k=>statTxt(k,Math.round(es[k]*10)/10)).join("<br>"):"—");
- $("sellCommon").disabled=!bag.some(x=>x.r===0);
+ fillSellAll();
  fillAsDots()
  renderIDet();
 }
@@ -4429,7 +4579,12 @@ $("asX").onclick=()=>{closeAsPop();SFX.close()};
 $("asPop").onclick=e=>{if(e.target===$("asPop")){closeAsPop();return}const b=e.target.closest(".asRow");if(!b)return;const r=+b.dataset.r;S.asm=asMask()^(1<<r);save();SFX.ui();renderAsPop()};
 $("asNone").onclick=()=>{S.asm=0;save();SFX.ui();renderAsPop()};
 $("asNow").onclick=()=>{let n=0,g=0;bag=bag.filter(x=>{if(asOn(x.r)){n++;g+=sellPrice(x);return false}return true});if(!n)return;P.gold+=g;if(iSel&&iSel.from==="bag"&&!findItem())iSel=null;toast("💰 "+t("asSold",{n,g}),"#d6a24a");SFX.coin();SFX.sell();applyEq();renderAsPop()};
-$("sellCommon").onclick=()=>{let g=0;bag=bag.filter(x=>{if(x.r===0){g+=sellPrice(x);return false}return true});if(!g)return;P.gold+=g;if(iSel&&iSel.from==="bag"&&!findItem())iSel=null;toast(t("sold",{n:g}));SFX.coin();SFX.sell();applyEq()};
+let sellArm=0;
+function fillSellAll(){const b=$("sellAll"),n=bag.length,g=bag.reduce((a,x)=>a+sellPrice(x),0),armed=sellArm>Date.now()&&n>0;b.disabled=!n;b.classList.toggle("armed",armed);b.textContent=armed?t("sellAllSure",{n,g}):t("sellAll")+(n?" ("+n+")":"")}
+/* sells EVERYTHING in the bag; equipped items are not in the bag, so they are never touched. Two taps = safe. */
+$("sellAll").onclick=()=>{const n=bag.length;if(!n)return;if(sellArm<Date.now()){sellArm=Date.now()+3500;fillSellAll();clearTimeout(fillSellAll.t);fillSellAll.t=setTimeout(fillSellAll,3600);SFX.ui();return}
+ sellArm=0;let g=0;for(const x of bag)g+=sellPrice(x);bag=[];P.gold+=g;if(iSel&&iSel.from==="bag")iSel=null;toast(t("sold",{n:g}));SFX.coin();SFX.sell();applyEq()};
+document.querySelectorAll("i[data-ico]").forEach(el=>{const [n,c]=el.dataset.ico.split("|");el.innerHTML=icoSvg(n,c||"#fff","1.15em")});
 $("eqGrid").addEventListener("click",e=>{const b=e.target.closest("[data-eq]");if(!b)return;const k=b.dataset.eq;iSel=eq[k]?{from:"eq",k}:null;renderInv();const box=$("idet");if(box)box.scrollIntoView({behavior:"smooth",block:"nearest"})});
 $("bagGrid").addEventListener("click",e=>{const b=e.target.closest("[data-iid]");if(!b)return;const id=+b.dataset.iid;iSel={from:"bag",id};const it=findItem();renderInv();hideTip2();if(it&&e.detail===2)equipItem(id);const box=$("idet");if(box)box.scrollIntoView({behavior:"smooth",block:"nearest"})});
 function bindItemTips(el,get){el.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;const it=get(e.target);if(it){const o=itemTipHTML(it);placeTip("i"+it.id,o,e.clientX,e.clientY)}else hideTip2()});el.addEventListener("pointerleave",()=>hideTip2())}
