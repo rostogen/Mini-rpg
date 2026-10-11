@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.11-e",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.11-f",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -76,7 +76,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 #stage{position:relative;width:100%;height:100%;overflow:hidden;touch-action:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 #hLv,#hGold{display:inline-block}
-.pop{animation:popIn .55s cubic-bezier(.2,1.7,.4,1)}@keyframes popIn{0%{transform:scale(2.1);color:#fff6c0;text-shadow:0 0 12px #ffd34e}100%{transform:scale(1)}}
+.popN{animation:popIn .55s cubic-bezier(.2,1.7,.4,1)}@keyframes popIn{0%{transform:scale(2.1);color:#fff6c0;text-shadow:0 0 12px #ffd34e}100%{transform:scale(1)}}
 .bump{animation:bump .35s ease-out}@keyframes bump{0%{transform:scale(1.35);color:#fff3b0}100%{transform:scale(1)}}
 .sk.ready{animation:skReady .7s ease-out}@keyframes skReady{0%{box-shadow:0 0 0 0 rgba(255,232,170,.95),0 6px 16px rgba(0,0,0,.45);filter:brightness(1.8)}100%{box-shadow:0 0 0 18px rgba(255,232,170,0),0 6px 16px rgba(0,0,0,.45);filter:brightness(1)}}
 .sweep{position:absolute;inset:0;pointer-events:none;opacity:0;z-index:5;background:linear-gradient(100deg,transparent 38%,rgba(255,220,140,.3) 50%,transparent 62%);background-size:300% 100%}
@@ -362,6 +362,83 @@ body[data-gfx="hi"] .vig{display:block}
 @media (max-width:520px){.pzI{gap:3px}.pzI::before,.pzI::after{width:3.5px;height:12px}}
 .sk{border-color:rgba(255,236,214,.3);box-shadow:inset 0 2px 1px rgba(255,255,255,.17),inset 0 -5px 9px rgba(0,0,0,.45),0 6px 16px rgba(0,0,0,.45);transition:transform .12s cubic-bezier(.3,1.7,.5,1)}
 .sk.atk{box-shadow:inset 0 3px 2px rgba(255,200,200,.25),inset 0 -7px 12px rgba(0,0,0,.5),0 0 0 4px rgba(225,75,90,.16),0 8px 20px rgba(0,0,0,.5)}
+/* ability buttons v2: own icons, a colour per skill, countdown, lock inside, cast bursts */
+.ddg{--r:210,220,235;--ri:244,248,255}.spn{--r:242,193,78;--ri:255,238,176}.hvy{--r:255,154,58;--ri:255,224,172}.fir{--r:255,106,42;--ri:255,208,152}.blt{--r:122,168,255;--ri:218,234,255}.hel{--r:78,224,142;--ri:204,255,226}.blz{--r:255,90,30;--ri:255,198,142}.shl{--r:89,178,255;--ri:212,238,255}.atk{--r:255,77,98;--ri:255,206,212}
+.sk{--r:200,190,200;--ri:240,230,236;color:rgb(var(--ri));opacity:1;border:2px solid rgba(var(--r),.62);background:radial-gradient(circle at 50% 24%,rgba(var(--r),.46),rgba(var(--r),.12) 52%,rgba(10,5,12,.92) 100%),rgba(18,10,18,.85);box-shadow:inset 0 2px 1px rgba(255,255,255,.24),inset 0 -6px 10px rgba(0,0,0,.5),0 0 0 2px rgba(0,0,0,.4),0 0 14px -2px rgba(var(--r),.6),0 6px 14px rgba(0,0,0,.45)}
+.sk.atk{background:radial-gradient(circle at 50% 24%,rgba(255,110,130,.6),rgba(150,30,50,.5) 55%,rgba(40,8,16,.95) 100%);box-shadow:inset 0 3px 2px rgba(255,200,200,.3),inset 0 -8px 12px rgba(0,0,0,.5),0 0 0 3px rgba(0,0,0,.4),0 0 18px -1px rgba(255,77,98,.7),0 8px 20px rgba(0,0,0,.5)}
+.sk .ic{position:absolute;left:21%;top:21%;width:58%;height:58%;display:block;overflow:visible;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.8));transition:opacity .2s,transform .2s;pointer-events:none}
+.sk.atk .ic{left:24%;top:24%;width:52%;height:52%}
+.sk:after{background:conic-gradient(rgba(6,3,8,.8) calc(var(--cd)*360deg),transparent 0)}
+.sk .cdn{position:absolute;inset:0;display:none;place-items:center;font:900 16px/1 system-ui,sans-serif;font-variant-numeric:tabular-nums;color:#fff;text-shadow:0 0 3px #000,0 1px 2px #000,0 0 9px #000;pointer-events:none;z-index:2}
+.sk.cd .cdn{display:grid}.sk.cd .ic{opacity:.32;transform:scale(.86)}
+.sk.cd{border-color:rgba(var(--r),.3);box-shadow:inset 0 2px 1px rgba(255,255,255,.1),inset 0 -6px 10px rgba(0,0,0,.5),0 0 0 2px rgba(0,0,0,.4),0 6px 14px rgba(0,0,0,.45)}
+.sk .lk{display:none;pointer-events:none}
+.sk.locked{color:#8a7a84;background:rgba(18,10,18,.74)!important;border-color:rgba(255,255,255,.1);box-shadow:inset 0 2px 1px rgba(255,255,255,.06),0 0 0 2px rgba(0,0,0,.35),0 4px 10px rgba(0,0,0,.4);text-shadow:none}
+.sk.locked::before{content:none}.sk.locked .ic{opacity:.16}.sk.locked::after{display:none}
+.sk.locked .lk{display:flex;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:2px;z-index:2;font-style:normal}
+.sk .lk svg{width:15px;height:15px;color:#e8b04b;display:block;filter:drop-shadow(0 1px 1px #000)}
+.sk .lk b{font:900 12px/1 system-ui,sans-serif;color:#ffd98a;text-shadow:0 1px 2px #000,0 0 4px #000}
+.sk.atk .lk svg{width:20px;height:20px}
+.skl{background:rgba(10,5,10,.58);border:0;border-radius:7px;padding:1px 4px;bottom:-8px;text-shadow:0 1px 2px #000;color:#fbf2f6;max-width:66px}
+.sk.atk .skl{bottom:-6px}
+.sk.ready{animation:skReady2 .7s ease-out}
+@keyframes skReady2{0%{box-shadow:0 0 0 0 rgba(var(--ri),.95),0 0 20px 5px rgba(var(--r),.95);filter:brightness(1.7)}100%{box-shadow:0 0 0 20px rgba(var(--ri),0),0 0 14px -2px rgba(var(--r),.6);filter:brightness(1)}}
+.sk.cast{animation:skCast .55s ease-out}
+@keyframes skCast{0%{box-shadow:0 0 0 0 rgba(var(--ri),.9),0 0 24px 6px rgba(var(--r),.95)}100%{box-shadow:0 0 0 22px rgba(var(--ri),0),0 0 0 0 rgba(var(--r),0)}}
+.sk.cast .ic{animation:skIc .5s cubic-bezier(.3,1.8,.5,1)}
+@keyframes skIc{0%{transform:scale(.5) rotate(-22deg)}55%{transform:scale(1.25) rotate(7deg)}100%{transform:scale(.86)}}
+.sk.unlock{animation:skUnlock 1.3s ease-out}
+@keyframes skUnlock{0%{transform:scale(.4);filter:brightness(2.6);box-shadow:0 0 0 0 rgba(255,236,170,.95)}35%{transform:scale(1.32)}62%{transform:scale(.94)}100%{transform:scale(1);filter:none;box-shadow:0 0 0 30px rgba(255,236,170,0)}}
+.sk.atk.on{box-shadow:inset 0 3px 2px rgba(255,200,200,.3),inset 0 -8px 12px rgba(0,0,0,.5),0 0 0 3px rgba(0,0,0,.4),0 0 26px 2px rgba(255,77,98,.95),0 8px 20px rgba(0,0,0,.5)}
+
+/* forge */
+.fgGold{display:flex;justify-content:flex-end;font-weight:800;color:#ffd98a;margin:-2px 0 8px;font-size:15px}
+.fpane{display:none}.fpane.on{display:block}
+.fgCard{position:relative;border:1px solid var(--line);border-top:3px solid var(--rc,#d6a24a);border-radius:14px;padding:12px;background:radial-gradient(120% 90% at 50% 0,color-mix(in srgb,var(--rc,#d6a24a) 16%,#1a0f19),#0f0a10)}
+.fgCard h4{margin:0 0 2px;color:var(--rc,#fff);font-size:15px;line-height:1.25}
+.fgCard .rr{font-size:12px;color:var(--muted);margin-bottom:6px}
+.fgCard .up{color:#6bf0ae;font-style:normal}.fgCard .dn{color:#ff8a8a}
+.fgCard.gone{opacity:.5;display:grid;place-items:center;align-content:center;gap:8px;min-height:90px;border-top-color:var(--line)}
+.fgHead{display:flex;gap:14px;align-items:center}
+.fgNm{min-width:0}.fgNm h4{font-size:17px}
+.fgIc{position:relative;width:68px;height:68px;flex:none;border-radius:18px;border:2px solid var(--rc);display:grid;place-items:center;font-size:36px;background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--rc) 35%,#1b0f1a),#0d080d);box-shadow:0 0 22px -4px var(--rc),inset 0 0 14px -6px var(--rc)}
+.fgIc b{position:absolute;right:-7px;top:-9px;background:linear-gradient(180deg,#ffe08a,#e8a73a);color:#2b1406;border-radius:99px;padding:1px 7px;font:900 13px/1.35 system-ui,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.fgIc.fgHit{animation:fgHit .5s cubic-bezier(.3,1.8,.5,1)}
+@keyframes fgHit{0%{transform:scale(.8) rotate(-10deg);filter:brightness(2)}55%{transform:scale(1.18) rotate(5deg)}100%{transform:none;filter:none}}
+.fgIc .spk{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;pointer-events:none;animation:fgSpk .7s ease-out forwards}
+@keyframes fgSpk{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+.fgPips{display:flex;gap:2px;margin:10px 0 6px}
+.fgPips i{flex:1;height:6px;border-radius:3px;background:#2a1a26}
+.fgPips i.on{background:linear-gradient(90deg,#ffb03a,#ffe08a);box-shadow:0 0 6px -1px rgba(255,200,90,.7)}
+.fgSt{list-style:none;margin:8px 0;padding:0;display:grid;gap:3px;font-size:13.5px;line-height:1.4}
+#fgU .fgSt li{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+#fgS .fgSt{font-size:13px;gap:4px}#fgS .fgSt li{display:block}
+.fgAct{display:flex;gap:8px;margin-top:10px}
+.fgGo{flex:1;padding:13px 10px;font-size:15px}
+.fgX5{min-width:62px;padding:13px 10px;font-size:15px}
+.btn.dis{opacity:.5}
+.fgHint{margin:10px 0 0;font-size:12px}
+.fgTop{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}.fgTop .sub{margin:0}
+.fgShop{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:600px){.fgShop{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fgBuy{width:100%;margin-top:6px;padding:10px 6px;font-size:13.5px}
+.fgCard .acts{margin-top:10px}
+@media (prefers-reduced-motion:reduce){.fgIc.fgHit,.fgIc .spk{animation:none}}
+/* a short coloured wash over the whole view when a skill fires */
+#fxv{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0}
+#fxv.f-fire,#fxv.f-blaze{background:radial-gradient(ellipse 95% 62% at 50% 105%,rgba(255,120,30,.62),rgba(255,80,20,.2) 55%,transparent 78%);animation:fxPulse .55s ease-out}
+#fxv.f-bolt{background:radial-gradient(circle at 50% 42%,rgba(220,236,255,.6),rgba(150,190,255,.26) 58%,transparent 82%);animation:fxFlash .42s linear}
+#fxv.f-heal{background:linear-gradient(0deg,rgba(80,240,150,.58),rgba(80,240,150,.14) 46%,transparent 74%);animation:fxRise .85s ease-out}
+#fxv.f-shield{background:radial-gradient(circle at 50% 55%,transparent 50%,rgba(90,180,255,.55) 100%);animation:fxRing .65s ease-out}
+#fxv.f-spin{background:linear-gradient(90deg,transparent 0,rgba(255,236,190,0) 18%,rgba(255,236,190,.5) 50%,rgba(255,236,190,0) 82%,transparent 100%);animation:fxSweep .5s ease-out}
+#fxv.f-heavy{background:radial-gradient(circle at 50% 62%,transparent 38%,rgba(255,150,60,.55) 100%);animation:fxRing .45s ease-out}
+#fxv.f-dodge{background:radial-gradient(circle,transparent 52%,rgba(255,255,255,.4) 100%);animation:fxPulse .32s ease-out}
+@keyframes fxPulse{0%{opacity:0}16%{opacity:1}100%{opacity:0}}
+@keyframes fxFlash{0%{opacity:0}6%{opacity:1}22%{opacity:.25}34%{opacity:.8}100%{opacity:0}}
+@keyframes fxRise{0%{opacity:0;transform:translateY(22%)}30%{opacity:1}100%{opacity:0;transform:translateY(-8%)}}
+@keyframes fxRing{0%{opacity:0;transform:scale(1.25)}25%{opacity:1}100%{opacity:0;transform:scale(1)}}
+@keyframes fxSweep{0%{opacity:0;transform:translateX(-32%)}30%{opacity:1}100%{opacity:0;transform:translateX(32%)}}
+@media (prefers-reduced-motion:reduce){#fxv{display:none}.sk.cast,.sk.unlock{animation:none}}
 /* settings: custom language button + popup, graphics tiles */
 .row.colr{flex-direction:column;align-items:stretch;gap:9px}
 .pickB{display:flex;align-items:center;gap:9px;min-width:170px;justify-content:space-between;padding:9px 12px;border-radius:12px;background:linear-gradient(180deg,#2c1a27,#1a0f18);border:1px solid var(--line);font-weight:700;font-size:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
@@ -395,7 +472,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-e</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-f</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -425,16 +502,29 @@ body[data-gfx="hi"] .vig{display:block}
   <div class="joyHint" id="joyHint" data-i="joyHint">Тягни пальцем тут, щоб ходити</div>
   <div class="tip plate" id="tip" data-i="tip"></div>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-dodge" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 7h7M2 12h9M3 17h7"/></g><path fill="currentColor" d="M13 5.2l8.6 6.8-8.6 6.8z"/></symbol>
+<symbol id="i-spin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5.2 9.5A7.5 7.5 0 0 1 18.6 7.6"/><path d="M18.8 14.5A7.5 7.5 0 0 1 5.4 16.4"/></g><path fill="currentColor" d="M20.6 4.6l.4 5.6-5.5-1.2zM3.4 19.4L3 13.8l5.5 1.2z"/><circle cx="12" cy="12" r="2.3" fill="currentColor"/></symbol>
+<symbol id="i-heavy" viewBox="0 0 24 24"><path fill="currentColor" d="M12.0 1.6L13.9 7.4L19.4 4.6L16.6 10.1L22.4 12.0L16.6 13.9L19.4 19.4L13.9 16.6L12.0 22.4L10.1 16.6L4.6 19.4L7.4 13.9L1.6 12.0L7.4 10.1L4.6 4.6L10.1 7.4z"/><circle cx="12" cy="12" r="3.1" fill="#fff" opacity=".85"/></symbol>
+<symbol id="i-fire" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c1 4.2 6.2 6.2 6.2 12a6.2 6.2 0 0 1-12.4 0c0-3.2 2-4.8 3.2-6.4.4 1.8 1.3 2.4 2.1 2.6C10.8 8.2 11 5.2 12 2z"/><path fill="#fff" opacity=".8" d="M12 12.6c.9 1.7 2.7 2.5 2.7 4.5a2.7 2.7 0 0 1-5.4 0c0-1.3.8-1.9 1.5-2.7.4.8.8 1 1.2 1z"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path fill="currentColor" d="M13.4 1.8L4.6 13.6h5.8L8.8 22.4l10.4-13h-6.2z"/><path fill="#fff" opacity=".55" d="M13.4 1.8L8.4 13.6h2z"/></symbol>
+<symbol id="i-heal" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21.4S3.6 16 3.6 9.9A4.6 4.6 0 0 1 12 7.4a4.6 4.6 0 0 1 8.4 2.5c0 6.1-8.4 11.5-8.4 11.5z"/><path fill="#073a22" opacity=".7" d="M10.9 9h2.2v2.4h2.4v2.2h-2.4V16h-2.2v-2.4H8.5v-2.2h2.4z"/></symbol>
+<symbol id="i-blaze" viewBox="0 0 24 24"><path fill="currentColor" d="M21 3l-.5 5L10.6 17.8 6.2 13.4 16 3.6z"/><path fill="currentColor" d="M5.2 12.4l1.6-1.6 6.4 6.4-1.6 1.6zM8.6 15.4l1.8 1.8-4.4 4.4-1.6-1.6z"/><path fill="#fff" opacity=".8" d="M4.6 3.2c.4 1.2 1.9 1.6 1.9 3.2A1.9 1.9 0 0 1 2.7 6.4c0-.9.6-1.4 1-2 .3.5.5.6.9.6z"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.4l8 3v6.3c0 5-3.4 8.4-8 9.9-4.6-1.5-8-4.9-8-9.9V5.4z"/><path fill="#fff" opacity=".4" d="M12 4.9l5.6 2.1v4.7c0 3.6-2.2 6.3-5.6 7.5z"/></symbol>
+<symbol id="i-attack" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l14 14M19 5L5 19"/><path d="M3.6 9.4l5-5M20.4 9.4l-5-5M3.6 14.6l5 5M20.4 14.6l-5 5" stroke-width="1.8"/></g></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10V7.5a5 5 0 0 1 10 0V10h1.2A1.8 1.8 0 0 1 20 11.8v8.4a1.8 1.8 0 0 1-1.8 1.8H5.8A1.8 1.8 0 0 1 4 20.2v-8.4A1.8 1.8 0 0 1 5.8 10zm2.2 0h5.6V7.5a2.8 2.8 0 0 0-5.6 0z"/></symbol>
+</defs></svg>
+<div id="fxv"></div>
   <div class="pad" id="pad">
-    <button class="sk ddg" data-a="dodge" data-tk="aDodge">💨<em>N</em><small class="skl" data-i="aDodge"></small></button>
-    <button class="sk spn" data-a="spin" data-tk="aSpin">🌀<em>M</em><small class="skl" data-i="aSpin"></small></button>
-    <button class="sk hvy" data-a="heavy" data-tk="aHeavy">💥<em>X</em><small class="skl" data-i="aHeavy"></small></button>
-    <button class="sk fir" data-a="fire" data-tk="aFire">🔥<em>C</em><small class="skl" data-i="aFire"></small></button>
-    <button class="sk blt" data-a="bolt" data-tk="aBolt">⚡<em>V</em><small class="skl" data-i="aBolt"></small></button>
-    <button class="sk hel" data-a="heal" data-tk="aHeal">💚<em>B</em><small class="skl" data-i="aHeal"></small></button>
-    <button class="sk blz" data-a="blaze" data-tk="aBlaze">🗡️<em>G</em><small class="skl" data-i="aBlaze"></small></button>
-    <button class="sk shl" data-a="shield" data-tk="aShield">🛡️<em>H</em><small class="skl" data-i="aShield"></small></button>
-    <button class="sk atk" data-a="attack" data-tk="aAttack">⚔<em>Z</em><small class="skl" data-i="aAttack"></small></button>
+    <button class="sk ddg" data-a="dodge" data-tk="aDodge"><svg class="ic" viewBox="0 0 24 24"><use href="#i-dodge"/></svg><b class="cdn"></b><i class="lk"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg><b></b></i><em>N</em><small class="skl" data-i="aDodge"></small></button>
+    <button class="sk spn" data-a="spin" data-tk="aSpin"><svg class="ic" viewBox="0 0 24 24"><use href="#i-spin"/></svg><b class="cdn"></b><i class="lk"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg><b></b></i><em>M</em><small class="skl" data-i="aSpin"></small></button>
+    <button class="sk hvy" data-a="heavy" data-tk="aHeavy"><svg class="ic" viewBox="0 0 24 24"><use href="#i-heavy"/></svg><b class="cdn"></b><i class="lk"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg><b></b></i><em>X</em><small class="skl" data-i="aHeavy"></small></button>
+    <button class="sk fir" data-a="fire" data-tk="aFire"><svg class="ic" viewBox="0 0 24 24"><use href="#i-fire"/></svg><b class="cdn"></b><i class="lk"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg><b></b></i><em>C</em><small class="skl" data-i="aFire"></small></button>
+    <button class="sk blt" data-a="bolt" data-tk="aBolt"><svg class="ic" viewBox="0 0 24 24"><use href="#i-bolt"/></svg><b class="cdn"></b><i class="lk"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg><b></b></i><em>V</em><small class="skl" data-i="aBolt"></small></button>
+    <button class="sk hel" data-a="heal" data-tk="aHeal"><svg class="ic" viewBox="0 0 24 24"><use href="#i-heal"/></svg><b class="cdn"></b><i class="lk"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg><b></b></i><em>B</em><small class="skl" data-i="aHeal"></small></button>
+    <button class="sk blz" data-a="blaze" data-tk="aBlaze"><svg class="ic" viewBox="0 0 24 24"><use href="#i-blaze"/></svg><b class="cdn"></b><i class="lk"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg><b></b></i><em>G</em><small class="skl" data-i="aBlaze"></small></button>
+    <button class="sk shl" data-a="shield" data-tk="aShield"><svg class="ic" viewBox="0 0 24 24"><use href="#i-shield"/></svg><b class="cdn"></b><i class="lk"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg><b></b></i><em>H</em><small class="skl" data-i="aShield"></small></button>
+    <button class="sk atk" data-a="attack" data-tk="aAttack"><svg class="ic" viewBox="0 0 24 24"><use href="#i-attack"/></svg><b class="cdn"></b><i class="lk"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg><b></b></i><em>Z</em><small class="skl" data-i="aAttack"></small></button>
   </div>
 
   <div class="modal" id="mTree"><div class="sheet">
@@ -462,10 +552,18 @@ body[data-gfx="hi"] .vig{display:block}
     <div class="shead"><h2 data-i="inv">Інвентар</h2><button class="x" data-close aria-label="✕">✕</button></div>
     <p class="sub" data-i="invHint"></p>
     <div class="invWrap">
-      <div class="invL"><div class="bagHead"><h3 class="h3" data-i="equipTitle"></h3><button class="btn main sm" id="eqBest">⭐ <span data-i="eqBest">Вдягнути найкраще</span></button></div><div class="eqGrid" id="eqGrid"></div><div class="eqSum" id="eqSum"></div></div>
+      <div class="invL"><div class="bagHead"><h3 class="h3" data-i="equipTitle"></h3><button class="btn main sm" id="eqBest">⭐ <span data-i="eqBest">Вдягнути найкраще</span></button><button class="btn sm" id="invForge" type="button">🔨 <span data-i="forge"></span></button></div><div class="eqGrid" id="eqGrid"></div><div class="eqSum" id="eqSum"></div></div>
       <div class="invR"><div class="bagHead"><h3 class="h3"><span data-i="bag"></span> <span id="bagCnt"></span></h3><div class="asw"><button class="btn sm asb" id="asBtn" type="button"><span data-i="asell"></span> <span class="asd" id="asDots"></span></button><button class="btn sm" id="sellCommon" data-i="sellCommon"></button></div></div><div class="bagGrid" id="bagGrid"></div></div>
     </div>
     <div class="idet" id="idet"></div>
+  </div></div>
+
+  <div class="modal" id="mForge"><div class="sheet">
+    <div class="shead"><h2>🔨 <span data-i="forge"></span></h2><button class="x" data-close aria-label="✕">✕</button></div>
+    <div class="fgGold">🪙 <b id="fgGold">0</b></div>
+    <div class="tabs"><button class="tab ftab on" type="button" data-ft="fgU" data-i="fgUp"></button><button class="tab ftab" type="button" data-ft="fgS" data-i="fgShop"></button></div>
+    <div class="fpane on" id="fgU"></div>
+    <div class="fpane" id="fgS"></div>
   </div></div>
 
   <div class="modal" id="mDrops"><div class="sheet">
@@ -477,7 +575,7 @@ body[data-gfx="hi"] .vig{display:block}
 
   <div class="modal" id="mPause"><div class="sheet set">
     <div class="shead"><h2 data-i="pause">Пауза</h2><button class="x" data-close aria-label="Закрити">✕</button></div>
-    <div class="pacts"><button class="btn main" data-close data-i="resume">▶ Продовжити</button><button class="btn" id="pTree"></button><button class="btn" id="pInv"></button><button class="btn" id="pDrops"></button><button class="btn" id="pBest"></button></div>
+    <div class="pacts"><button class="btn main" data-close data-i="resume">▶ Продовжити</button><button class="btn" id="pTree"></button><button class="btn" id="pInv"></button><button class="btn" id="pDrops"></button><button class="btn" id="pBest"></button><button class="btn" id="pForge"></button></div>
     <h3 class="h3" data-i="settings">Налаштування</h3>
     <div class="row"><div><b data-i="acc">Акаунт</b><div class="m" id="accWho"></div></div><div class="accb" id="accBtns"></div></div>
     <div class="row"><div><b data-i="nick">Нікнейм</b><div class="m" data-i="nickHint">Показується над героєм</div></div><div><input id="nickIn" class="inp" maxlength="18" placeholder="…"> <button class="btn" id="nickOk" data-i="save">Зберегти</button></div></div>
@@ -693,6 +791,19 @@ eqBestDone:"Вдягнуто кращих речей: {n}|Equipped {n} better it
 eqBestNone:"Ти вже вдягнув найкраще|You already wear the best|Tu portes déjà le meilleur|Du trägst schon das Beste|已穿戴最佳装备|Ya llevas lo mejor|Indossi già il meglio|Masz już najlepsze|Você já usa o melhor|すでに最強の装備です|이미 최고 장비를 착용 중입니다",
 perSec:"/с|/s|/s|/s|/秒|/s|/s|/s|/s|/秒|/초",
 dodged:"Ухилився!|Dodged!|Esquivé !|Ausgewichen!|闪避！|¡Esquivado!|Schivato!|Unik!|Esquivou!|回避！|회피!",
+forge:"Кузня|Forge|Forge|Schmiede|铁匠铺|Herrería|Forgia|Kuźnia|Forja|鍛冶場|대장간",
+fgUp:"Прокачка меча|Sword upgrade|Amélioration de l'épée|Schwert verbessern|强化武器|Mejorar espada|Potenzia spada|Ulepsz miecz|Melhorar espada|剣の強化|검 강화",
+fgShop:"Новий меч|New sword|Nouvelle épée|Neues Schwert|新武器|Espada nueva|Nuova spada|Nowy miecz|Espada nova|新しい剣|새 검",
+fgNoSword:"Вдягни меч, щоб його прокачати.|Equip a sword to upgrade it.|Équipe une épée pour l'améliorer.|Rüste ein Schwert aus, um es zu verbessern.|先装备一把武器才能强化。|Equipa una espada para mejorarla.|Equipaggia una spada per potenziarla.|Załóż miecz, aby go ulepszyć.|Equipe uma espada para melhorá-la.|強化するには剣を装備してください。|강화하려면 검을 장착하세요.",
+fgBtn:"Прокачати · 🪙 {n}|Upgrade · 🪙 {n}|Améliorer · 🪙 {n}|Verbessern · 🪙 {n}|强化 · 🪙 {n}|Mejorar · 🪙 {n}|Potenzia · 🪙 {n}|Ulepsz · 🪙 {n}|Melhorar · 🪙 {n}|強化 · 🪙 {n}|강화 · 🪙 {n}",
+fgDone:"Меч +{n}!|Sword +{n}!|Épée +{n} !|Schwert +{n}!|武器 +{n}！|¡Espada +{n}!|Spada +{n}!|Miecz +{n}!|Espada +{n}!|剣 +{n}！|검 +{n}!",
+fgHint:"Золото робить меч сильнішим. Кожен рівень дорожчий. Якщо продати меч, половина золота повернеться.|Gold makes your sword stronger. Each level costs more. Sell the sword and half of that gold comes back.|L'or renforce ton épée. Chaque niveau coûte plus cher. Si tu la vends, la moitié de l'or te revient.|Gold macht dein Schwert stärker. Jede Stufe kostet mehr. Beim Verkauf bekommst du die Hälfte zurück.|金币能让武器更强，等级越高越贵。出售武器会返还一半金币。|El oro hace más fuerte tu espada. Cada nivel cuesta más. Si la vendes, recuperas la mitad.|L'oro rende più forte la spada. Ogni livello costa di più. Se la vendi, ne riavrai la metà.|Złoto wzmacnia miecz. Każdy poziom kosztuje więcej. Po sprzedaży odzyskasz połowę.|O ouro deixa a espada mais forte. Cada nível custa mais. Ao vender, metade do ouro volta.|ゴールドで剣が強くなります。レベルが上がるほど高くなります。売ると半分が戻ります。|골드로 검을 강하게 만듭니다. 레벨이 오를수록 비쌉니다. 팔면 골드의 절반이 돌아옵니다.",
+fgShopHint:"Нові мечі. Асортимент змінюється з прогресом.|New swords. The stock changes as you progress.|Nouvelles épées. Le stock change avec ta progression.|Neue Schwerter. Das Angebot wechselt mit deinem Fortschritt.|新武器。库存会随进度更新。|Espadas nuevas. El stock cambia con tu progreso.|Nuove spade. Le scorte cambiano con i progressi.|Nowe miecze. Oferta zmienia się wraz z postępem.|Espadas novas. O estoque muda conforme você avança.|新しい剣。品揃えは進行に応じて変わります。|새 검. 진행에 따라 재고가 바뀝니다.",
+fgRefresh:"Оновити · 🪙 {n}|Refresh · 🪙 {n}|Renouveler · 🪙 {n}|Erneuern · 🪙 {n}|刷新 · 🪙 {n}|Renovar · 🪙 {n}|Aggiorna · 🪙 {n}|Odśwież · 🪙 {n}|Atualizar · 🪙 {n}|入れ替え · 🪙 {n}|새로고침 · 🪙 {n}",
+fgBuy:"Купити · 🪙 {n}|Buy · 🪙 {n}|Acheter · 🪙 {n}|Kaufen · 🪙 {n}|购买 · 🪙 {n}|Comprar · 🪙 {n}|Compra · 🪙 {n}|Kup · 🪙 {n}|Comprar · 🪙 {n}|購入 · 🪙 {n}|구매 · 🪙 {n}",
+fgBought:"Куплено: {n}|Bought: {n}|Acheté : {n}|Gekauft: {n}|已购买：{n}|Comprado: {n}|Acquistato: {n}|Kupiono: {n}|Comprado: {n}|購入：{n}|구매: {n}",
+fgSold:"Продано|Sold|Vendu|Verkauft|已售出|Vendido|Venduto|Sprzedane|Vendido|売り切れ|품절",
+fgFull:"Сумка повна|Bag is full|Sac plein|Tasche voll|背包已满|Mochila llena|Borsa piena|Torba pełna|Mochila cheia|バッグがいっぱい|가방이 가득 참",
 aShield:"Щит духу|Spirit Shield|Bouclier spirituel|Geisterschild|灵魂护盾|Escudo espiritual|Scudo dello spirito|Tarcza ducha|Escudo espiritual|魂の盾|영혼 방패"
 };
 const T8={};for(const k in T8src)T8[k]=S8(T8src[k]);
@@ -1123,6 +1234,12 @@ const SLOTS=[
  {k:"relic",ic:"🔮",main:["cdr","dropBonus|goldBonus|xpBonus"],n:S8("Реліквія|Relic|Relique|Relikt|圣物|Reliquia|Reliquia|Relikwia|Relíquia|聖遺物|성물"),names:[[S8("Стара монета|Old Coin|Vieille pièce|Alte Münze|旧硬币|Moneda vieja|Moneta antica|Stara moneta|Moeda antiga|古い硬貨|오래된 동전"),S8("Кістяна фішка|Bone Token|Jeton d'os|Knochenmarke|骨制筹码|Ficha de hueso|Gettone d'osso|Kościany żeton|Ficha de osso|骨の札|뼈 패"),S8("Тріснутий кристал|Cracked Crystal|Cristal fêlé|Gesprungener Kristall|裂纹水晶|Cristal agrietado|Cristallo incrinato|Pęknięty kryształ|Cristal rachado|ひび割れた水晶|금 간 수정")],[S8("Око ворона|Raven's Eye|Œil du corbeau|Rabenauge|渡鸦之眼|Ojo del cuervo|Occhio del corvo|Oko kruka|Olho do corvo|鴉の目|까마귀의 눈"),S8("Рунічний камінь|Rune Stone|Pierre runique|Runenstein|符文石|Piedra rúnica|Pietra runica|Kamień runiczny|Pedra rúnica|ルーンストーン|룬석"),S8("Пісковий годинник долі|Hourglass of Fate|Sablier du destin|Sanduhr des Schicksals|命运沙漏|Reloj de arena del destino|Clessidra del destino|Klepsydra losu|Ampulheta do destino|運命の砂時計|운명의 모래시계")],[S8("Серце дракона|Dragon Heart|Cœur de dragon|Drachenherz|龙之心|Corazón de dragón|Cuore di drago|Smocze serce|Coração de dragão|竜の心臓|용의 심장"),S8("Сльоза богині|Goddess's Tear|Larme de la déesse|Träne der Göttin|女神之泪|Lágrima de la diosa|Lacrima della dea|Łza bogini|Lágrima da deusa|女神の涙|여신의 눈물"),S8("Осколок вічності|Shard of Eternity|Éclat d'éternité|Splitter der Ewigkeit|永恒碎片|Fragmento de eternidad|Frammento d'eternità|Odłamek wieczności|Fragmento da eternidade|永遠の欠片|영원의 파편")]]}
 ];
 const SLOTI={};SLOTS.forEach((s,i)=>SLOTI[s.k]=i);
+/* forge: a sword can be upgraded with gold (it.up = level, it.inv = gold put in); stats are scaled on the fly so saves stay small */
+const UP_MAX=20;
+const upF=(k,up)=>1+(k==="atk"?.12:.05)*up;
+function svAt(k,v,up){if(!up)return v;const d=ISTAT[k],x=v*upF(k,up);return d&&d[3]?Math.round(x*10)/10:Math.round(x)}
+const ist=it=>it.up?it.st.map(([k,v])=>[k,svAt(k,v,it.up)]):it.st;
+function loadForge(){const f=LS.get(PK("r2_forge"),null),o={seed:-1,stock:[],rr:0};if(f&&typeof f==="object"){o.seed=f.seed|0;o.rr=clampN(f.rr|0,0,50);if(Array.isArray(f.stock))o.stock=f.stock.slice(0,4).map(x=>x&&x.sold?{sold:1,id:x.id|0}:(validItem(x)&&x.s===SLOTI.weapon?x:null))}return o}
 // stat: [base, per item level, cap per item (0 = none), decimals]
 const ISTAT={atk:[2,.6,0,0],maxhp:[10,4,0,0],armor:[1,.25,0,0],crit:[1,.08,12,0],critDmg:[5,.6,60,0],atkSpd:[2,.12,15,0],speed:[2,.1,12,0],fireBonus:[5,.8,0,0],lightningBonus:[5,.8,0,0],healBonus:[5,.8,0,0],regen:[.3,.04,0,1],lifesteal:[.5,.04,6,1],goldBonus:[3,.3,60,0],xpBonus:[3,.3,60,0],dmgRed:[1,.06,10,0],cdr:[1,.05,8,0],thorns:[3,.3,40,0],dropBonus:[2,.15,25,0],evade:[1,.05,10,0],killHeal:[1,.15,0,0],execute:[4,.3,40,0],bossDmg:[4,.3,40,0]};
 const LUCK_MAX=20;
@@ -1154,7 +1271,7 @@ const DEF_P={level:1,xp:0,gold:120,hp:100};
 let accounts=LS.get("r2_accounts",{});
 let session=LS.get("r2_session",null);if(session&&!accounts[session])session=null;
 const PK=k=>session?"r2u:"+session+":"+k.slice(3):k;
-let P,tal,train,kills,nickname,battleNo,bag,eq,luck,itemSeq;
+let P,tal,train,kills,nickname,battleNo,bag,eq,luck,itemSeq,forge={seed:-1,stock:[],rr:0};
 function loadState(){
  P=Object.assign({},DEF_P,LS.get(PK("r2_hero"),{}));
  tal=LS.get(PK("r2_tal"),[]).filter(id=>TALN[id]);
@@ -1164,8 +1281,9 @@ function loadState(){
  battleNo=LS.get(PK("r2_battle"),1);
  bag=(LS.get(PK("r2_bag"),[])||[]).filter(validItem);
  eq=LS.get(PK("r2_eq"),{})||{};for(const k in eq)if(!validItem(eq[k])||eq[k].s!==SLOTI[k])delete eq[k];
+ for(const it of bag.concat(Object.values(eq)))if(it.up||it.inv){it.up=it.s===SLOTI.weapon?clampN(it.up|0,0,UP_MAX):0;it.inv=Math.max(0,it.inv|0)}
  luck=Object.assign({lvl:0,until:0},LS.get(PK("r2_luck"),{}));luck.lvl=clampN(luck.lvl|0,0,LUCK_MAX);
- itemSeq=LS.get(PK("r2_iseq"),1);
+ itemSeq=LS.get(PK("r2_iseq"),1);forge=loadForge();
 }
 function clampN(v,a,b){return v<a?a:v>b?b:v}
 function validItem(it){return it&&typeof it==="object"&&SLOTS[it.s]&&RAR[it.r]&&Array.isArray(it.st)&&it.st.every(x=>Array.isArray(x)&&STN[x[0]]&&isFinite(x[1]))}
@@ -1174,16 +1292,17 @@ loadState();
 let S=Object.assign({sfx:70,music:30,musicOn:false},LS.get("r2_set",{}));
 /* if the last start never finished: 2nd try = Fast graphics, 3rd try = 2D without three.js (counter is cleared once the game has really run) */
 {const n=(+LS.get("r2_boot",0)||0)+1;LS.set("r2_boot",n);BOOT.safe=n>=3?2:n===2?1:0;if(BOOT.safe&&S.gfx!=="lo"){S.gfx="lo";LS.set("r2_set",S)}}
-function save(){LS.set(PK("r2_hero"),{level:P.level,xp:P.xp,gold:P.gold,hp:P.hp});LS.set(PK("r2_tal"),tal);LS.set(PK("r2_train"),train);LS.set(PK("r2_kills"),kills);LS.set(PK("r2_nick"),nickname);LS.set(PK("r2_battle"),battleNo);LS.set(PK("r2_bag"),bag);LS.set(PK("r2_eq"),eq);LS.set(PK("r2_luck"),luck);LS.set(PK("r2_iseq"),itemSeq);LS.set("r2_session",session);LS.set("r2_lang",lang);LS.set("r2_set",S)}
+function save(){LS.set(PK("r2_hero"),{level:P.level,xp:P.xp,gold:P.gold,hp:P.hp});LS.set(PK("r2_tal"),tal);LS.set(PK("r2_train"),train);LS.set(PK("r2_kills"),kills);LS.set(PK("r2_nick"),nickname);LS.set(PK("r2_battle"),battleNo);LS.set(PK("r2_bag"),bag);LS.set(PK("r2_eq"),eq);LS.set(PK("r2_luck"),luck);LS.set(PK("r2_iseq"),itemSeq);LS.set(PK("r2_forge"),forge);LS.set("r2_session",session);LS.set("r2_lang",lang);LS.set("r2_set",S)}
 
 var _sh={}; // colour cache for shade(); must exist before the first recalc() runs at start-up
 function recalc(){
  const lv=P.level,s={maxhp:100+14*(lv-1),atk:15+3*(lv-1),armor:0,crit:8,critDmg:0,atkSpd:0,dmgMul:0,dmgRed:0,thorns:0,dodgeCd:0,fireBonus:0,fireRad:0,fireCd:0,burn:0,burnDmg:0,fireMulti:0,lightningBonus:0,chain:1,boltCd:0,boltTwice:0,healBonus:0,regen:0,lifesteal:0,healCd:0,revive:0,goldBonus:0,xpBonus:0,speed:0,cdr:0,spinBonus:0,spinCd:0,dropBonus:0,rarBonus:0,heavyBonus:0,blazeBonus:0,bossDmg:0,execute:0,killHeal:0,evade:0,shieldCd:0,heavyCd:0,maxhpPct:0,armorPct:0,goldFlat:0,xpFlat:0,killCdr:0,critHeal:0,opener:0,knock:0,reach:0};
  for(const id of tal){const n=TALN[id];if(n)for(const [k,v] of n.fx)s[k]+=v}
- const ieq={};for(const k in eq){const it=eq[k];if(it)for(const [a,v] of it.st){s[a]+=v;ieq[a]=(ieq[a]||0)+v}}
+ const ieq={};for(const k in eq){const it=eq[k];if(it)for(const [a,v] of ist(it)){s[a]+=v;ieq[a]=(ieq[a]||0)+v}}
  P.eqStats=ieq;
  const HL=Object.assign({},HERO_BASE),rc=k=>eq[k]?RAR[eq[k].r].col:null;
- if(eq.weapon){HL.glowCol=rc("weapon");if(eq.weapon.r>=3){HL.glowIdle=.5;HL.blade=shade(rc("weapon"),.7)}}
+ if(eq.weapon){HL.glowCol=rc("weapon");if(eq.weapon.r>=3){HL.glowIdle=.5;HL.blade=shade(rc("weapon"),.7)}
+  if(eq.weapon.up>=5)HL.glowIdle=Math.max(HL.glowIdle||0,Math.min(.95,.3+eq.weapon.up*.03))}
  if(eq.armor){HL.trim=rc("armor");if(eq.armor.r>=3)HL.armor=shade(rc("armor"),.45)}
  if(eq.helmet)HL.helm=rc("helmet");
  if(eq.boots)HL.boot=shade(rc("boots"),-.55);
@@ -1452,6 +1571,7 @@ let tipHidden=false;function hideTip(){if(tipHidden)return;tipHidden=true;setTim
 /* ============ HERO ============ */
 const free=()=>hero.state==="idle"||hero.state==="walk";
 function setHero(s){hero.state=s;hero.st=0;hero.done=false}
+function skFx(a){const v=$("fxv");if(!v||S.fxOff)return;const k={fire:"fire",blaze:"blaze",bolt:"bolt",heal:"heal",shield:"shield",spin:"spin",heavy:"heavy",dodge:"dodge"}[a];if(!k)return;v.className="";void v.offsetWidth;v.className="f-"+k}
 function tryAction(a){
  ac();if(S.musicOn)musicStart();
  if(hero.state==="dead"||paused)return;
@@ -1464,10 +1584,10 @@ function tryAction(a){
   if(free()){h.combo=0;h.queued=false;setHero("attack");SFX.swing()}
   return;
  }
- if(a==="dodge"){if(h.cd.dodge>0||h.state==="dodge")return;if(!(free()||h.state==="attack"||h.state==="hurt"))return;const m=moveVec();let vx=m.x,vz=m.z;if(Math.hypot(vx,vz)<.2){const fd=hdir();vx=fd.x;vz=fd.z*MZ}const d=Math.hypot(vx,vz);h.dvx=vx/d;h.dvz=vz/d;if(Math.abs(vx)>.1&&!isFP())h.face=vx>0?1:-1;setHero("dodge");h.inv=.42;h.cd.dodge=CD.dodge*cdMul("dodge");SFX.dodge();return}
+ if(a==="dodge"){if(h.cd.dodge>0||h.state==="dodge")return;if(!(free()||h.state==="attack"||h.state==="hurt"))return;const m=moveVec();let vx=m.x,vz=m.z;if(Math.hypot(vx,vz)<.2){const fd=hdir();vx=fd.x;vz=fd.z*MZ}const d=Math.hypot(vx,vz);h.dvx=vx/d;h.dvz=vz/d;if(Math.abs(vx)>.1&&!isFP())h.face=vx>0?1:-1;setHero("dodge");h.inv=.42;h.cd.dodge=CD.dodge*cdMul("dodge");SFX.dodge();skFx("dodge");return}
  if(!free()||h.cd[a]>0)return;
  if(a==="heal"&&P.hp>=P.maxhp){toast("❤ "+Math.ceil(P.hp)+"/"+P.maxhp);return}
- h.cd[a]=CD[a]*cdMul(a);setHero(a);
+ h.cd[a]=CD[a]*cdMul(a);setHero(a);skFx(a);
  if(a==="heavy")SFX.swing();
  if(a==="spin"){h.hit1=false;SFX.spin()}
 }
@@ -1778,8 +1898,9 @@ function makeItem(r,slot,lvlOverride){
  while(st.length<Math.max(S.main.length,R.ns)&&pool.length){const k=pool.splice(rint(0,pool.length-1),1)[0];add(k)}
  const ng=S.names[r<=1?0:r<=3?1:2];const it={id:itemSeq++,s:si,r,l:lvl,st,nw:true,n:rint(0,ng.length-1),e:rint(0,4)};if(uq)it.u=1;return it;
 }
-const itemName=it=>{if(it.u&&UNQ[it.r]&&UNQ[it.r][it.s])return L(UNQ[it.r][it.s]);const opts=SLOTS[it.s].names[it.r<=1?0:it.r<=3?1:2],b=L(opts[(it.n!=null?it.n:it.id%3)%opts.length]),E=RAR[it.r].ep;return E?L(E[(it.e!=null?it.e:it.id)%E.length]).split("{n}").join(b):b};
-const sellPrice=it=>Math.round((5+it.l*2)*RAR[it.r].mul*RAR[it.r].mul);
+const itemName0=it=>{if(it.u&&UNQ[it.r]&&UNQ[it.r][it.s])return L(UNQ[it.r][it.s]);const opts=SLOTS[it.s].names[it.r<=1?0:it.r<=3?1:2],b=L(opts[(it.n!=null?it.n:it.id%3)%opts.length]),E=RAR[it.r].ep;return E?L(E[(it.e!=null?it.e:it.id)%E.length]).split("{n}").join(b):b};
+const itemName=it=>(it.up?"+"+it.up+" ":"")+itemName0(it);
+const sellPrice=it=>Math.round((5+it.l*2)*RAR[it.r].mul*RAR[it.r].mul)+Math.round((it.inv||0)*.5);
 const easeBk=t=>1+2.70158*Math.pow(t-1,3)+1.70158*Math.pow(t-1,2);
 function spawnLoot(e,it){
  const R=RAR[it.r],h0=e.h+(e.cfg?e.cfg.hgt*e.s*.55:20),sd=Math.random()<.5?-1:1;
@@ -3911,7 +4032,7 @@ function popCls(el,c){el.classList.remove(c);void el.offsetWidth;el.classList.ad
 const _dc={};function setTx(id,v){v=String(v);if(_dc[id]!==v){_dc[id]=v;$(id).textContent=v}}
 function setW(id,p){const v=(Math.round(p*10)/10)+"%";if(_dc[id+"w"]!==v){_dc[id+"w"]=v;$(id).style.width=v}}
 function hud(){
- {const lv=String(P.level),gd=String(P.gold);if(_dc.hLv!==undefined&&_dc.hLv!==lv)popCls($("hLv"),"pop");if(_dc.hGold!==undefined&&_dc.hGold!==gd)popCls($("hGold"),"bump")}
+ {const lv=String(P.level),gd=String(P.gold);if(_dc.hLv!==undefined&&_dc.hLv!==lv)popCls($("hLv"),"popN");if(_dc.hGold!==undefined&&_dc.hGold!==gd)popCls($("hGold"),"bump")}
  setTx("hName",nickname);setTx("hLv",P.level);if(_dc.nn!==!!nickname){_dc.nn=!!nickname;$("hName").parentNode.classList.toggle("nonick",!nickname)}
  {const need=100+P.level*45;setW("xpBar",P.xp/need*100);setTx("xpTxt",Math.floor(P.xp)+" / "+need)}
  setTx("hGold",P.gold);
@@ -3920,7 +4041,10 @@ function hud(){
  const nn=bag.filter(x=>x.nw).length,ib=$("invBdg");setTx("invBdg",nn>9?"9+":nn);ib.classList.toggle("on",nn>0);
  $("luckBdg").classList.toggle("on",!luck.until&&luck.lvl<LUCK_MAX&&P.gold>=luckCost(luck.lvl));
  const hpr=clamp((P.hp||0)/(P.maxhp||1),0,1);setW("hpBar",hpr*100);setTx("hpTxt",Math.ceil(P.hp)+" / "+P.maxhp);
- (hud.sk||(hud.sk=[...document.querySelectorAll(".sk")])).forEach(b=>{const a=b.dataset.a;if(a==="attack"||a==="turn")return;const cd=Math.round(clamp((hero.cd[a]||0)/(CD[a]*cdMul(a)),0,1)*100)/100;if(b._cd!==cd){if(b._cd>0&&cd===0){popCls(b,"ready");if(CD[a]>=6&&!paused)SFX.ready()}b._cd=cd;b.style.setProperty("--cd",cd)}const locked=P.level<(SKLV[a]||1);if(b._lk!==locked){b._lk=locked;b.classList.toggle("locked",locked)}if(locked){const lv="🔒 "+t("lv")+" "+SKLV[a];if(b.dataset.lv!==lv)b.dataset.lv=lv}});
+ (hud.sk||(hud.sk=[...document.querySelectorAll(".sk")])).forEach(b=>{const a=b.dataset.a;if(a==="turn")return;
+  if(a!=="attack"){const rem=hero.cd[a]||0,cd=Math.round(clamp(rem/(CD[a]*cdMul(a)),0,1)*100)/100;if(b._cd!==cd){if(b._cd>0&&cd===0){popCls(b,"ready");if(CD[a]>=6&&!paused)SFX.ready()}if(!(b._cd>0)&&cd>0)popCls(b,"cast");b._cd=cd;b.style.setProperty("--cd",cd);b.classList.toggle("cd",cd>0)}
+   const ct=rem>0?(rem>=1?String(Math.ceil(rem)):rem.toFixed(1)):"";if(b._ct!==ct){b._ct=ct;b.querySelector(".cdn").textContent=ct}}
+  const locked=P.level<(SKLV[a]||1);if(b._lk!==locked){if(b._lk===true&&!locked)popCls(b,"unlock");b._lk=locked;b.classList.toggle("locked",locked);if(locked){const lb=b.querySelector(".lk b");if(lb)lb.textContent=SKLV[a]||1}}});
  const boss=enemies.find(e=>e.boss&&e.state!=="dead"&&e.delay<=0);
  const bb=$("bossbar"),bs=boss?"block":"none";if(bb.style.display!==bs)bb.style.display=bs;if(boss){setTx("bossName","👑 "+L(boss.cfg.n));setW("bossHp",boss.hp/boss.maxhp*100)}
 }
@@ -3929,7 +4053,7 @@ function cine(){const el=$("cine");el.classList.add("on");SFX.cine();clearTimeou
 function banner(a,b){const el=$("banner");$("banT").textContent=a;$("banS").textContent=b||"";el.classList.remove("show");void el.offsetWidth;el.classList.add("show")}
 let toastT=null;function toast(s,col){const el=$("toast");el.textContent=s;el.style.background=col||"";el.style.color=col?"#10080c":"";el.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),col?1900:1200)}
 function openModal(id){closeModal(true);modalOpen=id;paused=true;$(id).classList.add("on");attackHeld=false;joy.id=null;joy.x=joy.y=0;look.id=null;joyRest();for(const k in keys)keys[k]=false;
- if(id==="mTree")renderTree();if(id==="mBest")buildBestiary();if(id==="mPause")fillSettings();if(id==="mInv"){iSel=null;renderInv()}if(id==="mDrops")renderDrops();SFX.open()}
+ if(id==="mTree")renderTree();if(id==="mBest")buildBestiary();if(id==="mPause")fillSettings();if(id==="mInv"){iSel=null;renderInv()}if(id==="mDrops")renderDrops();if(id==="mForge"){forgeCheck();renderForge()}SFX.open()}
 function closeModal(silent){if(!modalOpen)return;if(typeof hideTip2==="function")hideTip2();if(modalOpen==="mInv")bag.forEach(x=>x.nw=false);if(!silent)SFX.close();$(modalOpen).classList.remove("on");modalOpen=null;paused=false;last=performance.now();if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();if(!silent)save()}
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal()));
 document.querySelectorAll(".modal").forEach(m=>m.addEventListener("pointerdown",e=>{if(e.target!==m||m.id==="mDead")return;if(m.id==="mAuth")openModal("mPause");else closeModal()}));
@@ -4043,13 +4167,13 @@ document.querySelectorAll(".tab[data-tab]").forEach(b=>b.addEventListener("click
 /* ---- inventory ---- */
 let iSel=null;
 function findItem(){if(!iSel)return null;if(iSel.from==="eq")return eq[iSel.k]||null;return bag.find(x=>x.id===iSel.id)||null}
-function itemStatsHTML(it,cmp){
- const m={};if(cmp)for(const [k,v] of cmp.st)m[k]=v;
- let li=it.st.map(([k,v])=>{let d="";if(cmp){const diff=Math.round((v-(m[k]||0))*10)/10;d=diff>0?` <span class="up">▲ ${diff}</span>`:diff<0?` <span class="dn">▼ ${-diff}</span>`:""}return`<li>${statTxt(k,v)}${d}</li>`}).join("");
- if(cmp)for(const [k,v] of cmp.st)if(!it.st.some(x=>x[0]===k))li+=`<li class="dn"><s>${statTxt(k,v)}</s> ▼</li>`;
+function itemStatsHTML(it,cmp,nl){
+ const m={};if(cmp)for(const [k,v] of ist(cmp))m[k]=v;
+ let li=ist(it).map(([k,v])=>{let d="";if(cmp){const diff=Math.round((v-(m[k]||0))*10)/10;d=diff>0?` <span class="up">▲ ${diff}</span>`:diff<0?` <span class="dn">▼ ${-diff}</span>`:""}return`<li>${statTxt(k,v)}${d}</li>`}).join("");
+ if(cmp&&!nl)for(const [k,v] of ist(cmp))if(!it.st.some(x=>x[0]===k))li+=`<li class="dn"><s>${statTxt(k,v)}</s> ▼</li>`;
  return li;
 }
-function itemTipHTML(it){const R=RAR[it.r],S=SLOTS[it.s];return{c:R.col,h:`<b${R.rainbow?' class="rbt"':""}>${S.ic} ${it.u?"★ ":""}${itemName(it)}</b><div class="d">${L(R.n)} · ${t("ilvl",{n:it.l})}</div><div class="d">${it.st.map(([k,v])=>statTxt(k,v)).join("<br>")}</div>`}}
+function itemTipHTML(it){const R=RAR[it.r],S=SLOTS[it.s];return{c:R.col,h:`<b${R.rainbow?' class="rbt"':""}>${S.ic} ${it.u?"★ ":""}${itemName(it)}</b><div class="d">${L(R.n)} · ${t("ilvl",{n:it.l})}</div><div class="d">${ist(it).map(([k,v])=>statTxt(k,v)).join("<br>")}</div>`}}
 function sortedBag(){return bag.slice().sort((a,b)=>b.r-a.r||b.l-a.l||b.id-a.id)}
 function renderInv(){
  $("bagCnt").textContent=`${bag.length}/${BAG_MAX}`;
@@ -4069,9 +4193,10 @@ function renderIDet(){
  if(!it){box.style.setProperty("--rc","#d6a24a");box.innerHTML=`<div class="m">${t(bag.length||Object.keys(eq).length?"pickItem":"noItems")}</div>`;return}
  const R=RAR[it.r],S=SLOTS[it.s],isEq=iSel.from==="eq",cur=eq[S.k];
  box.style.setProperty("--rc",R.col);
- box.innerHTML=`<h4${R.rainbow?' class="rbt"':""}>${S.ic} ${it.u?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${L(S.n)} · ${t("ilvl",{n:it.l})}${isEq?" · ✓ "+t("equipped"):""}</div>${!isEq&&cur?`<div class="rr">${t("vsEq")}: ${SLOTS[cur.s].ic} <span style="color:${RAR[cur.r].col}">${itemName(cur)}</span></div>`:""}<ul>${itemStatsHTML(it,isEq?null:cur)}</ul><div class="acts">${isEq?`<button class="btn" id="iUn">${t("unequip")}</button>`:`<button class="btn main" id="iEq">${t("equip")}</button>`}<button class="btn warn" id="iSell">${t("sellFor",{n:sellPrice(it)})}</button></div>`;
+ box.innerHTML=`<h4${R.rainbow?' class="rbt"':""}>${S.ic} ${it.u?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${L(S.n)} · ${t("ilvl",{n:it.l})}${isEq?" · ✓ "+t("equipped"):""}</div>${!isEq&&cur?`<div class="rr">${t("vsEq")}: ${SLOTS[cur.s].ic} <span style="color:${RAR[cur.r].col}">${itemName(cur)}</span></div>`:""}<ul>${itemStatsHTML(it,isEq?null:cur)}</ul><div class="acts">${isEq?`<button class="btn" id="iUn">${t("unequip")}</button>`:`<button class="btn main" id="iEq">${t("equip")}</button>`}${isEq&&S.k==="weapon"?`<button class="btn" id="iForge">🔨 ${t("forge")}</button>`:""}<button class="btn warn" id="iSell">${t("sellFor",{n:sellPrice(it)})}</button></div>`;
  if($("iEq"))$("iEq").onclick=()=>equipItem(it.id);
  if($("iUn"))$("iUn").onclick=()=>unequipItem(S.k);
+ if($("iForge"))$("iForge").onclick=()=>openModal("mForge");
  $("iSell").onclick=()=>sellItem(it);
 }
 function applyEq(){const ratio=P.maxhp>0?P.hp/P.maxhp:1;recalc();P.hp=Math.max(1,Math.min(P.maxhp,Math.round(P.maxhp*ratio)));save();renderInv();hud()}
@@ -4079,12 +4204,68 @@ function equipItem(id){const i=bag.findIndex(x=>x.id===id);if(i<0)return;const i
  for(let j=0;j<16;j++)parts.push({x:hero.x+rnd(-12,12),z:hero.z,h:rnd(0,50),vx:rnd(-20,20),vz:0,vh:rnd(30,90),g:0,life:rnd(.5,.9),max:.9,col:RAR[it.r].col,size:rnd(1.5,3),t:"dot"});applyEq()}
 function unequipItem(k){if(!eq[k])return;bag.push(eq[k]);const id=eq[k].id;delete eq[k];iSel={from:"bag",id};SFX.close();applyEq()}
 function sellItem(it){const g=sellPrice(it);SFX.sell();if(iSel&&iSel.from==="eq"&&eq[iSel.k]===it)delete eq[iSel.k];else{const i=bag.indexOf(it);if(i<0)return;bag.splice(i,1)}P.gold+=g;iSel=null;toast(t("sold",{n:g}));SFX.coin();applyEq()}
-const itemPow=it=>it.st.reduce((a,[k,v])=>{const d=ISTAT[k],ref=d?Math.max(.1,(d[0]+d[1]*12)*(d[2]?.7:1)):1;return a+v/ref},0);
+const itemPow=it=>ist(it).reduce((a,[k,v])=>{const d=ISTAT[k],ref=d?Math.max(.1,(d[0]+d[1]*12)*(d[2]?.7:1)):1;return a+v/ref},0);
 function equipBest(){let n=0;for(const S of SLOTS){const si=SLOTI[S.k],cur=eq[S.k];let best=cur,bp=cur?itemPow(cur):-1;for(const it of bag)if(it.s===si){const p=itemPow(it);if(p>bp+1e-6){bp=p;best=it}}
   if(best&&best!==cur){bag.splice(bag.indexOf(best),1);if(cur){cur.nw=false;bag.push(cur)}best.nw=false;eq[S.k]=best;n++}}
  if(n){SFX.equip();SFX.unlock();toast("✓ "+t("eqBestDone",{n}),"#d6a24a");for(let j=0;j<30;j++)parts.push({x:hero.x+rnd(-14,14),z:hero.z,h:rnd(0,50),vx:rnd(-20,20),vz:0,vh:rnd(40,100),g:0,life:rnd(.5,.9),max:.9,col:j%2?"#ffd34e":"#ffffff",size:rnd(1.5,3),t:"dot"})}else{toast(t("eqBestNone"));SFX.buzz()}
  iSel=null;applyEq()}
 $("eqBest").onclick=equipBest;
+
+/* ---- forge: upgrade the equipped sword with gold, or buy a new one ---- */
+const forgeUpCost=it=>Math.max(10,Math.round((25+it.l*4)*Math.pow(1.3,it.up|0)*(.7+.3*RAR[it.r].mul)/5)*5);
+const forgeBuyPrice=it=>Math.max(40,Math.round(sellPrice(it)*7+60*it.r*it.r));
+const forgeRerollCost=()=>Math.round((30+battleNo*5)*(1+forge.rr*.35));
+function forgeRoll(){const bt=clamp(Math.floor(battleNo/8),0,4);forge.stock=[bt,bt+1,bt+2,bt+2].map(r=>{const it=makeItem(Math.min(6,r),SLOTI.weapon);it.nw=false;return it})}
+function forgeCheck(){const sd=Math.floor((battleNo-1)/5);if(forge.seed!==sd||forge.stock.length!==4){forge.seed=sd;forge.rr=0;forgeRoll();save()}}
+let fgTab="fgU";
+const fgNeed=()=>{toast(t("need"));SFX.buzz()};
+function renderForgeUp(){
+ const it=eq.weapon,box=$("fgU");
+ if(!it){box.innerHTML=`<div class="fgCard"><div class="m">${t("fgNoSword")}</div><div class="acts"><button class="btn main" id="fgToInv" type="button">🎒 ${t("inv")}</button></div></div>`;$("fgToInv").onclick=()=>openModal("mInv");return}
+ const R=RAR[it.r],up=it.up|0,max=up>=UP_MAX,cost=max?0:forgeUpCost(it),can=P.gold>=cost;
+ const rows=it.st.map(([k,b])=>{const v=svAt(k,b,up),d=max?0:Math.round((svAt(k,b,up+1)-v)*10)/10;return`<li><span>${statTxt(k,v)}</span>${d>0?`<em class="up">▲ ${d}</em>`:""}</li>`}).join("");
+ const pips=Array.from({length:UP_MAX},(_,i)=>`<i${i<up?' class="on"':""}></i>`).join("");
+ box.innerHTML=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc" id="fgIc">🗡️${up?`<b>+${up}</b>`:""}</div><div class="fgNm"><h4${R.rainbow?' class="rbt"':""}>${it.u?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})}</div></div></div><div class="fgPips">${pips}</div><ul class="fgSt">${rows}</ul><div class="fgAct"><button class="btn main fgGo${can||max?"":" dis"}" id="fgGo" type="button"${max?" disabled":""}>${max?t("maxed"):t("fgBtn",{n:cost})}</button>${max?"":'<button class="btn fgX5" id="fgX5" type="button">×5</button>'}</div><p class="sub fgHint">${t("fgHint")}</p></div>`;
+ $("fgGo").onclick=()=>forgeUp(1);if($("fgX5"))$("fgX5").onclick=()=>forgeUp(5);
+}
+function fgBurst(el,col){if(!el||S.fxOff)return;for(let i=0;i<12;i++){const s=document.createElement("i");s.className="spk";const a=Math.random()*6.283,d=32+Math.random()*34;s.style.cssText=`--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d}px;background:${i%3?col:"#fff"}`;el.appendChild(s);setTimeout(()=>s.remove(),750)}}
+function forgeUp(n){
+ const it=eq.weapon;if(!it)return;let done=0;
+ while(done<n&&(it.up|0)<UP_MAX){const c=forgeUpCost(it);if(P.gold<c)break;P.gold-=c;it.inv=(it.inv|0)+c;it.up=(it.up|0)+1;done++}
+ if(!done){if((it.up|0)>=UP_MAX){toast(t("maxed"))}else fgNeed();return}
+ SFX.hit();SFX.coin();if(it.up%5===0||it.up>=UP_MAX){SFX.unlock();banner("🔨 +"+it.up,itemName0(it))}
+ toast("🔨 "+t("fgDone",{n:it.up}),RAR[it.r].col);
+ applyEq();renderForge();
+ const ic=$("fgIc");if(ic){popCls(ic,"fgHit");fgBurst(ic,RAR[it.r].col)}
+}
+function renderForgeShop(){
+ const cur=eq.weapon,box=$("fgS");
+ let h=`<div class="fgTop"><p class="sub">${t("fgShopHint")}</p><button class="btn sm" id="fgRr" type="button">🔄 ${t("fgRefresh",{n:forgeRerollCost()})}</button></div><div class="fgShop">`;
+ forge.stock.forEach((it,i)=>{
+  if(!it){h+=`<div class="fgCard gone"><div class="m">${t("fgSold")}</div></div>`;return}
+  if(it.sold){const bi=bag.find(x=>x.id===it.id);h+=`<div class="fgCard gone"><div class="m">${t("fgSold")} ✓</div>${bi?`<button class="btn main sm" type="button" data-eqid="${bi.id}">${t("equip")}</button>`:""}</div>`;return}
+  const R=RAR[it.r],price=forgeBuyPrice(it),can=P.gold>=price;
+  h+=`<div class="fgCard" style="--rc:${R.col}"><h4${R.rainbow?' class="rbt"':""}>🗡️ ${it.u?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})}</div><ul class="fgSt">${itemStatsHTML(it,cur,1)}</ul><button class="btn main fgBuy${can?"":" dis"}" type="button" data-buy="${i}">${t("fgBuy",{n:price})}</button></div>`});
+ box.innerHTML=h+"</div>";
+ $("fgRr").onclick=()=>{const c=forgeRerollCost();if(P.gold<c){fgNeed();return}P.gold-=c;forge.rr++;forgeRoll();SFX.coin();SFX.ui();save();renderForge();hud()};
+ box.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>forgeBuy(+b.dataset.buy));
+ box.querySelectorAll("[data-eqid]").forEach(b=>b.onclick=()=>{equipItem(+b.dataset.eqid);renderForge()});
+}
+function forgeBuy(i){
+ const it=forge.stock[i];if(!it||it.sold)return;const c=forgeBuyPrice(it);
+ if(P.gold<c){fgNeed();return}
+ if(bag.length>=BAG_MAX){toast(t("fgFull"));SFX.buzz();return}
+ P.gold-=c;it.nw=false;bag.push(it);forge.stock[i]={sold:1,id:it.id};SFX.buy();SFX.coin();
+ toast("🗡️ "+t("fgBought",{n:itemName(it)}),RAR[it.r].col);save();renderForge();renderInv();hud();
+}
+function renderForge(){
+ $("fgGold").textContent=Math.floor(P.gold);
+ document.querySelectorAll(".ftab").forEach(b=>b.classList.toggle("on",b.dataset.ft===fgTab));
+ document.querySelectorAll(".fpane").forEach(p=>p.classList.toggle("on",p.id===fgTab));
+ renderForgeUp();renderForgeShop();
+}
+document.querySelectorAll(".ftab").forEach(b=>b.addEventListener("click",()=>{SFX.tab();fgTab=b.dataset.ft;renderForge()}));
+$("invForge").onclick=$("pForge").onclick=()=>openModal("mForge");
 function fillAsDots(){const m=asMask(),d=$("asDots");if(!d)return;let h="";for(let i=0;i<=AS_MAX;i++)if(m>>i&1)h+=`<i style="--c:${RAR[i].col}"></i>`;if(h!==d._h){d._h=h;d.innerHTML=h||`<em>${t("asOff")}</em>`}}
 function asMatch(){let n=0,g=0;for(const x of bag)if(asOn(x.r)){n++;g+=sellPrice(x)}return{n,g}}
 function renderAsPop(){const m=asMask(),cnt=new Array(AS_MAX+1).fill(0);bag.forEach(x=>{if(x.r<=AS_MAX)cnt[x.r]++});
@@ -4189,7 +4370,7 @@ async function hashPw(pw,salt){
  try{if(window.crypto&&crypto.subtle){const enc=new TextEncoder(),key=await crypto.subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveBits"]);const bits=await crypto.subtle.deriveBits({name:"PBKDF2",salt:enc.encode(salt),iterations:120000,hash:"SHA-256"},key,256);return"p2$"+bufHex(bits)}}catch(e){}
  let h1=0xdeadbeef,h2=0x41c6ce57;const str=salt+"|"+pw;for(let r=0;r<2000;r++)for(let i=0;i<str.length;i++){const ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}return"f1$"+(h1>>>0).toString(16)+(h2>>>0).toString(16)}
 function resetWorld(){slashes=[];debris=[];enemies=[];projs=[];coins=[];bolts=[];parts=[];texts=[];stains=[];loots=[];decals=[];beams=[];hero.slow=0;setHero("idle");hero.inv=1;hero.x=LW*.3;hero.z=60;camX=0;arenaX=0;locked=false;cleared=false;tSel=null;renderTree.did=0;startWave()}
-function switchTo(email,fresh){save();session=email;if(fresh){P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};itemSeq=1;nickname=LS.get(PK("r2_nick"),"")}else loadState();prevVis=null;iSel=null;recalc();if(!(P.hp>0))P.hp=P.maxhp;save();resetWorld();hud()}
+function switchTo(email,fresh){save();session=email;if(fresh){P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};itemSeq=1;forge={seed:-1,stock:[],rr:0};nickname=LS.get(PK("r2_nick"),"")}else loadState();prevVis=null;iSel=null;recalc();if(!(P.hp>0))P.hp=P.maxhp;save();resetWorld();hud()}
 $("aGo").onclick=async()=>{
  const err=m=>{$("aErr").textContent=m};
  const email=$("aEmail").value.trim().toLowerCase(),pw=$("aPass").value;
@@ -4240,11 +4421,11 @@ $("musR").oninput=e=>{S.music=+e.target.value};
 $("musB").onclick=()=>{S.musicOn=!S.musicOn;if(S.musicOn)musicStart();else musicStop();fillSettings();save()};
 let resetArm=0;
 $("resetB").onclick=()=>{if(Date.now()-resetArm>3000){resetArm=Date.now();$("resetB").textContent=t("resetQ");setTimeout(()=>{if(resetArm&&Date.now()-resetArm>=2900)$("resetB").textContent=t("reset")},3000);return}
- resetArm=0;$("resetB").textContent=t("reset");P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};itemSeq=1;tSel=null;prevVis=null;iSel=null;recalc();P.hp=P.maxhp;save();closeModal(true);enemies=[];projs=[];coins=[];loots=[];hero.x=150;hero.z=60;setHero("idle");camX=0;arenaX=0;startWave()};
+ resetArm=0;$("resetB").textContent=t("reset");P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};itemSeq=1;forge={seed:-1,stock:[],rr:0};tSel=null;prevVis=null;iSel=null;recalc();P.hp=P.maxhp;save();closeModal(true);enemies=[];projs=[];coins=[];loots=[];hero.x=150;hero.z=60;setHero("idle");camX=0;arenaX=0;startWave()};
 function applyLang(){LX=Math.max(0,LANGS.findIndex(l=>l[0]===lang));document.documentElement.lang=lang;document.querySelectorAll("[data-i]").forEach(el=>el.textContent=t(el.dataset.i));
  document.querySelectorAll("[data-tk]").forEach(el=>{const em=el.querySelector("em"),lab=t(el.dataset.tk)+(em?" ("+em.textContent+")":"");el.dataset.tip=lab;el.setAttribute("aria-label",lab)});
- $("nickIn").placeholder=t("nickPh");$("pTree").textContent="🌳 "+t("tree");$("pInv").textContent="🎒 "+t("inv");$("pDrops").textContent="🎲 "+t("drops");$("pBest").textContent="📖 "+t("best");
- if(modalOpen==="mTree")renderTree();if(modalOpen==="mInv")renderInv();if(modalOpen==="mDrops")renderDrops();if(modalOpen==="mBest")buildBestiary()}
+ $("nickIn").placeholder=t("nickPh");$("pTree").textContent="🌳 "+t("tree");$("pInv").textContent="🎒 "+t("inv");$("pDrops").textContent="🎲 "+t("drops");$("pBest").textContent="📖 "+t("best");$("pForge").textContent="🔨 "+t("forge");
+ if(modalOpen==="mForge")renderForge();if(modalOpen==="mTree")renderTree();if(modalOpen==="mInv")renderInv();if(modalOpen==="mDrops")renderDrops();if(modalOpen==="mBest")buildBestiary()}
 
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&!modalOpen&&hero.state!=="dead"){openModal("mPause")}});
 window.addEventListener("pagehide",save);
