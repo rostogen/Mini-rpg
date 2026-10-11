@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mini RPG — перевірка телефону</title>
+<style>
+body{margin:0;padding:14px;background:#07040a;color:#f3e9ee;font:15px/1.45 system-ui,sans-serif}
+h1{font-size:18px;color:#d6a24a;margin:0 0 4px}
+p{margin:0 0 10px;color:#b8a4ae;font-size:13px}
+.r{padding:7px 0;border-bottom:1px solid #2a1a26;word-break:break-word}
+.r b{display:inline-block;min-width:1.6em}
+.ok b{color:#5ee08e}.bad b{color:#ff6b7a}.wait b{color:#d6a24a}
+.d{display:block;color:#9a8a96;font:12px/1.35 monospace;margin-left:1.6em}
+#sum{margin:12px 0;padding:10px;border-radius:10px;background:#1f131e;font-weight:600}
+a.btn{display:inline-block;margin:6px 8px 0 0;padding:10px 14px;border-radius:12px;border:1px solid #d6a24a;background:#2a1220;color:#f0d9a0;text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+<h1>Перевірка телефону</h1>
+<p>Зачекай ~15 секунд, потім зроби скріншот усієї сторінки і скинь його.</p>
+<div id="sum">⏳ Перевіряю…</div>
+<div id="rows"></div>
+<div id="links"></div>
+<script>
+(function(){
+var rows=document.getElementById("rows"),sum=document.getElementById("sum"),bad=[],pending=0;
+function row(name){var d=document.createElement("div");d.className="r wait";d.innerHTML="<b>⏳</b> "+name+"<span class=d></span>";rows.appendChild(d);pending++;
+ return function(ok,detail){d.className="r "+(ok?"ok":"bad");d.firstChild.textContent=ok?"✅":"❌";d.lastChild.textContent=detail||"";if(!ok)bad.push(name);if(--pending===0)done()}}
+function done(){sum.textContent=bad.length?"❌ Проблеми: "+bad.join(", "):"✅ Усе гаразд. Проблема не в телефоні чи мережі."}
+function ls(k){try{return localStorage.getItem(k)}catch(e){return "(недоступно)"}}
+function t(){return new Date().getTime()}
+
+var r=row("Телефон");
+r(true,(navigator.userAgent||"").slice(0,140)+"\n"+screen.width+"x"+screen.height+"  dpr "+Math.round(window.devicePixelRatio*10)/10+"  mem "+navigator.deviceMemory+"  cpu "+navigator.hardwareConcurrency+"  lang "+navigator.language);
+
+r=row("Збережені налаштування гри");
+var gfx="auto";try{gfx=JSON.parse(ls("r2_set")).gfx||"auto"}catch(e){}
+r(true,"графіка: "+gfx+"   лічильник невдалих запусків r2_boot: "+(ls("r2_boot")||"0"));
+
+r=row("Сучасний JavaScript");
+var feats={"?.":"var a={};return a?.b","??":"return null??1","async":"return (async function(){})","lookbehind":"return /(?<=a)b/.test('ab')","import()":"return function(){return import('x')}","BigInt":"return typeof BigInt"},miss=[];
+for(var k in feats){try{new Function(feats[k])()}catch(e){miss.push(k)}}
+r(!miss.length,miss.length?"не підтримується: "+miss.join(", "):"усе підтримується");
+
+r=row("WebGL (3D)");
+try{var c=document.createElement("canvas"),gl=c.getContext("webgl2")||c.getContext("webgl");
+ if(!gl)r(false,"WebGL недоступний");else{var x=gl.getExtension("WEBGL_debug_renderer_info");
+  r(true,(window.WebGL2RenderingContext&&gl instanceof WebGL2RenderingContext?"webgl2 ":"webgl1 ")+(x?gl.getParameter(x.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER))+"\nтекстура до "+gl.getParameter(gl.MAX_TEXTURE_SIZE)+"  float-ціль: "+(gl.getExtension("EXT_color_buffer_float")||gl.getExtension("EXT_color_buffer_half_float")?"так":"ні"))}}
+catch(e){r(false,String(e))}
+
+r=row("Швидкість кадрів (1 с)");
+var n=0,t0=t();(function f(){n++;if(t()-t0<1000)requestAnimationFrame(f);else r(n>12,n+" кадрів за секунду (порожня сторінка)")})();
+
+function net(name,url,opt,check,note){
+ var rr=row(name),ts=t(),ctl=window.AbortController?new AbortController():null,fin=false,to=setTimeout(function(){end(false,"немає відповіді 12 с (завис або заблоковано)");if(ctl)ctl.abort()},12000);
+ function end(ok,d){if(fin)return;fin=true;clearTimeout(to);rr(ok,ok||!note?d:d+"\n"+note)}
+ if(!window.fetch)return end(false,"fetch недоступний");
+ if(ctl)opt.signal=ctl.signal;
+ fetch(url,opt).then(function(res){return check(res)}).then(function(d){end(true,((t()-ts)/1000).toFixed(1)+" с  "+(d||""))},function(e){end(false,"помилка: "+(e&&e.message||e))})}
+net("Шрифти Google (fonts.googleapis.com)","https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap",{mode:"no-cors",cache:"no-store"},function(){return "доступні"},"(нова версія гри від шрифтів більше не залежить)");
+net("Three.js з jsdelivr","https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",{mode:"cors"},function(res){if(!res.ok)throw new Error("HTTP "+res.status);return res.arrayBuffer().then(function(b){return Math.round(b.byteLength/1024)+" КБ"})});
+net("Three.js з unpkg (запасний)","https://unpkg.com/three@0.160.0/build/three.module.min.js",{mode:"cors"},function(res){if(!res.ok)throw new Error("HTTP "+res.status);return res.arrayBuffer().then(function(b){return Math.round(b.byteLength/1024)+" КБ"})});
+
+function ver(txt){var m=/__boot=\{v:"([^"]+)"/.exec(txt);return m?m[1]:"невідомо (стара версія)"}
+var base=location.href.replace(/diag\.html.*$/,"");
+var rv=row("Версія гри на сервері і в кеші телефона");
+if(!window.fetch)rv(false,"fetch недоступний");else
+fetch(base+"index.html?x="+t(),{cache:"no-store"}).then(function(a){return a.text()}).then(function(fresh){
+ return fetch(base+"index.html").then(function(b){return b.text()}).then(function(cached){
+  var vf=ver(fresh),vc=ver(cached);rv(vf===vc,"на сервері: "+vf+"\nу телефона: "+vc+(vf===vc?"":"\n→ відкрий гру з ?v="+t()+" щоб оновити кеш"))})}).catch(function(e){rv(false,String(e&&e.message||e))});
+
+var L=document.getElementById("links");
+L.innerHTML='<a class="btn" href="'+base+'?v='+t()+'">▶ Грати (свіжа версія)</a><a class="btn" href="'+base+'?safe=1&v='+t()+'">Швидка графіка</a><a class="btn" href="'+base+'?safe=2&v='+t()+'">Без 3D</a><a class="btn" href="'+base+'?diag=1&v='+t()+'">Гра з діагностикою</a>';
+})();
+</script>
+</body>
+</html>
