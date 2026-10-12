@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.12-b",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.12-c",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -224,6 +224,48 @@ svg.iart{width:100%;height:100%;display:block;overflow:visible;filter:drop-shado
 .asAct{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}.asAct .btn{flex:1;min-width:120px}.asAct .btn:disabled{opacity:.45}
 .eqSum{margin-top:10px;font-size:12.5px;color:#e6d8de;line-height:1.55}
 .eqSum b{color:var(--gold)}
+/* --- equipment screen: hero paper doll --- */
+.eqGrid.doll{grid-template-columns:minmax(0,56px) minmax(0,1fr) minmax(0,56px);grid-template-rows:repeat(5,auto);gap:6px;margin-top:8px}
+.eqGrid.doll .slot .ia{inset:3px}.eqGrid.doll .slot.empty{font-size:0}
+.slot .lv{position:absolute;bottom:1px;left:3px;z-index:1;font-size:8.5px;font-weight:800;color:#f1e4ea;text-shadow:0 1px 2px #000,0 0 3px #000;pointer-events:none}
+.eqGrid.doll .slot .us{bottom:2px}.eqGrid.doll .slot .ub{top:2px;left:2px;font-size:9px;line-height:12px;padding:0 3px}
+.dollMid{grid-column:2;grid-row:1/6;position:relative;overflow:hidden;min-height:250px;border-radius:64px 64px 16px 16px;border:2px solid color-mix(in srgb,var(--ac,#6a5060) 55%,#2a1a26);background:radial-gradient(ellipse 70% 38% at 50% 94%,color-mix(in srgb,var(--ac,#6a5060) 34%,transparent),transparent 70%),radial-gradient(ellipse 60% 50% at 50% 38%,rgba(255,236,200,.07),transparent 75%),linear-gradient(180deg,#241621,#120a12 55%,#0b060b);box-shadow:inset 0 0 22px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.04)}
+.dollMid::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 22px,rgba(255,255,255,.025) 22px 23px),repeating-linear-gradient(0deg,transparent 0 22px,rgba(255,255,255,.02) 22px 23px);pointer-events:none;opacity:.8}
+.dollSvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:2}
+.dAura{position:absolute;left:50%;top:46%;width:96%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--ac) 50%,transparent),color-mix(in srgb,var(--ac) 14%,transparent) 48%,transparent 70%);opacity:0;z-index:1;pointer-events:none}
+.dollMid.m2 .dAura,.dollMid.m3 .dAura{opacity:.35}
+.dollMid.m4 .dAura,.dollMid.m5 .dAura,.dollMid.m6 .dAura,.dollMid.m7 .dAura,.dollMid.m8 .dAura,.dollMid.m9 .dAura,.dollMid.m10 .dAura{opacity:.8;animation:dAur 3s ease-in-out infinite}
+.dollMid.m8 .dAura{background:radial-gradient(circle,rgba(255,40,40,.55),rgba(120,0,0,.25) 45%,transparent 70%)}
+.dollMid.m10 .dAura{background:conic-gradient(from 0deg,#ff4d4d,#ffb03a,#ffe14e,#4fd67a,#4f9dff,#b36bff,#ff4d4d);-webkit-mask:radial-gradient(circle,rgba(0,0,0,.7),rgba(0,0,0,.25) 45%,transparent 68%);mask:radial-gradient(circle,rgba(0,0,0,.7),rgba(0,0,0,.25) 45%,transparent 68%);animation:dAur 3s ease-in-out infinite,dSpin 7s linear infinite}
+@keyframes dAur{50%{transform:translate(-50%,-50%) scale(1.1);opacity:1}}
+@keyframes dSpin{to{rotate:360deg}}
+.dHero{animation:dBob 3s ease-in-out infinite;transform-origin:60px 165px}
+@keyframes dBob{50%{transform:translateY(-1.6px) scale(1.006)}}
+.dEye{transform-box:fill-box;transform-origin:center;animation:dBlink 4.6s infinite}
+@keyframes dBlink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+.dRune{animation:dRune 6s linear infinite}@keyframes dRune{to{stroke-dashoffset:-32}}
+.dRel{animation:dFloat 2.6s ease-in-out infinite}@keyframes dFloat{50%{transform:translateY(-4px)}}
+.dTw{transform-box:fill-box;transform-origin:center;animation:dTw 1.8s ease-in-out infinite}@keyframes dTw{0%,100%{opacity:.1;transform:scale(.3) rotate(0)}50%{opacity:1;transform:scale(1.2) rotate(45deg)}}
+.dRb{animation:dHue 3.2s linear infinite}@keyframes dHue{to{filter:hue-rotate(360deg)}}
+.dp.fx,.dRel.fx{transform-box:fill-box;transform-origin:center;animation:dpFx .8s cubic-bezier(.2,1.3,.4,1)}
+@keyframes dpFx{0%{opacity:0;transform:scale(1.5) translateY(-10px)}55%{opacity:1;transform:scale(.94)}100%{transform:none}}
+.dCnt{position:absolute;right:7px;bottom:5px;z-index:3;font:800 10px/1 system-ui,sans-serif;color:#d9c7cf;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:3px 6px}
+.dSp{position:absolute;bottom:12%;width:var(--s,7px);height:var(--s,7px);background:var(--ac);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);z-index:3;opacity:0;animation:dRise 3.2s ease-in infinite var(--d,0s);pointer-events:none;filter:drop-shadow(0 0 3px var(--ac))}
+@keyframes dRise{0%{opacity:0;transform:translate(0,0) scale(.4)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x,0),-150px) scale(1) rotate(180deg)}}
+.dFlash{position:absolute;left:50%;top:48%;width:30%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff,var(--fc,#fff) 38%,transparent 70%);transform:translate(-50%,-50%);z-index:4;pointer-events:none;animation:dFl .85s ease-out forwards}
+@keyframes dFl{from{opacity:1;transform:translate(-50%,-50%) scale(.3)}to{opacity:0;transform:translate(-50%,-50%) scale(4.2)}}
+.slot.eqFlash{z-index:2}.slot.eqFlash::after{content:"";position:absolute;inset:-3px;border-radius:14px;border:3px solid var(--rc);box-shadow:0 0 14px var(--rc);animation:eqRing .75s ease-out forwards;pointer-events:none}
+.slot.eqFlash .ia{animation:eqPop .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes eqRing{from{opacity:1;transform:scale(.85)}to{opacity:0;transform:scale(1.55)}}
+@keyframes eqPop{0%{transform:scale(.4) rotate(-14deg);filter:brightness(3)}60%{transform:scale(1.22) rotate(4deg);filter:brightness(1.6)}100%{transform:none;filter:none}}
+.eqChips{margin:10px 0 0;gap:5px}.eqChips .g{display:none}.eqChips span{padding:3px 7px;font-size:12px}
+.eqMore{margin-top:8px;border:1px solid var(--line);border-radius:10px;background:#0f0910;padding:0 10px}
+.eqMore summary{cursor:pointer;padding:8px 0;font-size:12.5px;font-weight:800;color:var(--gold);list-style:none}.eqMore summary::-webkit-details-marker{display:none}.eqMore summary::before{content:"▸";display:inline-block;margin-right:6px;transition:transform .15s}.eqMore[open] summary::before{transform:rotate(90deg)}
+.eqMore .eqSum{margin:0 0 8px}
+@media (max-height:520px){.eqGrid.doll{grid-template-columns:minmax(0,44px) minmax(0,1fr) minmax(0,44px);gap:4px}.dollMid{min-height:0;border-radius:44px 44px 12px 12px}.eqGrid.doll .slot .lv{font-size:7.5px}.eqGrid.doll .slot .ub{font-size:8px;line-height:11px}}
+.idet{animation:idIn .28s ease-out}@keyframes idIn{from{opacity:.2;transform:translateY(6px)}}
+.cell:active,.slot:active{transform:scale(.94)}
+@media (prefers-reduced-motion:reduce){.idet,.dHero,.dEye,.dRune,.dRel,.dTw,.dRb,.dAura,.dSp,.dp.fx,.dRel.fx,.slot.eqFlash .ia{animation:none!important}.dSp{display:none}}
 .idet{margin-top:12px;border:1px solid var(--line);border-top:3px solid var(--rc,#d6a24a);border-radius:12px;padding:10px 12px;background:#120b12;min-height:52px}
 .idet h4{margin:0 0 2px;color:var(--rc,#fff);font-size:16px}
 .idet .rr{font-size:12px;color:var(--muted);margin-bottom:6px}
@@ -609,7 +651,7 @@ body[data-gfx="hi"] .vig{display:block}
     <div class="shead"><h2 data-i="inv">Інвентар</h2><button class="x" data-close aria-label="✕">✕</button></div>
     <p class="sub" data-i="invHint"></p>
     <div class="invWrap">
-      <div class="invL"><div class="bagHead"><h3 class="h3" data-i="equipTitle"></h3><button class="btn sm" id="invForge" type="button">🔨 <span data-i="forge"></span></button></div><div class="eqGrid" id="eqGrid"></div><div class="eqSum" id="eqSum"></div></div>
+      <div class="invL"><div class="bagHead"><h3 class="h3" data-i="equipTitle"></h3><button class="btn sm" id="invForge" type="button">🔨 <span data-i="forge"></span></button></div><div class="eqGrid doll" id="eqGrid"></div><div class="stats eqChips" id="eqChips"></div><details class="eqMore"><summary data-i="eqBonus"></summary><div class="eqSum" id="eqSum"></div></details></div>
       <div class="invR"><div class="bagHead"><h3 class="h3"><span data-i="bag"></span> <span id="bagCnt"></span></h3></div><div class="bagTools"><button class="btn main sm eqb" id="eqBest" type="button"><i data-ico="star|#ffd24a"></i> <span data-i="eqBest">Вдягнути найкраще</span></button><button class="btn sm asb" id="asBtn" type="button"><span data-i="asell"></span> <span class="asd" id="asDots"></span></button><button class="btn sm sellAll" id="sellAll" type="button"></button></div><div class="bagGrid" id="bagGrid"></div></div>
     </div>
     <div class="idet" id="idet"></div>
@@ -4973,8 +5015,9 @@ $("deadTree").onclick=()=>{retry(true);openModal("mTree")};
 function retry(){P.hp=P.maxhp;setHero("idle");hero.inv=1.2;hero.slow=0;hero.poison=null;enemies=[];projs=[];coins.forEach(k=>P.gold+=k.v);coins=[];const lt=loots;loots=[];lt.forEach(k=>addItem(k.it));hero.x=arenaX+LW*.3;hero.z=DEPTH/2;camX=arenaX;startWave()}
 
 let tSel=null;
-function statChips(){const I=(k,F)=>icoSvg(k,F,"1.2em");
- $("statList").innerHTML=`<span class="g">${I("coin","#ffd24a")} <b>${P.gold}</b></span><span>${I("heart","#ff6b86")} <b>${P.maxhp}</b></span><span>${I("sword","#ff8a8a")} <b>${P.atk}</b></span><span>${I("shield","#9fb3c8")} <b>${P.armor}</b></span><span>${I("crit","#ff9a6a")} <b>${P.crit}%</b></span><span>${I("burst","#ffc24a")} ${t("critDmg")} <b>×${(2+P.critDmg/100).toFixed(2)}</b></span><span>${I("fire","#ff8a3d")} <b>+${P.fireBonus}%</b></span><span>${I("bolt","#7fb8ff")} <b>+${P.lightningBonus}%</b></span><span>${I("heal","#4fd67a")} <b>+${P.healBonus}%</b></span>${P.dmgRed?`<span>${I("wall","#d98a5a")} ${t("dmgRed")} <b>−${P.dmgRed}%</b></span>`:""}${P.regen?`<span>${I("leaf","#6bf0ae")} <b>${P.regen}${t("perSec")}</b></span>`:""}${P.evade?`<span>${I("wind","#9fe0ff")} <b>${P.evade}%</b></span>`:""}<span>${I("clock","#c8b4ff")} <b>−${Math.round(P.cdr*100)}%</b></span>`}
+function statChipsHTML(){const I=(k,F)=>icoSvg(k,F,"1.2em");
+ return `<span class="g">${I("coin","#ffd24a")} <b>${P.gold}</b></span><span>${I("heart","#ff6b86")} <b>${P.maxhp}</b></span><span>${I("sword","#ff8a8a")} <b>${P.atk}</b></span><span>${I("shield","#9fb3c8")} <b>${P.armor}</b></span><span>${I("crit","#ff9a6a")} <b>${P.crit}%</b></span><span>${I("burst","#ffc24a")} ${t("critDmg")} <b>×${(2+P.critDmg/100).toFixed(2)}</b></span><span>${I("fire","#ff8a3d")} <b>+${P.fireBonus}%</b></span><span>${I("bolt","#7fb8ff")} <b>+${P.lightningBonus}%</b></span><span>${I("heal","#4fd67a")} <b>+${P.healBonus}%</b></span>${P.dmgRed?`<span>${I("wall","#d98a5a")} ${t("dmgRed")} <b>−${P.dmgRed}%</b></span>`:""}${P.regen?`<span>${I("leaf","#6bf0ae")} <b>${P.regen}${t("perSec")}</b></span>`:""}${P.evade?`<span>${I("wind","#9fe0ff")} <b>${P.evade}%</b></span>`:""}<span>${I("clock","#c8b4ff")} <b>−${Math.round(P.cdr*100)}%</b></span>`}
+function statChips(){$("statList").innerHTML=statChipsHTML()}
 function renderTree(){statChips();renderTalents();renderTrain();if(!renderTree.did){renderTree.did=1;requestAnimationFrame(()=>{const w=$("twrap");w.scrollLeft=(w.scrollWidth-w.clientWidth)/2;w.scrollTop=(w.scrollHeight-w.clientHeight)/2})}}
 const talAvail=id=>!tal.includes(id)&&TALN[id].nb.some(n=>n==="c"||tal.includes(n));
 let prevVis=null,justBought=null,treeExt=0,treeMaxR=0,treeBox=[-300,300,-300,300];
@@ -5140,15 +5183,121 @@ function itemStatsHTML(it,cmp,nl){
 }
 function itemTipHTML(it){const R=RAR[it.r],S=SLOTS[it.s];return{c:R.col,h:`${iIc(it)}<b${R.rainbow?' class="rbt"':""}>${it.u?"★ ":""}${itemName(it)}</b><div class="d">${L(R.n)} · ${t("ilvl",{n:it.l})}</div><div class="d">${ist(it).map(([k,v])=>statTxt(k,v)).join("<br>")}</div>`}}
 function sortedBag(){return bag.slice().sort((a,b)=>b.r-a.r||b.l-a.l||b.id-a.id)}
+/* ===== paper doll: a hero that really wears what is equipped (Smithing-Master style) ===== */
+const DL_SK="#f4cfa8",DL_SK2="#d9a77c",DL_HR="#6b3d1f",DL_HR2="#9a5a2a";
+const dlIn=s=>s.replace(/^<svg[^>]*>/,"").replace(/<\/svg>\s*$/,"");
+const dlMir=s=>`<g transform="translate(120 0) scale(-1 1)">${s}</g>`;
+const dlP=(it,k,inner)=>it?`<g class="dp" data-s="${k}"${it.r>=4?` filter="url(#dllG${it.r})"`:""}>${it.r===10?`<g class="dRb">${inner}</g>`:inner}</g>`:inner;
+const dlKd=it=>it?itemKind(it):-1;
+/* legs + boots (left side, mirrored for the right one) */
+function dlLegSide(it,pants){
+ const k=it?iaTok(it.r):null,kd=dlKd(it);
+ let s=iaSh("M47 108 L47 151 Q47 155 51 155 L57 155 Q58.5 155 58.5 151 L58.5 108Z",pants)+iaLn("M50 113 L50 148",shade(pants,.3),1.6,.55);
+ if(!it)return s+iaSh("M46.5 148 L58.5 148 L58.5 160 Q58.5 164.5 54 164.5 L42.5 164.5 Q39.5 164.5 40.5 160.5 Q43 157 46.5 155Z","#4a3428")+iaLn("M42 162.8 L57 162.8","#1c120c",1.5)+iaLn("M48 150 L48 157",shade("#4a3428",.3),1.4,.7);
+ const sole=iaLn("M41.5 163.6 L55 163.6",IA_O,2);
+ if(kd===0)return s+iaEl(50.5,160.5,9.5,4.2,DL_SK)+iaLn("M46 155.5 L58 155.5",k.c,2.2)+iaLn("M42.5 160 Q50 156.5 58 160",k.c,1.8)+iaEl(50,163.6,10.4,2,k.c2,1.4)+iaCi(58,155.5,1.5,k.gd,.8);
+ if(kd===1)return s+iaSh("M46 138.5 L59 138.5 L59 156 Q59 164.5 52 164.5 L42.5 164.5 Q39.5 164.5 41 160 Q43.5 156.5 46 155Z",k.m2)+iaSh("M45.5 138 L59.5 138 L59.5 144.5 L45.5 144.5Z",k.c)+iaLn("M46 141.3 L59 141.3",k.gd,1.3)+iaLn("M48.5 147 L48.5 157",k.m1,1.8,.75)+iaEl(44.5,161.2,3.6,2.2,k.m1,1)+sole;
+ if(kd===2)return s+iaSh("M45.5 124 L59.5 124 L59.5 156 Q59.5 164.5 52 164.5 L42.5 164.5 Q39.5 164.5 41 160 Q43.5 156.5 45.5 155Z",k.m2)+iaEl(52.5,126,6.6,4.4,k.m1)+iaCi(52.5,126,2.1,k.g,1)+iaLn("M46 137 L59.5 137",k.m3,1.4)+iaLn("M46 147 L59.5 147",k.m3,1.4)+iaLn("M49.5 131 L49.5 157",k.m1,2,.8)+iaEl(44.5,161,3.8,2.4,k.m1,1)+sole;
+ return s+iaSh("M45 146 Q33 148 26 136 Q36 137 40 133 Q30 129 29 118 Q41 124 46 135Z",k.m1)+iaLn("M42 140 Q35 136 31 126",k.a,1.3,.9)+iaSh("M46 138.5 L59 138.5 L59 156 Q59 164.5 52 164.5 L42.5 164.5 Q39.5 164.5 41 160 Q43.5 156.5 46 155Z",k.c)+iaSh("M45.5 138 L59.5 138 L59.5 143.5 L45.5 143.5Z",k.gd)+iaCi(52.5,150,2.6,k.g,1)+iaLn("M48.5 146 L48.5 158",k.c1,1.8,.7)+sole}
+const DL_TORSO="M46 71 Q60 66 74 71 L76 88 L74.5 111 Q60 116.5 45.5 111 L44 88Z";
+/* body armour -> {back,front,sleeve}; the sleeve colour is reused for the arms */
+function dlArmor(it){
+ const k=it?iaTok(it.r):null,kd=dlKd(it);
+ if(!it)return{sl:"#b08a58",bk:"",ft:iaSh(DL_TORSO,"#b08a58")+iaSh("M45 103 L75 103 L77.5 119 Q60 123.5 42.5 119Z","#b08a58")+iaPoly([[52,70],[60,83],[68,70]],"#8a6a40",1.4)+iaLn("M52 70 L60 83 L68 70","#6a4a28",1.4)+iaSh("M44.5 99 L75.5 99 L76 104.5 L44 104.5Z","#6a4a28")+iaCi(60,101.8,2.5,"#d6b050",1)+iaLn("M47 114 Q60 119 73 114","#8a6a40",1.2,.7)};
+ if(kd===0){const rb="M45 71 Q60 65.5 75 71 L79 108 Q82 134 87 151 Q60 157.5 33 151 Q38 134 41 108Z";
+  return{sl:k.c1,bk:"",ft:iaSh(rb,k.c)+iaLn("M60 82 L60 154",k.c2,1.6,.7)+iaLn("M49 113 L43.5 150",k.c2,1.5,.6)+iaLn("M71 113 L76.5 150",k.c2,1.5,.6)+iaLn("M54 118 L51 152",k.c1,1.2,.5)+iaLn("M66 118 L69 152",k.c1,1.2,.5)+iaPoly([[51.5,70],[60,86],[68.5,70]],k.c1,1.5)+iaLn("M51.5 70 L60 86 L68.5 70",k.gd,1.4)+iaSh("M44.5 99 L75.5 99 L76.4 106.5 L43.6 106.5Z",k.gd)+iaCi(60,102.8,2.8,k.g,1.2)+iaLn("M33.8 150 Q60 156.5 86.2 150",k.gd,2.6)}}
+ if(kd===1)return{sl:"#cdb998",bk:"",ft:iaSh(DL_TORSO,"#cdb998")+iaSh("M46 71 Q60 66 74 71 L76 88 L74.5 111 Q60 116.5 45.5 111 L44 88Z",k.c)+iaPoly([[53,70],[60,84],[67,70]],"#cdb998",1.4)+iaLn("M60 84 L57.5 89 L62.5 93 L57.5 97 L62.5 101",k.gd,1.2)+iaLn("M50.5 71 L47.5 85",k.c2,3.2)+iaLn("M69.5 71 L72.5 85",k.c2,3.2)+iaSh("M44.5 100 L75.5 100 L76 106 L44 106Z",k.c2)+iaSh("M55.5 99 L64.5 99 L64.5 107 L55.5 107Z",k.gd,1.6)+iaSh("M45 106 L75 106 L77 119 L71.5 122.5 L66 119 L60 122.5 L54 119 L48.5 122.5 L43 119Z",k.c)+iaLn("M47 113 L73 113",k.c2,1,.7,' stroke-dasharray="2 2"')+iaCi(48,103,1.3,k.gd,.6)+iaCi(72,103,1.3,k.gd,.6)};
+ if(kd===2){let sc="";for(let y=0;y<4;y++)for(let x=0;x<5;x++){const cx=50.2+x*5.9+(y%2?2.9:0);if(cx>71.5)continue;sc+=iaLn(`M${(cx-3).toFixed(1)} ${77+y*8} Q${cx.toFixed(1)} ${82.2+y*8} ${(cx+3).toFixed(1)} ${77+y*8}`,k.m1,1.2,.9)}
+  return{sl:k.m2,bk:"",ft:iaSh(DL_TORSO,k.m2)+sc+iaSh("M45 102 L75 102 L75.5 108.5 L44.5 108.5Z",k.c)+iaCi(60,105.3,2.6,k.g,1)+iaSh("M45 108.5 L75 108.5 L78.5 121 Q60 125.5 41.5 121Z",k.m2)+iaLn("M50 109 L48.5 123M60 109.5 L60 125M70 109 L71.5 123",k.m3,1.2,.8)+iaLn("M45 71 Q60 76 75 71",k.m1,1.6)+iaEl(41.5,73.5,8.5,6,k.m1)+iaLn("M34 75 Q41.5 81 49 75",k.m3,1.3)+iaEl(78.5,73.5,8.5,6,k.m1)+iaLn("M71 75 Q78.5 81 86 75",k.m3,1.3)}}
+ if(kd===3)return{sl:k.m2,bk:"",ft:iaSh(DL_TORSO,k.m2)+iaPoly([[52.5,75],[60,71.5],[67.5,75],[66,97],[60,101.5],[54,97]],k.m1,1.6)+iaLn("M60 72 L60 100",k.m3,1.2,.8)+iaCi(60,86,3.6,k.g,1.4)+iaEl(60,70.5,10,3.8,k.m1)+iaSh("M44.5 101 L75.5 101 L76 107 L44 107Z",k.gd)+iaSh("M44 107 L76 107 L79.5 123 Q60 128.5 40.5 123Z",k.m2)+iaLn("M60 107.5 L60 127M50 107.5 L47.5 125M70 107.5 L72.5 125",k.m3,1.3,.85)+iaSh("M32.5 77 Q34 61.5 48 67 L50 81.5 Q41 85 32.5 77Z",k.m2)+iaLn("M36.5 70 Q43 68 48.5 73",k.m1,2,.9)+iaPoly([[37.5,66],[34,55],[43,63.5]],k.a,1.3)+iaSh("M87.5 77 Q86 61.5 72 67 L70 81.5 Q79 85 87.5 77Z",k.m2)+iaLn("M83.5 70 Q77 68 71.5 73",k.m1,2,.9)+iaPoly([[82.5,66],[86,55],[77,63.5]],k.a,1.3)};
+ return{sl:k.m2,bk:"",ft:iaSh(DL_TORSO,k.m2)+iaLn("M47 79 L73 79M46 86 L74 86M46 93 L74.5 93M46 100 L74.5 100",k.m3,1.1,.55,' stroke-dasharray="1.5 1.7"')+iaSh("M45 108 L75 108 L78.5 121 Q60 125.5 41.5 121Z",k.m2)+iaLn("M46 115 L74 115",k.m3,1,.55,' stroke-dasharray="1.5 1.7"')+iaSh("M52 70.5 L68 70.5 L70.5 125 L60 129.5 L49.5 125Z",k.c)+iaLn("M60 72 L60 128",k.c2,1,.6)+iaSh(iaStar(60,90,6.6,3,4,-90),k.gd,1.2)+iaCi(60,90,1.8,k.g,.8)+iaSh("M44.5 100 L75.5 100 L76 106 L44 106Z",k.c2)+iaSh("M55.5 99 L64.5 99 L64.5 107 L55.5 107Z",k.gd,1.6)+iaEl(60,70.5,8.5,3.2,k.m1)}}
+/* cloak: back layer (behind the body) and front layer (collar over the shoulders) */
+function dlCloak(it){
+ if(!it)return{bk:"",ft:""};
+ const k=iaTok(it.r),kd=dlKd(it),clasp=iaLn("M46.5 72 Q60 79 73.5 72",k.gd,1.7)+iaCi(60,75.5,3,k.gd,1.3)+iaCi(60,75.5,1.2,k.g,0);
+ if(kd===0)return{bk:iaSh("M43 71 Q60 65 77 71 L93 148 Q60 160 27 148Z",k.c)+iaSh("M52 73 L68 73 L80 150 Q60 156 40 150Z",k.c2)+iaLn("M40 88 L33 146M80 88 L87 146M47 96 L42 148M73 96 L78 148",k.c2,1.4,.65)+iaLn("M29 148 Q60 158.5 91 148",k.gd,2.4),ft:clasp};
+ if(kd===1)return{bk:iaSh("M38 55 Q40 29 60 27 Q80 29 82 55 Q73 72 60 72 Q47 72 38 55Z",k.c2)+iaSh("M43 71 Q60 65 77 71 L91 142 Q60 153 29 142Z",k.c)+iaSh("M52 73 L68 73 L78 144 Q60 149 42 144Z",k.c2)+iaLn("M39 88 L33 140M81 88 L87 140",k.c2,1.4,.65)+iaLn("M31 142 Q60 152 89 142",k.gd,2.2),ft:iaSh("M38.5 75 Q60 63.5 81.5 75 L86 92 Q60 82 34 92Z",k.c)+iaLn("M36 90 Q60 80.5 84 90",k.gd,1.5)+iaCi(60,77.5,3,k.gd,1.3)+iaCi(60,77.5,1.2,k.g,0)};
+ if(kd===2){const w=iaSh("M50 80 Q24 74 9 44 Q5 32 9 20 Q21 33 33 42 Q24 28 27 10 Q44 28 52 58Z",k.m1)+iaSh("M50 82 Q30 80 17 62 Q27 66 36 62 Q27 54 24 44 Q40 56 51 66Z",k.m2)+iaLn("M46 76 Q22 60 13 32",k.a,1.3,.9)+iaLn("M47 70 Q33 52 29 24",k.g,1,.7)+iaLn("M12 24 Q9 34 14 46",k.g,1.4,.8);return{bk:w+dlMir(w),ft:""}}
+ return{bk:iaSh("M41 71 Q60 65 79 71 L89 134 Q60 144 31 134Z",k.c)+iaLn("M40 88 L35 132M80 88 L85 132",k.c2,1.4,.65)+iaSh("M32 132 Q38 140 44 133 Q50 142 56 134 Q60 143 64 134 Q70 142 76 133 Q82 140 88 132 Q60 146 32 132Z",k.bone,1.4),ft:[0,1,2,3,4,5,6].map(i=>iaCi(37+i*7.7,73.5-Math.sin(i/6*Math.PI)*3.5+ (i%2)*1.6,5.6,i%2?k.bone:iaMix(k.bone,k.c,.8),1.5)).join("")+iaLn("M43 79 Q60 86 77 79",k.c2,1.2,.5)}}
+/* gloves + hands */
+function dlHand(it,x,y,ex,ey,right){
+ const k=it?iaTok(it.r):null,kd=dlKd(it);let s="";
+ if(!it)return iaCi(x,y,5.2,DL_SK,2);
+ const arm=(c,w)=>iaTk(`M${ex} ${ey} L${x} ${y-1}`,c,w);
+ if(kd===0)return arm(k.c1,8.8)+iaEl(ex,ey,5.6,2.3,k.gd,1.2)+iaCi(x,y,5.5,k.c,2)+iaLn(`M${x-2.5} ${y+1} Q${x} ${y+3.4} ${x+2.5} ${y+1}`,k.c2,1,.8);
+ if(kd===1)return arm(k.m2,9.6)+iaEl(ex,ey,6,2.5,k.m1,1.2)+iaCi(x,y,5.9,k.m2,2)+iaLn(`M${x-3.4} ${y-1.8} L${x+3.4} ${y-1.8}`,k.m3,1.1)+iaLn(`M${x-2} ${y-4} L${x-2} ${y+1}`,k.m1,1.6,.8);
+ if(kd===2){const cl=[-3.2,0,3.2].map(d=>iaPoly([[x+d-1.3,y+4.2],[x+d*1.15,y+11.6],[x+d+1.3,y+4.2]],k.bone,1.1)).join("");return cl+arm(k.c2,9)+iaEl(ex,ey,5.6,2.2,k.c,1.1)+iaCi(x,y,5.6,k.c,2)+iaLn(`M${x-3.6} ${y-1.4} L${x+3.6} ${y-1.4}`,k.gd,1.2,.95,' stroke-dasharray="1 1.6"')+iaCi(ex-2.4,ey,.9,k.gd,.4)+iaCi(ex,ey+.4,.9,k.gd,.4)+iaCi(ex+2.4,ey,.9,k.gd,.4)}
+ return iaCi(x,y,5.2,DL_SK,2)+iaTk(`M${ex} ${ey} L${(ex+x)/2+(right?-.4:.4)} ${(ey+y)/2-.5}`,k.m2,9.6)+iaEl(ex,ey,5.4,2.3,k.m1,1.2)+iaLn(`M${ex-3.4} ${(ey+y)/2-1.5} L${ex+3.4} ${(ey+y)/2-1.5}`,k.gd,1.4)+iaCi((ex+x)/2,(ey+y)/2-3,1.8,k.g,.8)}
+/* head + headgear */
+function dlHead(it){
+ const k=it?iaTok(it.r):null,kd=dlKd(it);
+ const face=iaCi(60,44,21,DL_SK,2.2),ears=iaEl(39.2,47,3,3.8,DL_SK,1.8)+iaEl(80.8,47,3,3.8,DL_SK,1.8);
+ const eyes=`<g class="dEye">${iaEl(52,47.5,2.7,3.5,"#2a1a14",0)}${iaCi(51,46.2,1,"#fff",0)}${iaEl(68,47.5,2.7,3.5,"#2a1a14",0)}${iaCi(67,46.2,1,"#fff",0)}</g>`;
+ const feat=eyes+iaCi(46.3,54,3,"#ff9a8a",0).replace('fill=','opacity=".55" fill=')+iaCi(73.7,54,3,"#ff9a8a",0).replace('fill=','opacity=".55" fill=')+iaLn("M57.5 55.2 Q60 57.6 62.5 55.2","#7a3a2a",1.4)+iaLn("M48 41.5 Q51.5 39.6 55 40.8M65 40.8 Q68.5 39.6 72 41.5","#4a2a14",1.5);
+ const hair=iaSh("M38.6 45 Q36 20 60 19.5 Q84 20 81.4 45 Q77 33.5 67 33.5 Q60.5 37 53 32.5 Q44 34 38.6 45Z",DL_HR)+iaSh("M51 24 Q56 10 71 20.5 Q64 20.5 60.5 28Z",DL_HR2)+iaLn("M47 25 Q56 20 66 24",shade(DL_HR2,.35),1.4,.8);
+ if(!it)return ears+face+feat+hair;
+ if(kd===0)return ears+face+feat+iaSh("M36.5 49 Q32 17 60 16 Q88 17 83.5 49 Q83 57 78 61.5 Q81 40 60 34.5 Q39 40 42 61.5 Q37 57 36.5 49Z",k.c)+iaLn("M45 25 Q60 18.5 75 25",k.c1,1.8,.85)+iaLn("M40 52 Q39 60 43 62",k.c2,1.4,.8)+iaSh("M55 18.5 Q60 5 68 13.5 Q63 15.5 63.5 19Z",k.c);
+ if(kd===1||kd===3){let h=ears+face+feat;if(kd===3)h=iaSh("M40 37 Q21 35 17 12 Q31 19 44 29Z",k.bone,1.6)+iaSh("M80 37 Q99 35 103 12 Q89 19 76 29Z",k.bone,1.6)+iaLn("M24 28 Q30 26 36 31M96 28 Q90 26 84 31",k.c2,1,.6)+h;
+  return h+iaSh("M38.5 46 Q35.5 17 60 16.5 Q84.5 17 81.5 46 L77.5 43 Q60 35.5 42.5 43Z",k.m2)+iaSh("M38.2 40.5 Q60 31 81.8 40.5 L81.5 46 Q60 36 38.5 46Z",k.m1)+iaLn("M60 17 L60 33",k.m1,2.2,.9)+iaLn("M47 22 Q60 17.5 73 22",k.m1,1.6,.7)+iaSh("M58 34 L62 34 L62.5 51 Q60 54.5 57.5 51Z",k.m1,1.6)+iaSh("M38.5 45 L41.5 61 L47.5 58.5 L45.5 42Z",k.m2)+iaSh("M81.5 45 L78.5 61 L72.5 58.5 L74.5 42Z",k.m2)+iaCi(60,38.5,2.2,k.g,.9)+(kd===1&&it.r>=2?iaSh("M55 17 Q59 3 70 7 Q64 9 64 17Z",k.a,1.4):"")}
+ if(kd===2)return iaSh("M37 47 Q34.5 16.5 60 15.5 Q85.5 16.5 83 47 L82 62 Q77 69 60 69 Q43 69 38 62Z",k.m2)+iaLn("M60 16 L60 44",k.m1,2.6,.9)+iaLn("M44 24 Q60 16 76 24",k.m1,1.8,.75)+iaSh("M41.5 44.5 L78.5 44.5 L77.5 52.5 L42.5 52.5Z","#0f070d",1.6)+iaEl(51,48.5,3.7,1.7,k.g,0)+iaEl(69,48.5,3.7,1.7,k.g,0)+iaLn("M60 54 L60 67",k.m3,1.3)+iaLn("M48 59 L52 59M48 62.5 L52 62.5M68 59 L72 59M68 62.5 L72 62.5",k.m3,1.2,.8)+iaSh("M54 14 Q60 -4 76 4 Q67 6 65.5 15.5Z",k.a,1.4)+iaLn("M57 12 Q65 3 73 5",k.g,1,.8);
+ if(kd===4)return ears+face+feat+hair+iaSh("M39.5 36.5 Q60 28.5 80.5 36.5 L80.5 41.5 Q60 33.5 39.5 41.5Z",k.gd,1.8)+iaPoly([[43.5,34.5],[45.5,23],[52,31]],k.gd,1.5)+iaPoly([[53.5,31],[60,16.5],[66.5,31]],k.gd,1.5)+iaPoly([[68,31],[74.5,23],[76.5,34.5]],k.gd,1.5)+iaCi(60,25,2.6,k.g,1)+iaCi(46,29,1.6,k.a,.7)+iaCi(74,29,1.6,k.a,.7)+iaCi(60,35.5,1.9,k.g,.8);
+ return iaSh("M34.5 52 Q30 16 60 14.5 Q90 16 85.5 52 L81 60 L39 60Z",k.c2)+iaCi(60,45.5,20,k.bone,2.2)+iaSh("M47 57 Q60 71 73 57 L71 64.5 Q60 71.5 49 64.5Z",k.bone,1.8)+iaEl(52,45,4.7,5.8,"#0f070d",1.6)+iaEl(68,45,4.7,5.8,"#0f070d",1.6)+iaCi(52,46,2,k.g,0)+iaCi(68,46,2,k.g,0)+iaPoly([[58.4,54],[60,50],[61.6,54]],"#0f070d",1)+iaLn("M64 27 L61 33.5 L64.5 38",k.dk,1,.7)+iaLn("M52.5 62.5 L67.5 62.5M56 59.5 L56 65.5M60 59.5 L60 66M64 59.5 L64 65.5",k.dk,1,.8)}
+/* held weapon: the item icon itself, rotated upright and put into the right hand */
+function dlWeapon(it,hx,hy){
+ if(!it)return"";const kd=dlKd(it),sc=[.95,.82,.95,.95,1.14,1.16,1.1,1.05][kd]||.95,gy=[48,47,48,48,48,42,46,50][kd]||48;
+ return`<g transform="translate(${hx} ${hy}) rotate(10) scale(${sc}) translate(-32 ${-gy}) rotate(-45 32 32)">${dlIn(itemArt(0,kd,it.r,{bare:1}))}</g>`}
+/* neck jewels */
+function dlNeck(it){
+ if(!it)return"";const k=iaTok(it.r),kd=dlKd(it),c=iaTk("M49.5 69.5 Q60 83 70.5 69.5",k.gd,1.8);let p;
+ if(kd===0)p=iaCi(60,78.6,3.4,k.g,1.4);else if(kd===1)p=iaPoly([[60,74.2],[63.6,79],[60,84],[56.4,79]],k.g,1.4);else if(kd===2)p=[0,1,2,3,4].map(i=>iaCi(52.4+i*3.8,73+Math.sin(i/4*Math.PI)*5.6,1.9,k.bone,.9)).join("")+iaCi(60,79.8,2.8,k.g,1.2);else if(kd===3)p=iaSh("M57.4 74.8 Q60 85 63.2 80 Q62.5 77 62.6 74.8Z",k.bone,1.3);else p=iaCi(60,78.8,4.2,k.gd,1.4)+iaCi(60,78.8,2.2,k.g,.8);
+ return c+p}
+function dlAmulet(it){
+ if(!it)return"";const k=iaTok(it.r),kd=dlKd(it),c=iaLn("M52.8 70 Q56 86 60 94",k.c2,1.5)+iaLn("M67.2 70 Q64 86 60 94",k.c2,1.5);let p;
+ if(kd===0)p=iaCi(60,98.5,5.4,k.gd,1.6)+iaCi(60,98.5,2.8,k.g,1);else if(kd===1)p=iaPoly([[60,92.5],[65,99],[60,108],[55,99]],k.g,1.6)+iaLn("M60 94 L60 106",k.m1,1,.8);else if(kd===2)p=iaSh("M56.5 93.5 Q60 108.5 64 99 Q63 95.5 63.4 93.5Z",k.bone,1.5);else if(kd===3)p=iaSh(iaStar(60,98.5,6.6,3,5,-90),k.gd,1.4)+iaCi(60,98.5,1.6,k.g,0);else p=iaEl(60,98.5,6.2,4.2,k.m1,1.6)+iaCi(60,98.5,2.3,k.a,1)+iaCi(60,98.5,.9,"#0f070d",0);
+ return c+p}
+function dlRing(it){
+ if(!it)return"";const k=iaTok(it.r);
+ return iaCi(31.6,105.5,2.9,"none",1.8).replace('stroke="'+IA_O+'"','stroke="'+k.gd+'"')+iaCi(31.6,102.5,1.8,k.g,.7)+(it.r>=4?`<path class="dTw" d="${iaStar(28.4,99.5,3.6,1,4,-90)}" fill="#fff"/>`:"")}
+function dlRelic(it){
+ if(!it)return"";const kd=dlKd(it),k=iaTok(it.r);
+ return`<g class="dRel" data-s="relic"${it.r>=4?` filter="url(#dllG${it.r})"`:""}><g${it.r===10?' class="dRb"':""} transform="translate(3 10) scale(.42)">${dlIn(itemArt(9,kd,it.r,{bare:1}))}</g></g>`}
+const dllSig=()=>SLOTS.map(S=>{const it=eq[S.k];return it?it.r+"."+itemKind(it):"-"}).join(",");
+function dollSvg(){
+ const E=eq,mx=Math.max(-1,...SLOTS.map(S=>E[S.k]?E[S.k].r:-1)),A=dlArmor(E.armor),C=dlCloak(E.cloak),pants=E.armor&&dlKd(E.armor)===0?"#4a3a5a":"#5a4632";
+ const rs=new Set(SLOTS.map(S=>E[S.k]?E[S.k].r:-1).filter(r=>r>=4));
+ let defs=`<defs>${IA_RB}${[...rs].map(r=>{const c=RAR[r].col;return`<filter id="dllG${r}" x="-35%" y="-35%" width="170%" height="170%"><feGaussianBlur in="SourceAlpha" stdDeviation="${r>=8?3.1:2.4}" result="b"/><feFlood flood-color="${r===10?"#ff7ad9":c}" flood-opacity=".95"/><feComposite in2="b" operator="in" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`}).join("")}</defs>`;
+ const col=mx>=0?RAR[mx].col:"#6a5060",ring=mx>=3?`<ellipse class="dRune" cx="60" cy="168" rx="41" ry="9" fill="none" stroke="${col}" stroke-width="1.4" stroke-dasharray="3 5" opacity=".85"/>`:"";
+ const floor=`<ellipse cx="60" cy="169" rx="44" ry="10.5" fill="#000" opacity=".5"/><ellipse cx="60" cy="168" rx="37" ry="8" fill="${col}" opacity="${mx>=2?.28:.12}"/><ellipse cx="60" cy="168" rx="33" ry="6.6" fill="none" stroke="${col}" stroke-width="1.6" opacity="${mx>=0?.8:.35}"/>${ring}`;
+ const cloakBk=E.cloak?dlP(E.cloak,"cloak",C.bk):"";
+ const legs=dlP(E.boots,"boots",dlLegSide(E.boots,pants)+dlMir(dlLegSide(E.boots,pants)));
+ const body=E.armor?dlP(E.armor,"armor",A.ft):A.ft;
+ const cloakFt=E.cloak&&C.ft?`<g class="dp" data-s="cloak">${C.ft}</g>`:"";
+ const sl=A.sl,armL=iaTk("M45.5 75.5 Q35.5 85 34.2 99",sl,8.6),armR=iaTk("M74.5 75.5 Q85 80.5 88.6 94",sl,8.6);
+ const G=E.gloves,hands=dlP(G,"gloves",dlHand(G,34,103,34.4,92.6,0)+dlHand(G,90,101,88,90.4,1));
+ const head=dlP(E.helmet,"helmet",dlHead(E.helmet));
+ const wp=dlP(E.weapon,"weapon",dlWeapon(E.weapon,90,101));
+ const jew=dlP(E.necklace,"necklace",dlNeck(E.necklace))+dlP(E.amulet,"amulet",dlAmulet(E.amulet))+dlP(E.ring,"ring",dlRing(E.ring));
+ return`<svg class="dollSvg" viewBox="0 0 120 190" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${defs}${floor}<g class="dHero">${cloakBk}<ellipse cx="60" cy="68.5" rx="5.5" ry="4.5" fill="${DL_SK2}"/>${legs}${body}${cloakFt}${armL}${armR}${wp}${hands}${head}${jew}</g>${dlRelic(E.relic)}</svg>`}
+let dllCache={sig:"",html:""};
+const dollHTML=()=>{const sg=dllSig();if(dllCache.sig!==sg)dllCache={sig:sg,html:dollSvg()};return dllCache.html};
+let eqFx=null;
+const DOLL_L=["helmet","armor","gloves","boots","cloak"],DOLL_R=["weapon","ring","amulet","necklace","relic"];
 function renderInv(){
  $("bagCnt").textContent=`${bag.length}/${BAG_MAX}`;
- $("eqGrid").innerHTML=SLOTS.map(S=>{const it=eq[S.k],sel=iSel&&iSel.from==="eq"&&iSel.k===S.k;return`<button class="slot ${it?"r"+it.r:"empty"}${sel?" pick":""}" data-eq="${S.k}" style="--rc:${it?RAR[it.r].col:"#3a2a36"}">${it?iTile(it):`<span class="ia">${itemArt(SLOTI[S.k],0,0,{bare:1})}</span>`}<small>${it?itemName(it):L(S.n)}</small></button>`}).join("");
+ const fx=eqFx&&Date.now()-eqFx.t<1500?eqFx:null;eqFx=null;
+ let mxr=-1,cnt=0;for(const S of SLOTS){const it=eq[S.k];if(it){cnt++;if(it.r>mxr)mxr=it.r}}
+ const ac=mxr>=0?(mxr===10?"#ff7ad9":RAR[mxr].col):"#6a5060";
+ const sps=mxr>=4?Array.from({length:Math.min(14,4+mxr*1.2|0)},(_,i)=>`<i class="dSp" style="left:${8+(i*37+i*i*5)%84}%;--d:${(i*.53)%3.2}s;--s:${6+(i*3)%6}px;--x:${(i%2?1:-1)*(4+i%5*3)}px"></i>`).join(""):"";
+ const mid=`<div class="dollMid m${mxr}" style="--ac:${ac}"><i class="dAura"></i>${dollHTML()}${sps}<span class="dCnt">${cnt}/${SLOTS.length}</span>${fx?`<i class="dFlash" style="--fc:${fx.col}"></i>`:""}</div>`;
+ $("eqGrid").innerHTML=mid+SLOTS.map(S=>{const it=eq[S.k],sel=iSel&&iSel.from==="eq"&&iSel.k===S.k,li=DOLL_L.indexOf(S.k),cl=li>=0?1:3,row=(li>=0?li:DOLL_R.indexOf(S.k))+1;return`<button class="slot ${it?"r"+it.r:"empty"}${sel?" pick":""}${fx&&fx.k===S.k?" eqFlash":""}" data-eq="${S.k}" aria-label="${L(S.n)}" style="--rc:${it?RAR[it.r].col:"#3a2a36"};grid-area:${row}/${cl}">${it?iTile(it)+`<span class="lv">Lv.${it.l}</span>`:`<span class="ia">${itemArt(SLOTI[S.k],0,0,{bare:1})}</span>`}</button>`}).join("");
+ if(fx){const g=$("eqGrid").querySelector(`.dp[data-s="${fx.k}"],.dRel[data-s="${fx.k}"]`);if(g){g.classList.add("fx")}}
+ $("eqChips").innerHTML=statChipsHTML();
  const sb=sortedBag();let g="";
  for(const it of sb){const sel=iSel&&iSel.from==="bag"&&iSel.id===it.id;g+=`<button class="cell r${it.r}${sel?" pick":""}${it.nw?" fresh":""}" data-iid="${it.id}" style="--rc:${RAR[it.r].col}">${iTile(it)}${it.nw?'<i class="nw"></i>':""}<span class="lv">Lv.${it.l}</span></button>`}
  for(let i=sb.length;i<BAG_MAX;i++)g+=`<div class="cell" style="opacity:.25;cursor:default"></div>`;
  $("bagGrid").innerHTML=g;
  const es=P.eqStats||{},ks=Object.keys(es);
- $("eqSum").innerHTML=`<b>${t("eqBonus")}</b><br>`+(ks.length?ks.map(k=>statTxt(k,Math.round(es[k]*10)/10)).join("<br>"):"—");
+ $("eqSum").innerHTML=(ks.length?ks.map(k=>statTxt(k,Math.round(es[k]*10)/10)).join("<br>"):"—");
  fillSellAll();
  fillAsDots()
  renderIDet();
@@ -5165,14 +5314,14 @@ function renderIDet(){
  $("iSell").onclick=()=>sellItem(it);
 }
 function applyEq(){const ratio=P.maxhp>0?P.hp/P.maxhp:1;recalc();P.hp=Math.max(1,Math.min(P.maxhp,Math.round(P.maxhp*ratio)));save();renderInv();hud()}
-function equipItem(id){const i=bag.findIndex(x=>x.id===id);if(i<0)return;const it=bag[i],k=SLOTS[it.s].k;bag.splice(i,1);if(eq[k]){eq[k].nw=false;bag.push(eq[k])}it.nw=false;eq[k]=it;iSel={from:"eq",k};SFX.buy();SFX.equip();
+function equipItem(id){const i=bag.findIndex(x=>x.id===id);if(i<0)return;const it=bag[i],k=SLOTS[it.s].k;bag.splice(i,1);if(eq[k]){eq[k].nw=false;bag.push(eq[k])}it.nw=false;eq[k]=it;iSel={from:"eq",k};eqFx={k,col:it.r===10?"#ff7ad9":RAR[it.r].col,t:Date.now()};SFX.buy();SFX.equip();
  for(let j=0;j<16;j++)parts.push({x:hero.x+rnd(-12,12),z:hero.z,h:rnd(0,50),vx:rnd(-20,20),vz:0,vh:rnd(30,90),g:0,life:rnd(.5,.9),max:.9,col:RAR[it.r].col,size:rnd(1.5,3),t:"dot"});applyEq()}
 function unequipItem(k){if(!eq[k])return;bag.push(eq[k]);const id=eq[k].id;delete eq[k];iSel={from:"bag",id};SFX.close();applyEq()}
 function sellItem(it){const g=sellPrice(it);SFX.sell();if(iSel&&iSel.from==="eq"&&eq[iSel.k]===it)delete eq[iSel.k];else{const i=bag.indexOf(it);if(i<0)return;bag.splice(i,1)}P.gold+=g;iSel=null;toast(t("sold",{n:g}));SFX.coin();applyEq()}
 const itemPow=it=>ist(it).reduce((a,[k,v])=>{const d=ISTAT[k],ref=d?Math.max(.1,(d[0]+d[1]*12)*(d[2]?.7:1)):1;return a+v/ref},0);
 function equipBest(){let n=0;for(const S of SLOTS){const si=SLOTI[S.k],cur=eq[S.k];let best=cur,bp=cur?itemPow(cur):-1;for(const it of bag)if(it.s===si){const p=itemPow(it);if(p>bp+1e-6){bp=p;best=it}}
   if(best&&best!==cur){bag.splice(bag.indexOf(best),1);if(cur){cur.nw=false;bag.push(cur)}best.nw=false;eq[S.k]=best;n++}}
- if(n){SFX.equip();SFX.unlock();toast("✓ "+t("eqBestDone",{n}),"#d6a24a");for(let j=0;j<30;j++)parts.push({x:hero.x+rnd(-14,14),z:hero.z,h:rnd(0,50),vx:rnd(-20,20),vz:0,vh:rnd(40,100),g:0,life:rnd(.5,.9),max:.9,col:j%2?"#ffd34e":"#ffffff",size:rnd(1.5,3),t:"dot"})}else{toast(t("eqBestNone"));SFX.buzz()}
+ if(n){eqFx={k:"*",col:"#ffd34e",t:Date.now()};SFX.equip();SFX.unlock();toast("✓ "+t("eqBestDone",{n}),"#d6a24a");for(let j=0;j<30;j++)parts.push({x:hero.x+rnd(-14,14),z:hero.z,h:rnd(0,50),vx:rnd(-20,20),vz:0,vh:rnd(40,100),g:0,life:rnd(.5,.9),max:.9,col:j%2?"#ffd34e":"#ffffff",size:rnd(1.5,3),t:"dot"})}else{toast(t("eqBestNone"));SFX.buzz()}
  iSel=null;applyEq()}
 $("eqBest").onclick=equipBest;
 
