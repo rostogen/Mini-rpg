@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.11-l",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.12-a",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -234,7 +234,7 @@ svg.iart{width:100%;height:100%;display:block;overflow:visible;filter:drop-shado
 .rrow b{color:var(--rc)}
 .rbar{height:12px;border-radius:6px;background:#1a1018;overflow:hidden;border:1px solid #2e1f2a}
 .rbar i{display:block;height:100%;background:var(--rc);border-radius:6px;transition:width .5s}
-.rrow .pc{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.rrow .pc{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}.rrow .pc.w{min-width:9.2em}
 .bigstat{font-size:30px;font-weight:800;color:var(--gold);font-family:Cinzel,Georgia,serif}
 .lbox{border:1px solid var(--line);border-radius:12px;padding:12px;background:#120b12;margin-top:10px}
 .lprog{height:14px;border-radius:7px;background:#1a1018;overflow:hidden;margin:8px 0;border:1px solid #2e1f2a}
@@ -289,12 +289,12 @@ svg.iart{width:100%;height:100%;display:block;overflow:visible;filter:drop-shado
 .tinfo b{font-size:15px;color:var(--c,#fff)}
 .tinfo .m{color:#cdbac4;font-size:13px}
 .tinfo small{color:var(--muted);font-size:12px}
-.trTable{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;align-items:start}
-.trCol{display:flex;flex-direction:column;gap:7px;min-width:0;--cc:#d6a24a}
+.trTable{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px 8px;align-items:stretch}
+.trCol{display:contents;--cc:#d6a24a}
 .trCol.c-str{--cc:#ff7a6a}.trCol.c-spd{--cc:#5fd0ff}.trCol.c-hp{--cc:#ff8fb0}.trCol.c-mag{--cc:#b98cff}.trCol.c-wealth{--cc:#ffd24a}
 .trHd{position:sticky;top:0;z-index:3;display:flex;flex-direction:column;align-items:center;gap:0;padding:5px 4px 4px;border-radius:10px;background:#1b101b;border:1px solid var(--line);border-top:3px solid var(--cc);box-shadow:0 7px 10px -6px rgba(0,0,0,.85);text-align:center;min-width:0}
 .trHd .r1{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0}.trHd .ci{font-size:16px;line-height:1.1}.trHd b{font:700 12px Cinzel,Georgia,serif;color:var(--cc);overflow-wrap:anywhere;line-height:1.15}.trHd small{font:700 10.5px system-ui,sans-serif;color:var(--gold)}
-@media(max-width:620px){.trTable{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(122px,1fr);overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:6px}.trCol{scroll-snap-align:start}.trHd{position:static}}
+@media(max-width:620px){.trTable{grid-template-columns:repeat(5,minmax(122px,1fr));overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:6px}.trHd,.trc{scroll-snap-align:start}.trHd{position:static}}
 .tab.fgBtn{margin-left:auto;color:var(--gold);border-color:#8a6424;background:linear-gradient(180deg,#3a2616,#1c1210)}
 .trc{background:#0f0910;border:1px solid var(--line);box-shadow:inset 0 2px 0 var(--cc,#d6a24a);border-radius:12px;padding:8px 7px 7px;display:flex;flex-direction:column;gap:4px;min-width:0;text-align:center}
 .trc .trh{display:flex;align-items:center;justify-content:space-between;gap:4px}
@@ -302,7 +302,7 @@ svg.iart{width:100%;height:100%;display:block;overflow:visible;filter:drop-shado
 .trc b{display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1.15;min-height:2.3em;overflow-wrap:anywhere}
 .trc .m{color:var(--muted);font-size:10.5px;line-height:1.25}
 .trc .m.dd{min-height:3.8em;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.trc .m.nw{color:#bfe9d0;font-size:11px;font-weight:700}
+.trc .m.nw{color:#bfe9d0;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px}.trc .nwi{display:inline-flex;gap:1px;flex:none}.buyAllBar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:2px 0 10px}.buyAllBar .btn{display:inline-flex;align-items:center;gap:6px}.buyAllBar .m{color:var(--muted);font-size:12px}.tbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 8px}.tbar .tcount{margin:0}.tbar .btn{display:inline-flex;align-items:center;gap:6px}
 .trc .lvl{color:var(--gold);font-size:11px;font-weight:800;background:#1d121c;border:1px solid #3a2a1c;border-radius:99px;padding:2px 7px}
 .trc .buy{width:100%;padding:6px 4px;margin-top:auto}
 .trc .ok{display:block;padding:6px 0;font-size:12px;font-weight:700;color:#6bf0ae}
@@ -440,7 +440,7 @@ body[data-gfx="hi"] .vig{display:block}
 /* forge */
 .fgGold{display:flex;justify-content:flex-end;font-weight:800;color:#ffd98a;margin:-2px 0 8px;font-size:15px}
 .fpane{display:none}.fpane.on{display:block}
-.fgJump{display:flex;gap:8px;margin:0 0 6px}.fgJump .chip{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#120b12;color:var(--muted);font-weight:700;font-size:12.5px}.fgJump .chip:active{background:#1c1220}
+.fgBtns{display:flex;gap:6px;margin-top:auto}.fgBtns .btn{flex:1 1 auto;padding:8px 6px;font-size:12px}.fgBtns .fgBuy{flex:1.2}.fgTag{display:inline-block;margin-left:4px;padding:0 6px;border-radius:99px;font-size:10.5px;font-weight:800;background:#241a22;color:var(--muted)}.fgTag.up{background:#12301f;color:#6bf0ae}.fgTag.dn{background:#331619;color:#ff8a8a}.fgJump{display:flex;gap:8px;margin:0 0 6px}.fgJump .chip{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#120b12;color:var(--muted);font-weight:700;font-size:12.5px}.fgJump .chip:active{background:#1c1220}
 #fgB .h3{margin-top:12px}
 #mForge .tabs{flex-wrap:wrap}#mForge .tab{padding:8px 12px}@media(max-width:420px){#mForge .tab{padding:8px 6px;font-size:12px;flex:1 1 auto;text-align:center;white-space:nowrap}}
 .fgCard{position:relative;border:1px solid var(--line);border-top:3px solid var(--rc,#d6a24a);border-radius:14px;padding:12px;background:radial-gradient(120% 90% at 50% 0,color-mix(in srgb,var(--rc,#d6a24a) 16%,#1a0f19),#0f0a10)}
@@ -522,7 +522,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-l</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.12-a</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -586,7 +586,7 @@ body[data-gfx="hi"] .vig{display:block}
     <div class="tpane on" id="tTal">
       <p class="sub" data-i="treeHint"></p>
       <div class="tbody">
-        <div class="tcount" id="tcount"></div>
+        <div class="tbar"><div class="tcount" id="tcount"></div><button class="btn sm main" id="tAll" type="button"></button></div>
         <div class="tmain"><div class="twrap" id="twrap"><div id="tsvg"></div></div>
           <div class="tzoom"><button type="button" id="tzIn" aria-label="+"><svg viewBox="0 0 20 20"><path d="M10 3.5V16.5M3.5 10H16.5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg></button><button type="button" id="tzOut" aria-label="−"><svg viewBox="0 0 20 20"><path d="M3.5 10H16.5" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg></button><button type="button" id="tzFit" aria-label="fit"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5V3.5H7.5M12.5 3.5H16.5V7.5M16.5 12.5V16.5H12.5M7.5 16.5H3.5V12.5"/></svg></button></div></div>
         <div class="tinfo" id="tinfo"></div>
@@ -594,6 +594,7 @@ body[data-gfx="hi"] .vig{display:block}
     </div>
     <div class="tpane" id="tTrain">
       <p class="sub" data-i="trainHint">Покращення можна купувати безкінечно. Кожен рівень дорожчий за попередній.</p>
+      <div class="buyAllBar"><button class="btn main" id="trAll" type="button"></button><span class="m" id="trAllInfo"></span></div>
       <div id="trGrid"></div>
     </div>
   </div></div>
@@ -619,11 +620,7 @@ body[data-gfx="hi"] .vig{display:block}
     <div class="fgGold">🪙 <b id="fgGold">0</b></div>
     <div class="tabs"><button class="tab ftab on" type="button" data-ft="fgU" data-i="fgUp"></button><button class="tab ftab" type="button" data-ft="fgB" data-i="fgBuyDept"></button></div>
     <div class="fpane on" id="fgU"></div>
-    <div class="fpane" id="fgB">
-      <div class="fgJump"><button class="chip" type="button" data-j="fgSH" data-i="fgRandH"></button><button class="chip" type="button" data-j="fgAH" data-i="fgArm"></button></div>
-      <h3 class="h3" id="fgSH" data-i="fgRandH"></h3><div id="fgS"></div>
-      <h3 class="h3" id="fgAH" data-i="fgArm"></h3><div id="fgA"></div>
-    </div>
+    <div class="fpane" id="fgB"><div id="fgS"></div></div>
   </div></div>
 
   <div class="modal" id="mDrops"><div class="sheet">
@@ -646,6 +643,7 @@ body[data-gfx="hi"] .vig{display:block}
     <div class="row"><b data-i="musicOn">Фонова музика</b><button class="btn" id="musB">▶</button></div>
     <div class="row colr"><b data-i="gfx">Графіка</b><div class="gfxT" id="gfxT"></div><select id="gfxSel" class="sel" hidden></select></div>
     <div class="row"><div><b data-i="fpsL">Лічильник FPS</b><div class="m" data-i="fpsHint">Показує кадри за секунду вгорі екрана</div></div><button class="btn" id="fpsB">✕</button></div>
+    <div class="row"><div><b data-i="stickL">Стік повертає камеру</b><div class="m" data-i="stickHint"></div></div><button class="btn" id="stickB">✕</button></div>
     <div class="row"><b data-i="resetL">Прогрес</b><button class="btn warn" id="resetB" data-i="reset">Скинути прогрес</button></div>
     <p class="ctrlText" data-i="ctrl"></p>
     <div class="donate"><div><b>💛 <span data-i="donate">Підтримати автора</span></b><div class="m"><span data-i="donateBank">монобанк</span> · <span class="card" id="donCard">4441114438533190</span></div></div><button class="btn" id="donCopy">📋 <span data-i="copy">Копіювати</span></button></div>
@@ -736,6 +734,10 @@ resetQ:"Натисни ще раз, щоб скинути все|Press again to 
 ctrl:"Пауза: P або Esc. Рух: WASD або стрілки. Z — удар (тисни кілька разів поспіль для комбо з трьох ударів), X — сильний удар, C — вогняна куля, V — блискавка, B — лікування, N — перекат (на мить ти невразливий), M — вихор, G — палаючий клинок, H — щит духу. Від першого лиця: W/S — уперед і назад, A/D або стрілки — повертатися, Q/E — крок убік, R — розвернутися, тягни пальцем по правій частині екрана — оглядатися. На телефоні джойстик ліворуч: вгору/вниз — іти, вліво/вправо — повертатися. Прогрес зберігається в цьому браузері.|Pause: P or Esc. Move: WASD or arrow keys. Z: strike, press repeatedly for a three-hit combo. X: heavy strike. C: fireball. V: lightning. B: heal. N: invulnerable roll. M: whirlwind. G: blazing blade. H: spirit shield. On a phone, the left side of the screen is a joystick and the buttons are on the right. Progress is saved in this browser. In first person: W/S forward and back, A/D or arrows turn, Q/E strafe, R turn around, drag on the right side to look around. On a phone the joystick moves up/down and turns left/right.|Pause : P ou Échap. Déplacement : WASD ou flèches. Z : frappe, appuie plusieurs fois pour un combo de trois coups. X : coup puissant. C : boule de feu. V : éclair. B : soin. N : roulade invulnérable. M : tourbillon. G : lame ardente. H : bouclier spirituel. Sur téléphone, la gauche de l'écran sert de joystick et les boutons sont à droite. La progression est sauvegardée dans ce navigateur. En première personne : W/S avancer et reculer, A/D ou flèches tourner, Q/E pas de côté, R demi-tour, glisse à droite pour regarder autour. Sur téléphone, le joystick avance/recule et tourne.|Pause: P oder Esc. Bewegen: WASD oder Pfeiltasten. Z: Schlag, mehrmals drücken für eine Dreierkombo. X: schwerer Schlag. C: Feuerball. V: Blitz. B: Heilung. N: unverwundbare Rolle. M: Wirbelwind. G: Flammenklinge. H: Geisterschild. Auf dem Handy ist die linke Bildschirmseite ein Joystick, die Tasten sind rechts. Der Fortschritt wird in diesem Browser gespeichert. In der Ego-Perspektive: W/S vor und zurück, A/D oder Pfeile drehen, Q/E seitwärts, R umdrehen, rechts ziehen zum Umsehen. Auf dem Handy: Joystick hoch/runter laufen, links/rechts drehen.|暂停：P 或 Esc。移动：WASD 或方向键。Z：攻击，连按可打出三连击。X：重击。C：火球。V：闪电。B：治疗。N：无敌翻滚。M：旋风斩。G：烈焰之刃。H：灵魂护盾。手机上屏幕左侧是摇杆，按钮在右侧。进度保存在此浏览器中。第一人称时：W/S 前进后退，A/D 或方向键转向，Q/E 横移，R 转身，在右侧拖动环顾四周。手机上摇杆上下移动、左右转向。|Pausa: P o Esc. Moverse: WASD o flechas. Z: golpe, pulsa varias veces para un combo de tres golpes. X: golpe fuerte. C: bola de fuego. V: rayo. B: curación. N: voltereta invulnerable. M: torbellino. G: hoja ardiente. H: escudo espiritual. En el móvil, la parte izquierda de la pantalla es un joystick y los botones están a la derecha. El progreso se guarda en este navegador. En primera persona: W/S avanzar y retroceder, A/D o flechas girar, Q/E paso lateral, R darse la vuelta, arrastra a la derecha para mirar. En el móvil, el joystick avanza/retrocede y gira.|Pausa: P o Esc. Movimento: WASD o frecce. Z: colpo, premi più volte per una combo di tre colpi. X: colpo pesante. C: palla di fuoco. V: fulmine. B: cura. N: capriola invulnerabile. M: turbine. G: lama infuocata. H: scudo dello spirito. Sul telefono il lato sinistro dello schermo è un joystick e i pulsanti sono a destra. I progressi vengono salvati in questo browser. In prima persona: W/S avanti e indietro, A/D o frecce girare, Q/E passo laterale, R girarsi, trascina a destra per guardarti intorno. Sul telefono il joystick avanza/arretra e gira.|Pauza: P lub Esc. Ruch: WASD lub strzałki. Z: cios, naciskaj kilka razy dla combo z trzech ciosów. X: mocny cios. C: kula ognia. V: błyskawica. B: leczenie. N: przewrót z nietykalnością. M: wir. G: płonące ostrze. H: tarcza ducha. Na telefonie lewa strona ekranu działa jak joystick, a przyciski są po prawej. Postęp zapisuje się w tej przeglądarce. W pierwszej osobie: W/S naprzód i w tył, A/D lub strzałki obrót, Q/E krok w bok, R zawrócenie, przeciągnij po prawej, aby się rozejrzeć. Na telefonie joystick: góra/dół chód, lewo/prawo obrót.|Pausa: P ou Esc. Mover: WASD ou setas. Z: golpe, pressione várias vezes para um combo de três golpes. X: golpe pesado. C: bola de fogo. V: raio. B: cura. N: rolamento invulnerável. M: redemoinho. G: lâmina ardente. H: escudo espiritual. No celular, o lado esquerdo da tela é um joystick e os botões ficam à direita. O progresso é salvo neste navegador. Em primeira pessoa: W/S para frente e para trás, A/D ou setas para virar, Q/E passo lateral, R dar meia-volta, arraste no lado direito para olhar ao redor. No celular, o joystick move para cima/baixo e vira para esquerda/direita.|一時停止：P または Esc。移動：WASD または矢印キー。Z：攻撃（連打で3連コンボ）。X：強打。C：ファイアボール。V：雷。B：回復。N：無敵の回避。M：旋風。G：炎刃。H：魂の盾。スマホでは画面左側がジョイスティック、右側にボタンがあります。進行状況はこのブラウザに保存されます。一人称では W/S で前後、A/D または矢印で旋回、Q/E で横移動、R で振り向き、画面右側をドラッグで見回せます。スマホではジョイスティックの上下で移動、左右で旋回します。|일시정지: P 또는 Esc. 이동: WASD 또는 방향키. Z: 공격 (연타하면 3연속 콤보). X: 강타. C: 화염구. V: 번개. B: 치유. N: 무적 구르기. M: 회오리. G: 불타는 검. H: 영혼 방패. 휴대폰에서는 화면 왼쪽이 조이스틱이고 버튼은 오른쪽에 있습니다. 진행 상황은 이 브라우저에 저장됩니다. 1인칭에서는 W/S 앞뒤, A/D 또는 방향키 회전, Q/E 옆걸음, R 뒤돌기, 화면 오른쪽을 드래그해 둘러봅니다. 휴대폰에서는 조이스틱 위아래로 이동, 좌우로 회전합니다.",
 tip:"Z — удар (тисни кілька разів для комбо), X — сильний удар, C — вогонь, V — блискавка, B — лікування, N — перекат, M — вихор, G — палаючий клинок, H — щит духу. W/S — рух, A/D — поворот, Q/E — крок убік, R — розворот, P — пауза.|WASD or arrows: move. Z strike (press repeatedly to combo), X heavy strike, C fire, V lightning, B heal, N roll, M whirlwind, G blazing blade, H spirit shield. P: pause. A/D turn, Q/E strafe, R turn around.|WASD ou flèches : déplacement. Z frappe (appuie plusieurs fois pour un combo), X coup puissant, C feu, V éclair, B soin, N roulade, M tourbillon, G lame ardente, H bouclier spirituel. P : pause. A/D tourner, Q/E de côté, R demi-tour.|WASD oder Pfeile: bewegen. Z Schlag (mehrmals für Kombo), X schwerer Schlag, C Feuer, V Blitz, B Heilung, N Rolle, M Wirbelwind, G Flammenklinge, H Geisterschild. P: Pause. A/D drehen, Q/E seitwärts, R umdrehen.|WASD 或方向键：移动。Z 攻击（连按连击），X 重击，C 火球，V 闪电，B 治疗，N 翻滚，M 旋风斩，G 烈焰之刃，H 灵魂护盾。P：暂停。 A/D 转向，Q/E 横移，R 转身。|WASD o flechas: moverse. Z golpe (pulsa varias veces para combo), X golpe fuerte, C fuego, V rayo, B curación, N voltereta, M torbellino, G hoja ardiente, H escudo espiritual. P: pausa. A/D girar, Q/E lateral, R darse la vuelta.|WASD o frecce: movimento. Z colpo (premi più volte per la combo), X colpo pesante, C fuoco, V fulmine, B cura, N capriola, M turbine, G lama infuocata, H scudo dello spirito. P: pausa. A/D girare, Q/E laterale, R girarsi.|WASD lub strzałki: ruch. Z cios (naciskaj kilka razy dla combo), X mocny cios, C ogień, V błyskawica, B leczenie, N przewrót, M wir, G płonące ostrze, H tarcza ducha. P: pauza. A/D obrót, Q/E w bok, R zawrócenie.|WASD ou setas: mover. Z golpe (pressione várias vezes para combo), X golpe pesado, C fogo, V raio, B cura, N rolamento, M redemoinho, G lâmina ardente, H escudo espiritual. P: pausa. A/D virar, Q/E passo lateral, R meia-volta.|WASD または矢印：移動。Z 攻撃（連打でコンボ）、X 強打、C 炎、V 雷、B 回復、N 回避、M 旋風、G 炎刃、H 魂の盾。P：一時停止。A/D 旋回、Q/E 横移動、R 振り向き。|WASD 또는 방향키: 이동. Z 공격 (연타로 콤보), X 강타, C 화염, V 번개, B 치유, N 구르기, M 회오리, G 불타는 검, H 영혼 방패. P: 일시정지. A/D 회전, Q/E 옆걸음, R 뒤돌기.",
 joyHint:"Тягни пальцем тут, щоб іти|Drag here to walk|Glisse ici pour marcher|Hier ziehen zum Laufen|在此拖动以移动|Arrastra aquí para caminar|Trascina qui per camminare|Przeciągnij tutaj, aby chodzić|Arraste aqui para andar|ここをドラッグして歩く|여기를 드래그해 걷기",
+goGo:"Іди вперед до наступного бою · {n} м|Walk ahead to the next battle · {n} m|Avance vers le prochain combat · {n} m|Geh weiter zum nächsten Kampf · {n} m|前进至下一场战斗 · {n} 米|Avanza hacia la siguiente batalla · {n} m|Avanza verso la prossima battaglia · {n} m|Idź naprzód do kolejnej walki · {n} m|Siga em frente para a próxima batalha · {n} m|次の戦いへ前進 · {n} m|다음 전투로 전진 · {n} m",
+goFight:"Знищ ворогів: {n}|Defeat the enemies: {n}|Vaincs les ennemis : {n}|Besiege die Gegner: {n}|消灭敌人：{n}|Derrota a los enemigos: {n}|Sconfiggi i nemici: {n}|Pokonaj wrogów: {n}|Derrote os inimigos: {n}|敵を倒せ：{n}|적을 처치하세요: {n}",
+stickL:"Стік повертає камеру|Stick turns the camera|Le stick tourne la caméra|Stick dreht die Kamera|摇杆转动视角|El joystick gira la cámara|Lo stick ruota la camera|Drążek obraca kamerę|O analógico gira a câmera|スティックでカメラを回す|스틱으로 카메라 회전",
+stickHint:"Вимкнено: стік тільки рухає (і вбік), камеру крутиш пальцем по екрану|Off: the stick only moves (sideways too); drag the screen to look around|Désactivé : le stick ne fait que déplacer (de côté aussi) ; glisse sur l\'écran pour regarder|Aus: der Stick bewegt nur (auch seitwärts); zum Umsehen über den Bildschirm wischen|关闭：摇杆只负责移动（含左右平移），滑动屏幕转动视角|Desactivado: el joystick solo mueve (también de lado); desliza la pantalla para mirar|Disattivato: lo stick muove soltanto (anche di lato); trascina lo schermo per guardare|Wyłączone: drążek tylko porusza (także na boki), rozglądasz się przeciągając po ekranie|Desligado: o analógico só move (e para os lados); arraste a tela para olhar|オフ：スティックは移動のみ（横移動も）。画面をドラッグして視点を回す|꺼짐: 스틱은 이동만 담당(옆으로도), 화면을 드래그해 시점 회전",
 defeat:"Поразка|Defeat|Défaite|Niederlage|失败|Derrota|Sconfitta|Porażka|Derrota|敗北|패배",
 defeatSub:"Цього разу вороги виявилися сильнішими. Прокачай навички або спробуй ще раз.|The enemies were stronger this time. Upgrade your skills or try again.|Les ennemis étaient plus forts cette fois. Améliore tes compétences ou réessaie.|Die Gegner waren diesmal stärker. Verbessere deine Fähigkeiten oder versuche es erneut.|敌人这次更强。升级技能或再试一次。|Esta vez los enemigos fueron más fuertes. Mejora tus habilidades o inténtalo de nuevo.|Questa volta i nemici erano più forti. Potenzia le abilità o riprova.|Tym razem wrogowie byli silniejsi. Ulepsz umiejętności lub spróbuj ponownie.|Os inimigos foram mais fortes desta vez. Melhore suas habilidades ou tente de novo.|今回は敵の方が強かった。スキルを強化するか、もう一度挑戦しよう。|이번에는 적이 더 강했습니다. 스킬을 강화하거나 다시 도전하세요.",
 openTree:"Відкрити дерево навичок|Open skill tree|Ouvrir l'arbre|Skillbaum öffnen|打开技能树|Abrir el árbol|Apri l'albero|Otwórz drzewko|Abrir árvore de habilidades|スキルツリーを開く|스킬 트리 열기",
@@ -771,6 +773,10 @@ tabTrain:"Покращення|Upgrades|Améliorations|Verbesserungen|强化|Mej
 treeHint:"Починай із центру. Нові вузли з'являються, щойно купиш сусідній. Наведи курсор або затисни вузол, щоб побачити, що він дає. Ціна — під кожним вузлом.|Start from the center. New nodes appear when you buy a neighboring one. Hover or press and hold a node to see what it gives. Each node shows its price below it.|Commence au centre. De nouveaux nœuds apparaissent quand tu achètes un nœud voisin. Survole ou maintiens un nœud pour voir ce qu'il donne. Son prix est affiché dessous.|Beginne in der Mitte. Neue Knoten erscheinen, wenn du einen benachbarten kaufst. Fahre über einen Knoten oder halte ihn gedrückt, um seinen Effekt zu sehen. Der Preis steht darunter.|从中心开始。购买相邻节点后会出现新节点。悬停或长按节点查看效果，价格显示在下方。|Empieza por el centro. Aparecen nodos nuevos cuando compras uno vecino. Pasa el cursor o mantén pulsado un nodo para ver qué da. Su precio aparece debajo.|Inizia dal centro. Nuovi nodi compaiono quando ne compri uno vicino. Passa sopra o tieni premuto un nodo per vedere cosa dà. Il prezzo è sotto.|Zacznij od środka. Nowe węzły pojawiają się, gdy kupisz sąsiedni. Najedź lub przytrzymaj węzeł, aby zobaczyć, co daje. Cena jest pod nim.|Comece pelo centro. Novos nós aparecem quando você compra um vizinho. Passe o mouse ou segure um nó para ver o que ele dá. O preço fica abaixo de cada nó.|中央から始めよう。隣のノードを買うと新しいノードが現れます。ノードにカーソルを合わせるか長押しすると効果が見られます。価格は各ノードの下に表示されます。|중앙에서 시작하세요. 이웃 노드를 사면 새 노드가 나타납니다. 노드에 마우스를 올리거나 길게 누르면 효과를 볼 수 있습니다. 가격은 각 노드 아래에 있습니다.",
 trainHint:"Покращення можна купувати без обмежень. Кожен наступний рівень дорожчий.|Upgrades can be bought forever. Each level costs more than the last.|Les améliorations s'achètent à l'infini. Chaque niveau coûte plus cher.|Verbesserungen sind unbegrenzt kaufbar. Jede Stufe kostet mehr.|强化可以无限购买，每级都比上一级更贵。|Las mejoras se pueden comprar sin límite. Cada nivel cuesta más.|I potenziamenti si comprano all'infinito. Ogni livello costa di più.|Ulepszenia można kupować bez końca. Każdy poziom kosztuje więcej.|As melhorias podem ser compradas sem limite. Cada nível custa mais que o anterior.|強化は無制限に購入できます。レベルが上がるごとに高くなります。|강화는 제한 없이 살 수 있습니다. 레벨마다 가격이 오릅니다.",
 opened:"Відкрито|Unlocked|Débloqués|Freigeschaltet|已解锁|Desbloqueados|Sbloccati|Odblokowane|Desbloqueados|解放済み|해금됨",
+buyAll:"Купити все|Buy all|Tout acheter|Alles kaufen|全部购买|Comprar todo|Compra tutto|Kup wszystko|Comprar tudo|すべて購入|전부 구매",
+buyAllDone:"Куплено: {n} за 🪙 {g}|Bought: {n} for 🪙 {g}|Acheté : {n} pour 🪙 {g}|Gekauft: {n} für 🪙 {g}|已购买 {n} 项，花费 🪙 {g}|Comprado: {n} por 🪙 {g}|Acquistati: {n} per 🪙 {g}|Kupiono: {n} za 🪙 {g}|Comprado: {n} por 🪙 {g}|購入: {n}個 / 🪙 {g}|구매: {n}개 / 🪙 {g}",
+buyAllNone:"Немає що купити|Nothing to buy|Rien à acheter|Nichts zu kaufen|没有可买的|Nada que comprar|Niente da comprare|Nie ma czego kupić|Nada para comprar|買えるものがありません|살 것이 없습니다",
+cheapest:"Найдешевше|Cheapest|Moins cher|Günstigstes|最便宜|Más barato|Più economico|Najtańsze|Mais barato|最安|최저가",
 unlock:"Відкрити за 🪙 {n}|Unlock for 🪙 {n}|Débloquer : 🪙 {n}|Freischalten: 🪙 {n}|解锁 🪙 {n}|Desbloquear 🪙 {n}|Sblocca 🪙 {n}|Odblokuj za 🪙 {n}|Desbloquear por 🪙 {n}|🪙 {n}で解放|🪙 {n}에 해금",
 owned:"Відкрито|Unlocked|Débloqué|Freigeschaltet|已解锁|Desbloqueado|Sbloccato|Odblokowane|Desbloqueado|解放済み|해금됨",
 needLink:"Спершу відкрий сусідній вузол|Unlock a linked node first|Débloque d'abord un nœud relié|Schalte zuerst einen verbundenen Knoten frei|请先解锁相连的节点|Desbloquea antes un nodo conectado|Sblocca prima un nodo collegato|Najpierw odblokuj połączony węzeł|Desbloqueie antes um nó ligado|先に隣接するノードを解放してください|먼저 연결된 노드를 해금하세요",
@@ -832,7 +838,7 @@ foeHint:"Плати золотом, і рідкісні вороги з'явля
 foeLvl:"Рівень рідкісних ворогів {n} / {m}|Rare enemy level {n} / {m}|Niveau d'ennemis rares {n} / {m}|Stufe seltener Gegner {n} / {m}|稀有敌人等级 {n} / {m}|Nivel de enemigos raros {n} / {m}|Livello nemici rari {n} / {m}|Poziom rzadkich wrogów {n} / {m}|Nível de inimigos raros {n} / {m}|レア敵レベル {n} / {m}|희귀 적 레벨 {n} / {m}",
 foeDone:"Рідкісних ворогів покращено до рівня {n}|Rare enemies upgraded to level {n}|Ennemis rares améliorés au niveau {n}|Seltene Gegner auf Stufe {n} verbessert|稀有敌人提升至 {n} 级|Enemigos raros mejorados al nivel {n}|Nemici rari portati al livello {n}|Rzadcy wrogowie ulepszeni do poziomu {n}|Inimigos raros melhorados para o nível {n}|レア敵をレベル {n} に強化|희귀 적이 {n}레벨로 강화됨",
 foeChance:"Шанс рідкісного ворога в бою|Chance of a rare enemy per battle|Chance d'un ennemi rare par combat|Chance auf einen seltenen Gegner pro Kampf|每场战斗出现稀有敌人的几率|Probabilidad de enemigo raro por batalla|Probabilità di nemico raro per battaglia|Szansa na rzadkiego wroga w walce|Chance de inimigo raro por batalha|戦闘ごとのレア敵出現率|전투당 희귀 적 확률",
-foeTiers:"Які вороги можуть з'явитися|Which enemies can appear|Quels ennemis peuvent apparaître|Welche Gegner erscheinen können|可能出现的敌人|Qué enemigos pueden aparecer|Quali nemici possono comparire|Którzy wrogowie mogą się pojawić|Quais inimigos podem aparecer|出現する敵|등장 가능한 적",
+foeTiers:"Шанс кожного ворога в бою|Chance for each enemy in a battle|Chance pour chaque ennemi au combat|Chance pro Gegner im Kampf|战斗中每个敌人的几率|Probabilidad de cada enemigo en combate|Probabilità di ogni nemico in battaglia|Szansa na każdego wroga w walce|Chance de cada inimigo na batalha|戦闘での敵ごとの確率|전투에서 적 한 마리당 확률",
 foeLocked:"🔒 з бою {n}|🔒 from battle {n}|🔒 dès le combat {n}|🔒 ab Kampf {n}|🔒 第 {n} 场起|🔒 desde la batalla {n}|🔒 dalla battaglia {n}|🔒 od walki {n}|🔒 a partir da batalha {n}|🔒 {n} 戦目から|🔒 {n}번째 전투부터",
 luckNext:"Після покращення|After the upgrade|Après l'amélioration|Nach der Verbesserung|升级后|Tras la mejora|Dopo il potenziamento|Po ulepszeniu|Depois da melhoria|強化後|강화 후",
 rarity:"Рідкість|Rarity|Rareté|Seltenheit|稀有度|Rareza|Rarità|Rzadkość|Raridade|レア度|희귀도",
@@ -871,7 +877,8 @@ fgNoSword:"Вдягни меч, щоб його прокачати.|Equip a swor
 fgBtn:"Прокачати · 🪙 {n}|Upgrade · 🪙 {n}|Améliorer · 🪙 {n}|Verbessern · 🪙 {n}|强化 · 🪙 {n}|Mejorar · 🪙 {n}|Potenzia · 🪙 {n}|Ulepsz · 🪙 {n}|Melhorar · 🪙 {n}|強化 · 🪙 {n}|강화 · 🪙 {n}",
 fgDone:"Меч +{n}!|Sword +{n}!|Épée +{n} !|Schwert +{n}!|武器 +{n}！|¡Espada +{n}!|Spada +{n}!|Miecz +{n}!|Espada +{n}!|剣 +{n}！|검 +{n}!",
 fgHint:"Золото робить меч сильнішим. Кожен рівень дорожчий. Якщо продати меч, половина золота повернеться.|Gold makes your sword stronger. Each level costs more. Sell the sword and half of that gold comes back.|L'or renforce ton épée. Chaque niveau coûte plus cher. Si tu la vends, la moitié de l'or te revient.|Gold macht dein Schwert stärker. Jede Stufe kostet mehr. Beim Verkauf bekommst du die Hälfte zurück.|金币能让武器更强，等级越高越贵。出售武器会返还一半金币。|El oro hace más fuerte tu espada. Cada nivel cuesta más. Si la vendes, recuperas la mitad.|L'oro rende più forte la spada. Ogni livello costa di più. Se la vendi, ne riavrai la metà.|Złoto wzmacnia miecz. Każdy poziom kosztuje więcej. Po sprzedaży odzyskasz połowę.|O ouro deixa a espada mais forte. Cada nível custa mais. Ao vender, metade do ouro volta.|ゴールドで剣が強くなります。レベルが上がるほど高くなります。売ると半分が戻ります。|골드로 검을 강하게 만듭니다. 레벨이 오를수록 비쌉니다. 팔면 골드의 절반이 돌아옵니다.",
-fgShopHint:"Нові мечі. Асортимент змінюється з прогресом.|New swords. The stock changes as you progress.|Nouvelles épées. Le stock change avec ta progression.|Neue Schwerter. Das Angebot wechselt mit deinem Fortschritt.|新武器。库存会随进度更新。|Espadas nuevas. El stock cambia con tu progreso.|Nuove spade. Le scorte cambiano con i progressi.|Nowe miecze. Oferta zmienia się wraz z postępem.|Espadas novas. O estoque muda conforme você avança.|新しい剣。品揃えは進行に応じて変わります。|새 검. 진행에 따라 재고가 바뀝니다.",
+fgShopHint:"Усі мечі в одному місці, від найдешевшого. ★ — іменні мечі. Список змінюється з прогресом.|All swords in one list, cheapest first. ★ marks named blades. The stock changes as you progress.|Toutes les épées dans une seule liste, de la moins chère à la plus chère. ★ = lames nommées. Le stock change avec votre progression.|Alle Schwerter in einer Liste, das günstigste zuerst. ★ = benannte Klingen. Das Angebot ändert sich mit dem Fortschritt.|所有武器在同一列表中，由便宜到贵。★ 为名剑。随着进度推进，货物会变化。|Todas las espadas en una lista, de la más barata a la más cara. ★ = hojas con nombre. El stock cambia con tu progreso.|Tutte le spade in un unico elenco, dalla più economica. ★ = lame con nome. L'assortimento cambia con i progressi.|Wszystkie miecze na jednej liście, od najtańszego. ★ oznacza imienne ostrza. Oferta zmienia się wraz z postępem.|Todas as espadas numa só lista, da mais barata à mais cara. ★ = lâminas com nome. O estoque muda com o progresso.|すべての剣を一覧に。安い順。★ は名剣。進行に応じて品揃えが変わります。|모든 검을 한 목록에 저렴한 순으로 표시합니다. ★ 는 이름 있는 검. 진행에 따라 목록이 바뀝니다.",
+fgBuyEq:"Купити й одягнути|Buy & equip|Acheter et équiper|Kaufen & ausrüsten|购买并装备|Comprar y equipar|Compra ed equipaggia|Kup i załóż|Comprar e equipar|購入して装備|구매 후 장착",
 fgRefresh:"Оновити · 🪙 {n}|Refresh · 🪙 {n}|Renouveler · 🪙 {n}|Erneuern · 🪙 {n}|刷新 · 🪙 {n}|Renovar · 🪙 {n}|Aggiorna · 🪙 {n}|Odśwież · 🪙 {n}|Atualizar · 🪙 {n}|入れ替え · 🪙 {n}|새로고침 · 🪙 {n}",
 fgBuy:"Купити · 🪙 {n}|Buy · 🪙 {n}|Acheter · 🪙 {n}|Kaufen · 🪙 {n}|购买 · 🪙 {n}|Comprar · 🪙 {n}|Compra · 🪙 {n}|Kup · 🪙 {n}|Comprar · 🪙 {n}|購入 · 🪙 {n}|구매 · 🪙 {n}",
 fgBought:"Куплено: {n}|Bought: {n}|Acheté : {n}|Gekauft: {n}|已购买：{n}|Comprado: {n}|Acquistato: {n}|Kupiono: {n}|Comprado: {n}|購入：{n}|구매: {n}",
@@ -1452,7 +1459,7 @@ const ICK={atk:"sword",dmgMul:"sword+up",critDmg:"burst",crit:"crit",atkSpd:"che
  goldBonus:"coin",goldFlat:"coins",xpBonus:"book",xpFlat:"notes",dropBonus:"clover",rarBonus:"gem",speed:"boot",cdr:"clock",killCdr:"hourglass",
  fireBonus:"fire",fireRad:"fire+up",fireCd:"fire+clock",burn:"fire+plus",burnDmg:"fire+up",fireMulti:"fire+plus",blazeBonus:"sword",
  lightningBonus:"bolt",chain:"bolt+plus",boltCd:"bolt+clock",boltTwice:"bolt+plus"};
-const TRIK={mag:"sparkle",fury:"sword+up",smolderT:"fire+up",blazeT:"fire+plus",wisdomT:"book+up",openT:"sword+plus",heavyT:"axe",slayer:"crown"};
+const TRIK={luckT:"clover",merchT:"coin+up",scavT:"gem",plunderT:"coins",flareT:"burst",cycloneT:"spin",mag:"sparkle",fury:"sword+up",smolderT:"fire+up",blazeT:"fire+plus",wisdomT:"book+up",openT:"sword+plus",heavyT:"axe",slayer:"crown"};
 const trIk=T=>TRIK[T.id]||ICK[T.fx[0][0]]||"star";
 const TCOL={str:"#ff7a6a",spd:"#5fd0ff",hp:"#ff8fb0",mag:"#b98cff",wealth:"#ffd24a"},TCI={str:"sword",spd:"wind",hp:"heart",mag:"sparkle",wealth:"coin"};
 const ikOf=n=>n.cap?"star":ICK[n.fx[0][0]]||"star";
@@ -1542,7 +1549,17 @@ const TRAIN=[
  {id:"smolderT",cat:"mag",fx:[["burnDmg",4]],ic:"🕯",n:S8("Живий вогонь|Living Flame|Flamme vivante|Lebende Flamme|活焰|Llama viva|Fiamma viva|Żywy ogień|Chama viva|生ける炎|살아있는 불꽃"),d:S8("+4% шкоди від горіння за рівень|+4% burn damage per level|+4% de dégâts de brûlure par niveau|+4% Brandschaden pro Stufe|每级灼烧伤害 +4%|+4% de daño de quemadura por nivel|+4% danni da ustione per livello|+4% obrażeń od podpalenia na poziom|+4% de dano de queimadura por nível|レベルごとに燃焼ダメージ +4%|레벨당 화상 피해 +4%"),per:4,base:150,grow:1.21,max:30},
  {id:"pocketT",cat:"wealth",fx:[["goldFlat",1]],u:"",ic:"🧺",n:S8("Дрібні гроші|Pocket Change|Petite monnaie|Kleingeld|零钱|Calderilla|Spiccioli|Drobne|Trocados|小銭|잔돈"),d:S8("+1 золота за вбивство за рівень|+1 gold per kill per level|+1 or par élimination par niveau|+1 Gold pro Kill pro Stufe|每级每次击杀 +1 金币|+1 de oro por muerte por nivel|+1 oro per uccisione per livello|+1 złota za zabójstwo na poziom|+1 de ouro por abate por nível|レベルごとに撃破ゴールド +1|레벨당 처치 골드 +1"),per:1,base:130,grow:1.2,max:50},
  {id:"notesT",cat:"wealth",fx:[["xpFlat",2]],u:"",ic:"📓",n:S8("Бойові нотатки|Battle Notes|Notes de bataille|Kampfnotizen|战斗笔记|Notas de batalla|Appunti di battaglia|Notatki bojowe|Notas de batalha|戦闘メモ|전투 노트"),d:S8("+2 досвіду за вбивство за рівень|+2 XP per kill per level|+2 XP par élimination par niveau|+2 EP pro Kill pro Stufe|每级每次击杀 +2 经验|+2 de XP por muerte por nivel|+2 XP per uccisione per livello|+2 PD za zabójstwo na poziom|+2 de XP por abate por nível|レベルごとに撃破経験値 +2|레벨당 처치 경험치 +2"),per:2,base:130,grow:1.2,max:50},
- {id:"wisdomT",cat:"wealth",fx:[["xpBonus",3]],ic:"🎓",n:S8("Жага знань|Thirst for Knowledge|Soif de savoir|Wissensdurst|求知若渴|Sed de saber|Sete di sapere|Głód wiedzy|Sede de saber|知識欲|지식욕"),d:S8("+3% досвіду за рівень|+3% XP per level|+3% d'XP par niveau|+3% EP pro Stufe|每级经验 +3%|+3% de XP por nivel|+3% XP per livello|+3% PD na poziom|+3% de XP por nível|レベルごとに経験値 +3%|레벨당 경험치 +3%"),per:3,base:160,grow:1.22,max:30}
+ {id:"wisdomT",cat:"wealth",fx:[["xpBonus",3]],ic:"🎓",n:S8("Жага знань|Thirst for Knowledge|Soif de savoir|Wissensdurst|求知若渴|Sed de saber|Sete di sapere|Głód wiedzy|Sede de saber|知識欲|지식욕"),d:S8("+3% досвіду за рівень|+3% XP per level|+3% d'XP par niveau|+3% EP pro Stufe|每级经验 +3%|+3% de XP por nivel|+3% XP per livello|+3% PD na poziom|+3% de XP por nível|レベルごとに経験値 +3%|레벨당 경험치 +3%"),per:3,base:160,grow:1.22,max:30},
+ {id:"cycloneT",cat:"str",fx:[["spinBonus",6]],ic:"🌀",n:S8("Сталевий смерч|Steel Tornado|Tornade d'acier|Stahlwirbel|钢铁龙卷|Tornado de acero|Tornado d'acciaio|Stalowa trąba|Tornado de aço|鋼の竜巻|강철 회오리"),d:S8("+6% шкоди вихору за рівень|+6% whirlwind damage per level|+6% de dégâts du tourbillon par niveau|+6% Wirbelschaden pro Stufe|每级旋风伤害 +6%|+6% de daño del torbellino por nivel|+6% danni del turbine per livello|+6% obrażeń wiru na poziom|+6% de dano do redemoinho por nível|レベルごとに旋風ダメージ +6%|레벨당 회오리 피해 +6%"),per:6,base:75,grow:1.18,max:0},
+ {id:"tempoT",cat:"spd",fx:[["heavyCd",2]],ic:"🔨",n:S8("Темп молота|Hammer Tempo|Cadence du marteau|Hammertempo|重锤节奏|Ritmo del martillo|Ritmo del martello|Tempo młota|Ritmo do martelo|槌のテンポ|망치 박자"),d:S8("Сильний удар відновлюється на 2% швидше за рівень|Heavy strike −2% cooldown per level|Coup puissant −2% de recharge par niveau|Schwerer Schlag −2% Abklingzeit pro Stufe|每级重击冷却 −2%|Golpe fuerte −2% de recarga por nivel|Colpo pesante −2% ricarica per livello|Mocny cios −2% odnowienia na poziom|Golpe pesado −2% de recarga por nível|レベルごとに強打のクールダウン −2%|레벨당 강타 재사용 대기시간 −2%"),per:2,base:100,grow:1.22,max:15,neg:1},
+ {id:"prayT",cat:"spd",fx:[["healCd",2]],ic:"🙏",n:S8("Швидка молитва|Swift Prayer|Prière rapide|Schnelles Gebet|迅捷祈祷|Plegaria veloz|Preghiera rapida|Szybka modlitwa|Prece veloz|素早い祈り|빠른 기도"),d:S8("Лікування відновлюється на 2% швидше за рівень|Heal −2% cooldown per level|Soin −2% de recharge par niveau|Heilung −2% Abklingzeit pro Stufe|每级治疗冷却 −2%|Curación −2% de recarga por nivel|Cura −2% ricarica per livello|Leczenie −2% odnowienia na poziom|Cura −2% de recarga por nível|レベルごとに回復のクールダウン −2%|레벨당 치유 재사용 대기시간 −2%"),per:2,base:100,grow:1.22,max:15,neg:1},
+ {id:"flareT",cat:"mag",fx:[["fireRad",5]],ic:"💥",n:S8("Спалах|Flare|Éruption|Aufflammen|耀斑|Llamarada|Vampata|Rozbłysk|Labareda|閃炎|섬광"),d:S8("Вибух вогню ширший на 5% за рівень|Fire blast 5% wider per level|Explosion de feu 5% plus large par niveau|Feuerexplosion 5% breiter pro Stufe|每级火焰爆炸范围 +5%|Explosión de fuego 5% más ancha por nivel|Esplosione di fuoco più ampia del 5% per livello|Eksplozja ognia szersza o 5% na poziom|Explosão de fogo 5% mais larga por nível|レベルごとに炎の爆発範囲 +5%|레벨당 화염 폭발 범위 +5%"),per:5,base:70,grow:1.18,max:30},
+ {id:"wardT",cat:"mag",fx:[["shieldCd",2]],ic:"🛡",n:S8("Щит духу|Spirit Ward|Garde spirituelle|Geisterwall|灵魂守护|Guardia espiritual|Guardia dello spirito|Strażnik ducha|Guarda espiritual|霊の守り|영혼의 수호"),d:S8("Щит духу відновлюється на 2% швидше за рівень|Spirit Shield −2% cooldown per level|Bouclier spirituel −2% de recharge par niveau|Geisterschild −2% Abklingzeit pro Stufe|每级灵魂护盾冷却 −2%|Escudo espiritual −2% de recarga por nivel|Scudo spirituale −2% ricarica per livello|Tarcza ducha −2% odnowienia na poziom|Escudo espiritual −2% de recarga por nível|レベルごとに霊の盾のクールダウン −2%|레벨당 영혼 방패 재사용 대기시간 −2%"),per:2,base:110,grow:1.22,max:15,neg:1},
+ {id:"chainT",cat:"mag",fx:[["chain",0.5]],u:"",ic:"🔗",n:S8("Ланцюгова руна|Chain Rune|Rune en chaîne|Kettenrune|连锁符文|Runa en cadena|Runa a catena|Runa łańcucha|Runa em cadeia|連鎖のルーン|연쇄 룬"),d:S8("Блискавка перескакує на +0.5 цілі за рівень|+0.5 lightning chain target per level|+0,5 cible d'éclair en chaîne par niveau|+0,5 Blitz-Kettenziel pro Stufe|每级闪电连锁 +0.5 个目标|+0,5 objetivo de rayo en cadena por nivel|+0,5 bersaglio a catena del fulmine per livello|+0,5 celu łańcucha błyskawicy na poziom|+0,5 alvo de raio em cadeia por nível|レベルごとに雷の連鎖 +0.5 ターゲット|레벨당 번개 연쇄 대상 +0.5"),per:0.5,base:200,grow:1.3,max:6,},
+ {id:"luckT",cat:"wealth",fx:[["rarBonus",0.2]],u:"",ic:"🍀",n:S8("Улюбленець долі|Fortune's Favourite|Favori du destin|Glückskind|命运宠儿|Favorito del destino|Favorito del fato|Pupil losu|Favorito do destino|運命の寵児|운명의 총아"),d:S8("+0.2 до удачі на рідкісні речі за рівень|+0.2 luck level for rarity per level|+0,2 niveau de chance de rareté par niveau|+0,2 Glücksstufe für Seltenheit pro Stufe|每级稀有度幸运 +0.2|+0,2 de suerte para rareza por nivel|+0,2 di fortuna per rarità per livello|+0,2 szczęścia na rzadkość na poziom|+0,2 de sorte para raridade por nível|レベルごとにレア運 +0.2|레벨당 희귀도 행운 +0.2"),per:0.2,base:150,grow:1.2,max:25,},
+ {id:"merchT",cat:"wealth",fx:[["goldBonus",3]],ic:"💰",n:S8("Торговець|Merchant|Marchand|Händler|商人|Mercader|Mercante|Kupiec|Mercador|商人|상인"),d:S8("+3% золота за рівень|+3% gold per level|+3% d'or par niveau|+3% Gold pro Stufe|每级金币 +3%|+3% de oro por nivel|+3% oro per livello|+3% złota na poziom|+3% de ouro por nível|レベルごとにゴールド +3%|레벨당 골드 +3%"),per:3,base:90,grow:1.22,max:40},
+ {id:"scavT",cat:"wealth",fx:[["dropBonus",2]],ic:"🎁",n:S8("Падальник|Scavenger|Charognard|Aasjäger|拾荒者|Carroñero|Spazzino|Padlinożerca|Catador|拾い屋|청소부"),d:S8("+2% шансу випадіння речей за рівень|+2% item drop chance per level|+2% de chance de butin par niveau|+2% Beutechance pro Stufe|每级掉落几率 +2%|+2% de probabilidad de botín por nivel|+2% probabilità di bottino per livello|+2% szansy na łup na poziom|+2% de chance de saque por nível|レベルごとにドロップ率 +2%|레벨당 아이템 드롭 확률 +2%"),per:2,base:100,grow:1.22,max:30},
+ {id:"plunderT",cat:"wealth",fx:[["goldFlat",2]],u:"",ic:"🪙",n:S8("Хабар|Plunder|Butin|Plünderung|掠夺|Saqueo|Saccheggio|Łup|Pilhagem|略奪|약탈"),d:S8("+2 золота за вбивство за рівень|+2 gold per kill per level|+2 or par victoire par niveau|+2 Gold pro Kill pro Stufe|每级每次击杀金币 +2|+2 de oro por muerte por nivel|+2 oro per uccisione per livello|+2 złota za zabójstwo na poziom|+2 de ouro por morte por nível|レベルごとに撃破ごとのゴールド +2|레벨당 처치당 골드 +2"),per:2,base:120,grow:1.2,max:0,},
 ];
 const TCAT=[["str","⚔",S8("Сила|Strength|Force|Stärke|力量|Fuerza|Forza|Siła|Força|筋力|힘")],["spd","💨",S8("Швидкість|Speed|Vitesse|Tempo|速度|Velocidad|Velocità|Szybkość|Velocidade|スピード|속도")],["hp","❤",S8("Здоров'я|Health|Santé|Leben|生命|Salud|Salute|Zdrowie|Vida|体力|체력")],["mag","✨",S8("Магія|Magic|Magie|Magie|魔法|Magia|Magia|Magia|Magia|魔法|마법")],["wealth","🪙",S8("Багатство|Wealth|Richesse|Reichtum|财富|Riqueza|Ricchezza|Bogactwo|Riqueza|富|부")]];
 const trainCost=(T,l)=>Math.round(T.base*Math.pow(T.grow,l)/5)*5;
@@ -1739,10 +1756,10 @@ const ist=it=>it.up?it.st.map(([k,v])=>[k,svAt(k,v,it.up)]):it.st;
 function loadForge(){const f=LS.get(PK("r2_forge"),null),o={seed:-1,stock:[],rr:0};if(f&&typeof f==="object"){o.seed=f.seed|0;o.rr=clampN(f.rr|0,0,50);if(Array.isArray(f.stock))o.stock=f.stock.slice(0,4).map(x=>x&&x.sold?{sold:1,id:x.id|0}:(validItem(x)&&x.s===SLOTI.weapon?x:null))}return o}
 // stat: [base, per item level, cap per item (0 = none), decimals]
 const ISTAT={atk:[2,.6,0,0],maxhp:[10,4,0,0],armor:[1,.25,0,0],crit:[1,.08,12,0],critDmg:[5,.6,60,0],atkSpd:[2,.12,15,0],speed:[2,.1,12,0],fireBonus:[5,.8,0,0],lightningBonus:[5,.8,0,0],healBonus:[5,.8,0,0],regen:[.3,.04,0,1],lifesteal:[.5,.04,6,1],goldBonus:[3,.3,60,0],xpBonus:[3,.3,60,0],dmgRed:[1,.06,10,0],cdr:[1,.05,8,0],thorns:[3,.3,40,0],dropBonus:[2,.15,25,0],evade:[1,.05,10,0],killHeal:[1,.15,0,0],execute:[4,.3,40,0],bossDmg:[4,.3,40,0]};
-const LUCK_MAX=30;
+const LUCK_MAX=50;
 const luckCost=l=>Math.round(120*(l+1)*(1+l*.22)/10)*10;
 const luckTime=l=>Math.max(5,Math.round(6*(l+1)*(1+l*.1)));
-const FOE_MAX=20;
+const FOE_MAX=35;
 const foeCost=l=>Math.round(160*(l+1)*(1+l*.24)/10)*10;
 const foeTime=l=>Math.max(6,Math.round(7*(l+1)*(1+l*.1)));
 const BIOMES=[
@@ -2056,7 +2073,7 @@ function joyRest(){const j=$("joy");j.classList.remove("on");j.style.left=j.styl
 stage.addEventListener("pointerdown",e=>{
  if(modalOpen||e.target.closest(".sk,.ib,.plate,.modal"))return;
  const r=stage.getBoundingClientRect();
- if(e.clientX-r.left<r.width*.55&&joy.id===null){joy.id=e.pointerId;joy.ox=e.clientX;joy.oy=e.clientY;joy.x=joy.y=0;const j=$("joy");j.style.left=(e.clientX-r.left)+"px";j.style.top=(e.clientY-r.top)+"px";j.classList.add("on");$("joyK").style.transform="";$("joyHint").style.display="none";ac();hideTip()}
+ if(e.clientX-r.left<r.width*.45&&joy.id===null){joy.id=e.pointerId;joy.ox=e.clientX;joy.oy=e.clientY;joy.x=joy.y=0;const j=$("joy");j.style.left=(e.clientX-r.left)+"px";j.style.top=(e.clientY-r.top)+"px";j.classList.add("on");$("joyK").style.transform="";$("joyHint").style.display="none";ac();hideTip()}
  else if(isFP()&&look.id===null){look.id=e.pointerId;look.x=e.clientX;look.y=e.clientY;ac();hideTip()}
 });
 stage.addEventListener("pointermove",e=>{if(e.pointerId===look.id){if(!paused&&isFP()&&hero.state!=="dead"){hero.ang-=(e.clientX-look.x)*.0065;hero.pitch=clamp((hero.pitch||0)-(e.clientY-look.y)*.0045,-.55,.5);syncAng()}look.x=e.clientX;look.y=e.clientY;return}if(e.pointerId!==joy.id)return;let dx=e.clientX-joy.ox,dy=e.clientY-joy.oy;const d=Math.hypot(dx,dy),m=50;if(d>m){dx*=m/d;dy*=m/d}joy.x=dx/m;joy.y=dy/m;$("joyK").style.transform=`translate(${dx}px,${dy}px)`});
@@ -2211,38 +2228,47 @@ function hurtHero(dmg,dir,att){
 function makeEnemy(ti,boss,x,z,delay,opt){
  opt=opt||{};
  const C=ETYPES[ti],n=battleNo,loop=Math.floor((n-1)/REGT.length);
- const hpM=(1+(n-1)*.065)*(1+loop*.15)*1.15,atkM=(1+(n-1)*.033)*(1+loop*.08)*1.08;
+ const hpM=(1+(n-1)*.065)*(1+loop*.15)*1.15*ENEMY_BOOST,atkM=(1+(n-1)*.033)*(1+loop*.08)*1.08*ENEMY_BOOST;
  let hp=Math.round(C.hp*hpM*(opt.small?.35:1)),atk=Math.round(C.atk*atkM*(opt.small?.6:1));
  if(boss){hp=Math.round(hp*1.9);atk=Math.round(atk*1.3)}
  const rm0=RARM[C.tier];
- if(rm0&&opt.ref!=null){const R0=ETYPES[opt.ref];hp=Math.round(R0.hp*hpM*rm0.hp*C.hp/rm0.bh);atk=Math.round(R0.atk*atkM*rm0.atk*C.atk/rm0.ba)}
+ const tm=rm0||NORMM[C.tier];
+ if(tm&&opt.ref!=null){const R0=ETYPES[opt.ref];hp=Math.round(R0.hp*hpM*tm.hp*C.hp/tm.bh);atk=Math.round(R0.atk*atkM*tm.atk*C.atk/tm.ba)}
  return{cfg:C,ti,boss,rarI:rm0?rm0.i:0,x,z,h:C.fly?(C.flyH||44):0,face:-1,hp,maxhp:hp,atk,state:"chase",st:0,anim:rnd(0,6),seed:rnd(0,9),flash:0,kb:0,cd:rnd(.4,1.2),delay,entered:false,moving:false,
   s:C.size*(boss?1.3:1)*(opt.small?.6:1),combo2:false,shots:0,hopT:rnd(0,.9),dive:0,webCd:rnd(.6,1.6),summons:0,lastHit:9,regenT:0,small:!!opt.small,summoned:!!opt.summoned,atkKind:C.style,stun:0,chargeV:0};
 }
-/* every normal battle can bring one rarity enemy; the rarer the tier, the later it unlocks and the less often it shows up */
-const foeChance=(n,l)=>Math.min(.16+l*.012,(.06+n*.0015)*(1+l*.2));
-const foeGate=(k,l)=>Math.max(1,Math.round(RARM[k].gate*(1-l*.012)));
-const foeW=(k,l)=>RARM[k].w*(1+l*.05*RARK.indexOf(k));
-function foeTiers(n,l){const bi=biomeAt(n);return RARK.filter(k=>n>=foeGate(k,l)&&RARIDS[k].some(i=>bioFit(i,bi)))}
-function rarPick(n,force){
- const l=foe.lvl,bi=biomeAt(n),av=foeTiers(n,l);if(!av.length||(!force&&Math.random()>=foeChance(n,l)))return-1;
- let x=Math.random()*av.reduce((a,k)=>a+foeW(k,l),0),tk=av[av.length-1];for(const k of av){x-=foeW(k,l);if(x<=0){tk=k;break}}
- const ids=RARIDS[tk].filter(i=>bioFit(i,bi));return ids[rint(0,ids.length-1)];
-}
+/* ---- enemy tiers: EVERY enemy rolls a tier. Common is the most likely, the rarest tiers are tiny but never zero.
+   The Foes upgrade makes the rare tiers more likely and brings them in earlier. ---- */
+const ENEMY_BOOST=1.5;
+const TL=["common","uncommon","rare","epic","elite","mythic","ancient","divine","eclipse","ancientone","eternal"];
+const TW0=[100,50,25,12.5,6.5,3.3,1.7,.9,.5,.28,.15],TG=[0,0,6,14,24,38,54,72,92,114,138];
+const TIERIDS=TL.map(k=>ETYPES.map((C,i)=>i).filter(i=>ETYPES[i].tier===k&&!ETYPES[i].bossOnly));
+/* strength of each normal tier compared with the enemy that is typical for the battle number */
+const NORMM={common:{hp:.9,atk:.92},uncommon:{hp:1.05,atk:1.02},rare:{hp:1.2,atk:1.12},epic:{hp:1.45,atk:1.25},elite:{hp:1.8,atk:1.45}};
+for(const k in NORMM){const ids=TIERIDS[TL.indexOf(k)];NORMM[k].bh=ids.reduce((a,i)=>a+ETYPES[i].hp,0)/ids.length;NORMM[k].ba=ids.reduce((a,i)=>a+ETYPES[i].atk,0)/ids.length}
+const waveCnt=n=>Math.min(6,2+Math.floor(n/3)+Math.floor((n-1)/REGT.length));
+function tierW(n,l){return TW0.map((w,k)=>{
+ if(k===0)return w/(1+n/110)/(1+l*.02);
+ if(k===1)return w;
+ const g=TG[k]*(1-Math.min(l,FOE_MAX)*.01),r=Math.pow(clamp((n+3)/(g+3),.12,1),1.2);
+ return w*r*(1+l*.1*(k-1))})}
+function tierDist(n,l){const w=tierW(n,l),s=w.reduce((a,b)=>a+b,0);return w.map(x=>x/s)}
+const foeAny=(n,l)=>{const q=tierDist(n,l).slice(5).reduce((a,b)=>a+b,0);return 1-Math.pow(1-q,waveCnt(n))};
+function pickTier(n,l){const w=tierW(n,l);let x=Math.random()*w.reduce((a,b)=>a+b,0);for(let k=0;k<w.length;k++){x-=w[k];if(x<=0)return k}return 0}
+function pickOfTier(k,bi){let ids=TIERIDS[k].filter(i=>bioFit(i,bi));if(!ids.length)ids=TIERIDS[k];return ids[rint(0,ids.length-1)]}
 function waveList(n){
  const N=REGT.length,mi=(n-1)%N,bi=biomeAt(n),main=regNear(mi,bi),loop=Math.floor((n-1)/N),list=[],prev=k=>regNear(Math.max(0,mi-k),bi);
  // every 7th battle is a boss fight: odd ones bring one of the five dedicated bosses, even ones a crowned champion
  if(n%7===0){const bw=n/7;if(bw%2===1&&BOSST.length){list.push({t:bossFor(n),boss:true});list.push({t:main});if(n>14)list.push({t:prev(1)})}
   else{list.push({t:main,boss:true});list.push({t:prev(1)});if(n>14)list.push({t:prev(2)})}}
- else{const cnt=Math.min(6,2+Math.floor(n/3)+loop);for(let i=0;i<cnt;i++)list.push({t:i%2===0?main:regPrev(mi,bi)});
-  const rt=rarPick(n);if(rt>=0)list.push({t:rt,rar:true,ref:main});if(foe.lvl>=10&&Math.random()<(foe.lvl-8)*.012){const r2=rarPick(n,true);if(r2>=0)list.push({t:r2,rar:true,ref:main})}}
+ else{const cnt=waveCnt(n),l=foe.lvl;for(let i=0;i<cnt;i++){const k=pickTier(n,l);list.push({t:pickOfTier(k,bi),rar:k>=5,ref:main})}}
  return list;
 }
 function startWave(){
  locked=true;cleared=false;usedRevive=false;
  arenaX=Math.max(0,hero.x-LW*.35);
  const list=waveList(battleNo);enemies=[];
- list.forEach((w,i)=>{const left=list.length>=3&&i%3===2;const x=left?arenaX-40-i*14:arenaX+LW+40+i*26;enemies.push(makeEnemy(w.t,!!w.boss,x,rnd(15,DEPTH-15),i*.55,w.rar?{ref:w.ref}:null))});
+ list.forEach((w,i)=>{const left=list.length>=3&&i%3===2;const x=left?arenaX-40-i*14:arenaX+LW+40+i*26;enemies.push(makeEnemy(w.t,!!w.boss,x,rnd(15,DEPTH-15),i*.55,w.ref!=null?{ref:w.ref}:null))});
  const boss=enemies.find(e=>e.boss);
  if(boss){banner(t("bossWave"),L(boss.cfg.n));setTimeout(()=>SFX.roar(),500)}
  else{banner(t("wave",{n:battleNo}),L(BIOME_N[biomeIdx()]));SFX.horn()}
@@ -4317,10 +4343,9 @@ function overlay3(){
   else{left=sx<0;y=clamp(sy,40,LH-40)}
   const danger=e.state==="windup"||e.state==="strike",x=left?10:LW-10,s=(danger?1.35+Math.sin(tNow*20)*.15:1)*sc;
   c.fillStyle=danger?"#ff2a40":e.boss?"#e6b84e":"#e14b5a";c.beginPath();c.moveTo(x+(left?-6:6)*s,y);c.lineTo(x+(left?4:-4)*s,y-6*s);c.lineTo(x+(left?4:-4)*s,y+6*s);c.closePath();c.fill()}
- if(cleared&&!locked&&h.state!=="dead"){const k=(Math.sin(tNow*5)+1)/2;c.fillStyle=`rgba(214,162,74,${.6+.4*k})`;
-  if(fp){const x=LW/2,y=Math.max(96,LH*.24)-k*6;c.font="700 12px Cinzel,Georgia,serif";c.textAlign="center";
-   const ra=((h.ang+PI)%(2*PI)+2*PI)%(2*PI)-PI;c.save();c.translate(x,y);c.rotate(ra);c.beginPath();c.moveTo(0,-14);c.lineTo(-12,2);c.lineTo(-5,2);c.lineTo(-5,14);c.lineTo(5,14);c.lineTo(5,2);c.lineTo(12,2);c.closePath();c.fill();c.restore();c.fillText(t("go"),x,y+30)}
-  else{const x=LW-34+k*8,y=Math.max(110,GT-70);c.beginPath();c.moveTo(x+14,y);c.lineTo(x-4,y-12);c.lineTo(x-4,y-5);c.lineTo(x-18,y-5);c.lineTo(x-18,y+5);c.lineTo(x-4,y+5);c.lineTo(x-4,y+12);c.closePath();c.fill();c.font="700 12px Cinzel,Georgia,serif";c.textAlign="right";c.fillText(t("go"),x-22,y+4)}}
+ if(fp&&h.state!=="dead")drawGoal(c,h);
+ if(!fp&&cleared&&!locked&&h.state!=="dead"){const k=(Math.sin(tNow*5)+1)/2;c.fillStyle=`rgba(214,162,74,${.6+.4*k})`;
+  {const x=LW-34+k*8,y=Math.max(110,GT-70);c.beginPath();c.moveTo(x+14,y);c.lineTo(x-4,y-12);c.lineTo(x-4,y-5);c.lineTo(x-18,y-5);c.lineTo(x-18,y+5);c.lineTo(x-4,y+5);c.lineTo(x-4,y+12);c.closePath();c.fill();c.font="700 12px Cinzel,Georgia,serif";c.textAlign="right";c.fillText(t("go"),x-22,y+4)}}
 }
 /* --- 3D bestiary --- */
 function drawBestiary3(){
@@ -4448,14 +4473,28 @@ const MZ=125/(82*ZS);
 function hdir(){const a=hero.ang||0;return{x:Math.cos(a),z:-Math.sin(a)}}
 function relH(e){const f=hdir(),dx=e.x-hero.x,dz=(e.z-hero.z)*ZS;return{a:dx*f.x+dz*f.z,l:Math.abs(-dx*f.z+dz*f.x)}}
 function syncAng(){const h=hero;if(!isFP()){h.ang=h.face>0?0:PI;return}h.ang=((h.ang+PI)%(2*PI)+2*PI)%(2*PI)-PI;const c=Math.cos(h.ang);if(Math.abs(c)>.15)h.face=c>0?1:-1}
-function fpTurnInput(){let t=0;if(keys.KeyD||keys.ArrowRight)t++;if(keys.KeyA||keys.ArrowLeft)t--;if(Math.abs(joy.x)>.15)t+=joy.x;return clamp(t,-1,1)}
-function fpMove(){let f=0,s=0;if(keys.KeyW||keys.ArrowUp)f++;if(keys.KeyS||keys.ArrowDown)f--;if(Math.abs(joy.y)>.25)f-=joy.y;if(keys.KeyE)s++;if(keys.KeyQ)s--;f=clamp(f,-1,1);const L=Math.hypot(f,s);if(L>1){f/=L;s/=L}const d=hdir();return{x:f*d.x-s*d.z,z:(f*d.z+s*d.x)*MZ}}
+function fpTurnInput(){let t=0;if(keys.KeyD||keys.ArrowRight)t++;if(keys.KeyA||keys.ArrowLeft)t--;if(S.stickTurn&&Math.abs(joy.x)>.15)t+=joy.x;return clamp(t,-1,1)}
+function fpMove(){let f=0,s=0;if(keys.KeyW||keys.ArrowUp)f++;if(keys.KeyS||keys.ArrowDown)f--;if(Math.abs(joy.y)>.25)f-=joy.y;if(!S.stickTurn&&Math.abs(joy.x)>.25)s+=joy.x;if(keys.KeyE)s++;if(keys.KeyQ)s--;f=clamp(f,-1,1);const L=Math.hypot(f,s);if(L>1){f/=L;s/=L}const d=hdir();return{x:f*d.x-s*d.z,z:(f*d.z+s*d.x)*MZ}}
 function fpAssist(){
  // aim assist: face the closest enemy in front (or one right behind) before striking
  const h=hero;let best=null,bs=1e9;
  for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const dx=e.x-h.x,dz=(e.z-h.z)*ZS,dist=Math.hypot(dx,dz);if(dist>180)continue;
   const an=Math.atan2(-dz,dx),da=Math.abs(((an-h.ang+PI)%(2*PI)+2*PI)%(2*PI)-PI);if(da>1.15&&dist>115)continue;const sc=dist+da*80;if(sc<bs){bs=sc;best=an}}
  if(best!=null){h.ang=best;syncAng()}
+}
+/* "where to go" line: after a win it points to the next battle, in a fight to the nearest enemy */
+function drawGoal(c,h){
+ let txt,rot,col;
+ if(cleared&&!locked){txt=t("goGo",{n:Math.max(0,Math.round((arenaX+LW*.97-h.x)/10))});rot=h.ang-0;col="#ffd98a"}
+ else if(locked){let best=null,bd=1e9,cnt=0;for(const e of enemies){if(e.state==="dead")continue;cnt++;const dx=e.x-h.x,dz=(e.z-h.z)*ZS,d=Math.hypot(dx,dz)+(e.delay>0?400:0);if(d<bd){bd=d;best=Math.atan2(-dz,dx)}}
+  if(best==null)return;txt=t("goFight",{n:cnt});rot=h.ang-best;col="#ff9a9a"}
+ else return;
+ const k=(Math.sin(tNow*5)+1)/2,y=Math.max(104,LH*.2);
+ c.save();c.font="700 13px Cinzel,Georgia,'Segoe UI',sans-serif";c.textAlign="left";c.textBaseline="middle";
+ const tw=c.measureText(txt).width,w=tw+54,x0=LW/2-w/2;
+ c.fillStyle="rgba(14,8,12,.72)";c.strokeStyle=hexA(col,.55+.35*k);c.lineWidth=1.6;c.beginPath();if(c.roundRect)c.roundRect(x0,y-17,w,34,17);else c.rect(x0,y-17,w,34);c.fill();c.stroke();
+ c.translate(x0+22,y);c.rotate(rot);c.fillStyle=col;c.beginPath();c.moveTo(0,-11-k*1.5);c.lineTo(-9,2);c.lineTo(-3.5,2);c.lineTo(-3.5,11);c.lineTo(3.5,11);c.lineTo(3.5,2);c.lineTo(9,2);c.closePath();c.fill();
+ c.rotate(-rot);c.translate(-(x0+22),-y);c.fillStyle="#fff3dc";c.fillText(txt,x0+40,y+1);c.restore();
 }
 function syncBarrier3(){
  const on=locked&&isFP();if(!G3.barrier){const T=T3,tx=cvTex(64,128,(g)=>{const gr=g.createLinearGradient(0,128,0,0);gr.addColorStop(0,"rgba(255,255,255,.9)");gr.addColorStop(1,"rgba(255,255,255,0)");g.fillStyle=gr;g.fillRect(0,0,64,128);g.fillStyle="rgba(255,255,255,.9)";for(let i=0;i<6;i++){g.fillRect(8+i*9,60+(i%3)*14,3,10)}},true);
@@ -4664,6 +4703,7 @@ function renderTalents(){
  else if(oldW){w.scrollLeft=sl;w.scrollTop=st2}
  prevVis=vis;justBought=null;
  $("tcount").textContent=t("opened")+": "+tal.length+"/"+TALL.length;
+ {const b=$("tAll");let can=false;for(const nd of TALL){if(nd.cost<=P.gold&&talAvail(nd.id)){can=true;break}}b.innerHTML=icoSvg("coin","#ffd24a","1.1em")+" "+t("buyAll");b.disabled=!can}
  placeSel();renderTInfo();
 }
 /* the dashed selection ring is moved, the tree is NOT redrawn on a tap (that was slow) */
@@ -4722,6 +4762,12 @@ tsvg.addEventListener("contextmenu",e=>e.preventDefault());
 $("twrap").addEventListener("scroll",()=>{if(tip.classList.contains("on"))hideTip2()},{passive:true});
 function buyTalent(id){const n=TALN[id];if(!talAvail(id)){toast(t("needLink"));return}if(P.gold<n.cost){toast(t("need"));SFX.buzz();return}
  P.gold-=n.cost;const old=P.maxhp;tal.push(id);recalc();P.hp=Math.min(P.maxhp,P.hp+Math.max(0,P.maxhp-old));toast(t("bought"));SFX.talent();justBought=id;save();statChips();hideTip2();renderTalents();hud()}
+function buyAllTal(){let n=0,spent=0,last=null;const old=P.maxhp;
+ for(let g=0;g<900;g++){let best=null;for(const nd of TALL){if(nd.cost>P.gold||!talAvail(nd.id))continue;if(!best||nd.cost<best.cost)best=nd}
+  if(!best)break;P.gold-=best.cost;spent+=best.cost;tal.push(best.id);n++;last=best.id}
+ if(!n){toast(t("buyAllNone"));SFX.buzz();return}
+ recalc();P.hp=Math.min(P.maxhp,P.hp+Math.max(0,P.maxhp-old));toast(t("buyAllDone",{n:n,g:spent}));SFX.talent();justBought=last;save();statChips();hideTip2();renderTalents();hud()}
+$("tAll").onclick=buyAllTal;
 let trKey=null;const trUI={cards:{},cols:{}},cIc=n=>icoSvg(n,"#ffd24a","1em");
 const setT=(el,s)=>{if(el._t!==s){el._t=s;el.textContent=s}},setH=(el,s)=>{if(el._h!==s){el._h=s;el.innerHTML=s}};
 /* the Upgrades table is built once and only numbers/buttons are updated after a purchase,
@@ -4729,12 +4775,14 @@ const setT=(el,s)=>{if(el._t!==s){el._t=s;el.textContent=s}},setH=(el,s)=>{if(el
 function buildTrain(){
  const root=$("trGrid");root.innerHTML="";trUI.cards={};trUI.cols={};
  const tb=document.createElement("div");tb.className="trTable";root.appendChild(tb);
- for(const [ck,ci,cn] of TCAT){const list=TRAIN.filter(T=>T.cat===ck);if(!list.length)continue;
+ let cx=0;
+ for(const [ck,ci,cn] of TCAT){const list=TRAIN.filter(T=>T.cat===ck);if(!list.length)continue;cx++;
   const col=document.createElement("div");col.className="trCol c-"+ck;tb.appendChild(col);
-  const hd=document.createElement("div");hd.className="trHd";hd.innerHTML=`<div class="r1"><span class="ci">${icoSvg(TCI[ck],TCOL[ck],"1.25em")}</span><b>${L(cn)}</b></div><small></small>`;col.appendChild(hd);trUI.cols[ck]=hd.querySelector("small");
-  list.forEach(T=>{const d=document.createElement("div");d.className="trc";
-   d.innerHTML=`<div class="trh"><div class="ic">${icoSvg(trIk(T),TCOL[ck],"22px")}</div><span class="lvl"></span></div><b>${L(T.n)}</b><div class="m dd">${L(T.d)}</div><div class="m nw"></div><button class="buy" type="button"></button><span class="ok"></span>`;
-   const u={lvl:d.querySelector(".lvl"),nw:d.querySelector(".nw"),buy:d.querySelector(".buy"),ok:d.querySelector(".ok")};u.buy.onclick=()=>buyTrain(T.id);trUI.cards[T.id]=u;col.appendChild(d)})}
+  const hd=document.createElement("div");hd.className="trHd";hd.style.gridColumn=cx;hd.style.gridRow=1;hd.innerHTML=`<div class="r1"><span class="ci">${icoSvg(TCI[ck],TCOL[ck],"1.25em")}</span><b>${L(cn)}</b></div><small></small>`;col.appendChild(hd);trUI.cols[ck]=hd.querySelector("small");
+  list.forEach((T,ri)=>{const d=document.createElement("div");d.className="trc";d.style.gridColumn=cx;d.style.gridRow=ri+2;
+   const sic=[...new Set(T.fx.map(f=>ICK[f[0]]).filter(Boolean))].slice(0,2).map(n=>icoSvg(n,TCOL[ck],"1.2em")).join("");
+   d.innerHTML=`<div class="trh"><div class="ic">${icoSvg(trIk(T),TCOL[ck],"22px")}</div><span class="lvl"></span></div><b>${L(T.n)}</b><div class="m dd">${L(T.d)}</div><div class="m nw"><span class="nwi">${sic}</span><span class="nwt"></span></div><button class="buy" type="button"></button><span class="ok"></span>`;
+   const u={lvl:d.querySelector(".lvl"),nw:d.querySelector(".nwt"),buy:d.querySelector(".buy"),ok:d.querySelector(".ok")};u.buy.onclick=()=>buyTrain(T.id);trUI.cards[T.id]=u;col.appendChild(d)})}
  trKey=lang}
 function renderTrain(){
  if(trKey!==lang||!$("trGrid").firstChild)buildTrain();
@@ -4743,7 +4791,16 @@ function renderTrain(){
   setT(u.lvl,l+(T.max?"/"+T.max:""));setT(u.nw,t("now")+": "+(T.neg?"−":"+")+v+unit);
   if(mx){u.buy.style.display="none";u.ok.style.display="block";setT(u.ok,t("maxed"))}
   else{u.ok.style.display="none";u.buy.style.display="";setH(u.buy,cIc()+" "+cost);u.buy.disabled=P.gold<cost}}
+ {const b=$("trAll");if(b){let mc=1e18;for(const T of TRAIN){const l=train[T.id]||0;if(T.max&&l>=T.max)continue;const c=trainCost(T,l);if(c<mc)mc=c}
+  setH(b,cIc()+" "+t("buyAll"));b.disabled=P.gold<mc;const i=$("trAllInfo");if(i)setT(i,mc<1e18?t("cheapest")+": "+mc:"")}}
 }
+/* Buy all: always takes the cheapest affordable upgrade first, again and again, until the gold runs out */
+function buyAllTrain(){let n=0,spent=0;const old=P.maxhp;
+ for(let g=0;g<4000;g++){let best=null,bc=1e18;for(const T of TRAIN){const l=train[T.id]||0;if(T.max&&l>=T.max)continue;const c=trainCost(T,l);if(c<bc){bc=c;best=T}}
+  if(!best||bc>P.gold)break;P.gold-=bc;spent+=bc;train[best.id]=(train[best.id]||0)+1;n++}
+ if(!n){toast(t("buyAllNone"));SFX.buzz();return}
+ recalc();P.hp=Math.min(P.maxhp,P.hp+Math.max(0,P.maxhp-old));SFX.buy();toast(t("buyAllDone",{n:n,g:spent}));save();statChips();renderTrain();renderTInfo();hud()}
+$("trAll").onclick=buyAllTrain;
 function buyTrain(id){const T=TRAIN.find(x=>x.id===id),l=train[id]||0;if(T.max&&l>=T.max)return;const cost=trainCost(T,l);if(P.gold<cost){toast(t("need"));SFX.buzz();return}
  P.gold-=cost;const old=P.maxhp;train[id]=l+1;recalc();P.hp=Math.min(P.maxhp,P.hp+Math.max(0,P.maxhp-old));SFX.buy();save();statChips();renderTrain();renderTInfo();hud()}
 document.querySelectorAll(".tab[data-tab]").forEach(b=>b.addEventListener("click",()=>{SFX.tab();document.querySelectorAll(".tab[data-tab]").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll(".tpane").forEach(x=>x.classList.toggle("on",x.id===b.dataset.tab))}));
@@ -4796,7 +4853,7 @@ $("eqBest").onclick=equipBest;
 
 /* ---- forge: upgrade the equipped sword with gold, or buy a new one ---- */
 const forgeUpCost=it=>Math.max(10,Math.round((25+it.l*4)*Math.pow(1.3,it.up|0)*(.7+.3*RAR[it.r].mul)/5)*5);
-const forgeBuyPrice=it=>Math.max(40,Math.round(sellPrice(it)*7+60*it.r*it.r));
+const forgeBuyPrice=it=>Math.max(80,Math.round((sellPrice(it)*7+60*it.r*it.r)*2/10)*10); /* swords cost 2x */
 const forgeRerollCost=()=>Math.round((30+battleNo*5)*(1+forge.rr*.35));
 function forgeRoll(){const bt=clamp(Math.floor(battleNo/8),0,4);forge.stock=[bt,bt+1,bt+2,bt+2].map(r=>{const it=makeItem(Math.min(6,r),SLOTI.weapon);it.nw=false;return it})}
 function forgeCheck(){const sd=Math.floor((battleNo-1)/5);if(forge.seed!==sd||forge.stock.length!==4){forge.seed=sd;forge.rr=0;forgeRoll();save()}}
@@ -4808,8 +4865,8 @@ function renderForgeUp(){
  const R=RAR[it.r],up=it.up|0,max=up>=UP_MAX,cost=max?0:forgeUpCost(it),can=P.gold>=cost;
  const rows=it.st.map(([k,b])=>{const v=svAt(k,b,up),d=max?0:Math.round((svAt(k,b,up+1)-v)*10)/10;return`<li><span>${statTxt(k,v)}</span>${d>0?`<em class="up">▲ ${d}</em>`:""}</li>`}).join("");
  const pips=Array.from({length:UP_MAX},(_,i)=>`<i${i<up?' class="on"':""}></i>`).join("");
- box.innerHTML=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc" id="fgIc">${itemArt(it.s,itemKind(it),it.r,{bare:1})}${up?`<b>+${up}</b>`:""}</div><div class="fgNm"><h4${R.rainbow?' class="rbt"':""}>${it.u?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})}</div></div></div><div class="fgPips">${pips}</div><ul class="fgSt">${rows}</ul><div class="fgAct"><button class="btn main fgGo${can||max?"":" dis"}" id="fgGo" type="button"${max?" disabled":""}>${max?t("maxed"):t("fgBtn",{n:cost})}</button>${max?"":'<button class="btn fgX5" id="fgX5" type="button">×5</button>'}</div><p class="sub fgHint">${t("fgHint")}</p></div>`;
- $("fgGo").onclick=()=>forgeUp(1);if($("fgX5"))$("fgX5").onclick=()=>forgeUp(5);
+ box.innerHTML=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc" id="fgIc">${itemArt(it.s,itemKind(it),it.r,{bare:1})}${up?`<b>+${up}</b>`:""}</div><div class="fgNm"><h4${R.rainbow?' class="rbt"':""}>${it.u?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})}</div></div></div><div class="fgPips">${pips}</div><ul class="fgSt">${rows}</ul><div class="fgAct"><button class="btn main fgGo${can||max?"":" dis"}" id="fgGo" type="button"${max?" disabled":""}>${max?t("maxed"):t("fgBtn",{n:cost})}</button>${max?"":'<button class="btn fgX5" id="fgX5" type="button">×5</button><button class="btn fgX5" id="fgXM" type="button">MAX</button>'}</div><p class="sub fgHint">${t("fgHint")}</p></div>`;
+ $("fgGo").onclick=()=>forgeUp(1);if($("fgX5"))$("fgX5").onclick=()=>forgeUp(5);if($("fgXM"))$("fgXM").onclick=()=>forgeUp(UP_MAX);
 }
 function fgBurst(el,col){if(!el||S.fxOff)return;for(let i=0;i<12;i++){const s=document.createElement("i");s.className="spk";const a=Math.random()*6.283,d=32+Math.random()*34;s.style.cssText=`--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d}px;background:${i%3?col:"#fff"}`;el.appendChild(s);setTimeout(()=>s.remove(),750)}}
 function forgeUp(n){
@@ -4821,55 +4878,43 @@ function forgeUp(n){
  applyEq();renderForge();
  const ic=$("fgIc");if(ic){popCls(ic,"fgHit");fgBurst(ic,RAR[it.r].col)}
 }
-function renderForgeShop(){
- const cur=eq.weapon,box=$("fgS");
- let h=`<div class="fgTop"><p class="sub">${t("fgShopHint")}</p><button class="btn sm" id="fgRr" type="button">🔄 ${t("fgRefresh",{n:forgeRerollCost()})}</button></div><div class="fgShop">`;
- forge.stock.forEach((it,i)=>{
-  if(!it){h+=`<div class="fgCard gone"><div class="m">${t("fgSold")}</div></div>`;return}
-  if(it.sold){const bi=bag.find(x=>x.id===it.id);h+=`<div class="fgCard gone"><div class="m">${t("fgSold")} ✓</div>${bi?`<button class="btn main sm" type="button" data-eqid="${bi.id}">${t("equip")}</button>`:""}</div>`;return}
-  const R=RAR[it.r],price=forgeBuyPrice(it),can=P.gold>=price;
-  h+=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc sm">${itemArt(it.s,itemKind(it),it.r,{bare:1})}</div><div class="fgNm"><h4${R.rainbow?' class="rbt"':""}>${it.u?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})}</div></div></div><ul class="fgSt">${itemStatsHTML(it,cur,1)}</ul><button class="btn main fgBuy${can?"":" dis"}" type="button" data-buy="${i}">${t("fgBuy",{n:price})}</button></div>`});
- box.innerHTML=h+"</div>";
- $("fgRr").onclick=()=>{const c=forgeRerollCost();if(P.gold<c){fgNeed();return}P.gold-=c;forge.rr++;forgeRoll();SFX.coin();SFX.ui();save();renderForge();hud()};
- box.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>forgeBuy(+b.dataset.buy));
- box.querySelectorAll("[data-eqid]").forEach(b=>b.onclick=()=>{equipItem(+b.dataset.eqid);renderForge()});
-}
-function forgeBuy(i){
- const it=forge.stock[i];if(!it||it.sold)return;const c=forgeBuyPrice(it);
- if(P.gold<c){fgNeed();return}
- if(bag.length>=BAG_MAX){toast(t("fgFull"));SFX.buzz();return}
- P.gold-=c;it.nw=false;bag.push(it);forge.stock[i]={sold:1,id:it.id};SFX.buy();SFX.coin();
- toast("🗡️ "+t("fgBought",{n:itemName(it)}),RAR[it.r].col);save();renderForge();renderInv();hud();
-}
-/* armory: the 10 named swords, always on sale; a fresh roll is made after every purchase and every 5 waves */
+/* the shop: random stock + the named armory swords in ONE list, cheapest first */
 let armStock=[],armSeed=-1;
 const armPrice=it=>Math.round(forgeBuyPrice(it)*1.4/10)*10;
 function armRoll(i){const it=makeItem(ARM[i].r,SLOTI.weapon,undefined,i);it.nw=false;return it}
 function armCheck(){const sd=Math.floor((battleNo-1)/5);if(armSeed!==sd||armStock.length!==ARM.length){armSeed=sd;armStock=ARM.map((_,i)=>armRoll(i))}}
-function renderForgeArm(){
- armCheck();const cur=eq.weapon,box=$("fgA");
- let h=`<div class="fgTop"><p class="sub">${t("fgArmHint")}</p></div><div class="fgShop">`;
- ARM.map((_,i)=>i).sort((a,b)=>ARM[a].r-ARM[b].r||a-b).forEach(i=>{const it=armStock[i];
-  const R=RAR[it.r],price=armPrice(it),can=P.gold>=price;
-  h+=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc sm">${itemArt(it.s,itemKind(it),it.r,{bare:1})}</div><div class="fgNm"><h4${R.rainbow?' class="rbt"':""}>${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})}</div></div></div><ul class="fgSt">${itemStatsHTML(it,cur,1)}</ul><button class="btn main fgBuy${can?"":" dis"}" type="button" data-arm="${i}">${t("fgBuy",{n:price})}</button></div>`});
+function renderForgeShop(){
+ armCheck();const cur=eq.weapon,box=$("fgS"),cp=cur?itemPow(cur):0;
+ const list=[];forge.stock.forEach((it,i)=>{if(it&&!it.sold)list.push({it,src:"s",i,price:forgeBuyPrice(it)})});
+ armStock.forEach((it,i)=>list.push({it,src:"a",i,price:armPrice(it)}));
+ list.sort((x,y)=>x.price-y.price||x.it.r-y.it.r);
+ let h=`<div class="fgTop"><p class="sub">${t("fgShopHint")}</p><button class="btn sm" id="fgRr" type="button">🔄 ${t("fgRefresh",{n:forgeRerollCost()})}</button></div><div class="fgShop">`;
+ list.forEach(({it,src,i,price})=>{
+  const R=RAR[it.r],can=P.gold>=price,nm=it.u||it.a!=null,key=src+i;
+  let tag="";if(cur){const pw=itemPow(it),d=Math.round((pw/Math.max(1,cp)-1)*100);tag=d>0?`<span class="fgTag up">▲ +${d}%</span>`:d<0?`<span class="fgTag dn">▼ ${d}%</span>`:`<span class="fgTag">＝</span>`}
+  h+=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc sm">${itemArt(it.s,itemKind(it),it.r,{bare:1})}</div><div class="fgNm"><h4${R.rainbow?' class="rbt"':""}>${nm?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})} ${tag}</div></div></div><ul class="fgSt">${itemStatsHTML(it,cur,1)}</ul><div class="fgBtns"><button class="btn main fgBuy${can?"":" dis"}" type="button" data-buy="${key}">${t("fgBuy",{n:price})}</button><button class="btn fgBuy2${can?"":" dis"}" type="button" data-buy2="${key}">${t("fgBuyEq")}</button></div></div>`});
  box.innerHTML=h+"</div>";
- box.querySelectorAll("[data-arm]").forEach(b=>b.onclick=()=>forgeBuyArm(+b.dataset.arm));
+ $("fgRr").onclick=()=>{const c=forgeRerollCost();if(P.gold<c){fgNeed();return}P.gold-=c;forge.rr++;forgeRoll();SFX.coin();SFX.ui();save();renderForge();hud()};
+ box.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>forgeBuyAny(b.dataset.buy,false));
+ box.querySelectorAll("[data-buy2]").forEach(b=>b.onclick=()=>forgeBuyAny(b.dataset.buy2,true));
 }
-function forgeBuyArm(i){
- const it=armStock[i];if(!it)return;const c=armPrice(it);
+function forgeBuyAny(key,equip){
+ const src=key[0],i=+key.slice(1),it=src==="s"?forge.stock[i]:armStock[i];if(!it||it.sold)return;
+ const c=src==="s"?forgeBuyPrice(it):armPrice(it);
  if(P.gold<c){fgNeed();return}
  if(bag.length>=BAG_MAX){toast(t("fgFull"));SFX.buzz();return}
- P.gold-=c;it.nw=false;bag.push(it);armStock[i]=armRoll(i);SFX.buy();SFX.coin();
- toast("🗡️ "+t("fgBought",{n:itemName(it)}),RAR[it.r].col);save();renderForge();renderInv();hud();
+ P.gold-=c;it.nw=false;bag.push(it);if(src==="s")forge.stock[i]={sold:1,id:it.id};else armStock[i]=armRoll(i);
+ SFX.buy();SFX.coin();toast("🗡️ "+t("fgBought",{n:itemName(it)}),RAR[it.r].col);
+ if(equip)equipItem(it.id);
+ save();renderForge();renderInv();hud();
 }
 function renderForge(){
  $("fgGold").textContent=Math.floor(P.gold);
  document.querySelectorAll(".ftab").forEach(b=>b.classList.toggle("on",b.dataset.ft===fgTab));
  document.querySelectorAll(".fpane").forEach(p=>p.classList.toggle("on",p.id===fgTab));
- renderForgeUp();renderForgeShop();renderForgeArm();
+ renderForgeUp();renderForgeShop();
 }
 document.querySelectorAll(".ftab").forEach(b=>b.addEventListener("click",()=>{SFX.tab();fgTab=b.dataset.ft;renderForge()}));
-document.querySelectorAll(".fgJump .chip").forEach(b=>b.addEventListener("click",()=>{SFX.tab();const el=$(b.dataset.j);if(el)el.scrollIntoView({behavior:"smooth",block:"start"})}));
 $("invForge").onclick=$("pForge").onclick=$("bForge").onclick=$("tForge").onclick=()=>openModal("mForge");
 function fillAsDots(){const m=asMask(),d=$("asDots");if(!d)return;let h="";for(let i=0;i<=AS_MAX;i++)if(m>>i&1)h+=`<i style="--c:${RAR[i].col}"></i>`;if(h!==d._h){d._h=h;d.innerHTML=h||`<em>${t("asOff")}</em>`}}
 function asMatch(){let n=0,g=0;for(const x of bag)if(asOn(x.r)){n++;g+=sellPrice(x)}return{n,g}}
@@ -4920,15 +4965,14 @@ function renderDrops(){
  if(l<LUCK_MAX){const nl=l+1;h+=`<h3 class="h3">${t("luckNext")}</h3><div class="lbox"><div class="m">${t("dropChance")}</div><div><b class="bigstat" style="font-size:22px">${pct(dropChanceAt(l))}</b> <span style="color:#6bf0ae;font-weight:700">→ ${pct(dropChanceAt(nl))}</span></div></div>${rarRows(rarProbs(0),rarProbs(0,nl+(P.rarBonus||0)))}`}
  $("dLuck").innerHTML=h;
  {const n=battleNo,fl=foe.lvl,frun=foe.until>Date.now(),fc=foeCost(fl),nfl=Math.min(FOE_MAX,fl+1);
-  const rows=(l,cmp)=>{const av=foeTiers(n,l),av2=cmp!=null?foeTiers(n,cmp):[],tot=av.reduce((a,k)=>a+foeW(k,l),0),tot2=av2.reduce((a,k)=>a+foeW(k,cmp),0);
-   return RARK.map(k=>{const R=RAR[RARM[k].i],p=av.includes(k)&&tot?foeW(k,l)/tot:0,q=cmp!=null?(av2.includes(k)&&tot2?foeW(k,cmp)/tot2:0):null;
-    const lock=!av.includes(k)&&!(q>0)?`<span class="pc">${t("foeLocked",{n:foeGate(k,cmp!=null?cmp:l)})}</span>`:`<span class="pc">${pct(p)}${q!=null?` <span style="color:${q>=p?"#6bf0ae":"#ff8a8a"}">→ ${pct(q)}</span>`:""}</span>`;
-    return`<div class="rrow" style="--rc:${R.col}"><b${R.rainbow?' class="rbt"':""}>${L(TIERS[k])}</b><div class="rbar"><i style="width:${Math.max(1.2,Math.cbrt(Math.max(p,q||0))*100).toFixed(1)}%"></i></div>${lock}</div>`}).join("")};
+  const rows=(l,cmp)=>{const p=tierDist(n,l),q=cmp!=null?tierDist(n,cmp):null;
+   return TL.map((k,i)=>{const R=RAR[i],v=p[i],w=q?q[i]:null;
+    return`<div class="rrow r${i}" style="--rc:${R.col}"><b${R.rainbow?' class="rbt"':""}>${L(TIERS[k])}</b><div class="rbar"><i style="width:${Math.max(1.4,Math.sqrt(Math.max(v,w||0))*100).toFixed(1)}%"></i></div><span class="pc w">${pct(v)}${w!=null?` <span style="color:${w>=v?"#6bf0ae":"#ff8a8a"}">→ ${pct(w)}</span>`:""}</span></div>`}).join("")};
   let f=`<p class="sub">${t("foeHint")}</p><div class="lbox"><b>👹 ${t("foeLvl",{n:fl,m:FOE_MAX})}</b><div class="lpips">${Array.from({length:FOE_MAX},(_,i)=>`<i class="${i<fl?"on":""}"></i>`).join("")}</div>`;
   if(frun){const dur=(foe.dur||foeTime(fl))*1000,left=foe.until-Date.now();f+=`<div id="fpT">⏳ ${t("luckRun",{t:fmtT(left/1000)})}</div><div class="lprog"><i id="fpI" style="width:${clamp(100-left/dur*100,0,100).toFixed(1)}%"></i></div>`}
   else if(fl<FOE_MAX)f+=`<div class="acts" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px"><button class="btn main" id="foeGo" ${P.gold<fc?"disabled":""}>${t("luckGo",{n:fc})}</button><span class="m">⏳ ${t("luckTime",{t:fmtT(foeTime(fl))})}</span></div>${P.gold<fc?`<div class="m" style="color:#ff8a8a">${t("need")}</div>`:""}`;
   else f+=`<div class="ok">✓ ${t("maxed")}</div>`;
-  f+=`</div><div class="lbox"><div class="m">${t("foeChance")}</div><div><b class="bigstat" style="font-size:22px">${pct(foeChance(n,fl))}</b>${fl<FOE_MAX?` <span style="color:#6bf0ae;font-weight:700">→ ${pct(foeChance(n,nfl))}</span>`:""}</div></div><h3 class="h3">${t("foeTiers")}</h3>${rows(fl,fl<FOE_MAX?nfl:null)}`;
+  f+=`</div><div class="lbox"><div class="m">${t("foeChance")}</div><div><b class="bigstat" style="font-size:22px">${pct(foeAny(n,fl))}</b>${fl<FOE_MAX?` <span style="color:#6bf0ae;font-weight:700">→ ${pct(foeAny(n,nfl))}</span>`:""}</div></div><h3 class="h3">${t("foeTiers")}</h3>${rows(fl,fl<FOE_MAX?nfl:null)}`;
   $("dFoe").innerHTML=f;const fb=$("foeGo");if(fb)fb.onclick=foeStart}
  const b=$("luckGo");if(b)b.onclick=luckStart;
  document.querySelectorAll(".dtab").forEach(x=>x.classList.toggle("on",x.dataset.dt===dTab));document.querySelectorAll(".dpane").forEach(x=>x.classList.toggle("on",x.id===dTab));
@@ -5019,7 +5063,7 @@ $("aGo").onclick=async()=>{
 };
 function logOut(){switchTo(null,false);toast(t("loggedOut"));fillSettings()}
 function tglSet(id,on){const b=$(id);b.className="tgl"+(on?" on":"");b.setAttribute("aria-pressed",on?"true":"false");if(!b.firstChild||b.firstChild.tagName!=="I")b.innerHTML="<i></i>"}
-function fillSettings(){fillAccount();$("nickIn").value=nickname;$("langSel").value=lang;$("sfxR").value=S.sfx;$("musR").value=S.music;tglSet("musB",S.musicOn);$("gfxSel").innerHTML=[["ultra","gfxUltra"],["hi","gfxHi"],["lo","gfxLo"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("gfxSel").value=gfxMode();tglSet("fpsB",S.fps);if(typeof fillPickers==="function")fillPickers()}
+function fillSettings(){fillAccount();$("nickIn").value=nickname;$("langSel").value=lang;$("sfxR").value=S.sfx;$("musR").value=S.music;tglSet("musB",S.musicOn);$("gfxSel").innerHTML=[["ultra","gfxUltra"],["hi","gfxHi"],["lo","gfxLo"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("gfxSel").value=gfxMode();tglSet("fpsB",S.fps);tglSet("stickB",!!S.stickTurn);if(typeof fillPickers==="function")fillPickers()}
 $("donCopy").onclick=()=>{const v=$("donCard").textContent.trim();const ok=()=>{toast("✓ "+t("copied"),"#d6a24a");SFX.cash()};try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(ok,()=>{selCard();ok()});else{selCard();document.execCommand("copy");ok()}}catch(e){selCard()}};
 function selCard(){try{const r=document.createRange();r.selectNodeContents($("donCard"));const sl=getSelection();sl.removeAllRanges();sl.addRange(r)}catch(e){}}
 $("nickOk").onclick=()=>{nickname=$("nickIn").value.trim().slice(0,18);save();hud();toast(t("saved"))};
@@ -5038,6 +5082,7 @@ $("gfxT").onclick=e=>{const b=e.target.closest("[data-g]");if(!b||b.dataset.g===
 $("langSel").onchange=e=>{lang=e.target.value;applyLang();fillSettings();save()};
 $("sfxR").oninput=e=>{S.sfx=+e.target.value};
 $("fpsB").onclick=()=>{S.fps=!S.fps;fillSettings();save()};
+$("stickB").onclick=()=>{S.stickTurn=!S.stickTurn;fillSettings();save()};
 $("gfxSel").onchange=e=>{S.gfx=e.target.value;applyGfx();save()};
 $("musR").oninput=e=>{S.music=+e.target.value};
 $("musB").onclick=()=>{S.musicOn=!S.musicOn;if(S.musicOn)musicStart();else musicStop();fillSettings();save()};
