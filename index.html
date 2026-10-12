@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.11-k",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.11-l",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -394,7 +394,7 @@ svg.iart{width:100%;height:100%;display:block;overflow:visible;filter:drop-shado
 .defeat .acts{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
 .toast{position:absolute;left:50%;top:84px;transform:translate(-50%,-10px);opacity:0;background:var(--gold);color:#1a1108;padding:8px 16px;border-radius:99px;font-weight:700;transition:.22s;z-index:30;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-@media (max-width:520px){.me{width:168px}.ibs{gap:4px}.ib{width:32px;height:32px;font-size:15px;border-radius:9px}.ibl{font-size:8px}.bossbar{top:124px}.rrow{grid-template-columns:88px 1fr auto;gap:6px}}
+@media (max-width:520px){.me{width:168px}.ibs{gap:4px}.ib{width:32px;height:32px;font-size:15px;border-radius:9px}.ibl{font-size:8px}.bossbar{top:124px}.rrow{grid-template-columns:106px 1fr auto;gap:6px;font-size:13px}.rrow b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 @media (prefers-reduced-motion:reduce){.banner.show{animation-duration:2.6s;animation-name:banFade}@keyframes banFade{0%,100%{opacity:0}10%,80%{opacity:1}}}
 /* graphics: soft vignette on High (Ultra does it in the colour grade) */
 .vig{position:fixed;inset:0;pointer-events:none;z-index:1;display:none;background:radial-gradient(ellipse 75% 70% at 50% 45%,transparent 55%,rgba(8,2,10,.38))}
@@ -440,6 +440,8 @@ body[data-gfx="hi"] .vig{display:block}
 /* forge */
 .fgGold{display:flex;justify-content:flex-end;font-weight:800;color:#ffd98a;margin:-2px 0 8px;font-size:15px}
 .fpane{display:none}.fpane.on{display:block}
+.fgJump{display:flex;gap:8px;margin:0 0 6px}.fgJump .chip{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#120b12;color:var(--muted);font-weight:700;font-size:12.5px}.fgJump .chip:active{background:#1c1220}
+#fgB .h3{margin-top:12px}
 #mForge .tabs{flex-wrap:wrap}#mForge .tab{padding:8px 12px}@media(max-width:420px){#mForge .tab{padding:8px 6px;font-size:12px;flex:1 1 auto;text-align:center;white-space:nowrap}}
 .fgCard{position:relative;border:1px solid var(--line);border-top:3px solid var(--rc,#d6a24a);border-radius:14px;padding:12px;background:radial-gradient(120% 90% at 50% 0,color-mix(in srgb,var(--rc,#d6a24a) 16%,#1a0f19),#0f0a10)}
 .fgCard h4{margin:0 0 2px;color:var(--rc,#fff);font-size:15px;line-height:1.25}
@@ -520,7 +522,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-k</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.11-l</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -615,17 +617,21 @@ body[data-gfx="hi"] .vig{display:block}
   <div class="modal" id="mForge"><div class="sheet">
     <div class="shead"><h2>🔨 <span data-i="forge"></span></h2><button class="x" data-close aria-label="✕">✕</button></div>
     <div class="fgGold">🪙 <b id="fgGold">0</b></div>
-    <div class="tabs"><button class="tab ftab on" type="button" data-ft="fgU" data-i="fgUp"></button><button class="tab ftab" type="button" data-ft="fgS" data-i="fgShop"></button><button class="tab ftab" type="button" data-ft="fgA" data-i="fgArm"></button></div>
+    <div class="tabs"><button class="tab ftab on" type="button" data-ft="fgU" data-i="fgUp"></button><button class="tab ftab" type="button" data-ft="fgB" data-i="fgBuyDept"></button></div>
     <div class="fpane on" id="fgU"></div>
-    <div class="fpane" id="fgS"></div>
-    <div class="fpane" id="fgA"></div>
+    <div class="fpane" id="fgB">
+      <div class="fgJump"><button class="chip" type="button" data-j="fgSH" data-i="fgRandH"></button><button class="chip" type="button" data-j="fgAH" data-i="fgArm"></button></div>
+      <h3 class="h3" id="fgSH" data-i="fgRandH"></h3><div id="fgS"></div>
+      <h3 class="h3" id="fgAH" data-i="fgArm"></h3><div id="fgA"></div>
+    </div>
   </div></div>
 
   <div class="modal" id="mDrops"><div class="sheet">
     <div class="shead"><h2 data-i="drops">Шанси дропу</h2><button class="x" data-close aria-label="✕">✕</button></div>
-    <div class="tabs"><button class="tab dtab on" data-dt="dChance" data-i="tabChance"></button><button class="tab dtab" data-dt="dLuck" data-i="tabLuck"></button></div>
+    <div class="tabs"><button class="tab dtab on" data-dt="dChance" data-i="tabChance"></button><button class="tab dtab" data-dt="dLuck" data-i="tabLuck"></button><button class="tab dtab" data-dt="dFoe" data-i="tabFoes"></button></div>
     <div class="dpane on" id="dChance"></div>
     <div class="dpane" id="dLuck"></div>
+    <div class="dpane" id="dFoe"></div>
   </div></div>
 
   <div class="modal" id="mPause"><div class="sheet set">
@@ -821,6 +827,13 @@ luckGo:"Покращити за 🪙 {n}|Upgrade for 🪙 {n}|Améliorer : 🪙 
 luckTime:"Час покращення: {t}|Upgrade time: {t}|Durée : {t}|Dauer: {t}|升级时间：{t}|Tiempo de mejora: {t}|Durata: {t}|Czas ulepszenia: {t}|Tempo de melhoria: {t}|強化時間：{t}|강화 시간: {t}",
 luckRun:"Покращується, залишилось {t}|Upgrading, {t} left|Amélioration, reste {t}|Wird verbessert, noch {t}|升级中，剩余 {t}|Mejorando, faltan {t}|In corso, mancano {t}|Ulepszanie, zostało {t}|Melhorando, faltam {t}|強化中、残り {t}|강화 중, {t} 남음",
 luckDone:"Удачу покращено до рівня {n}|Luck upgraded to level {n}|Chance améliorée au niveau {n}|Glück auf Stufe {n} verbessert|幸运提升至 {n} 级|Suerte mejorada al nivel {n}|Fortuna portata al livello {n}|Szczęście ulepszone do poziomu {n}|Sorte melhorada para o nível {n}|運がレベル{n}に上がった|행운이 레벨 {n}(으)로 올랐습니다",
+tabFoes:"Вороги|Foes|Ennemis|Gegner|敌人|Enemigos|Nemici|Wrogowie|Inimigos|敵|적",
+foeHint:"Плати золотом, і рідкісні вороги з'являтимуться частіше та раніше. Вони міцніші, але дають кращу здобич. Це окрема прокачка, вона йде паралельно з удачею.|Pay gold and rare enemies show up more often and earlier. They are tougher but drop better loot. This is a separate upgrade that runs in parallel with Luck.|Paie de l'or : les ennemis rares apparaissent plus souvent et plus tôt. Ils sont plus coriaces mais lâchent un meilleur butin. Amélioration séparée, en parallèle de la chance.|Zahle Gold, und seltene Gegner erscheinen öfter und früher. Sie sind zäher, lassen aber bessere Beute fallen. Eine eigene Verbesserung, die parallel zum Glück läuft.|花金币，稀有敌人会更频繁、更早出现。它们更强，但掉落更好的战利品。这是独立升级，与幸运同时进行。|Paga oro y los enemigos raros aparecerán más a menudo y antes. Son más duros, pero sueltan mejor botín. Es una mejora aparte que corre en paralelo a la suerte.|Paga oro e i nemici rari compariranno più spesso e prima. Sono più duri ma lasciano un bottino migliore. È un potenziamento separato, in parallelo alla fortuna.|Zapłać złotem, a rzadcy wrogowie będą pojawiać się częściej i wcześniej. Są twardsi, ale zostawiają lepszy łup. To osobne ulepszenie, działa równolegle ze szczęściem.|Pague ouro e inimigos raros aparecerão com mais frequência e mais cedo. São mais duros, mas largam melhor saque. É uma melhoria separada, em paralelo à sorte.|ゴールドを払うと、レアな敵がより頻繁に、より早く現れる。強いがドロップは良くなる。運とは別の強化で、同時に進められる。|골드를 내면 희귀 적이 더 자주, 더 일찍 나타난다. 더 강하지만 전리품이 좋다. 행운과 별개의 강화이며 동시에 진행된다.",
+foeLvl:"Рівень рідкісних ворогів {n} / {m}|Rare enemy level {n} / {m}|Niveau d'ennemis rares {n} / {m}|Stufe seltener Gegner {n} / {m}|稀有敌人等级 {n} / {m}|Nivel de enemigos raros {n} / {m}|Livello nemici rari {n} / {m}|Poziom rzadkich wrogów {n} / {m}|Nível de inimigos raros {n} / {m}|レア敵レベル {n} / {m}|희귀 적 레벨 {n} / {m}",
+foeDone:"Рідкісних ворогів покращено до рівня {n}|Rare enemies upgraded to level {n}|Ennemis rares améliorés au niveau {n}|Seltene Gegner auf Stufe {n} verbessert|稀有敌人提升至 {n} 级|Enemigos raros mejorados al nivel {n}|Nemici rari portati al livello {n}|Rzadcy wrogowie ulepszeni do poziomu {n}|Inimigos raros melhorados para o nível {n}|レア敵をレベル {n} に強化|희귀 적이 {n}레벨로 강화됨",
+foeChance:"Шанс рідкісного ворога в бою|Chance of a rare enemy per battle|Chance d'un ennemi rare par combat|Chance auf einen seltenen Gegner pro Kampf|每场战斗出现稀有敌人的几率|Probabilidad de enemigo raro por batalla|Probabilità di nemico raro per battaglia|Szansa na rzadkiego wroga w walce|Chance de inimigo raro por batalha|戦闘ごとのレア敵出現率|전투당 희귀 적 확률",
+foeTiers:"Які вороги можуть з'явитися|Which enemies can appear|Quels ennemis peuvent apparaître|Welche Gegner erscheinen können|可能出现的敌人|Qué enemigos pueden aparecer|Quali nemici possono comparire|Którzy wrogowie mogą się pojawić|Quais inimigos podem aparecer|出現する敵|등장 가능한 적",
+foeLocked:"🔒 з бою {n}|🔒 from battle {n}|🔒 dès le combat {n}|🔒 ab Kampf {n}|🔒 第 {n} 场起|🔒 desde la batalla {n}|🔒 dalla battaglia {n}|🔒 od walki {n}|🔒 a partir da batalha {n}|🔒 {n} 戦目から|🔒 {n}번째 전투부터",
 luckNext:"Після покращення|After the upgrade|Après l'amélioration|Nach der Verbesserung|升级后|Tras la mejora|Dopo il potenziamento|Po ulepszeniu|Depois da melhoria|強化後|강화 후",
 rarity:"Рідкість|Rarity|Rareté|Seltenheit|稀有度|Rareza|Rarità|Rzadkość|Raridade|レア度|희귀도",
 aAttack:"Удар|Strike|Frappe|Schlag|攻击|Golpe|Colpo|Cios|Golpe|攻撃|공격",
@@ -851,6 +864,8 @@ forge:"Кузня|Forge|Forge|Schmiede|铁匠铺|Herrería|Forgia|Kuźnia|Forja|
 fgUp:"Прокачка меча|Sword upgrade|Amélioration de l'épée|Schwert verbessern|强化武器|Mejorar espada|Potenzia spada|Ulepsz miecz|Melhorar espada|剣の強化|검 강화",
 fgArm:"Зброярня|Armory|Armurerie|Waffenkammer|军械库|Armería|Armeria|Zbrojownia|Arsenal|武器庫|무기고",
 fgArmHint:"Іменні мечі найвищих рідкостей. Ціна росте з прогресом.|Named blades of the highest rarities. Price grows with your progress.|Lames légendaires des plus hautes raretés. Le prix grimpe avec ta progression.|Namhafte Klingen höchster Seltenheit. Der Preis steigt mit deinem Fortschritt.|最高稀有度的名刃。价格随进度上涨。|Hojas con nombre de las mayores rarezas. El precio sube con tu progreso.|Lame leggendarie delle rarità più alte. Il prezzo cresce con i progressi.|Imienne ostrza najwyższych rzadkości. Cena rośnie wraz z postępem.|Lâminas lendárias das maiores raridades. O preço sobe com o progresso.|最高レアリティの名剣。価格は進行とともに上がる。|최고 희귀도의 명검. 가격은 진행에 따라 오른다.",
+fgBuyDept:"Купівля|Buy|Achat|Kaufen|购买|Compra|Acquisto|Kupno|Compra|購入|구매",
+fgRandH:"Мечі зі складу|Swords in stock|Épées en stock|Schwerter im Angebot|在售武器|Espadas en venta|Spade in vendita|Miecze w sprzedaży|Espadas à venda|販売中の剣|판매 중인 검",
 fgShop:"Новий меч|New sword|Nouvelle épée|Neues Schwert|新武器|Espada nueva|Nuova spada|Nowy miecz|Espada nova|新しい剣|새 검",
 fgNoSword:"Вдягни меч, щоб його прокачати.|Equip a sword to upgrade it.|Équipe une épée pour l'améliorer.|Rüste ein Schwert aus, um es zu verbessern.|先装备一把武器才能强化。|Equipa una espada para mejorarla.|Equipaggia una spada per potenziarla.|Załóż miecz, aby go ulepszyć.|Equipe uma espada para melhorá-la.|強化するには剣を装備してください。|강화하려면 검을 장착하세요.",
 fgBtn:"Прокачати · 🪙 {n}|Upgrade · 🪙 {n}|Améliorer · 🪙 {n}|Verbessern · 🪙 {n}|强化 · 🪙 {n}|Mejorar · 🪙 {n}|Potenzia · 🪙 {n}|Ulepsz · 🪙 {n}|Melhorar · 🪙 {n}|強化 · 🪙 {n}|강화 · 🪙 {n}",
@@ -1715,6 +1730,7 @@ const NN={weapon:[[[7,S8("Дерев'яна булава|Wooden Mace|Masse en bo
 SLOTS.forEach(S=>{const d=NN[S.k];for(let g=0;g<3;g++)d[g].forEach(([k,s])=>{S.names[g].push(s);S.ak[g].push(k)})});
 /* armory: 10 fixed named high-rarity weapons sold in the forge (item field `a` = index) */
 const ARM=[{r:5,k:0,n:S8("Клинок валькірії|Valkyrie Blade|Lame de la valkyrie|Walküren-Klinge|女武神之刃|Hoja de valquiria|Lama della valchiria|Ostrze walkirii|Lâmina da valquíria|ヴァルキリーの刃|발키리의 검")},{r:5,k:3,n:S8("Сабля нового місяця|Crescent Moon Saber|Sabre du croissant de lune|Mondsichel-Säbel|新月弯刀|Sable de luna creciente|Sciabola della luna crescente|Szabla półksiężyca|Sabre da lua crescente|三日月の曲刀|초승달 곡도")},{r:6,k:4,n:S8("Екскалібур|Excalibur|Excalibur|Excalibur|王者之剑|Excalibur|Excalibur|Ekskalibur|Excalibur|エクスカリバー|엑스칼리버")},{r:6,k:2,n:S8("Сокира титана|Titan's Axe|Hache du titan|Titanenaxt|泰坦之斧|Hacha del titán|Ascia del titano|Topór tytana|Machado do titã|タイタンの斧|타이탄의 도끼")},{r:7,k:0,n:S8("Меч архангела|Archangel's Sword|Épée de l'archange|Schwert des Erzengels|大天使之剑|Espada del arcángel|Spada dell'arcangelo|Miecz archanioła|Espada do arcanjo|大天使の剣|대천사의 검")},{r:7,k:5,n:S8("Спис світанку|Dawnspear|Lance de l'aube|Morgenspeer|黎明之矛|Lanza del alba|Lancia dell'alba|Włócznia świtu|Lança da aurora|暁の槍|새벽의 창")},{r:8,k:6,n:S8("Коса Чорного сонця|Scythe of the Black Sun|Faux du Soleil noir|Sense der Schwarzen Sonne|黑日之镰|Guadaña del Sol Negro|Falce del Sole Nero|Kosa Czarnego Słońca|Foice do Sol Negro|黒き太陽の大鎌|검은 태양의 낫")},{r:8,k:3,n:S8("Катана кривавого місяця|Blood Moon Katana|Katana de la Lune de sang|Blutmond-Katana|血月太刀|Katana de la Luna de Sangre|Katana della Luna di Sangue|Katana Krwawego Księżyca|Katana da Lua de Sangue|血月の刀|핏빛 달 카타나")},{r:9,k:7,n:S8("Молот Початку|Hammer of the Beginning|Marteau du Commencement|Hammer des Anbeginns|太初战锤|Martillo del Principio|Martello del Principio|Młot Początku|Martelo do Princípio|始まりの鎚|태초의 망치")},{r:10,k:0,n:S8("Меч вічності|Sword of Eternity|Épée de l'éternité|Schwert der Ewigkeit|永恒之剑|Espada de la eternidad|Spada dell'eternità|Miecz wieczności|Espada da eternidade|永遠の剣|영원의 검")}];
+ARM.push({r:4,k:1,n:S8("Кинджал тіней|Shadow Dagger|Dague d'ombre|Schattendolch|暗影匕首|Daga de sombra|Pugnale d'ombra|Sztylet cienia|Adaga da sombra|影の短剣|그림자 단검")},{r:4,k:2,n:S8("Сокира берсерка|Berserker's Axe|Hache du berserker|Berserkeraxt|狂战士之斧|Hacha del berserker|Ascia del berserker|Topór berserkera|Machado do berserker|狂戦士の斧|광전사의 도끼")},{r:5,k:5,n:S8("Спис дракона|Dragonspear|Lance du dragon|Drachenspeer|龙矛|Lanza del dragón|Lancia del drago|Smocza włócznia|Lança do dragão|竜の槍|용창")},{r:5,k:0,n:S8("Клинок бурі|Stormblade|Lame de la tempête|Sturmklinge|风暴之刃|Hoja de la tormenta|Lama della tempesta|Ostrze burzy|Lâmina da tempestade|嵐の刃|폭풍검")},{r:6,k:7,n:S8("Молот Титанів|Hammer of the Titans|Marteau des Titans|Titanenhammer|泰坦之锤|Martillo de los Titanes|Martello dei Titani|Młot Tytanów|Martelo dos Titãs|巨神の鎚|타이탄의 망치")},{r:7,k:3,n:S8("Сяйлива катана|Radiant Katana|Katana radieuse|Strahlende Katana|璀璨太刀|Katana radiante|Katana radiosa|Promienna katana|Katana radiante|輝く刀|찬란한 카타나")},{r:7,k:4,n:S8("Меч королів|Sword of Kings|Épée des rois|Schwert der Könige|王者之剑·诸王|Espada de los reyes|Spada dei re|Miecz królów|Espada dos reis|王たちの剣|왕들의 검")},{r:8,k:2,n:S8("Сокира затемнення|Eclipse Axe|Hache de l'éclipse|Finsternis-Axt|日蚀之斧|Hacha del eclipse|Ascia dell'eclissi|Topór zaćmienia|Machado do eclipse|日蝕の斧|일식의 도끼")},{r:9,k:5,n:S8("Спис Предвічного|Spear of the Ancient One|Lance du Primordial|Speer des Urahns|太古之矛|Lanza del Primigenio|Lancia del Primordiale|Włócznia Prastarego|Lança do Primordial|太古の槍|태초 존재의 창")},{r:10,k:6,n:S8("Веселкова коса|Rainbow Scythe|Faux arc-en-ciel|Regenbogensense|彩虹之镰|Guadaña arcoíris|Falce arcobaleno|Tęczowa kosa|Foice arco-íris|虹の大鎌|무지개 낫")});
 /* forge: a sword can be upgraded with gold (it.up = level, it.inv = gold put in); stats are scaled on the fly so saves stay small */
 const UP_MAX=20;
 const upF=(k,up)=>1+(k==="atk"?.12:.05)*up;
@@ -1726,6 +1742,9 @@ const ISTAT={atk:[2,.6,0,0],maxhp:[10,4,0,0],armor:[1,.25,0,0],crit:[1,.08,12,0]
 const LUCK_MAX=30;
 const luckCost=l=>Math.round(120*(l+1)*(1+l*.22)/10)*10;
 const luckTime=l=>Math.max(5,Math.round(6*(l+1)*(1+l*.1)));
+const FOE_MAX=20;
+const foeCost=l=>Math.round(160*(l+1)*(1+l*.24)/10)*10;
+const foeTime=l=>Math.max(6,Math.round(7*(l+1)*(1+l*.1)));
 const BIOMES=[
  {sky:["#170914","#3b1426","#6e2434"],moon:"#f4d9c4",far:"#2a1020",far2:"#210c19",mid:"#1a0a14",near:"#10060c",ground:["#2e1b1d","#1a0f11"],stone:"#3f2a2d",accent:"#ff6a5a",fog:"rgba(170,40,60,0.16)"},
  {sky:["#080d1a","#18223c","#33405c"],moon:"#dfe8f5",far:"#1c2436",far2:"#161c2b",mid:"#121826",near:"#0a0e17",ground:["#20262a","#121619"],stone:"#2f363c",accent:"#8fb4ff",fog:"rgba(120,150,210,0.12)"},
@@ -1755,7 +1774,7 @@ const DEF_P={level:1,xp:0,gold:120,hp:100};
 let accounts=LS.get("r2_accounts",{});
 let session=LS.get("r2_session",null);if(session&&!accounts[session])session=null;
 const PK=k=>session?"r2u:"+session+":"+k.slice(3):k;
-let P,tal,train,kills,nickname,battleNo,bag,eq,luck,itemSeq,forge={seed:-1,stock:[],rr:0};
+let P,tal,train,kills,nickname,battleNo,bag,eq,luck,foe,itemSeq,forge={seed:-1,stock:[],rr:0};
 function loadState(){
  P=Object.assign({},DEF_P,LS.get(PK("r2_hero"),{}));
  tal=LS.get(PK("r2_tal"),[]).filter(id=>TALN[id]);
@@ -1767,6 +1786,7 @@ function loadState(){
  eq=LS.get(PK("r2_eq"),{})||{};for(const k in eq)if(!validItem(eq[k])||eq[k].s!==SLOTI[k])delete eq[k];
  for(const it of bag.concat(Object.values(eq)))if(it.up||it.inv){it.up=it.s===SLOTI.weapon?clampN(it.up|0,0,UP_MAX):0;it.inv=Math.max(0,it.inv|0)}
  luck=Object.assign({lvl:0,until:0},LS.get(PK("r2_luck"),{}));luck.lvl=clampN(luck.lvl|0,0,LUCK_MAX);
+ foe=Object.assign({lvl:0,until:0},LS.get(PK("r2_foe"),{}));foe.lvl=clampN(foe.lvl|0,0,FOE_MAX);
  itemSeq=LS.get(PK("r2_iseq"),1);forge=loadForge();
 }
 function clampN(v,a,b){return v<a?a:v>b?b:v}
@@ -1776,7 +1796,7 @@ loadState();
 let S=Object.assign({sfx:70,music:30,musicOn:false},LS.get("r2_set",{}));
 /* if the last start never finished: 2nd try = Fast graphics, 3rd try = 2D without three.js (counter is cleared once the game has really run) */
 {const n=(+LS.get("r2_boot",0)||0)+1;LS.set("r2_boot",n);BOOT.safe=n>=3?2:n===2?1:0;if(BOOT.safe&&S.gfx!=="lo"){S.gfx="lo";LS.set("r2_set",S)}}
-function save(){LS.set(PK("r2_hero"),{level:P.level,xp:P.xp,gold:P.gold,hp:P.hp});LS.set(PK("r2_tal"),tal);LS.set(PK("r2_train"),train);LS.set(PK("r2_kills"),kills);LS.set(PK("r2_nick"),nickname);LS.set(PK("r2_battle"),battleNo);LS.set(PK("r2_bag"),bag);LS.set(PK("r2_eq"),eq);LS.set(PK("r2_luck"),luck);LS.set(PK("r2_iseq"),itemSeq);LS.set(PK("r2_forge"),forge);LS.set("r2_session",session);LS.set("r2_lang",lang);LS.set("r2_set",S)}
+function save(){LS.set(PK("r2_hero"),{level:P.level,xp:P.xp,gold:P.gold,hp:P.hp});LS.set(PK("r2_tal"),tal);LS.set(PK("r2_train"),train);LS.set(PK("r2_kills"),kills);LS.set(PK("r2_nick"),nickname);LS.set(PK("r2_battle"),battleNo);LS.set(PK("r2_bag"),bag);LS.set(PK("r2_eq"),eq);LS.set(PK("r2_luck"),luck);LS.set(PK("r2_foe"),foe);LS.set(PK("r2_iseq"),itemSeq);LS.set(PK("r2_forge"),forge);LS.set("r2_session",session);LS.set("r2_lang",lang);LS.set("r2_set",S)}
 
 var _sh={}; // colour cache for shade(); must exist before the first recalc() runs at start-up
 function recalc(){
@@ -2191,7 +2211,7 @@ function hurtHero(dmg,dir,att){
 function makeEnemy(ti,boss,x,z,delay,opt){
  opt=opt||{};
  const C=ETYPES[ti],n=battleNo,loop=Math.floor((n-1)/REGT.length);
- const hpM=(1+(n-1)*.06)*(1+loop*.15),atkM=(1+(n-1)*.03)*(1+loop*.08);
+ const hpM=(1+(n-1)*.065)*(1+loop*.15)*1.15,atkM=(1+(n-1)*.033)*(1+loop*.08)*1.08;
  let hp=Math.round(C.hp*hpM*(opt.small?.35:1)),atk=Math.round(C.atk*atkM*(opt.small?.6:1));
  if(boss){hp=Math.round(hp*1.9);atk=Math.round(atk*1.3)}
  const rm0=RARM[C.tier];
@@ -2200,9 +2220,13 @@ function makeEnemy(ti,boss,x,z,delay,opt){
   s:C.size*(boss?1.3:1)*(opt.small?.6:1),combo2:false,shots:0,hopT:rnd(0,.9),dive:0,webCd:rnd(.6,1.6),summons:0,lastHit:9,regenT:0,small:!!opt.small,summoned:!!opt.summoned,atkKind:C.style,stun:0,chargeV:0};
 }
 /* every normal battle can bring one rarity enemy; the rarer the tier, the later it unlocks and the less often it shows up */
-function rarPick(n){
- const bi=biomeAt(n),av=RARK.filter(k=>n>=RARM[k].gate&&RARIDS[k].some(i=>bioFit(i,bi)));if(!av.length||Math.random()>=Math.min(.16,.06+n*.0015))return-1;
- let x=Math.random()*av.reduce((a,k)=>a+RARM[k].w,0),tk=av[av.length-1];for(const k of av){x-=RARM[k].w;if(x<=0){tk=k;break}}
+const foeChance=(n,l)=>Math.min(.16+l*.012,(.06+n*.0015)*(1+l*.2));
+const foeGate=(k,l)=>Math.max(1,Math.round(RARM[k].gate*(1-l*.012)));
+const foeW=(k,l)=>RARM[k].w*(1+l*.05*RARK.indexOf(k));
+function foeTiers(n,l){const bi=biomeAt(n);return RARK.filter(k=>n>=foeGate(k,l)&&RARIDS[k].some(i=>bioFit(i,bi)))}
+function rarPick(n,force){
+ const l=foe.lvl,bi=biomeAt(n),av=foeTiers(n,l);if(!av.length||(!force&&Math.random()>=foeChance(n,l)))return-1;
+ let x=Math.random()*av.reduce((a,k)=>a+foeW(k,l),0),tk=av[av.length-1];for(const k of av){x-=foeW(k,l);if(x<=0){tk=k;break}}
  const ids=RARIDS[tk].filter(i=>bioFit(i,bi));return ids[rint(0,ids.length-1)];
 }
 function waveList(n){
@@ -2211,7 +2235,7 @@ function waveList(n){
  if(n%7===0){const bw=n/7;if(bw%2===1&&BOSST.length){list.push({t:bossFor(n),boss:true});list.push({t:main});if(n>14)list.push({t:prev(1)})}
   else{list.push({t:main,boss:true});list.push({t:prev(1)});if(n>14)list.push({t:prev(2)})}}
  else{const cnt=Math.min(6,2+Math.floor(n/3)+loop);for(let i=0;i<cnt;i++)list.push({t:i%2===0?main:regPrev(mi,bi)});
-  const rt=rarPick(n);if(rt>=0)list.push({t:rt,rar:true,ref:main})}
+  const rt=rarPick(n);if(rt>=0)list.push({t:rt,rar:true,ref:main});if(foe.lvl>=10&&Math.random()<(foe.lvl-8)*.012){const r2=rarPick(n,true);if(r2>=0)list.push({t:r2,rar:true,ref:main})}}
  return list;
 }
 function startWave(){
@@ -2440,6 +2464,7 @@ function drawLoot(k){
  c.save();c.translate(x,y+(rest?Math.sin(k.spin)*1.5:0));c.rotate(k.land<1?Math.sin(k.spin)*.7:0);c.scale(sc,sc);{const e=artCv(k.it.s,itemKind(k.it),k.it.r,48);if(e.ok)c.drawImage(e.cv,-11,-11,22,22);else{c.font="16px system-ui,sans-serif";c.textAlign="center";c.textBaseline="middle";c.fillText(SLOTS[k.it.s].ic,0,0)}}c.restore();
 }
 function luckTick(){
+ if(foe.until&&Date.now()>=foe.until){foe.until=0;foe.lvl=Math.min(FOE_MAX,foe.lvl+1);save();toast("👹 "+t("foeDone",{n:foe.lvl}),"#b36bff");SFX.unlock();if(modalOpen==="mDrops")renderDrops()}
  if(luck.until&&Date.now()>=luck.until){luck.until=0;luck.lvl=Math.min(LUCK_MAX,luck.lvl+1);save();toast("🍀 "+t("luckDone",{n:luck.lvl}),"#4fd67a");SFX.unlock();if(modalOpen==="mDrops")renderDrops()}
 }
 
@@ -4551,7 +4576,7 @@ function hud(){
  if(goldAcc>0&&realT-goldT>.45){goldT=realT;const el=document.createElement("span");el.className="gfly";el.textContent="+"+goldAcc+" 🪙";$("gflyW").appendChild(el);setTimeout(()=>el.remove(),1100);goldAcc=0}setTx("hWave","#"+battleNo);
  luckTick();luckLive();
  const nn=bag.filter(x=>x.nw).length,ib=$("invBdg");setTx("invBdg",nn>9?"9+":nn);ib.classList.toggle("on",nn>0);
- $("luckBdg").classList.toggle("on",!luck.until&&luck.lvl<LUCK_MAX&&P.gold>=luckCost(luck.lvl));
+ $("luckBdg").classList.toggle("on",(!luck.until&&luck.lvl<LUCK_MAX&&P.gold>=luckCost(luck.lvl))||(!foe.until&&foe.lvl<FOE_MAX&&P.gold>=foeCost(foe.lvl)));
  const hpr=clamp((P.hp||0)/(P.maxhp||1),0,1);setW("hpBar",hpr*100);setTx("hpTxt",Math.ceil(P.hp)+" / "+P.maxhp);
  (hud.sk||(hud.sk=[...document.querySelectorAll(".sk")])).forEach(b=>{const a=b.dataset.a;if(a==="turn")return;
   if(a!=="attack"){const rem=hero.cd[a]||0,cd=Math.round(clamp(rem/(CD[a]*cdMul(a)),0,1)*100)/100;if(b._cd!==cd){if(b._cd>0&&cd===0){popCls(b,"ready");if(CD[a]>=6&&!paused)SFX.ready()}if(!(b._cd>0)&&cd>0)popCls(b,"cast");b._cd=cd;b.style.setProperty("--cd",cd);b.classList.toggle("cd",cd>0)}
@@ -4824,7 +4849,7 @@ function armCheck(){const sd=Math.floor((battleNo-1)/5);if(armSeed!==sd||armStoc
 function renderForgeArm(){
  armCheck();const cur=eq.weapon,box=$("fgA");
  let h=`<div class="fgTop"><p class="sub">${t("fgArmHint")}</p></div><div class="fgShop">`;
- armStock.forEach((it,i)=>{
+ ARM.map((_,i)=>i).sort((a,b)=>ARM[a].r-ARM[b].r||a-b).forEach(i=>{const it=armStock[i];
   const R=RAR[it.r],price=armPrice(it),can=P.gold>=price;
   h+=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc sm">${itemArt(it.s,itemKind(it),it.r,{bare:1})}</div><div class="fgNm"><h4${R.rainbow?' class="rbt"':""}>${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})}</div></div></div><ul class="fgSt">${itemStatsHTML(it,cur,1)}</ul><button class="btn main fgBuy${can?"":" dis"}" type="button" data-arm="${i}">${t("fgBuy",{n:price})}</button></div>`});
  box.innerHTML=h+"</div>";
@@ -4844,6 +4869,7 @@ function renderForge(){
  renderForgeUp();renderForgeShop();renderForgeArm();
 }
 document.querySelectorAll(".ftab").forEach(b=>b.addEventListener("click",()=>{SFX.tab();fgTab=b.dataset.ft;renderForge()}));
+document.querySelectorAll(".fgJump .chip").forEach(b=>b.addEventListener("click",()=>{SFX.tab();const el=$(b.dataset.j);if(el)el.scrollIntoView({behavior:"smooth",block:"start"})}));
 $("invForge").onclick=$("pForge").onclick=$("bForge").onclick=$("tForge").onclick=()=>openModal("mForge");
 function fillAsDots(){const m=asMask(),d=$("asDots");if(!d)return;let h="";for(let i=0;i<=AS_MAX;i++)if(m>>i&1)h+=`<i style="--c:${RAR[i].col}"></i>`;if(h!==d._h){d._h=h;d.innerHTML=h||`<em>${t("asOff")}</em>`}}
 function asMatch(){let n=0,g=0;for(const x of bag)if(asOn(x.r)){n++;g+=sellPrice(x)}return{n,g}}
@@ -4893,12 +4919,24 @@ function renderDrops(){
  h+=`</div>`;
  if(l<LUCK_MAX){const nl=l+1;h+=`<h3 class="h3">${t("luckNext")}</h3><div class="lbox"><div class="m">${t("dropChance")}</div><div><b class="bigstat" style="font-size:22px">${pct(dropChanceAt(l))}</b> <span style="color:#6bf0ae;font-weight:700">→ ${pct(dropChanceAt(nl))}</span></div></div>${rarRows(rarProbs(0),rarProbs(0,nl+(P.rarBonus||0)))}`}
  $("dLuck").innerHTML=h;
+ {const n=battleNo,fl=foe.lvl,frun=foe.until>Date.now(),fc=foeCost(fl),nfl=Math.min(FOE_MAX,fl+1);
+  const rows=(l,cmp)=>{const av=foeTiers(n,l),av2=cmp!=null?foeTiers(n,cmp):[],tot=av.reduce((a,k)=>a+foeW(k,l),0),tot2=av2.reduce((a,k)=>a+foeW(k,cmp),0);
+   return RARK.map(k=>{const R=RAR[RARM[k].i],p=av.includes(k)&&tot?foeW(k,l)/tot:0,q=cmp!=null?(av2.includes(k)&&tot2?foeW(k,cmp)/tot2:0):null;
+    const lock=!av.includes(k)&&!(q>0)?`<span class="pc">${t("foeLocked",{n:foeGate(k,cmp!=null?cmp:l)})}</span>`:`<span class="pc">${pct(p)}${q!=null?` <span style="color:${q>=p?"#6bf0ae":"#ff8a8a"}">→ ${pct(q)}</span>`:""}</span>`;
+    return`<div class="rrow" style="--rc:${R.col}"><b${R.rainbow?' class="rbt"':""}>${L(TIERS[k])}</b><div class="rbar"><i style="width:${Math.max(1.2,Math.cbrt(Math.max(p,q||0))*100).toFixed(1)}%"></i></div>${lock}</div>`}).join("")};
+  let f=`<p class="sub">${t("foeHint")}</p><div class="lbox"><b>👹 ${t("foeLvl",{n:fl,m:FOE_MAX})}</b><div class="lpips">${Array.from({length:FOE_MAX},(_,i)=>`<i class="${i<fl?"on":""}"></i>`).join("")}</div>`;
+  if(frun){const dur=(foe.dur||foeTime(fl))*1000,left=foe.until-Date.now();f+=`<div id="fpT">⏳ ${t("luckRun",{t:fmtT(left/1000)})}</div><div class="lprog"><i id="fpI" style="width:${clamp(100-left/dur*100,0,100).toFixed(1)}%"></i></div>`}
+  else if(fl<FOE_MAX)f+=`<div class="acts" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px"><button class="btn main" id="foeGo" ${P.gold<fc?"disabled":""}>${t("luckGo",{n:fc})}</button><span class="m">⏳ ${t("luckTime",{t:fmtT(foeTime(fl))})}</span></div>${P.gold<fc?`<div class="m" style="color:#ff8a8a">${t("need")}</div>`:""}`;
+  else f+=`<div class="ok">✓ ${t("maxed")}</div>`;
+  f+=`</div><div class="lbox"><div class="m">${t("foeChance")}</div><div><b class="bigstat" style="font-size:22px">${pct(foeChance(n,fl))}</b>${fl<FOE_MAX?` <span style="color:#6bf0ae;font-weight:700">→ ${pct(foeChance(n,nfl))}</span>`:""}</div></div><h3 class="h3">${t("foeTiers")}</h3>${rows(fl,fl<FOE_MAX?nfl:null)}`;
+  $("dFoe").innerHTML=f;const fb=$("foeGo");if(fb)fb.onclick=foeStart}
  const b=$("luckGo");if(b)b.onclick=luckStart;
  document.querySelectorAll(".dtab").forEach(x=>x.classList.toggle("on",x.dataset.dt===dTab));document.querySelectorAll(".dpane").forEach(x=>x.classList.toggle("on",x.id===dTab));
 }
+function foeStart(){const l=foe.lvl;if(foe.until||l>=FOE_MAX)return;const cost=foeCost(l);if(P.gold<cost){toast(t("need"));SFX.buzz();return}P.gold-=cost;foe.dur=foeTime(l);foe.until=Date.now()+foe.dur*1000;save();SFX.buy();SFX.dice();renderDrops();hud()}
 function luckStart(){const l=luck.lvl;if(luck.until||l>=LUCK_MAX)return;const cost=luckCost(l);if(P.gold<cost){toast(t("need"));SFX.buzz();return}P.gold-=cost;luck.dur=luckTime(l);luck.until=Date.now()+luck.dur*1000;save();SFX.buy();SFX.dice();renderDrops();hud()}
 document.querySelectorAll(".dtab").forEach(x=>x.addEventListener("click",()=>{SFX.tab();dTab=x.dataset.dt;renderDrops()}));
-function luckLive(){if(modalOpen!=="mDrops"||!luck.until)return;const l=luck.lvl,dur=(luck.dur||luckTime(l))*1000,left=luck.until-Date.now();const a=$("lpT"),b=$("lpI");if(a)a.textContent="⏳ "+t("luckRun",{t:fmtT(left/1000)});if(b)b.style.width=clamp(100-left/dur*100,0,100).toFixed(1)+"%"}
+function luckLive(){if(modalOpen!=="mDrops")return;if(foe.until){const l=foe.lvl,dur=(foe.dur||foeTime(l))*1000,left=foe.until-Date.now();const a=$("fpT"),b=$("fpI");if(a)a.textContent="⏳ "+t("luckRun",{t:fmtT(left/1000)});if(b)b.style.width=clamp(100-left/dur*100,0,100).toFixed(1)+"%"}if(!luck.until)return;const l=luck.lvl,dur=(luck.dur||luckTime(l))*1000,left=luck.until-Date.now();const a=$("lpT"),b=$("lpI");if(a)a.textContent="⏳ "+t("luckRun",{t:fmtT(left/1000)});if(b)b.style.width=clamp(100-left/dur*100,0,100).toFixed(1)+"%"}
 
 
 let bestCv=[];
@@ -4954,7 +4992,7 @@ async function hashPw(pw,salt){
  try{if(window.crypto&&crypto.subtle){const enc=new TextEncoder(),key=await crypto.subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveBits"]);const bits=await crypto.subtle.deriveBits({name:"PBKDF2",salt:enc.encode(salt),iterations:120000,hash:"SHA-256"},key,256);return"p2$"+bufHex(bits)}}catch(e){}
  let h1=0xdeadbeef,h2=0x41c6ce57;const str=salt+"|"+pw;for(let r=0;r<2000;r++)for(let i=0;i<str.length;i++){const ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}return"f1$"+(h1>>>0).toString(16)+(h2>>>0).toString(16)}
 function resetWorld(){slashes=[];debris=[];enemies=[];projs=[];coins=[];bolts=[];parts=[];texts=[];stains=[];loots=[];decals=[];beams=[];hero.slow=0;setHero("idle");hero.inv=1;hero.x=LW*.3;hero.z=60;camX=0;arenaX=0;locked=false;cleared=false;tSel=null;renderTree.did=0;startWave()}
-function switchTo(email,fresh){save();session=email;if(fresh){P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};itemSeq=1;forge={seed:-1,stock:[],rr:0};nickname=LS.get(PK("r2_nick"),"")}else loadState();prevVis=null;iSel=null;recalc();if(!(P.hp>0))P.hp=P.maxhp;save();resetWorld();hud()}
+function switchTo(email,fresh){save();session=email;if(fresh){P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};foe={lvl:0,until:0};itemSeq=1;forge={seed:-1,stock:[],rr:0};nickname=LS.get(PK("r2_nick"),"")}else loadState();prevVis=null;iSel=null;recalc();if(!(P.hp>0))P.hp=P.maxhp;save();resetWorld();hud()}
 $("aGo").onclick=async()=>{
  const err=m=>{$("aErr").textContent=m};
  const email=$("aEmail").value.trim().toLowerCase(),pw=$("aPass").value;
@@ -5005,7 +5043,7 @@ $("musR").oninput=e=>{S.music=+e.target.value};
 $("musB").onclick=()=>{S.musicOn=!S.musicOn;if(S.musicOn)musicStart();else musicStop();fillSettings();save()};
 let resetArm=0;
 $("resetB").onclick=()=>{if(Date.now()-resetArm>3000){resetArm=Date.now();$("resetB").textContent=t("resetQ");setTimeout(()=>{if(resetArm&&Date.now()-resetArm>=2900)$("resetB").textContent=t("reset")},3000);return}
- resetArm=0;$("resetB").textContent=t("reset");P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};itemSeq=1;forge={seed:-1,stock:[],rr:0};tSel=null;prevVis=null;iSel=null;recalc();P.hp=P.maxhp;save();closeModal(true);enemies=[];projs=[];coins=[];loots=[];hero.x=150;hero.z=60;setHero("idle");camX=0;arenaX=0;startWave()};
+ resetArm=0;$("resetB").textContent=t("reset");P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};foe={lvl:0,until:0};itemSeq=1;forge={seed:-1,stock:[],rr:0};tSel=null;prevVis=null;iSel=null;recalc();P.hp=P.maxhp;save();closeModal(true);enemies=[];projs=[];coins=[];loots=[];hero.x=150;hero.z=60;setHero("idle");camX=0;arenaX=0;startWave()};
 function applyLang(){LX=Math.max(0,LANGS.findIndex(l=>l[0]===lang));document.documentElement.lang=lang;document.querySelectorAll("[data-i]").forEach(el=>el.textContent=t(el.dataset.i));
  document.querySelectorAll("[data-tk]").forEach(el=>{const em=el.querySelector("em"),lab=t(el.dataset.tk)+(em?" ("+em.textContent+")":"");el.dataset.tip=lab;el.setAttribute("aria-label",lab)});
  $("nickIn").placeholder=t("nickPh");$("pTree").textContent="🌳 "+t("tree");$("pInv").textContent="🎒 "+t("inv");$("pDrops").textContent="🎲 "+t("drops");$("pBest").textContent="📖 "+t("best");$("pForge").textContent="🔨 "+t("forge");
