@@ -122,6 +122,38 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .bossbar .bar{height:12px;border-color:#6b4a1c}
 .bossbar .bar i{background:linear-gradient(90deg,#7a1020,#e14b5a,#ffb35a)}
 
+.pHero{position:relative;display:flex;gap:12px;align-items:center;padding:8px 12px;margin:2px 0 10px;border-radius:14px;background:linear-gradient(120deg,rgba(138,34,51,.42),rgba(30,16,30,.7) 58%,rgba(232,176,74,.2));border:1px solid rgba(232,176,74,.38);overflow:hidden;box-shadow:inset 0 0 18px rgba(0,0,0,.35)}
+.pHero::before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(255,230,170,.16) 50%,transparent 62%);background-size:260% 100%;animation:phShine 4s ease-in-out infinite;pointer-events:none}
+@keyframes phShine{0%{background-position:130% 0}55%,100%{background-position:-30% 0}}
+.phD{position:relative;width:76px;height:120px;flex:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))}
+.phI{flex:1;min-width:0;position:relative}
+.phI b{display:block;font-size:16px;color:#ffe2a8;text-shadow:0 1px 3px #000;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.phS{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.phS span{background:rgba(0,0,0,.38);border:1px solid var(--line);border-radius:8px;padding:3px 7px;font-size:12px;font-weight:800;animation:tileIn .45s cubic-bezier(.2,1.5,.4,1) backwards}
+.phX{height:6px;border-radius:4px;background:rgba(0,0,0,.5);margin-top:9px;overflow:hidden}
+.phX i{display:block;height:100%;width:0;background:linear-gradient(90deg,#7a5cff,#d6c2ff);border-radius:4px;transition:width .9s cubic-bezier(.2,.9,.3,1);box-shadow:0 0 8px #8a6bff}
+.set .pacts{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.set .pacts .btn{grid-column:span 2}.set .pacts .btn:nth-child(5),.set .pacts .btn:nth-child(6){grid-column:span 3}
+.set .pacts .btn{flex-direction:column;gap:4px;padding:10px 4px 9px;min-width:0;white-space:normal;text-align:center;line-height:1.15;font-size:12.5px;transition:transform .15s,box-shadow .2s,border-color .2s;background:linear-gradient(180deg,#2e1a26,#1c1018)}
+.set .pacts .btn .pi{font-style:normal;font-size:24px;line-height:1;display:block;transition:transform .3s cubic-bezier(.2,1.6,.4,1)}
+.set .pacts .btn:hover{border-color:#8a6424;box-shadow:0 0 12px rgba(232,176,74,.25)}
+.set .pacts .btn:hover .pi,.set .pacts .btn:active .pi{transform:scale(1.22) rotate(-8deg)}
+.set .pacts .btn:active{transform:scale(.94)}
+.set .pacts .btn.main{grid-column:1/-1;background:linear-gradient(180deg,#b02c40,#5a1320);border-color:#d04a5a;flex-direction:row;font-size:15.5px;padding:13px;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(184,57,74,.35)}
+.set .pacts .btn.main::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.28) 50%,transparent 65%);background-size:250% 100%;animation:phShine 2.8s ease-in-out infinite;pointer-events:none}
+.modal.on .pHero{animation:tileIn .5s cubic-bezier(.2,1.4,.4,1) backwards}
+.modal.on .set .pacts .btn{animation:tileIn .5s cubic-bezier(.2,1.5,.4,1) backwards}
+.modal.on .set .pacts .btn:nth-child(2){animation-delay:.05s}.modal.on .set .pacts .btn:nth-child(3){animation-delay:.09s}.modal.on .set .pacts .btn:nth-child(4){animation-delay:.13s}.modal.on .set .pacts .btn:nth-child(5){animation-delay:.17s}.modal.on .set .pacts .btn:nth-child(6){animation-delay:.21s}
+.modal.on .set .row{animation:rowIn .45s ease-out backwards;animation-delay:calc(.18s + var(--ri,0)*.035s)}
+@keyframes tileIn{from{opacity:0;transform:translateY(14px) scale(.85)}}
+@keyframes rowIn{from{opacity:0;transform:translateX(-14px)}}
+.tab{transition:color .2s,background .2s,border-color .2s,transform .12s}
+.tab:active{transform:scale(.95)}
+.tab.on{box-shadow:inset 0 -2px 0 var(--gold),0 0 10px rgba(232,176,74,.18)}
+.tpane.on{animation:paneIn .35s ease-out}
+@keyframes paneIn{from{opacity:0;transform:translateY(8px)}}
+.modal.on .trc{animation:tileIn .4s ease-out backwards}
+@media (prefers-reduced-motion:reduce){.pHero,.pHero::before,.phS span,.set .pacts .btn,.set .pacts .btn.main::after,.set .row,.tpane.on,.trc,.buf{animation:none!important}}
 .bufs{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;max-width:190px}
 .buf{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:2px;min-width:26px;height:24px;padding:0 5px;border-radius:9px;background:rgba(12,7,13,.82);border:1.5px solid var(--c);box-shadow:0 0 9px var(--c),inset 0 0 6px var(--c);font-size:13px;line-height:1;animation:bufIn .45s cubic-bezier(.2,1.7,.4,1)}
 .buf i{font-style:normal;font-size:10px;font-weight:800;color:#fff}
@@ -696,6 +728,7 @@ body[data-gfx="hi"] .vig{display:block}
 
   <div class="modal" id="mPause"><div class="sheet set">
     <div class="shead"><h2 data-i="pause">Пауза</h2><button class="x" data-close aria-label="Закрити">✕</button></div>
+    <div class="pHero" id="pHero"><div class="phD" id="phDoll"></div><div class="phI"><b id="phName"></b><div class="phS" id="phStats"></div><div class="phX"><i id="phXp"></i></div></div></div>
     <div class="pacts"><button class="btn main" data-close data-i="resume">▶ Продовжити</button><button class="btn" id="pTree"></button><button class="btn" id="pInv"></button><button class="btn" id="pDrops"></button><button class="btn" id="pBest"></button><button class="btn" id="pForge"></button></div>
     <h3 class="h3" data-i="settings">Налаштування</h3>
     <div class="row"><div><b data-i="acc">Акаунт</b><div class="m" id="accWho"></div></div><div class="accb" id="accBtns"></div></div>
@@ -5654,8 +5687,16 @@ let banTimer=null,cineT=null;
 function cine(){const el=$("cine");el.classList.add("on");SFX.cine();clearTimeout(cineT);cineT=setTimeout(()=>el.classList.remove("on"),2300)}
 function banner(a,b){const el=$("banner");$("banT").textContent=a;$("banS").textContent=b||"";el.classList.remove("show");void el.offsetWidth;el.classList.add("show")}
 let toastT=null;function toast(s,col){const el=$("toast");el.textContent=s;el.style.background=col||"";el.style.color=col?"#10080c":"";el.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),col?1900:1200)}
+/* pause menu: a hero card with the paper doll and the run so far */
+function fillPHero(){
+ const d=$("phDoll");if(d)d.innerHTML=dollHTML();
+ $("phName").textContent=(nickname?nickname+" · ":"")+t("lv")+" "+P.level;
+ const kl=Object.values(kills).reduce((a,b)=>a+b,0);
+ $("phStats").innerHTML=[["🪙",P.gold],["⚔",battleNo],["💀",kl],["🌳",tal.length+"/"+TALL.length],["🎒",bag.length]].map(([i,v],k)=>`<span style="animation-delay:${.12+k*.05}s">${i} ${v}</span>`).join("");
+ const need=100+P.level*45,x=$("phXp");x.style.width="0";requestAnimationFrame(()=>requestAnimationFrame(()=>{x.style.width=clamp(P.xp/need*100,0,100)+"%"}))}
+document.querySelectorAll("#mPause .row").forEach((r,i)=>r.style.setProperty("--ri",i));
 function openModal(id){closeModal(true);modalOpen=id;paused=true;$(id).classList.add("on");attackHeld=false;joy.id=null;joy.x=joy.y=0;look.id=null;joyRest();for(const k in keys)keys[k]=false;
- if(id==="mTree")renderTree();if(id==="mBest")buildBestiary();if(id==="mPause")fillSettings();if(id==="mInv"){iSel=null;renderInv()}if(id==="mDrops")renderDrops();if(id==="mForge"){forgeCheck();renderForge()}SFX.open()}
+ if(id==="mTree")renderTree();if(id==="mBest")buildBestiary();if(id==="mPause"){fillSettings();fillPHero()}if(id==="mInv"){iSel=null;renderInv()}if(id==="mDrops")renderDrops();if(id==="mForge"){forgeCheck();renderForge()}SFX.open()}
 function closeModal(silent){if(!modalOpen)return;if(typeof hideTip2==="function")hideTip2();if(modalOpen==="mInv")bag.forEach(x=>x.nw=false);if(!silent)SFX.close();$(modalOpen).classList.remove("on");modalOpen=null;paused=false;last=performance.now();if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();if(!silent)save()}
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal()));
 document.querySelectorAll(".modal").forEach(m=>m.addEventListener("pointerdown",e=>{if(e.target!==m||m.id==="mDead")return;if(m.id==="mAuth")openModal("mPause");else closeModal()}));
@@ -6297,7 +6338,7 @@ $("resetB").onclick=()=>{if(Date.now()-resetArm>3000){resetArm=Date.now();$("res
  resetArm=0;$("resetB").textContent=t("reset");P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};foe={lvl:0,until:0};itemSeq=1;forge={seed:-1,stock:[],rr:0};tSel=null;prevVis=null;iSel=null;recalc();P.hp=P.maxhp;save();closeModal(true);enemies=[];projs=[];coins=[];loots=[];hero.x=150;hero.z=60;setHero("idle");camX=0;arenaX=0;mapCancel();startWave()};
 function applyLang(){LX=Math.max(0,LANGS.findIndex(l=>l[0]===lang));document.documentElement.lang=lang;document.querySelectorAll("[data-i]").forEach(el=>el.textContent=t(el.dataset.i));
  document.querySelectorAll("[data-tk]").forEach(el=>{const em=el.querySelector("em"),lab=t(el.dataset.tk)+(em?" ("+em.textContent+")":"");el.dataset.tip=lab;el.setAttribute("aria-label",lab)});
- $("nickIn").placeholder=t("nickPh");$("pTree").textContent="🌳 "+t("tree");$("pInv").textContent="🎒 "+t("inv");$("pDrops").textContent="🎲 "+t("drops");$("pBest").textContent="📖 "+t("best");$("pForge").textContent="🔨 "+t("forge");
+ $("nickIn").placeholder=t("nickPh");[["pTree","🌳","tree"],["pInv","🎒","inv"],["pDrops","🎲","drops"],["pBest","📖","best"],["pForge","🔨","forge"]].forEach(([id,ic,k])=>{$(id).innerHTML=`<i class="pi">${ic}</i><span>${t(k)}</span>`});
  if(modalOpen==="mForge")renderForge();if(modalOpen==="mTree")renderTree();if(modalOpen==="mInv")renderInv();if(modalOpen==="mDrops")renderDrops();if(modalOpen==="mBest")buildBestiary()}
 
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&!modalOpen&&hero.state!=="dead"){openModal("mPause")}});
