@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.13-a",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.13-b",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -2051,24 +2051,97 @@ const IA_N=[8,6,5,4,5,5,5,4,4,8];
 const IA_RB=`<defs><linearGradient id="iaRb" gradientUnits="userSpaceOnUse" x1="6" y1="6" x2="58" y2="58"><stop offset="0" stop-color="#ff5a6a"/><stop offset=".25" stop-color="#ffd24a"/><stop offset=".5" stop-color="#4fe08a"/><stop offset=".75" stop-color="#4f9dff"/><stop offset="1" stop-color="#c06bff"/></linearGradient></defs>`;
 const IA_C={};
 function itemArt(slot,kind,r,o){
- o=o||{};const key=slot+"|"+kind+"|"+r+"|"+(o.bare?1:0)+"|"+(o.sa?1:0);if(IA_C[key])return IA_C[key];
- const k=iaTok(r),f=IA[slot],fn=f[((kind|0)%f.length+f.length)%f.length];
- let defs="",aura="",sp="";
+ o=o||{};const lk=o.lk,key=slot+"|"+kind+"|"+r+"|"+(o.bare?1:0)+"|"+(o.sa?1:0)+"|"+(lk?lk.id:"");if(IA_C[key])return IA_C[key];
+ const k=lk?lookTok(iaTok(r),lk):iaTok(r),f=IA[slot],fn=f[((kind|0)%f.length+f.length)%f.length];
+ let defs="",aura="",sp="",bdg="";
+ /* the item's own emblem as a small badge in the corner */
+ if(lk&&!o.bare)bdg=`<g transform="translate(52.5 11.5)"><circle r="7.6" fill="#140b12" stroke="${k.gd}" stroke-width="1.5"/>${lkSym(lk.em,k.g,.58)}</g>`;
  if(!o.bare){
   if(r>=4)aura=`<circle cx="32" cy="34" r="${r>=8?27:24}" fill="${r===8?"#ff2a2a":k.a}" opacity="${r>=8?.22:.16}"/>`;
   if(r>=6)sp=[[8,10],[56,8],[54,54],[9,52]].map(([x,y],i)=>`<path d="${iaStar(x,y,4.500-i%2,1.300,4,-90)}" fill="${k.g}" opacity="${.6+.1*(i%3)}"/>`).join("")}
  let body=fn(k);
  if(r===10){if(o.sa)defs=IA_RB;body=body.split(k.gd).join("url(#iaRb)")}
- return IA_C[key]=`<svg class="iart" viewBox="0 0 64 64" aria-hidden="true">${defs}${aura}${body}${sp}</svg>`}
+ return IA_C[key]=`<svg class="iart" viewBox="0 0 64 64" aria-hidden="true">${defs}${aura}${body}${sp}${bdg}</svg>`}
 
 /* which drawing a noun / a signature item uses (indexes into IA[slot]) */
 const UAK=[[1,1,0,0,0,0,0,0,1,5],[2,0,1,1,0,2,1,0,1,1],[3,2,4,3,1,0,2,1,3,4],[0,4,4,3,1,2,3,1,2,6],[4,3,3,3,2,2,1,1,0,5],[2,4,3,2,2,3,2,1,2,1],[3,5,3,0,2,0,3,3,1,1],[5,4,0,3,1,4,1,0,2,5],[4,2,2,2,4,2,4,2,2,2],[6,4,1,1,0,1,3,3,1,4],[0,4,3,3,1,2,0,0,0,7]];
 function itemKind(it){const S=SLOTS[it.s];if(it.a!=null&&ARM[it.a])return ARM[it.a].k;if(it.u){const q=unqOf(it);if(q&&q[0]!=null)return q[0]}const g=it.r<=1?0:it.r<=3?1:2,ng=S.names[g],ix=(it.n!=null?it.n:it.id%3)%ng.length;return S.ak[g][ix]||0}
-const iIc=it=>`<span class="ih">${itemArt(it.s,itemKind(it),it.r,{bare:1})}</span>`;
-const iTile=it=>`<span class="ia">${itemArt(it.s,itemKind(it),it.r)}</span>${it.up?`<b class="ub">+${it.up}</b>`:""}${it.u?'<i class="us">★</i>':""}`;
+const iIc=it=>`<span class="ih">${itemArt(it.s,itemKind(it),it.r,{bare:1,lk:itemLook(it)})}</span>`;
+const iTile=it=>`<span class="ia">${itemArt(it.s,itemKind(it),it.r,{lk:itemLook(it)})}</span>${it.up?`<b class="ub">+${it.up}</b>`:""}${it.u?'<i class="us">★</i>':""}`;
 /* art as a canvas (for loot sprites): filled when the SVG has decoded */
 const IA_IMG={};
-function artCv(sl,kd,r,px){const key=sl+"_"+kd+"_"+r+"_"+px;let e=IA_IMG[key];if(e)return e;const cv=document.createElement("canvas");cv.width=cv.height=px;e=IA_IMG[key]={cv,ok:false};const im=new Image();im.onload=()=>{cv.getContext("2d").drawImage(im,0,0,px,px);e.ok=true;if(e.tx)e.tx.needsUpdate=true};im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(itemArt(sl,kd,r,{bare:1,sa:1}).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="'+px+'" height="'+px+'" '));return e}
+function artCv(sl,kd,r,px,lk){const key=sl+"_"+kd+"_"+r+"_"+px+"_"+(lk?lk.id:"");let e=IA_IMG[key];if(e)return e;const cv=document.createElement("canvas");cv.width=cv.height=px;e=IA_IMG[key]={cv,ok:false};const im=new Image();im.onload=()=>{cv.getContext("2d").drawImage(im,0,0,px,px);e.ok=true;if(e.tx)e.tx.needsUpdate=true};im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(itemArt(sl,kd,r,{bare:1,sa:1,lk}).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="'+px+'" height="'+px+'" '));return e}
+/* ===== every wearable item has its own look =====
+   metal, cloth and gem come from the words of the item's (English) name, the emblem from its epithet ("of the Wolf") or name,
+   and a pattern + a shape twist from a hash of the whole name. The same item always looks the same; different items look different. */
+const LK_M=[/* [words, metal, cloth, gem] */
+ [/obsidian|onyx|black|night|shadow|umbra|void|dusk|eclipse|abyss|dark|gloom|nightshade/i,"#4a4058","#241a2e","#b06bff"],
+ [/blood|crimson|ruby|vampire|garnet|bloodstone/i,"#8a2a34","#7a1020","#ff3a4a"],
+ [/fire|flame|ember|phoenix|inferno|lava|magma|blaz|volcano|cinder|searing|hellfire/i,"#d8743a","#9a2a10","#ffb03a"],
+ [/frost|ice|snow|winter|glacier|blizzard|icewind/i,"#bfe0f4","#3a6aa0","#9fefff"],
+ [/gold|golden|sun|royal|king|lion|midas|aurelia|gilded|ducat|coronation|crown jewel/i,"#e8b84a","#8a1f2a","#ffe08a"],
+ [/silver|moon|mithril|lunar/i,"#d4dbe8","#3a4a7a","#dce8ff"],
+ [/storm|thunder|lightning|tempest|sky|wind|gale|cloud|zephyr/i,"#9ab0d8","#2a3a6a","#9fe0ff"],
+ [/jade|emerald|forest|moss|leaf|druid|verdant|ivy|malachite|world tree|life|nile/i,"#5aa07a","#2a5a32","#5fe08a"],
+ [/sea|tide|ocean|coral|kraken|leviathan|wave|deep|siren|reef|aquamarine|turquoise|pearl|poseidon|trident/i,"#5aa0b0","#1f4a6a","#4fd0e0"],
+ [/dragon|wyrm|drake|wyvern|hydra|basilisk/i,"#3a8a5a","#6a1414","#ffcc3a"],
+ [/star|galaxy|cosmic|cosmos|comet|constellation|nebula|infinity|eternity|eternal|aeon|prism|rainbow|aurora|ouroboros|time/i,"#c8c8f0","#2a2a6a","#fff6a0"],
+ [/angel|holy|seraph|halo|divine|celestial|heaven|grace|light|radian|saint|mercy|choir|dawn|pilgrim/i,"#f4ecd0","#d8c8a0","#fff6c0"],
+ [/bone|skull|death|reaper|fossil|tooth|fang|rib|tusk|mummy|tomb/i,"#e6dcc0","#4a4038","#c8ff7a"],
+ [/amethyst|arcane|mage|sorcer|witch|warlock|mana|rune|glyph|sigil|oracle|dream/i,"#8a6ac8","#3a2a6a","#d08aff"],
+ [/bronze|copper|brass|amber|babylon|troy|ur\b|pharaoh|sphinx|scarab|ankh|khopesh/i,"#c88a4a","#6a3a1a","#ffb03a"],
+ [/rust|rusty|tin|pewter|dented|worn|bent|chipped|tarnished|leaky|patched|old/i,"#9a7458","#5a4a3a","#d0c0a0"],
+ [/iron|steel|knight|guard|militia|sentinel|warden|chain|plate|templar|crusader|titan/i,"#9aa2b0","#3a4252","#c8d8ff"],
+ [/wood|oak|bamboo|birch|straw|wicker|reed|willow|acorn|clay|seed|garlic|rope|button|sack|flour|burlap/i,"#a07440","#6a4a24","#c8e070"],
+ [/leather|hide|fur|pelt|wolf|bear|deer|goat|sheep|fox|lynx|boar|hunter|ranger|scout|felt|wool|falcon|hawk|feather/i,"#8a6040","#7a5232","#e0c070"]];
+const LK_GEM=[[/sapphire|lapis/i,"#4a7aff"],[/emerald/i,"#3ad07a"],[/ruby|garnet/i,"#ff3a4a"],[/amethyst/i,"#c87aff"],[/topaz|amber|sunstone/i,"#ffb03a"],[/opal|moonstone|pearl/i,"#e8f4ff"],[/turquoise|aquamarine/i,"#3ad0c8"],[/jade|malachite/i,"#4ae08a"],[/onyx|obsidian/i,"#9a6aff"]];
+const LK_E=[[/sun|solar|dawn|day|ra\b/i,"sun"],[/moon|lunar|crescent|night|dusk|twilight/i,"moon"],[/star|comet|galax|cosmos|cosmic|constellation|nebula|heaven|sky/i,"star"],[/fire|flame|ember|phoenix|inferno|lava|magma|blaz|volcano|hearth|forge|campfire|cinder/i,"flame"],
+ [/frost|ice|snow|winter|glacier|blizzard/i,"snow"],[/storm|thunder|lightning|tempest|bolt|zeus|thor|mjolnir/i,"bolt"],[/leaf|forest|oak|moss|ivy|willow|birch|tree|druid|meadow|orchard|field|garden|barn|mill/i,"leaf"],
+ [/skull|death|reaper|bone|undying|grave|tomb|mummy|hades|necromancer/i,"skull"],[/eye|seer|oracle|watch|horus|scout/i,"eye"],[/heart|love|life|spring|mercy|grace/i,"heart"],
+ [/wolf|bear|lynx|fox|boar|hound|claw|beast|hunt|fenrir|cerberus|stag|hare/i,"claw"],[/wing|feather|angel|seraph|hawk|falcon|raven|crow|bird|sparrow|griffin|pegasus|cherub|icarus|valkyrie/i,"wing"],
+ [/king|crown|royal|emperor|throne|kingdom|queen|lord|conqueror|champion|glory|triumph|lion/i,"crown"],[/sea|tide|wave|kraken|leviathan|ocean|reef|deep|brook|rain|well|pond|flood|poseidon|atlantis|ferry|dew/i,"wave"],
+ [/rune|glyph|sigil|arcane|mage|sorcer|warlock|odin|elder sign|tablet|old gods/i,"rune"],[/dragon|wyrm|drake|wyvern|hydra|serpent|snake|cobra|viper|basilisk|medusa|chimera|manticore/i,"fang"],
+ [/void|abyss|infinity|eternity|eternal|time|aeon|spiral|chaos|omega|beginning|endless/i,"spiral"],[/guard|shield|aegis|militia|fortress|bastion|crusader|paladin|knight|sentinel|warden|titan/i,"shield"],
+ [/gold|treasure|coin|ducat|midas|merchant|peddler|beggar|tavern/i,"coin"]];
+const LK_ALL=["sun","moon","star","flame","snow","bolt","leaf","skull","eye","heart","claw","wing","crown","wave","rune","fang","spiral","shield","coin"];
+const LK_FALL=["#8e9199","#c88a4a","#9aa2b0","#8a6040","#5aa07a","#9ab0d8","#a07440","#d4dbe8"];
+const enOf=a=>a?(a[1]||a[0]):"";
+/* the item's English base name and epithet (only used to pick its look) */
+function itemNameParts(it){
+ if(it.a!=null&&ARM[it.a])return[enOf(ARM[it.a].n),""];
+ if(it.u){const q=unqOf(it);if(q)return[enOf(q[1]),""]}
+ const S=SLOTS[it.s],opts=S.names[it.r<=1?0:it.r<=3?1:2],b=enOf(opts[(it.n!=null?it.n:it.id%3)%opts.length]),E=RAR[it.r].ep;
+ return[b,E?enOf(E[(it.e!=null?it.e:it.id)%E.length]).replace("{n}","").trim():""]}
+const LK_C=new Map();
+function itemLook(it){
+ const [b,e]=itemNameParts(it),key=it.s+"|"+it.r+"|"+b+"|"+e;let L=LK_C.get(key);if(L)return L;
+ let h=5381;for(const ch of key)h=(Math.imul(h,33)^ch.charCodeAt(0))>>>0;
+ const pick=(rows,i,txt)=>{for(const r of rows)if(r[i]&&r[0].test(txt))return r[i];return null},both=b+" "+e,P=IA_PAL[Math.max(0,Math.min(10,it.r))];
+ let m=pick(LK_M,1,b)||pick(LK_M,1,e),c=pick(LK_M,2,b)||pick(LK_M,2,e);const g=pick(LK_GEM,1,both)||pick(LK_M,3,b)||pick(LK_M,3,e)||P.g;
+ if(!m)m=LK_FALL[h%LK_FALL.length];if(!c)c=iaMix(P.c,LK_FALL[(h>>>4)%LK_FALL.length],.6);
+ /* keep a touch of the rarity colour so tiers still read at a glance */
+ m=iaMix(m,P.m,.78);c=iaMix(c,P.c,.8);
+ const em=pick(LK_E,1,e)||pick(LK_E,1,b)||LK_ALL[(h>>>3)%LK_ALL.length];
+ L={id:h.toString(36),m,c,g,em,pat:(h>>>9)%8,shp:(h>>>13)%4};LK_C.set(key,L);return L}
+function lookTok(k,L){const t=Object.assign({},k);t.m2=L.m;t.m1=shade(L.m,.45);t.m3=shade(L.m,-.5);t.c=L.c;t.c1=shade(L.c,.3);t.c2=shade(L.c,-.4);t.g=L.g;if(k.r<2){t.gd=t.m2;t.gd2=shade(t.m2,-.4)}return t}
+const iaTokIt=it=>lookTok(iaTok(it.r),itemLook(it));
+/* emblems, drawn in a ±10 box around 0,0 */
+function lkSym(n,col,sc){const o=IA_O,w=(1.4/sc).toFixed(2),F=d=>`<path d="${d}" fill="${col}" stroke="${o}" stroke-width="${w}" stroke-linejoin="round"/>`,S=(d,ww)=>`<path d="${d}" fill="none" stroke="${o}" stroke-width="${(+ww+2.4/sc).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${col}" stroke-width="${ww}" stroke-linecap="round" stroke-linejoin="round"/>`;
+ const d={sun:F("M0 -4.6A4.6 4.6 0 1 1 0 4.6A4.6 4.6 0 1 1 0 -4.6Z")+S("M0 -9V-6.4M0 9V6.4M-9 0H-6.4M9 0H6.4M-6.4 -6.4L-4.6 -4.6M6.4 6.4L4.6 4.6M-6.4 6.4L-4.6 4.6M6.4 -6.4L4.6 -4.6",1.6),
+  moon:F("M2 -9A9 9 0 1 0 2 9A7 7 0 1 1 2 -9Z"),star:F(iaStar(0,0,9.4,4,5,-90)),
+  flame:F("M0 -9.4C5 -3.6 7.4 .6 5.4 5C3.6 9.4 -3.6 9.4 -5.4 5C-7.2 1 -3.6 -2.2 -1.2 -6C-.2 -2.4 1.8 -.4 2.2 2C3.4 -.8 2.4 -5.4 0 -9.4Z"),
+  snow:S("M0 -9V9M-7.8 -4.5L7.8 4.5M-7.8 4.5L7.8 -4.5M-2.4 -7L0 -4.6L2.4 -7M-2.4 7L0 4.6L2.4 7",1.7),bolt:F("M2.6 -9.6L-5.6 1.2H-.4L-2.6 9.6L5.6 -1.6H.4Z"),
+  leaf:F("M0 -9.4C7.4 -5.2 7.4 4.2 0 9.4C-7.4 4.2 -7.4 -5.2 0 -9.4Z")+S("M0 -6.6V8",1),
+  skull:F("M-6.6 -1A6.6 6.6 0 1 1 6.6 -1L5.4 3.4H3.2V7H-3.2V3.4H-5.4Z")+`<circle cx="-2.6" cy="-1" r="1.9" fill="${o}"/><circle cx="2.6" cy="-1" r="1.9" fill="${o}"/>`,
+  eye:F("M-9.6 0Q0 -8 9.6 0Q0 8 -9.6 0Z")+`<circle r="3.4" fill="${o}"/><circle cx="1" cy="-1" r="1" fill="#fff"/>`,heart:F("M0 8.6C-9.6 1.6 -8.6 -7.6 -3.2 -7.6C-1.2 -7.6 0 -5.6 0 -4.4C0 -5.6 1.2 -7.6 3.2 -7.6C8.6 -7.6 9.6 1.6 0 8.6Z"),
+  claw:S("M-6 -8.4Q-2.4 0 -5.4 8.4M0 -9.4Q3.6 0 .2 9.4M6 -8.4Q9.4 0 5.6 8.4",2),wing:F("M-8.6 6.6C-8.6 -4.4 0 -9.6 9.4 -8.6C5.4 -5.4 6.4 -3.2 3.2 -2.2C6.4 -1 5.4 2.2 2.2 2.2C4.4 4.4 2.2 6.6 -1 5.4Z"),
+  crown:F("M-8.6 6.4V-3.2L-4.4 1L0 -7.6L4.4 1L8.6 -3.2V6.4Z"),wave:S("M-9 -1.6Q-6.4 -6.6 -3.2 -1.6Q0 3.4 3.2 -1.6Q6.4 -6.6 9 -1.6M-9 5Q-6.4 0 -3.2 5Q0 10 3.2 5Q6.4 0 9 5",1.8),
+  rune:S("M-2.6 -9.4V9.4M-2.6 -3.4L5 -8.4M-2.6 2.6L5.6 -1.6",2),fang:F("M-7.6 -7.4L-3 8.4L.4 -7.4Z")+F("M-.4 -7.4L3 8.4L7.6 -7.4Z"),
+  spiral:S("M0 0a1.4 1.4 0 1 1 2.8 0a3.4 3.4 0 1 1 -6.8 0a5.4 5.4 0 1 1 10.8 0a7.4 7.4 0 1 1 -14.8 0",1.6),shield:F("M0 -9.4L8.4 -6.2L7.4 2.2Q4.4 7.4 0 9.4Q-4.4 7.4 -7.4 2.2L-8.4 -6.2Z")+S("M0 -6V6M-4.6 -1H4.6",1.4),
+  coin:F("M0 -8.6A8.6 8.6 0 1 1 0 8.6A8.6 8.6 0 1 1 0 -8.6Z")+S("M1.8 -4.2Q-2.8 -4.6 -2.4 -1.6Q-2 .8 1.4 .6Q3.6 1.2 2.6 3.6Q1.2 5 -2.4 4.2M0 -6V6",1.2)}[n]||"";
+ return`<g transform="scale(${sc})">${d}</g>`}
+/* a small medallion with the emblem (for the doll) */
+const lkMed=(L,k,x,y,r)=>`<g transform="translate(${x} ${y})">${iaCi(0,0,r,k.m3,1.2)}<circle r="${(r-1.1).toFixed(2)}" fill="none" stroke="${k.gd}" stroke-width=".9"/>${lkSym(L.em,k.g,(r*.072).toFixed(3))}</g>`;
 const SLOTS=[
  {k:"weapon",ic:"🗡️",ak:[[0,1,2,2],[0,3,6,3],[4,0,3,4]],main:["atk"],n:S8("Зброя|Weapon|Arme|Waffe|武器|Arma|Arma|Broń|Arma|武器|무기|Silah|Senjata|हथियार|Vũ khí|อาวุธ|Wapen"),names:[[S8("Залізний меч|Iron Sword|Épée de fer|Eisenschwert|铁剑|Espada de hierro|Spada di ferro|Żelazny miecz|Espada de ferro|鉄の剣|철검|Demir Kılıç|Pedang Besi|लोहे की तलवार|Kiếm sắt|ดาบเหล็ก|IJzeren zwaard"),S8("Мідний кинджал|Bronze Dagger|Poignard de bronze|Bronzedolch|青铜匕首|Daga de bronce|Pugnale di bronzo|Brązowy sztylet|Adaga de bronze|青銅の短剣|청동 단검|Bronz Hançer|Belati Perunggu|काँसे का खंजर|Dao găm đồng|มีดสั้นสำริด|Bronzen dolk"),S8("Зазублений тесак|Serrated Cleaver|Hachoir dentelé|Gezackter Hackmesser|锯齿砍刀|Machete dentado|Mannaia dentata|Ząbkowany tasak|Cutelo serrilhado|ギザ刃の鉈|톱날 식칼|Tırtıklı Satır|Pisau Daging Bergerigi|दाँतेदार छुरा|Dao chặt răng cưa|มีดสับฟันเลื่อย|Gekartelde hakbijl"),S8("Іржава сокира|Rusty Hatchet|Hachette rouillée|Rostiges Beil|生锈手斧|Hacha oxidada|Accetta arrugginita|Zardzewiały toporek|Machadinha enferrujada|錆びた手斧|녹슨 손도끼|Paslı Balta|Kapak Berkarat|जंग लगी कुल्हाड़ी|Rìu nhỏ gỉ|ขวานเล็กขึ้นสนิม|Roestig bijltje")],[S8("Руновий клинок|Runic Blade|Lame runique|Runenklinge|符文之刃|Hoja rúnica|Lama runica|Runiczne ostrze|Lâmina rúnica|ルーンブレード|룬 검|Rünlü Kılıç|Bilah Rune|रूण वाली तलवार|Lưỡi kiếm rune|ดาบรูน|Runenzwaard"),S8("Клинок тіней|Shadow Blade|Lame des ombres|Schattenklinge|暗影之刃|Hoja de las sombras|Lama delle ombre|Ostrze cieni|Lâmina das sombras|影の刃|그림자 칼날|Gölge Kılıcı|Bilah Bayangan|छाया की तलवार|Lưỡi kiếm bóng tối|ดาบเงา|Schaduwzwaard"),S8("Серп ночі|Night Sickle|Faucille de la nuit|Nachtsichel|夜之镰|Hoz nocturna|Falce notturna|Sierp nocy|Foice da noite|夜の鎌|밤의 낫|Gece Orağı|Sabit Malam|रात की हँसिया|Liềm đêm|เคียวราตรี|Nachtsikkel"),S8("Кривава шабля|Blood Sabre|Sabre de sang|Blutsäbel|血刃军刀|Sable de sangre|Sciabola di sangue|Krwawa szabla|Sabre de sangue|血のサーベル|피의 군도|Kan Kılıcı|Sabel Darah|रक्त कृपाण|Kiếm cong máu|ดาบโค้งโลหิต|Bloedsabel")],[S8("Клинок зорепаду|Starfall Blade|Lame Chute-d'étoiles|Sternenfall-Klinge|星陨之刃|Hoja Estrella fugaz|Lama Cadistella|Ostrze Spadającej Gwiazdy|Lâmina Estrela Cadente|星降りの刃|별똥별 검|Yıldız Düşümü Kılıcı|Bilah Bintang Jatuh|उल्कापात की तलवार|Kiếm sao rơi|ดาบดาวตก|Sterrenvalzwaard"),S8("Меч вічної ночі|Sword of Eternal Night|Épée de la nuit éternelle|Schwert der ewigen Nacht|永夜之剑|Espada de la noche eterna|Spada della notte eterna|Miecz wiecznej nocy|Espada da noite eterna|永夜の剣|영원한 밤의 검|Ebedi Gece Kılıcı|Pedang Malam Abadi|अनंत रात्रि की तलवार|Kiếm đêm vĩnh cửu|ดาบราตรีนิรันดร์|Zwaard van de eeuwige nacht"),S8("Ятаган безодні|Abyssal Scimitar|Cimeterre abyssal|Abgrundkrummsäbel|深渊弯刀|Cimitarra abisal|Scimitarra abissale|Otchłanny jatagan|Cimitarra abissal|深淵の曲刀|심연의 언월도|Uçurum Pala|Scimitar Jurang|अथाह खाई की टेढ़ी तलवार|Đao cong vực thẳm|ดาบโค้งห้วงลึก|Afgrondkromzwaard"),S8("Драконобій|Dragonslayer|Tueur de dragons|Drachentöter|屠龙者|Matadragones|Ammazzadraghi|Smokobójca|Mata-dragões|竜殺し|용살자|Ejderha Katili|Pembunuh Naga|अजगर-संहारक|Kẻ diệt rồng|ผู้สังหารมังกร|Drakendoder")]]},
  {k:"helmet",ic:"🪖",ak:[[0,0,4,1],[2,1,5,4],[4,4,2,3]],main:["maxhp"],n:S8("Шолом|Helmet|Casque|Helm|头盔|Casco|Elmo|Hełm|Elmo|兜|투구|Miğfer|Helm|टोप|Mũ giáp|หมวก|Helm"),names:[[S8("Шкіряний каптур|Leather Hood|Capuche de cuir|Lederkapuze|皮兜帽|Capucha de cuero|Cappuccio di cuoio|Skórzany kaptur|Capuz de couro|革のフード|가죽 두건|Deri Kukuleta|Tudung Kulit|चमड़े का टोप|Mũ trùm da|ฮู้ดหนัง|Leren kap"),S8("Тканий капелюх|Woven Cap|Chapeau tissé|Gewebte Mütze|编织帽|Gorro tejido|Berretto intrecciato|Tkana czapka|Gorro tecido|編み帽子|짠 모자|Örgü Kasket|Topi Rajut|बुनी हुई टोपी|Mũ đan|หมวกสาน|Gevlochten muts"),S8("Бронзовий обруч|Bronze Circlet|Diadème de bronze|Bronzereif|青铜额环|Diadema de bronce|Cerchietto di bronzo|Brązowa opaska|Diadema de bronze|青銅のサークレット|청동 머리띠|Bronz Alın Bandı|Mahkota Kecil Perunggu|काँसे का मुकुट-पट्ट|Vòng đầu đồng|มงกุฎห่วงสำริด|Bronzen diadeem"),S8("Залізний шолом|Iron Helm|Heaume de fer|Eisenhelm|铁盔|Yelmo de hierro|Elmo di ferro|Żelazny hełm|Elmo de ferro|鉄の兜|철 투구|Demir Miğfer|Helm Besi|लोहे का टोप|Mũ sắt|หมวกเหล็ก|IJzeren helm")],[S8("Сталевий шолом|Steel Helm|Heaume d'acier|Stahlhelm|钢盔|Yelmo de acero|Elmo d'acciaio|Stalowy hełm|Elmo de aço|鋼の兜|강철 투구|Çelik Miğfer|Helm Baja|इस्पात का टोप|Mũ thép|หมวกเหล็กกล้า|Stalen helm"),S8("Шолом вартового|Sentinel Helm|Heaume de sentinelle|Wächterhelm|哨兵头盔|Yelmo del centinela|Elmo del sentinella|Hełm strażnika|Elmo da sentinela|番兵の兜|파수병 투구|Nöbetçi Miğferi|Helm Penjaga|प्रहरी टोप|Mũ lính gác|หมวกยามรักษาการณ์|Wachtershelm"),S8("Маска мисливця|Hunter's Mask|Masque du chasseur|Jägermaske|猎人面具|Máscara del cazador|Maschera del cacciatore|Maska łowcy|Máscara do caçador|狩人の仮面|사냥꾼의 가면|Avcı Maskesi|Topeng Pemburu|शिकारी का मुखौटा|Mặt nạ thợ săn|หน้ากากนักล่า|Jagersmasker"),S8("Корона з кісток|Bone Crown|Couronne d'os|Knochenkrone|骨冠|Corona de hueso|Corona d'ossa|Kościana korona|Coroa de ossos|骨の冠|뼈 왕관|Kemik Taç|Mahkota Tulang|हड्डी का ताज|Vương miện xương|มงกุฎกระดูก|Botenkroon")],[S8("Корона вічності|Crown of Eternity|Couronne d'éternité|Krone der Ewigkeit|永恒之冠|Corona de la eternidad|Corona dell'eternità|Korona wieczności|Coroa da eternidade|永遠の冠|영원의 왕관|Ebediyetin Tacı|Mahkota Keabadian|अनंतकाल का ताज|Vương miện vĩnh hằng|มงกุฎนิรันดร์|Kroon der eeuwigheid"),S8("Вінець забуття|Circlet of Oblivion|Diadème de l'oubli|Kranz des Vergessens|遗忘之冠|Diadema del olvido|Diadema dell'oblio|Diadem zapomnienia|Diadema do esquecimento|忘却のサークレット|망각의 머리띠|Unutuş Alın Bandı|Mahkota Kecil Pelupa|विस्मृति का मुकुट-पट्ट|Vòng đầu lãng quên|มงกุฎห่วงแห่งการลืมเลือน|Diadeem der vergetelheid"),S8("Шолом падшого короля|Fallen King's Helm|Heaume du roi déchu|Helm des gefallenen Königs|堕落之王头盔|Yelmo del rey caído|Elmo del re caduto|Hełm upadłego króla|Elmo do rei caído|堕ちた王の兜|몰락한 왕의 투구|Düşmüş Kralın Miğferi|Helm Raja yang Jatuh|पतित राजा का टोप|Mũ vua sa ngã|หมวกราชาผู้ล่มสลาย|Helm van de gevallen koning"),S8("Шолом титана|Titan's Helm|Heaume du titan|Titanenhelm|泰坦之盔|Yelmo del titán|Elmo del titano|Hełm tytana|Elmo do titã|タイタンの兜|타이탄의 투구|Titan'ın Miğferi|Helm Titan|दैत्य का टोप|Mũ titan|หมวกไททัน|Titanenhelm")]]},
@@ -2539,14 +2612,15 @@ function recalc(){
  const ieq={};for(const k in eq){const it=eq[k];if(it)for(const [a,v] of ist(it)){s[a]+=v;ieq[a]=(ieq[a]||0)+v}}
  P.eqStats=ieq;
  const HL=Object.assign({},HERO_BASE),rc=k=>eq[k]?RAR[eq[k].r].col:null;
- if(eq.weapon){HL.glowCol=rc("weapon");if(eq.weapon.r>=3){HL.glowIdle=.5;HL.blade=shade(rc("weapon"),.7)}
+ const lc=k=>eq[k]?itemLook(eq[k]):null;
+ if(eq.weapon){HL.glowCol=rc("weapon");HL.blade=shade(lc("weapon").m,.35);if(eq.weapon.r>=3){HL.glowIdle=.5;HL.blade=iaMix(shade(rc("weapon"),.7),HL.blade,.45)}
   if(eq.weapon.up>=5)HL.glowIdle=Math.max(HL.glowIdle||0,Math.min(.95,.3+eq.weapon.up*.03))}
- if(eq.armor){HL.trim=rc("armor");if(eq.armor.r>=3)HL.armor=shade(rc("armor"),.45)}
+ if(eq.armor){HL.trim=rc("armor");HL.armor=lc("armor").m}
  if(eq.helmet)HL.helm=rc("helmet");
- if(eq.boots)HL.boot=shade(rc("boots"),-.55);
+ if(eq.boots)HL.boot=shade(lc("boots").m,-.35);
  if(eq.amulet&&eq.amulet.r>=4)HL.cape=shade(rc("amulet"),-.55);
- if(eq.cloak)HL.cape=shade(rc("cloak"),-.45);
- if(eq.gloves){HL.glove=shade(rc("gloves"),-.3);HL.arm2=shade(rc("gloves"),-.45)}
+ if(eq.cloak)HL.cape=shade(lc("cloak").c,-.2);
+ if(eq.gloves){HL.glove=lc("gloves").m;HL.arm2=shade(lc("gloves").c,-.15)}
  if(eq.necklace)HL.neck=rc("necklace");
  {const hk=JSON.stringify(HL);if(hk!==recalc.hk){recalc.hk=hk;HERO_LOOK=HL}}
  for(const T of TRAIN){const l=train[T.id]||0;if(l)for(const [k,v] of T.fx)s[k]+=v*l}
@@ -3192,7 +3266,7 @@ const itemName=it=>(it.up?"+"+it.up+" ":"")+itemName0(it);
 const sellPrice=it=>Math.round((5+it.l*2)*RAR[it.r].mul*RAR[it.r].mul)+Math.round((it.inv||0)*.5);
 const easeBk=t=>1+2.70158*Math.pow(t-1,3)+1.70158*Math.pow(t-1,2);
 function spawnLoot(e,it){
- artCv(it.s,itemKind(it),it.r,96);
+ artCv(it.s,itemKind(it),it.r,96,itemLook(it));
  const R=RAR[it.r],h0=e.h+(e.cfg?e.cfg.hgt*e.s*.55:20),sd=Math.random()<.5?-1:1;
  loots.push({x:e.x,z:e.z,h:h0,vx:sd*rnd(30,75),vz:rnd(-25,25),vh:rnd(170,230)+it.r*12,t:0,it,spin:0,land:0,rest:0,tr:0,pop:0,mag:0});
  for(let i=0;i<10+it.r*3;i++){const a=rnd(0,PI*2),sp=rnd(60,150);parts.push({x:e.x,z:e.z,h:h0,vx:Math.cos(a)*sp,vz:Math.sin(a)*sp*.35,vh:rnd(40,160),g:260,life:rnd(.35,.7),max:.7,col:i%3?R.col:"#ffffff",size:rnd(1.4,2.8),t:"spark"})}
@@ -3227,7 +3301,7 @@ function drawLoot(k){
  if(k.it.r>=2&&rest){const bh=Math.min(1,k.rest*4)*(110+(k.it.r>=4?70:0)),g=c.createLinearGradient(0,y-bh,0,y+4);g.addColorStop(0,hexA(R.col,0));g.addColorStop(1,hexA(R.col,.35*pul));c.fillStyle=g;c.fillRect(x-4-k.it.r,y-bh,8+k.it.r*2,bh+4)}
  const gr=(16+k.it.r*2)*sc,gg=c.createRadialGradient(x,y,0,x,y,gr);gg.addColorStop(0,hexA(R.col,.7*pul));gg.addColorStop(1,hexA(R.col,0));c.fillStyle=gg;c.beginPath();c.arc(x,y,gr,0,7);c.fill();
  c.restore();
- c.save();c.translate(x,y+(rest?Math.sin(k.spin)*1.5:0));c.rotate(k.land<1?Math.sin(k.spin)*.7:0);c.scale(sc,sc);{const e=artCv(k.it.s,itemKind(k.it),k.it.r,48);if(e.ok)c.drawImage(e.cv,-11,-11,22,22);else{c.font="16px system-ui,sans-serif";c.textAlign="center";c.textBaseline="middle";c.fillText(SLOTS[k.it.s].ic,0,0)}}c.restore();
+ c.save();c.translate(x,y+(rest?Math.sin(k.spin)*1.5:0));c.rotate(k.land<1?Math.sin(k.spin)*.7:0);c.scale(sc,sc);{const e=artCv(k.it.s,itemKind(k.it),k.it.r,48,itemLook(k.it));if(e.ok)c.drawImage(e.cv,-11,-11,22,22);else{c.font="16px system-ui,sans-serif";c.textAlign="center";c.textBaseline="middle";c.fillText(SLOTS[k.it.s].ic,0,0)}}c.restore();
 }
 function luckTick(){
  if(foe.until&&Date.now()>=foe.until){foe.until=0;foe.lvl=Math.min(FOE_MAX,foe.lvl+1);save();toast("👹 "+t("foeDone",{n:foe.lvl}),"#b36bff");SFX.unlock();if(modalOpen==="mDrops")renderDrops()}
@@ -5083,7 +5157,7 @@ function syncProj3(){
 function syncLoot3(){
  const T=T3,seen=new Set();
  for(const k of loots){let o=G3.lmap.get(k);seen.add(k);const R=RAR[k.it.r];
-  if(!o){o=new T.Group();const kd=itemKind(k.it),ic=k.it.s+"_"+kd+"_"+k.it.r;let tx=G3.icoTex[ic];if(!tx){const e=artCv(k.it.s,kd,k.it.r,96);tx=G3.icoTex[ic]=new T.CanvasTexture(e.cv);tx.colorSpace=T.SRGBColorSpace;tx.anisotropy=4;e.tx=tx}
+  if(!o){o=new T.Group();const kd=itemKind(k.it),lk=itemLook(k.it),ic=k.it.s+"_"+kd+"_"+k.it.r+"_"+lk.id;let tx=G3.icoTex[ic];if(!tx){const e=artCv(k.it.s,kd,k.it.r,96,lk);tx=G3.icoTex[ic]=new T.CanvasTexture(e.cv);tx.colorSpace=T.SRGBColorSpace;tx.anisotropy=4;e.tx=tx}
    const s=sprite(tx,0xffffff,19,1,false);s.position.y=8;o.add(s);const gl=sprite(G3.tGlow,R.col,40+k.it.r*6,.7);gl.position.y=8;o.add(gl);
    if(k.it.r>=2){const bm=new T.Mesh(geo("beam",()=>new T.CylinderGeometry(1,1,1,12,1,true).translate(0,.5,0)),new T.MeshBasicMaterial({map:G3.tBeam,color:R.col,transparent:true,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide,toneMapped:false,fog:false}));bm.scale.set(4+k.it.r,120,4+k.it.r);o.add(bm);o.userData.bm=bm}
    o.userData.gl=gl;G3.fx.add(o);G3.lmap.set(k,o)}
@@ -5758,7 +5832,7 @@ const DL_DEFS=`<radialGradient id="dlgSk" cx=".36" cy=".28" r=".9"><stop offset=
 <linearGradient id="dlgWg" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#3a0610"/><stop offset=".55" stop-color="#9c1a2c"/><stop offset="1" stop-color="#e2443e"/></linearGradient>
 <linearGradient id="dlgCr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c42a3a"/><stop offset="1" stop-color="#5a0a18"/></linearGradient>
 <filter id="dlgGl" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="1.3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-<clipPath id="dlcE0"><path d="${DL_EYE(52,-1)}"/></clipPath><clipPath id="dlcE1"><path d="${DL_EYE(68,1)}"/></clipPath>
+<clipPath id="dlcT"><path d="M46 71 Q60 66 74 71 L76 88 L74.5 111 Q60 116.5 45.5 111 L44 88Z"/></clipPath><clipPath id="dlcE0"><path d="${DL_EYE(52,-1)}"/></clipPath><clipPath id="dlcE1"><path d="${DL_EYE(68,1)}"/></clipPath>
 <linearGradient id="dlgTn" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d2ab72"/><stop offset=".55" stop-color="#b08a58"/><stop offset="1" stop-color="#86663a"/></linearGradient>
 <linearGradient id="dlgSh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".5" stop-color="#000" stop-opacity=".06"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></linearGradient>
 <linearGradient id="dlgHi" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".36"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>
@@ -5768,8 +5842,8 @@ const dlMir=s=>`<g transform="translate(120 0) scale(-1 1)">${s}</g>`;
 const dlP=(it,k,inner)=>it?`<g class="dp" data-s="${k}"${it.r>=4?` filter="url(#dllG${it.r})"`:""}>${it.r===10?`<g class="dRb">${inner}</g>`:inner}</g>`:inner;
 const dlKd=it=>it?itemKind(it):-1;
 /* legs + boots (left side, mirrored for the right one) */
-function dlLegSide(it,pants){
- const k=it?iaTok(it.r):null,kd=dlKd(it);
+function dlLegSide0(it,pants){
+ const k=it?iaTokIt(it):null,kd=dlKd(it);
  let s=iaSh("M47 108 L47 151 Q47 155 51 155 L57 155 Q58.5 155 58.5 151 L58.5 108Z",pants)+iaLn("M50 113 L50 148",shade(pants,.3),1.6,.55)+iaLn("M47.8 130.5 Q52.8 133 58.2 130.5",IA_O,1,.3);
  const sole=iaLn("M41.5 163.6 L55 163.6",IA_O,2);
  if(!it)return s+iaEl(52.6,123.5,6.2,5,DL_ST,1.8)+iaPoly([[52.6,119.6],[55.4,123.5],[52.6,127.4],[49.8,123.5]],DL_GOc,1)+iaSh("M45.8 135 L59.4 135 L59.4 156 Q59.4 164.5 52 164.5 L42.3 164.5 Q39 164.5 40.6 159.6 Q43.4 156 45.8 154.6Z",DL_ST)+iaSh("M45.2 134.4 L60 134.4 L60 140.6 L45.2 140.6Z",DL_GO,1.6)+iaLn("M48.6 144 L48.6 157",shade("#8a93a8",.25),1.6,.7)+iaSh("M40.4 158.6 Q43.6 156 47.6 157.6 L47 164.5 L42.3 164.5 Q38.9 164.5 40.4 158.6Z",DL_GO,1.2)+sole;
@@ -5779,8 +5853,8 @@ function dlLegSide(it,pants){
  return s+iaSh("M45 146 Q33 148 26 136 Q36 137 40 133 Q30 129 29 118 Q41 124 46 135Z",k.m1)+iaLn("M42 140 Q35 136 31 126",k.a,1.3,.9)+iaSh("M46 138.5 L59 138.5 L59 156 Q59 164.5 52 164.5 L42.5 164.5 Q39.5 164.5 41 160 Q43.5 156.5 46 155Z",k.c)+iaSh("M45.5 138 L59.5 138 L59.5 143.5 L45.5 143.5Z",k.gd)+iaCi(52.5,150,2.6,k.g,1)+iaLn("M48.5 146 L48.5 158",k.c1,1.8,.7)+sole}
 const DL_TORSO="M46 71 Q60 66 74 71 L76 88 L74.5 111 Q60 116.5 45.5 111 L44 88Z";
 /* body armour -> {back,front,sleeve}; the sleeve colour is reused for the arms */
-function dlArmor(it){
- const k=it?iaTok(it.r):null,kd=dlKd(it);
+function dlArmor0(it){
+ const k=it?iaTokIt(it):null,kd=dlKd(it);
  if(!it){const pd=iaSh("M30.5 81 Q28 66.5 40.5 63.2 Q50.5 61.6 53 69.6 L51 80 Q41.5 86 30.5 81Z",DL_ST)+iaLn("M31 80.4 Q41.5 85 50.8 79.6",DL_GOc,1.7)+iaLn("M33.4 72 Q41 66.4 50.6 69.4",DL_GOc,1.2,.8)+iaPoly([[35.2,68],[29.2,53.6],[41.6,64.4]],DL_GO,1.3)+iaCi(44.6,74.6,1.3,DL_GOc,.6);
   return{sl:"#3e4352",bk:"",ft:iaSh(DL_TORSO,DL_ST)+iaLn("M47.6 84 Q53.6 90.6 59.2 86.6M72.4 84 Q66.4 90.6 60.8 86.6",IA_O,1.1,.55)+iaLn("M46 95.6 Q60 99.4 74 95.6",IA_O,1.1,.5)+iaLn("M60 92.5 L60 99",shade("#8a93a8",.3),1.2,.6)
    +iaLn("M46.6 72.4 Q60 79.4 73.4 72.4",DL_GOc,1.9)+iaPoly([[60,78.6],[66,86],[60,93.4],[54,86]],DL_GO,1.4)+`<g filter="url(#dlgGl)">${iaPoly([[60,81.2],[63.6,86],[60,90.8],[56.4,86]],"#5ff4ff",.8)}</g>`+iaCi(58.9,84.3,.9,"#fff",0)
@@ -5795,16 +5869,16 @@ function dlArmor(it){
  if(kd===3)return{sl:k.m2,bk:"",ft:iaSh(DL_TORSO,k.m2)+iaPoly([[52.5,75],[60,71.5],[67.5,75],[66,97],[60,101.5],[54,97]],k.m1,1.6)+iaLn("M60 72 L60 100",k.m3,1.2,.8)+iaCi(60,86,3.6,k.g,1.4)+iaEl(60,70.5,10,3.8,k.m1)+iaSh("M44.5 101 L75.5 101 L76 107 L44 107Z",k.gd)+iaSh("M44 107 L76 107 L79.5 123 Q60 128.5 40.5 123Z",k.m2)+iaLn("M60 107.5 L60 127M50 107.5 L47.5 125M70 107.5 L72.5 125",k.m3,1.3,.85)+iaSh("M32.5 77 Q34 61.5 48 67 L50 81.5 Q41 85 32.5 77Z",k.m2)+iaLn("M36.5 70 Q43 68 48.5 73",k.m1,2,.9)+iaPoly([[37.5,66],[34,55],[43,63.5]],k.a,1.3)+iaSh("M87.5 77 Q86 61.5 72 67 L70 81.5 Q79 85 87.5 77Z",k.m2)+iaLn("M83.5 70 Q77 68 71.5 73",k.m1,2,.9)+iaPoly([[82.5,66],[86,55],[77,63.5]],k.a,1.3)};
  return{sl:k.m2,bk:"",ft:iaSh(DL_TORSO,k.m2)+iaLn("M47 79 L73 79M46 86 L74 86M46 93 L74.5 93M46 100 L74.5 100",k.m3,1.1,.55,' stroke-dasharray="1.5 1.7"')+iaSh("M45 108 L75 108 L78.5 121 Q60 125.5 41.5 121Z",k.m2)+iaLn("M46 115 L74 115",k.m3,1,.55,' stroke-dasharray="1.5 1.7"')+iaSh("M52 70.5 L68 70.5 L70.5 125 L60 129.5 L49.5 125Z",k.c)+iaLn("M60 72 L60 128",k.c2,1,.6)+iaSh(iaStar(60,90,6.6,3,4,-90),k.gd,1.2)+iaCi(60,90,1.8,k.g,.8)+iaSh("M44.5 100 L75.5 100 L76 106 L44 106Z",k.c2)+iaSh("M55.5 99 L64.5 99 L64.5 107 L55.5 107Z",k.gd,1.6)+iaEl(60,70.5,8.5,3.2,k.m1)}}
 /* cloak: back layer (behind the body) and front layer (collar over the shoulders) */
-function dlCloak(it){
+function dlCloak0(it){
  if(!it)return{bk:"",ft:""};
- const k=iaTok(it.r),kd=dlKd(it),clasp=iaLn("M46.5 72 Q60 79 73.5 72",k.gd,1.7)+iaCi(60,75.5,3,k.gd,1.3)+iaCi(60,75.5,1.2,k.g,0);
+ const k=iaTokIt(it),kd=dlKd(it),clasp=iaLn("M46.5 72 Q60 79 73.5 72",k.gd,1.7)+iaCi(60,75.5,3,k.gd,1.3)+iaCi(60,75.5,1.2,k.g,0);
  if(kd===0)return{bk:iaSh("M43 71 Q60 65 77 71 L93 148 Q60 160 27 148Z",k.c)+iaSh("M52 73 L68 73 L80 150 Q60 156 40 150Z",k.c2)+iaLn("M40 88 L33 146M80 88 L87 146M47 96 L42 148M73 96 L78 148",k.c2,1.4,.65)+iaLn("M29 148 Q60 158.5 91 148",k.gd,2.4),ft:clasp};
  if(kd===1)return{bk:iaSh("M38 55 Q40 29 60 27 Q80 29 82 55 Q73 72 60 72 Q47 72 38 55Z",k.c2)+iaSh("M43 71 Q60 65 77 71 L91 142 Q60 153 29 142Z",k.c)+iaSh("M52 73 L68 73 L78 144 Q60 149 42 144Z",k.c2)+iaLn("M39 88 L33 140M81 88 L87 140",k.c2,1.4,.65)+iaLn("M31 142 Q60 152 89 142",k.gd,2.2),ft:iaSh("M38.5 75 Q60 63.5 81.5 75 L86 92 Q60 82 34 92Z",k.c)+iaLn("M36 90 Q60 80.5 84 90",k.gd,1.5)+iaCi(60,77.5,3,k.gd,1.3)+iaCi(60,77.5,1.2,k.g,0)};
  if(kd===2){const w=iaSh("M50 80 Q24 74 9 44 Q5 32 9 20 Q21 33 33 42 Q24 28 27 10 Q44 28 52 58Z",k.m1)+iaSh("M50 82 Q30 80 17 62 Q27 66 36 62 Q27 54 24 44 Q40 56 51 66Z",k.m2)+iaLn("M46 76 Q22 60 13 32",k.a,1.3,.9)+iaLn("M47 70 Q33 52 29 24",k.g,1,.7)+iaLn("M12 24 Q9 34 14 46",k.g,1.4,.8);return{bk:w+dlMir(w),ft:""}}
  return{bk:iaSh("M41 71 Q60 65 79 71 L89 134 Q60 144 31 134Z",k.c)+iaLn("M40 88 L35 132M80 88 L85 132",k.c2,1.4,.65)+iaSh("M32 132 Q38 140 44 133 Q50 142 56 134 Q60 143 64 134 Q70 142 76 133 Q82 140 88 132 Q60 146 32 132Z",k.bone,1.4),ft:[0,1,2,3,4,5,6].map(i=>iaCi(37+i*7.7,73.5-Math.sin(i/6*Math.PI)*3.5+ (i%2)*1.6,5.6,i%2?k.bone:iaMix(k.bone,k.c,.8),1.5)).join("")+iaLn("M43 79 Q60 86 77 79",k.c2,1.2,.5)}}
 /* gloves + hands */
-function dlHand(it,x,y,ex,ey,right){
- const k=it?iaTok(it.r):null,kd=dlKd(it);let s="";
+function dlHand0(it,x,y,ex,ey,right){
+ const k=it?iaTokIt(it):null,kd=dlKd(it);let s="";
  if(!it)return iaEl(ex,ey,5.8,2.5,DL_GO,1.2)+iaCi(x,y,5.6,DL_ST,2)+iaLn(`M${x-3.4} ${y-1.6} L${x+3.4} ${y-1.6}`,DL_GOc,1.3)+iaLn(`M${x-2.2} ${y+1.4} L${x+2.2} ${y+1.4}`,IA_O,.9,.5);
  const arm=(c,w)=>iaTk(`M${ex} ${ey} L${x} ${y-1}`,c,w);
  if(kd===0)return arm(k.c1,8.8)+iaEl(ex,ey,5.6,2.3,k.gd,1.2)+iaCi(x,y,5.5,k.c,2)+iaLn(`M${x-2.5} ${y+1} Q${x} ${y+3.4} ${x+2.5} ${y+1}`,k.c2,1,.8);
@@ -5812,8 +5886,8 @@ function dlHand(it,x,y,ex,ey,right){
  if(kd===2){const cl=[-3.2,0,3.2].map(d=>iaPoly([[x+d-1.3,y+4.2],[x+d*1.15,y+11.6],[x+d+1.3,y+4.2]],k.bone,1.1)).join("");return cl+arm(k.c2,9)+iaEl(ex,ey,5.6,2.2,k.c,1.1)+iaCi(x,y,5.6,k.c,2)+iaLn(`M${x-3.6} ${y-1.4} L${x+3.6} ${y-1.4}`,k.gd,1.2,.95,' stroke-dasharray="1 1.6"')+iaCi(ex-2.4,ey,.9,k.gd,.4)+iaCi(ex,ey+.4,.9,k.gd,.4)+iaCi(ex+2.4,ey,.9,k.gd,.4)}
  return iaCi(x,y,5.2,DL_SK,2)+iaTk(`M${ex} ${ey} L${(ex+x)/2+(right?-.4:.4)} ${(ey+y)/2-.5}`,k.m2,9.6)+iaEl(ex,ey,5.4,2.3,k.m1,1.2)+iaLn(`M${ex-3.4} ${(ey+y)/2-1.5} L${ex+3.4} ${(ey+y)/2-1.5}`,k.gd,1.4)+iaCi((ex+x)/2,(ey+y)/2-3,1.8,k.g,.8)}
 /* head + headgear */
-function dlHead(it){
- const k=it?iaTok(it.r):null,kd=dlKd(it);
+function dlHead0(it){
+ const k=it?iaTokIt(it):null,kd=dlKd(it);
  const face=`<ellipse cx="60" cy="67" rx="10.5" ry="3.4" fill="#000" opacity=".26"/>`+iaCi(60,44,21,DL_SK,2.2)+`<path d="M43 52 Q60 71 77 52 Q74 63.5 60 65 Q46 63.5 43 52Z" fill="#c98a62" opacity=".17"/>`,
   ears=iaSh("M40.6 43.6 Q33.4 40.4 30.2 36.6 Q31.4 46.4 39.8 52Z",DL_SK,1.8)+iaSh("M79.4 43.6 Q86.6 40.4 89.8 36.6 Q88.6 46.4 80.2 52Z",DL_SK,1.8)+iaLn("M37.6 43.2 Q34.6 41.6 33.4 40.2M82.4 43.2 Q85.4 41.6 86.6 40.2","#c98a62",.9,.75);
  const eye=(cx,sd)=>{const o=cx+sd*4.8,n=cx-sd*4.4,ix=cx-sd*.5;return`<path d="${DL_EYE(cx,sd)}" fill="#fff6ee"/><g clip-path="url(#dlcE${sd<0?0:1})"><g filter="url(#dlgGl)">${iaCi(ix,47.5,3,"url(#dlgIr)",0)}</g>${iaEl(ix,47.6,.8,2.4,"#04202c",0)}${iaCi(ix-sd*1.2,46.3,.9,"#fff",0)}</g>${iaLn(`M${o} 46 Q${cx} 42.9 ${n} 48.4`,"#1a0a08",2)}${iaLn(`M${o} 46 L${o+sd*1.8} 44.7`,"#1a0a08",1.3)}`},
@@ -5832,23 +5906,57 @@ function dlHead(it){
 /* held weapon: the item icon itself, rotated upright and put into the right hand */
 function dlWeapon(it,hx,hy){
  if(!it)return"";const kd=dlKd(it),sc=[.95,.82,.95,.95,1.14,1.16,1.1,1.05][kd]||.95,gy=[48,47,48,48,48,42,46,50][kd]||48;
- return`<g transform="translate(${hx} ${hy}) rotate(10) scale(${sc}) translate(-32 ${-gy}) rotate(-45 32 32)">${dlIn(itemArt(0,kd,it.r,{bare:1}))}</g>`}
+ return`<g transform="translate(${hx} ${hy}) rotate(10) scale(${sc}) translate(-32 ${-gy}) rotate(-45 32 32)">${dlIn(itemArt(0,kd,it.r,{bare:1,lk:itemLook(it)}))}</g>`}
 /* neck jewels */
 function dlNeck(it){
- if(!it)return"";const k=iaTok(it.r),kd=dlKd(it),c=iaTk("M49.5 69.5 Q60 83 70.5 69.5",k.gd,1.8);let p;
+ if(!it)return"";const k=iaTokIt(it),kd=dlKd(it),c=iaTk("M49.5 69.5 Q60 83 70.5 69.5",k.gd,1.8);let p;
  if(kd===0)p=iaCi(60,78.6,3.4,k.g,1.4);else if(kd===1)p=iaPoly([[60,74.2],[63.6,79],[60,84],[56.4,79]],k.g,1.4);else if(kd===2)p=[0,1,2,3,4].map(i=>iaCi(52.4+i*3.8,73+Math.sin(i/4*Math.PI)*5.6,1.9,k.bone,.9)).join("")+iaCi(60,79.8,2.8,k.g,1.2);else if(kd===3)p=iaSh("M57.4 74.8 Q60 85 63.2 80 Q62.5 77 62.6 74.8Z",k.bone,1.3);else p=iaCi(60,78.8,4.2,k.gd,1.4)+iaCi(60,78.8,2.2,k.g,.8);
  return c+p}
-function dlAmulet(it){
- if(!it)return"";const k=iaTok(it.r),kd=dlKd(it),c=iaLn("M52.8 70 Q56 86 60 94",k.c2,1.5)+iaLn("M67.2 70 Q64 86 60 94",k.c2,1.5);let p;
+function dlAmulet0(it){
+ if(!it)return"";const k=iaTokIt(it),kd=dlKd(it),c=iaLn("M52.8 70 Q56 86 60 94",k.c2,1.5)+iaLn("M67.2 70 Q64 86 60 94",k.c2,1.5);let p;
  if(kd===0)p=iaCi(60,98.5,5.4,k.gd,1.6)+iaCi(60,98.5,2.8,k.g,1);else if(kd===1)p=iaPoly([[60,92.5],[65,99],[60,108],[55,99]],k.g,1.6)+iaLn("M60 94 L60 106",k.m1,1,.8);else if(kd===2)p=iaSh("M56.5 93.5 Q60 108.5 64 99 Q63 95.5 63.4 93.5Z",k.bone,1.5);else if(kd===3)p=iaSh(iaStar(60,98.5,6.6,3,5,-90),k.gd,1.4)+iaCi(60,98.5,1.6,k.g,0);else p=iaEl(60,98.5,6.2,4.2,k.m1,1.6)+iaCi(60,98.5,2.3,k.a,1)+iaCi(60,98.5,.9,"#0f070d",0);
  return c+p}
 function dlRing(it){
- if(!it)return"";const k=iaTok(it.r);
+ if(!it)return"";const k=iaTokIt(it);
  return iaCi(31.6,105.5,2.9,"none",1.8).replace('stroke="'+IA_O+'"','stroke="'+k.gd+'"')+iaCi(31.6,102.5,1.8,k.g,.7)+(it.r>=4?`<path class="dTw" d="${iaStar(28.4,99.5,3.6,1,4,-90)}" fill="#fff"/>`:"")}
 function dlRelic(it){
- if(!it)return"";const kd=dlKd(it),k=iaTok(it.r);
- return`<g class="dRel" data-s="relic"${it.r>=4?` filter="url(#dllG${it.r})"`:""}><g${it.r===10?' class="dRb"':""} transform="translate(3 10) scale(.42)">${dlIn(itemArt(9,kd,it.r,{bare:1}))}</g></g>`}
-const dllSig=()=>SLOTS.map(S=>{const it=eq[S.k];return it?it.r+"."+itemKind(it):"-"}).join(",");
+ if(!it)return"";const kd=dlKd(it),k=iaTokIt(it);
+ return`<g class="dRel" data-s="relic"${it.r>=4?` filter="url(#dllG${it.r})"`:""}><g${it.r===10?' class="dRb"':""} transform="translate(3 10) scale(.42)">${dlIn(itemArt(9,kd,it.r,{bare:1,lk:itemLook(it)}))}</g></g>`}
+/* ---- each worn item's own touches on the doll: emblem, pattern, shape twist (see itemLook) ---- */
+function dlLegSide(it,pants){
+ const s0=dlLegSide0(it,pants);if(!it)return s0;const L=itemLook(it),k=iaTokIt(it),kd=dlKd(it);let x="";
+ if(kd===2)x+=lkMed(L,k,52.5,126,3.6);else if(kd!==0)x+=lkMed(L,k,52.5,150,3);
+ if(L.shp===1&&kd!==0)x+=iaPoly([[46.4,kd===2?123:139],[44.2,kd===2?114:131],[49.6,kd===2?122:138]],k.gd,1.1);
+ else if(L.shp===2&&kd!==0)x+=iaSh("M45.6 152 Q38 150 35.6 143 Q40 145.6 42 144.6 Q38.6 141.6 38.6 137.6 Q43 141.6 46 146Z",k.c1,1.1);
+ else if(L.shp===3)x+=iaSh(`M45 ${kd===2?122:kd===0?152:136.6} L60 ${kd===2?122:kd===0?152:136.6} L60 ${kd===2?125.6:kd===0?154.6:140.2} L45 ${kd===2?125.6:kd===0?154.6:140.2}Z`,k.g,1);
+ return s0+x}
+function dlArmor(it){
+ const A=dlArmor0(it);if(!it)return A;const L=itemLook(it),k=iaTokIt(it),kd=dlKd(it),gd=k.gd;let pt="";
+ switch(L.pat){case 1:pt=`<rect x="57.4" y="70" width="5.2" height="44" fill="${k.c}"/>`;break;case 2:pt=`<rect x="44" y="90.6" width="32" height="3.6" fill="${gd}"/>`;break;
+  case 3:pt=iaLn("M46 79 L60 86.4 L74 79M46 87.6 L60 95 L74 87.6",gd,1.7);break;case 4:for(let y=77;y<110;y+=8)for(let x=48;x<74;x+=6)pt+=`<circle cx="${x+(y%16?3:0)}" cy="${y}" r=".95" fill="${k.m1}"/>`;break;
+  case 5:pt=`<path d="M45 73 L51 70.6 L76 104 L71 109Z" fill="${k.c}"/>`;break;case 6:for(let y=0;y<4;y++)for(let x=0;x<5;x++)pt+=iaLn(`M${47+x*6.4+(y%2?3.2:0)} ${77+y*8} q3 4 6 0`,k.m3,1,.8);break;
+  case 7:pt=`<rect x="47" y="72" width="3" height="40" fill="${gd}"/><rect x="70" y="72" width="3" height="40" fill="${gd}"/>`;break}
+ const ft=A.ft+(pt?`<g clip-path="url(#dlcT)" opacity=".7">${pt}</g>`:"")+lkMed(L,k,60,89,5.4);
+ let pd=A.pd||"";
+ if(kd!==2&&kd!==3&&L.shp){const one=L.shp===1?iaEl(41,74,8.6,6.4,k.m2,1.6)+iaLn("M33.6 76.4 Q41 81.6 48.4 76.4",gd,1.3):
+   L.shp===2?iaSh("M31 80 Q29 67 40.6 64 Q50 62.6 52 70 L50.4 79.4 Q41.4 84.6 31 80Z",k.m2)+iaPoly([[35,68],[29.4,55],[41.4,64.4]],gd,1.2):
+   iaSh("M31.6 78 Q30 67 41 65 Q50 64 51.4 71 L50 77 Q41 82 31.6 78Z",k.m2)+iaSh("M33.6 84 Q32.6 76 41.6 74.6 Q49.6 74 50.6 79.6 L49.6 84 Q41.6 87.6 33.6 84Z",k.m1,1.4);
+  pd+=one+dlMir(one)}
+ return Object.assign({},A,{ft,pd})}
+function dlCloak(it){const C=dlCloak0(it);if(!it)return C;const L=itemLook(it),k=iaTokIt(it);
+ let hem="";if(L.pat%3===1)hem=iaLn("M33 146 Q60 155 87 146",k.g,1.4,.8);else if(L.pat%3===2)hem=[0,1,2,3,4,5,6].map(i=>iaLn(`M${36+i*8} ${147+Math.sin(i/6*Math.PI)*4} l0 5`,k.gd,1.6)).join("");
+ return{bk:C.bk+hem,ft:C.ft+lkMed(L,k,60,76,4)}}
+function dlHand(it,x,y,ex,ey,right){const s0=dlHand0(it,x,y,ex,ey,right);if(!it)return s0;const L=itemLook(it),k=iaTokIt(it);
+ if(L.shp===1)return s0+[-3,0,3].map(d=>iaPoly([[x+d-1.2,y-4.4],[x+d*1.1,y-9],[x+d+1.2,y-4.4]],k.gd,.8)).join("");
+ if(L.shp===2)return s0+iaEl(ex,ey+1,6.8,3,k.gd,1.1)+iaCi(ex,ey+1,1.3,k.g,.5);
+ if(L.shp===3)return s0+iaCi(x,y,1.8,k.g,.7);return s0}
+function dlHead(it){const h0=dlHead0(it);if(!it)return h0;const L=itemLook(it),k=iaTokIt(it),kd=dlKd(it);let x="";
+ if(kd>=1&&kd<=3){if(L.shp===1)x+=iaSh("M60 17 Q66 2 82 2 Q74 6 72 12 Q78 10 82 12 Q72 16 62 19Z",k.c1,1.4)+iaLn("M62 16 Q70 7 79 5",k.g,1,.7);
+  else if(L.shp===2)x+=iaSh("M53.6 18 Q60 1 66.4 18Z",k.gd,1.4);else if(L.shp===3)x+=iaPoly([[46,24],[43,10],[51,20]],k.m1,1.2)+iaPoly([[74,24],[77,10],[69,20]],k.m1,1.2)}
+ x+=kd===4?lkMed(L,k,60,25.4,3.4):kd===2?"":lkMed(L,k,60,kd===5?28:26,3.8);
+ return h0+x}
+function dlAmulet(it){const s0=dlAmulet0(it);if(!it)return s0;const L=itemLook(it),k=iaTokIt(it);return s0+`<g transform="translate(60 98.6)">${lkSym(L.em,k.g,.3)}</g>`}
+const dllSig=()=>SLOTS.map(S=>{const it=eq[S.k];return it?it.r+"."+itemKind(it)+"."+itemLook(it).id:"-"}).join(",");
 function dollSvg(){
  const E=eq,mx=Math.max(-1,...SLOTS.map(S=>E[S.k]?E[S.k].r:-1)),A=dlArmor(E.armor),C=dlCloak(E.cloak),pants=E.armor&&dlKd(E.armor)===0?"#4a3a5a":"#2b2834";
  const rs=new Set(SLOTS.map(S=>E[S.k]?E[S.k].r:-1).filter(r=>r>=4));
@@ -5934,7 +6042,7 @@ function renderForgeUp(){
  const R=RAR[it.r],up=it.up|0,max=up>=UP_MAX,cost=max?0:forgeUpCost(it),can=P.gold>=cost;
  const rows=it.st.map(([k,b])=>{const v=svAt(k,b,up),d=max?0:Math.round((svAt(k,b,up+1)-v)*10)/10;return`<li><span>${statTxt(k,v)}</span>${d>0?`<em class="up">▲ ${d}</em>`:""}</li>`}).join("");
  const pips=Array.from({length:UP_MAX},(_,i)=>`<i${i<up?' class="on"':""}></i>`).join("");
- box.innerHTML=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc" id="fgIc">${itemArt(it.s,itemKind(it),it.r,{bare:1})}${up?`<b>+${up}</b>`:""}</div><div class="fgNm"><h4${R.rainbow?' class="rbt"':""}>${it.u?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})}</div></div></div><div class="fgPips">${pips}</div><ul class="fgSt">${rows}</ul><div class="fgAct"><button class="btn main fgGo${can||max?"":" dis"}" id="fgGo" type="button"${max?" disabled":""}>${max?t("maxed"):t("fgBtn",{n:cost})}</button>${max?"":'<button class="btn fgX5" id="fgX5" type="button">×5</button><button class="btn fgX5" id="fgXM" type="button">MAX</button>'}</div><p class="sub fgHint">${t("fgHint")}</p></div>`;
+ box.innerHTML=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc" id="fgIc">${itemArt(it.s,itemKind(it),it.r,{bare:1,lk:itemLook(it)})}${up?`<b>+${up}</b>`:""}</div><div class="fgNm"><h4${R.rainbow?' class="rbt"':""}>${it.u?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})}</div></div></div><div class="fgPips">${pips}</div><ul class="fgSt">${rows}</ul><div class="fgAct"><button class="btn main fgGo${can||max?"":" dis"}" id="fgGo" type="button"${max?" disabled":""}>${max?t("maxed"):t("fgBtn",{n:cost})}</button>${max?"":'<button class="btn fgX5" id="fgX5" type="button">×5</button><button class="btn fgX5" id="fgXM" type="button">MAX</button>'}</div><p class="sub fgHint">${t("fgHint")}</p></div>`;
  $("fgGo").onclick=()=>forgeUp(1);if($("fgX5"))$("fgX5").onclick=()=>forgeUp(5);if($("fgXM"))$("fgXM").onclick=()=>forgeUp(UP_MAX);
 }
 function fgBurst(el,col){if(!el||S.fxOff)return;for(let i=0;i<12;i++){const s=document.createElement("i");s.className="spk";const a=Math.random()*6.283,d=32+Math.random()*34;s.style.cssText=`--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d}px;background:${i%3?col:"#fff"}`;el.appendChild(s);setTimeout(()=>s.remove(),750)}}
@@ -5961,7 +6069,7 @@ function renderForgeShop(){
  list.forEach(({it,src,i,price})=>{
   const R=RAR[it.r],can=P.gold>=price,nm=it.u||it.a!=null,key=src+i;
   let tag="";if(cur){const pw=itemPow(it),d=Math.round((pw/Math.max(1,cp)-1)*100);tag=d>0?`<span class="fgTag up">▲ +${d}%</span>`:d<0?`<span class="fgTag dn">▼ ${d}%</span>`:`<span class="fgTag">＝</span>`}
-  h+=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc sm">${itemArt(it.s,itemKind(it),it.r,{bare:1})}</div><div class="fgNm"><h4${R.rainbow?' class="rbt"':""}>${nm?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})} ${tag}</div></div></div><ul class="fgSt">${itemStatsHTML(it,cur,1)}</ul><div class="fgBtns"><button class="btn main fgBuy${can?"":" dis"}" type="button" data-buy="${key}">${t("fgBuy",{n:price})}</button><button class="btn fgBuy2${can?"":" dis"}" type="button" data-buy2="${key}">${t("fgBuyEq")}</button></div></div>`});
+  h+=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc sm">${itemArt(it.s,itemKind(it),it.r,{bare:1,lk:itemLook(it)})}</div><div class="fgNm"><h4${R.rainbow?' class="rbt"':""}>${nm?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})} ${tag}</div></div></div><ul class="fgSt">${itemStatsHTML(it,cur,1)}</ul><div class="fgBtns"><button class="btn main fgBuy${can?"":" dis"}" type="button" data-buy="${key}">${t("fgBuy",{n:price})}</button><button class="btn fgBuy2${can?"":" dis"}" type="button" data-buy2="${key}">${t("fgBuyEq")}</button></div></div>`});
  box.innerHTML=h+"</div>";
  $("fgRr").onclick=()=>{const c=forgeRerollCost();if(P.gold<c){fgNeed();return}P.gold-=c;forge.rr++;forgeRoll();SFX.coin();SFX.ui();save();renderForge();hud()};
  box.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>forgeBuyAny(b.dataset.buy,false));
