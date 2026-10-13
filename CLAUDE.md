@@ -4,6 +4,6 @@
   Never suggest steps that need a PC: terminal, Claude Desktop, `claude remote-control`, adb, USB cable.
   Give phone-friendly ways instead (GitHub links, the browser, the Claude app).
 - Talk in Ukrainian, short and simple (caveman style).
-- The game is one file: `index.html` (Three.js, first person only, 14 languages).
+- The game is one file: `index.html` (Three.js, first person only, open world, 17 languages).
 - When work is done: commit, push, open a PR, merge it into `main`, and give the link where the branch can be deleted.
 - Do not publish the game on Netlify: the owner asked to take it down.
