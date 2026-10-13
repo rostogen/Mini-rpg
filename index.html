@@ -122,6 +122,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .bossbar .bar{height:12px;border-color:#6b4a1c}
 .bossbar .bar i{background:linear-gradient(90deg,#7a1020,#e14b5a,#ffb35a)}
 
+.bufs{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;max-width:190px}
+.buf{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:2px;min-width:26px;height:24px;padding:0 5px;border-radius:9px;background:rgba(12,7,13,.82);border:1.5px solid var(--c);box-shadow:0 0 9px var(--c),inset 0 0 6px var(--c);font-size:13px;line-height:1;animation:bufIn .45s cubic-bezier(.2,1.7,.4,1)}
+.buf i{font-style:normal;font-size:10px;font-weight:800;color:#fff}
+.buf.low{animation:bufLow .5s ease-in-out infinite alternate}
+@keyframes bufIn{from{transform:scale(0) rotate(-30deg)}}
+@keyframes bufLow{to{opacity:.45}}
+.evTint{position:absolute;inset:0;pointer-events:none;z-index:1;opacity:0;transition:opacity 1.4s;background:radial-gradient(ellipse at 50% 45%,transparent 40%,var(--ec,#f00) 135%)}
 .banner{position:absolute;left:0;right:0;top:32%;text-align:center;pointer-events:none;z-index:6;opacity:0}
 .banner h1{margin:0;font-family:Cinzel,Georgia,serif;font-weight:900;font-size:clamp(28px,6vw,54px);color:#f7e3c0;letter-spacing:.02em;text-shadow:0 0 24px rgba(225,75,90,.7),0 4px 0 #3a0d16}
 .banner p{margin:4px 0 0;color:#e8d6dc;font-size:15px;text-shadow:0 2px 6px #000}
@@ -574,7 +581,7 @@ body[data-gfx="hi"] .vig{display:block}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="iaRb" gradientUnits="userSpaceOnUse" x1="6" y1="6" x2="58" y2="58"><stop offset="0" stop-color="#ff5a6a"/><stop offset=".25" stop-color="#ffd24a"/><stop offset=".5" stop-color="#4fe08a"/><stop offset=".75" stop-color="#4f9dff"/><stop offset="1" stop-color="#c06bff"/></linearGradient></defs></svg>
 <div id="stage">
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
-  <div class="vig3" id="vig3"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
+  <div class="vig3" id="vig3"></div><div class="evTint" id="evTint"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
   <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.12-a</small></div></div>
   <div class="hud">
@@ -582,6 +589,7 @@ body[data-gfx="hi"] .vig{display:block}
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
       <div class="bar hp hpw"><i id="hpBar"></i><span id="hpTxt"></span></div>
       <div class="bar xp"><i id="xpBar" style="width:0"></i><span id="xpTxt"></span></div>
+      <div class="bufs" id="bufs"></div>
     </div>
     <div class="rightHud">
       <div class="plate res"><span class="g">🪙 <b id="hGold">0</b></span><span>⚔ <b id="hWave">#1</b></span></div>
@@ -2581,7 +2589,7 @@ const DEF_P={level:1,xp:0,gold:120,hp:100};
 let accounts=LS.get("r2_accounts",{});
 let session=LS.get("r2_session",null);if(session&&!accounts[session])session=null;
 const PK=k=>session?"r2u:"+session+":"+k.slice(3):k;
-let P,tal,train,kills,nickname,battleNo,bag,eq,luck,foe,itemSeq,forge={seed:-1,stock:[],rr:0};
+let P,tal,train,kills,nickname,battleNo,bag,eq,luck,foe,itemSeq,forge={seed:-1,stock:[],rr:0},buffs=[];
 function loadState(){
  P=Object.assign({},DEF_P,LS.get(PK("r2_hero"),{}));
  tal=LS.get(PK("r2_tal"),[]).filter(id=>TALN[id]);
@@ -2624,6 +2632,7 @@ function recalc(){
  if(eq.necklace)HL.neck=rc("necklace");
  {const hk=JSON.stringify(HL);if(hk!==recalc.hk){recalc.hk=hk;HERO_LOOK=HL}}
  for(const T of TRAIN){const l=train[T.id]||0;if(l)for(const [k,v] of T.fx)s[k]+=v*l}
+ for(const b of buffs)for(const [k,v] of b.fx)s[k]+=v;
  s.crit=Math.min(75,s.crit);s.dmgRed=Math.min(60,s.dmgRed);s.cdr=Math.min(.45,s.cdr/100);s.atkSpd=Math.min(80,s.atkSpd);s.speed=Math.min(80,s.speed);s.lifesteal=Math.min(25,s.lifesteal);s.evade=Math.min(40,s.evade);s.killCdr=Math.min(40,s.killCdr);s.reach=Math.min(60,s.reach);s.knock=Math.min(150,s.knock);
  if(s.maxhpPct)s.maxhp=Math.round(s.maxhp*(1+s.maxhpPct/100));if(s.armorPct)s.armor=Math.round(s.armor*(1+s.armorPct/100));
  s.regen=Math.round(s.regen*10)/10;s.lifesteal=Math.round(s.lifesteal*10)/10;for(const k in s)if(typeof s[k]==="number"&&!Number.isInteger(s[k])&&k!=="cdr")s[k]=Math.round(s[k]*10)/10;
@@ -3074,6 +3083,7 @@ function startWave(){
   else{const left=list.length>=3&&i%3===2;x=left?arenaX-40-i*14:arenaX+LW+40+i*26;z=rnd(15,DEPTH-15)}
   enemies.push(makeEnemy(w.t,!!w.boss,x,z,i*.55,w.ref!=null?{ref:w.ref}:null))});
  const chg=visBi!=null&&biomeAt(battleNo)!==visBi;if(chg)mapStart(biomeAt(battleNo));const dl=chg?(MAP_CL+MAP_HOLD+.25)*1000:0;
+ rollEvent(biomeAt(battleNo),dl);
  const boss=enemies.find(e=>e.boss);
  if(boss){setTimeout(()=>banner(t("bossWave"),L(boss.cfg.n)),dl);setTimeout(()=>SFX.roar(),500+dl)}
  else if(dl){setTimeout(()=>{banner(t("wave",{n:battleNo}),L(BIOME_N[biomeIdx()]));SFX.horn()},dl)}
@@ -3090,6 +3100,7 @@ function enemyUpdate(e,dt){
  e.st+=dt;e.lastHit+=dt;
  if(e.boss&&!e.intro&&e.x>arenaX+20&&e.x<arenaX+LW-20){e.intro=true;shake+=7;dustRing(e.x,e.z,34);parts.push({x:e.x,z:e.z,h:0,life:.8,max:.8,t:"ring",col:"#ffb03a",size:26});parts.push({x:e.x,z:e.z,h:0,life:1.1,max:1.1,t:"ring",col:"#ffe0a0",size:40});SFX.bossIntro();decal("rune",e.x,e.z,70,2.6,"#ffb03a");cine()}
  if(C.aura&&e.state!=="dead"&&Math.random()<dt*(e.boss?22:12))parts.push({x:e.x+rnd(-C.rad,C.rad)*e.s,z:e.z+rnd(-3,3),h:e.h+rnd(2,C.hgt*e.s*.9),vx:rnd(-8,8),vz:0,vh:rnd(18,42),g:0,life:rnd(.5,.9),max:.9,col:C.aura,size:rnd(1.2,2.4),t:"dot"});
+ if(e.treasure&&e.state!=="dead"&&Math.random()<dt*18)parts.push({x:e.x+rnd(-e.cfg.rad,e.cfg.rad)*e.s,z:e.z+rnd(-3,3),h:e.h+rnd(0,e.cfg.hgt*e.s),vx:rnd(-12,12),vz:0,vh:rnd(30,70),g:0,life:rnd(.6,1),max:1,col:Math.random()<.5?"#ffd34e":"#2ff0c8",size:rnd(1.6,3),t:"dot"});
  if(e.rarI&&e.state!=="dead"){const rc=RAR[e.rarI].col;if(Math.random()<dt*16)parts.push({x:e.x+rnd(-C.rad,C.rad)*e.s,z:e.z+rnd(-3,3),h:e.h+rnd(0,C.hgt*e.s),vx:rnd(-10,10),vz:0,vh:rnd(24,60),g:0,life:rnd(.6,1),max:1,col:rc,size:rnd(1.5,3),t:"dot"});
   e.rarT=(e.rarT||0)-dt;if(e.rarT<=0){e.rarT=1.1;parts.push({x:e.x,z:e.z,h:0,life:.9,max:.9,t:"ring",col:rc,size:C.rad*e.s*1.1+8})}}
  if(C.fly){e.anim+=dt*(C.body==="bat"?16:9);const base=(C.flyH||44)+Math.sin(e.anim*.3)*5;e.h=lerp(base,10,e.dive)}
@@ -3210,8 +3221,8 @@ function killEnemy(e,dir){
  kills[C.k]=(kills[C.k]||0)+1;
  const tm=RARM[C.tier]?RARM[C.tier].g:({common:1,uncommon:1.2,rare:1.45,epic:1.7,elite:2}[C.tier]||1);
  const rm=e.summoned?.3:e.small?.35:1;
- const xp=Math.max(1,Math.round(((12+battleNo*4)*tm*(e.boss?4:1)+(e.boss?100:0))*1.25*(1+P.xpBonus/100)*rm+P.xpFlat*rm));
- const gold=Math.max(1,Math.round(((6+battleNo*2)*tm*(e.boss?5:1)+(e.boss?120:0))*1.3*(1+P.goldBonus/100)*goldGrow()*rm+P.goldFlat*rm));
+ const xp=Math.max(1,Math.round((((12+battleNo*4)*tm*(e.boss?4:1)+(e.boss?100:0))*1.25*(1+P.xpBonus/100)*rm+P.xpFlat*rm)*evM("swarm",1.5)));
+ const gold=Math.max(1,Math.round((((6+battleNo*2)*tm*(e.boss?5:1)+(e.boss?120:0))*1.3*(1+P.goldBonus/100)*goldGrow()*rm+P.goldFlat*rm)*evM("gold",2.5)*evM("blood",1.5)*(e.treasure?6:1)));
  addText(e.x,e.z,e.h+C.hgt*e.s+18,"+"+xp+" XP","#b59cff",11);
  {const n=e.boss?14:Math.round((3+(RARM[C.tier]?RARM[C.tier].i-1:({uncommon:1,rare:2,elite:3,epic:4}[C.tier]||0)))*rm+.4);for(let i=0;i<n;i++){const an=rnd(0,PI*2);parts.push({x:e.x,z:e.z,h:e.h+C.hgt*e.s*.5,vx:Math.cos(an)*rnd(30,80),vz:Math.sin(an)*rnd(10,30),vh:rnd(40,110),g:0,life:3,max:3,col:i%3?"#b59cff":"#e6d8ff",size:rnd(2.2,3.2),t:"soul"})}}
  spawnCoins(e.x,e.z,e.h,gold);gainXP(xp);
@@ -3222,6 +3233,7 @@ function killEnemy(e,dir){
  if(C.split&&!e.small){for(let i=0;i<2;i++){const m=makeEnemy(EIDX[C.splitK||C.k],false,isFP()?e.x+(i?16:-16):clamp(e.x+(i?16:-16),arenaX+12,arenaX+LW-12),clamp(e.z+rnd(-10,10),zLo(6),zHi(6)),0,{small:true});m.entered=true;m.kb=(i?1:-1)*140;m.cd=1;enemies.push(m)}}
  if(C.look.bones){scatter(e,"bone",11);SFX.rattle()}else if(C.look.head==="golem"){scatter(e,"rock",8)}
  tryDrop(e);
+ if(e.treasure){setTimeout(()=>spawnLoot(e,makeItem(rollRarity(3))),700);for(let i=0;i<30;i++){const an=rnd(0,PI*2);parts.push({x:e.x,z:e.z,h:e.h+10,vx:Math.cos(an)*rnd(40,120),vz:Math.sin(an)*rnd(14,40),vh:rnd(60,160),g:200,life:rnd(.6,1),max:1,col:i%2?"#2ff0c8":"#ffd34e",size:rnd(1.6,3),t:"spark"})}SFX.divine()}
  if(C.explode){projs.push({k:"boom",x:e.x,z:e.z,h:0,life:.8,max:.8,r:82,dmg:Math.round(e.atk*1.4),owner:null});SFX.charge()}
  if(e.boss)impact(3,e);else if(e.rarI){impact(e.rarI>=7?3:2,e);hitStop=Math.max(hitStop,.14);flashA=.3;flashCol=RAR[e.rarI].col}else if(C.tier==="elite"||C.tier==="epic"||C.heavy)impact(2,e);
  if(e.boss){SFX.bossDie();setTimeout(()=>SFX.jackpot(),450);for(let i=0;i<60;i++)parts.push({x:e.x+rnd(-8,8),z:e.z,h:rnd(10,40),vx:rnd(-90,90),vz:rnd(-20,20),vh:rnd(120,260),g:300,life:rnd(.8,1.4),max:1.4,col:i%3?"#ffd34e":"#fff6d0",size:rnd(1.6,3.2),t:"spark"});
@@ -4479,7 +4491,7 @@ function buildChunk(i){
  for(let j=0;j<5;j++){const x=x0+h(j+200)*CHW,z=DEPTH*ZS+26+h(j+210)*110;
   if(h(j+220)<.7)mesh(G3.tuftGeo,M.grass,x,0,z,1.2+h(j+230)*.9,h(j)*6);else mesh(G3.rockGeo[j%3],M.stone2,x,0,z,[6+h(j)*8,4+h(j+1)*5,6+h(j+2)*6],h(j+3)*6)}
  // stone curbs along both edges of the road
- const curb=(z0,par)=>{const n=16,im=new T.InstancedMesh(geo("curb",()=>new T.BoxGeometry(1,1,1).translate(0,.5,0)),M.stone,n),m4=new T.Matrix4(),q=new T.Quaternion(),eu=new T.Euler();let k=0;
+ const curb=(z0,par)=>{const n=16,im=new T.InstancedMesh(geo("curb2",()=>{const g=new T.SphereGeometry(.56,10,6);const p=g.attributes.position;for(let i=0;i<p.count;i++){const y=p.getY(i);p.setY(i,y<0?y*.3:y);p.setX(i,p.getX(i)*(1+hash(i*1.3)*.12))}g.computeVertexNormals();return g.translate(0,.2,0)}),M.stone,n),m4=new T.Matrix4(),q=new T.Quaternion(),eu=new T.Euler();let k=0;
   for(let j=0;j<n;j++){if(h(j+500+z0)<(roadKind(bi)==="dirt"?.62:.2))continue;const cx=x0+j*CHW/n+h(j+510)*6,cz=z0+(h(j+540)-.5)*4,sl=(lanH(cx+4,cz)-lanH(cx-4,cz))/8;eu.set(0,(h(j+520+z0)-.5)*.3,(h(j+530+z0)-.5)*.14+Math.atan(sl));q.setFromEuler(eu);m4.compose(new T.Vector3(cx,-1+lanH(cx,cz),cz),q,new T.Vector3(16+h(j+550)*6,5+h(j+560+z0)*6,9+h(j+570)*3));im.setMatrixAt(k++,m4)}
   im.count=k;im.castShadow=G3.hi;im.receiveShadow=true;par.add(im)};
  curb(-17,g);curb(DEPTH*ZS+17,fp);
@@ -5172,7 +5184,7 @@ function syncLights3(){
 function render3D(dt){
  const bi=visBiome();if(G3.biome!==bi)setBiome3(bi);
  poolReset();syncHero3(dt);if(isFP()){updateCamFP();vmSync(dt)}else updateCam3();G3.ptMats.forEach(m=>m.uniforms.uScale.value=G3.ptScale);updateMtn3();updateChunks3();
- syncEnemies3(dt);syncStains3();syncDecals3();syncDebris3();syncProj3();syncLoot3();syncChests3();syncGoal3();syncCoins3();syncBolts3();syncParts3(dt);syncSlash3(dt);syncLights3();
+ syncEnemies3(dt);syncStains3();syncDecals3();syncDebris3();syncProj3();syncLoot3();syncChests3();syncShrines3();syncGoal3();syncCoins3();syncBolts3();syncParts3(dt);syncSlash3(dt);syncLights3();
  G3.stars.material.opacity=.55+.2*Math.sin(tNow*.7);G3.skyU.uT.value=tNow;G3.skyU.uLin.value=G3.comp&&G3.ultra?1:0;syncBarrier3();
  if(modalOpen==="mBest")drawBestiary3();
  if(G3.comp&&G3.ultra)G3.comp.render();else G3.rr.render(G3.scene,G3.cam);if(isFP()&&G3.vm)vmRender();
@@ -5236,6 +5248,23 @@ function syncChests3(){
   o.scale.setScalar(c.open&&c.t>15?Math.max(.01,1-(c.t-15)/5):1)}
  for(const [c,o] of mp)if(!seen.has(c)){G3.fx.remove(o);o.traverse(x=>{if(x.material)x.material.dispose()});mp.delete(c)}
 }
+function syncShrines3(){
+ const T=T3,mp=G3.smap||(G3.smap=new Map()),seen=new Set();
+ for(const sh of shrines){let o=mp.get(sh);seen.add(sh);const D=SHR[sh.k];
+  if(!o){o=new T.Group();const st=new T.MeshStandardMaterial({color:0x7a7080,roughness:.88}),rn=new T.MeshStandardMaterial({color:D.col,emissive:D.col,emissiveIntensity:.9,roughness:.4}),cr=new T.MeshStandardMaterial({color:D.col,emissive:D.col,emissiveIntensity:1.3,roughness:.15,metalness:.2,flatShading:true,transparent:true});
+   const add=(g,m,y)=>{const q=new T.Mesh(g,m);q.position.y=y;q.castShadow=G3.hi;q.receiveShadow=true;o.add(q);return q};
+   add(geo("shrB",()=>new T.CylinderGeometry(19,23,6,12)),st,3);add(geo("shrB2",()=>new T.CylinderGeometry(14,17,5,12)),st,8.5);
+   add(geo("shrP",()=>new T.CylinderGeometry(5.5,7.5,26,10)),st,24);add(geo("shrR",()=>new T.TorusGeometry(7.2,1.1,8,24).rotateX(PI/2)),rn,24);
+   add(geo("shrT",()=>new T.CylinderGeometry(10,6.5,4,10)),st,39);
+   const c=add(geo("shrC",()=>new T.OctahedronGeometry(8,0)),cr,56);c.scale.y=1.55;
+   const gl=sprite(G3.tGlow,D.col,90,.6);gl.position.y=56;o.add(gl);
+   const bm=new T.Mesh(geo("beam",()=>new T.CylinderGeometry(1,1,1,12,1,true).translate(0,.5,0)),new T.MeshBasicMaterial({map:G3.tBeam,color:D.col,transparent:true,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide,toneMapped:false,fog:false}));bm.scale.set(6,200,6);o.add(bm);
+   o.rotation.y=hash(sh.x*.31+sh.z)*6.28;o.userData={c,gl,bm,cr};G3.fx.add(o);mp.set(sh,o)}
+  W3(o,sh.x,sh.z,0);const U=o.userData,k=.5+.5*Math.sin(tNow*3+sh.x),fade=sh.used?Math.max(0,1-sh.t/1.2):1;
+  U.c.rotation.y=tNow*1.6;U.c.position.y=56+Math.sin(tNow*2+sh.x)*3+(sh.used?sh.t*40:0);U.cr.opacity=fade;U.c.visible=fade>0;
+  U.gl.material.opacity=(.35+.3*k)*fade;U.bm.visible=!sh.used;U.bm.material.opacity=.22+.2*k}
+ for(const [sh,o] of mp)if(!seen.has(sh)){G3.fx.remove(o);o.traverse(x=>{if(x.material)x.material.dispose()});mp.delete(sh)}
+}
 function syncGoal3(){
  const T=T3,on=!!(goal&&cleared&&!locked&&isFP());let o=G3.goalO;
  if(!o){if(!on)return;o=G3.goalO=new T.Group();
@@ -5257,7 +5286,8 @@ function drawMinimap(c,h){
  const band=(z0,z1,col)=>{const q=[P(h.x-900,z0),P(h.x+900,z0),P(h.x+900,z1),P(h.x-900,z1)];c.beginPath();q.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fillStyle=col;c.fill()};
  band(zLo(0)*ZS,zHi(0)*ZS,hexA(B.ground[0],.55));band(0,DEPTH*ZS,hexA(shade(B.stone,.15),.85));
  for(const ch of chests){if(ch.open)continue;const [x,y]=P(ch.x,ch.z*ZS);c.fillStyle=ch.gold?"#ffd34e":"#e8c27a";c.strokeStyle="#2a1608";c.lineWidth=1;c.fillRect(x-3,y-2.5,6,5);c.strokeRect(x-3,y-2.5,6,5)}
- for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const [x,y]=P(e.x,e.z*ZS),r=e.boss?3.6:e.rarI?3:2.3;c.beginPath();c.arc(x,y,r,0,PI*2);c.fillStyle=e.rarI?RAR[e.rarI].col:e.boss?"#ffb03a":e.state==="roam"?"#ff9a7a":"#ff3a4e";c.globalAlpha=e.state==="roam"?.75:1;c.fill();c.globalAlpha=1}
+ for(const sh of shrines){if(sh.used)continue;const [x,y]=P(sh.x,sh.z*ZS);c.beginPath();c.moveTo(x,y-4.2);c.lineTo(x+3.2,y);c.lineTo(x,y+4.2);c.lineTo(x-3.2,y);c.closePath();c.fillStyle=SHR[sh.k].col;c.strokeStyle="#10080c";c.lineWidth=1;c.fill();c.stroke()}
+ for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;const [x,y]=P(e.x,e.z*ZS),r=e.boss?3.6:e.rarI?3:2.3;c.beginPath();c.arc(x,y,r,0,PI*2);c.fillStyle=e.treasure?"#2ff0c8":e.rarI?RAR[e.rarI].col:e.boss?"#ffb03a":e.state==="roam"?"#ff9a7a":"#ff3a4e";c.globalAlpha=e.state==="roam"?.75:1;c.fill();c.globalAlpha=1}
  c.restore();
  if(goal&&cleared&&!locked){let [x,y]=P(goal.x,goal.z*ZS);const dx=x-cx,dy=y-cy,d=Math.hypot(dx,dy);if(d>R-6){x=cx+dx/d*(R-6);y=cy+dy/d*(R-6)}
   c.beginPath();for(let i=0;i<10;i++){const an=-PI/2+i*PI/5,r=i%2?2.6:6.4;c.lineTo(x+Math.cos(an)*r,y+Math.sin(an)*r)}c.closePath();c.fillStyle="#ffd34e";c.fill();c.strokeStyle="#4a2a08";c.lineWidth=1;c.stroke()}
@@ -5397,7 +5427,7 @@ function openWorldNext(){
  for(let i=0;i<n;i++){const x=rnd(hero.x+260,gx+200),z=rnd(zLo(20),zHi(20));if(Math.hypot(x-hero.x,(z-hero.z)*ZS)<260)continue;
   const k=pickTier(battleNo,foe.lvl),e=makeEnemy(pickOfTier(k,bi),false,x,z,0,{ref});e.wild=true;e.home={x,z};e.state="roam";e.st=rnd(0,2);e.entered=true;e.spawned=true;enemies.push(e)}
  /* treasure chests away from the road */
- chests=chests.filter(c=>!c.open&&c.x>hero.x-400);
+ chests=chests.filter(c=>!c.open&&c.x>hero.x-400);shrines=shrines.filter(sh=>!sh.used&&sh.x>hero.x-400);placeShrine(gx);
  const nc=Math.random()<.6?1:2;for(let i=0;i<nc;i++){const far=Math.random()<.5,x=rnd(hero.x+180,gx+150),z=far?rnd(zLo(14),zLo(70)):rnd(zHi(70),zHi(14));chests.push({x,z,open:0,t:0,gold:Math.random()<.3})}
  setTimeout(()=>{if(cleared&&!locked)toast("🌐 "+t("exploreHint"),"#ffd98a")},2600)}
 function chestTick(dt){
@@ -5408,6 +5438,57 @@ function chestTick(dt){
    for(let i=0;i<26;i++){const a=rnd(0,PI*2),sp=rnd(40,120);parts.push({x:c.x,z:c.z,h:12,vx:Math.cos(a)*sp,vz:Math.sin(a)*sp*.35,vh:rnd(60,160),g:200,life:rnd(.5,.9),max:.9,col:i%3?"#ffd34e":"#fff6c0",size:rnd(1.5,3),t:"spark"})}
    SFX.unlock();toast("💰 "+t("chestOpen"),"#ffd34e");save()}}
  chests=chests.filter(c=>!c.open||c.t<20)}
+/* ---- variety: random battle events and roadside shrines with short buffs ---- */
+const EVTS=[
+ {k:"blood",ic:"🌑",col:"#ff3a4e",n:S8("Кривавий місяць|Blood Moon|Lune de sang|Blutmond|血月|Luna de sangre|Luna di sangue|Krwawy księżyc|Lua de sangue|ブラッドムーン|핏빛 달|Kanlı Ay|Bulan Darah|रक्त चंद्रमा|Trăng máu|จันทร์สีเลือด|Bloedmaan"),d:S8("Вороги сильніші, але дроп кращий|Foes are stronger, but loot is better|Ennemis plus forts, meilleur butin|Stärkere Feinde, bessere Beute|敌人更强，但掉落更好|Enemigos más fuertes, mejor botín|Nemici più forti, bottino migliore|Silniejsi wrogowie, lepsze łupy|Inimigos mais fortes, saque melhor|敵が強いが戦利品が良くなる|적이 강해지지만 전리품이 좋아진다|Düşmanlar güçlü, ganimet daha iyi|Musuh lebih kuat, jarahan lebih bagus|दुश्मन ताक़तवर, पर लूट बेहतर|Kẻ địch mạnh hơn, chiến lợi phẩm tốt hơn|ศัตรูแข็งแกร่งขึ้น แต่ของดรอปดีขึ้น|Sterkere vijanden, betere buit")},
+ {k:"gold",ic:"🪙",col:"#ffd34e",n:S8("Золота лихоманка|Gold Rush|Ruée vers l'or|Goldrausch|淘金热|Fiebre del oro|Febbre dell'oro|Gorączka złota|Corrida do ouro|ゴールドラッシュ|골드 러시|Altın Hücumu|Demam Emas|सोने की होड़|Cơn sốt vàng|ตื่นทอง|Goldkoorts"),d:S8("Золото за вбивства ×2.5|Gold from kills ×2.5|Or des victoires ×2,5|Gold aus Kills ×2,5|击杀金币 ×2.5|Oro por muertes ×2,5|Oro dalle uccisioni ×2,5|Złoto za zabójstwa ×2,5|Ouro por mortes ×2,5|撃破ゴールド ×2.5|처치 골드 ×2.5|Öldürme altını ×2,5|Emas dari kill ×2,5|मारने पर सोना ×2.5|Vàng khi hạ địch ×2,5|ทองจากการสังหาร ×2.5|Goud per kill ×2,5")},
+ {k:"swarm",ic:"🐜",col:"#ff9a4a",n:S8("Навала|Swarm|Essaim|Schwarm|虫潮|Enjambre|Sciame|Rój|Enxame|大群|대군|Sürü|Gerombolan|झुंड|Bầy đàn|ฝูงศัตรู|Zwerm"),d:S8("Більше ворогів, досвід ×1.5|More foes, XP ×1.5|Plus d'ennemis, XP ×1,5|Mehr Feinde, EP ×1,5|更多敌人，经验 ×1.5|Más enemigos, XP ×1,5|Più nemici, XP ×1,5|Więcej wrogów, PD ×1,5|Mais inimigos, XP ×1,5|敵が増える、経験値 ×1.5|적 증가, 경험치 ×1.5|Daha çok düşman, XP ×1,5|Lebih banyak musuh, XP ×1,5|ज़्यादा दुश्मन, XP ×1.5|Nhiều địch hơn, KN ×1,5|ศัตรูมากขึ้น XP ×1.5|Meer vijanden, XP ×1,5")},
+ {k:"elite",ic:"👑",col:"#c79cff",n:S8("Елітний загін|Elite Squad|Escouade d'élite|Eliteeinheit|精英小队|Escuadrón de élite|Squadra d'élite|Elitarny oddział|Esquadrão de elite|精鋭部隊|정예 부대|Seçkin Birlik|Pasukan Elit|विशिष्ट दस्ता|Đội tinh nhuệ|หน่วยรบพิเศษ|Elite-eenheid"),d:S8("Серед ворогів — міфічний або сильніший|A mythic or stronger foe joins|Un ennemi mythique ou plus fort se joint|Ein mythischer oder stärkerer Feind kommt|一名神话或更强的敌人加入|Se une un enemigo mítico o más fuerte|Si unisce un nemico mitico o più forte|Dołącza mityczny lub silniejszy wróg|Um inimigo mítico ou mais forte se junta|ミシック以上の敵が参戦|신화 이상의 적이 합류|Mitik ya da daha güçlü bir düşman katılır|Musuh mitos atau lebih kuat ikut|एक मिथिक या उससे ताक़तवर दुश्मन जुड़ता है|Một kẻ địch thần thoại trở lên tham chiến|ศัตรูระดับตำนานหรือสูงกว่าเข้าร่วม|Een mythische of sterkere vijand doet mee")},
+ {k:"frenzy",ic:"⚡",col:"#5fd0ff",n:S8("Шал битви|Battle Frenzy|Frénésie|Kampfrausch|战斗狂热|Frenesí|Frenesia|Szał bitewny|Frenesi|狂乱|광란|Savaş Coşkusu|Amukan|युद्ध-उन्माद|Cuồng chiến|คลั่งศึก|Strijdroes"),d:S8("Ти б'єш і бігаєш на 30% швидше|You strike and run 30% faster|Tu frappes et cours 30% plus vite|Du schlägst und läufst 30% schneller|攻击和移动速度 +30%|Golpeas y corres un 30% más rápido|Colpisci e corri il 30% più veloce|Uderzasz i biegasz o 30% szybciej|Você ataca e corre 30% mais rápido|攻撃と移動が30%速くなる|공격과 이동이 30% 빨라짐|%30 daha hızlı vurur ve koşarsın|Serang dan lari 30% lebih cepat|तुम 30% तेज़ वार करते और दौड़ते हो|Đánh và chạy nhanh hơn 30%|โจมตีและวิ่งเร็วขึ้น 30%|Je slaat en rent 30% sneller")},
+ {k:"bless",ic:"✨",col:"#6bf0ae",n:S8("Благословення|Blessing|Bénédiction|Segen|祝福|Bendición|Benedizione|Błogosławieństwo|Bênção|祝福|축복|Kutsama|Berkah|आशीर्वाद|Phước lành|พร|Zegen"),d:S8("Здоров'я відновлюється весь бій|Health regenerates all battle|La santé se régénère tout le combat|Leben regeneriert den ganzen Kampf|整场战斗持续回血|La salud se regenera toda la batalla|La salute si rigenera per tutta la battaglia|Zdrowie odnawia się przez całą walkę|A vida regenera durante a batalha|戦闘中ずっと体力回復|전투 내내 체력 회복|Savaş boyunca can yenilenir|Darah pulih sepanjang pertarungan|पूरी लड़ाई सेहत भरती रहती है|Hồi máu suốt trận|ฟื้นพลังชีวิตตลอดการต่อสู้|Gezondheid herstelt het hele gevecht")},
+ {k:"treasure",ic:"💎",col:"#2ff0c8",n:S8("Скарбоносець|Treasure Bearer|Porteur de trésor|Schatzträger|宝藏携带者|Portador del tesoro|Portatore di tesori|Nosiciel skarbu|Portador do tesouro|宝運び|보물 운반자|Hazine Taşıyıcı|Pembawa Harta|ख़ज़ाने वाला|Kẻ mang kho báu|ผู้แบกสมบัติ|Schattendrager"),d:S8("Один ворог несе скарб: багато золота і рідкісна річ|One foe carries treasure: lots of gold and a rare item|Un ennemi porte un trésor : beaucoup d'or et un objet rare|Ein Feind trägt einen Schatz: viel Gold und ein seltenes Item|一名敌人携带宝藏：大量金币和稀有物品|Un enemigo lleva un tesoro: mucho oro y un objeto raro|Un nemico porta un tesoro: tanto oro e un oggetto raro|Jeden wróg niesie skarb: dużo złota i rzadki przedmiot|Um inimigo carrega um tesouro: muito ouro e um item raro|宝を持つ敵：大量のゴールドとレアアイテム|보물을 든 적: 많은 골드와 희귀 아이템|Bir düşman hazine taşıyor: bol altın ve nadir eşya|Satu musuh membawa harta: banyak emas dan item langka|एक दुश्मन के पास ख़ज़ाना: ढेर सोना और दुर्लभ चीज़|Một kẻ địch mang kho báu: nhiều vàng và vật phẩm hiếm|ศัตรูตัวหนึ่งแบกสมบัติ: ทองมากมายและไอเทมหายาก|Eén vijand draagt een schat: veel goud en een zeldzaam item")}];
+const SHR=[
+ {k:"might",ic:"⚔️",col:"#ff5f6f",fx:[["dmgMul",35]],n:S8("Вівтар сили|Shrine of Might|Autel de puissance|Schrein der Macht|力量神殿|Santuario de fuerza|Santuario della forza|Kapliczka siły|Santuário da força|力の祠|힘의 제단|Güç Tapınağı|Kuil Kekuatan|शक्ति का मंदिर|Đền sức mạnh|ศาลแห่งพลัง|Heiligdom van kracht"),d:S8("+35% шкоди на 60 с|+35% damage for 60 s|+35% de dégâts pendant 60 s|+35% Schaden für 60 s|伤害 +35%，持续 60 秒|+35% de daño durante 60 s|+35% danni per 60 s|+35% obrażeń przez 60 s|+35% de dano por 60 s|60秒間ダメージ +35%|60초간 피해 +35%|60 sn boyunca +%35 hasar|+35% damage selama 60 dtk|60 सेकंड तक +35% नुक़सान|+35% sát thương trong 60 giây|ความเสียหาย +35% เป็นเวลา 60 วิ|+35% schade gedurende 60 s")},
+ {k:"swift",ic:"💨",col:"#5fd0ff",fx:[["speed",30],["atkSpd",30]],n:S8("Вівтар вітру|Shrine of Wind|Autel du vent|Schrein des Windes|疾风神殿|Santuario del viento|Santuario del vento|Kapliczka wiatru|Santuário do vento|風の祠|바람의 제단|Rüzgâr Tapınağı|Kuil Angin|पवन का मंदिर|Đền gió|ศาลแห่งสายลม|Heiligdom van de wind"),d:S8("+30% швидкості руху і ударів на 60 с|+30% move and attack speed for 60 s|+30% de vitesse de déplacement et d'attaque pendant 60 s|+30% Lauf- und Angriffstempo für 60 s|移动和攻击速度 +30%，持续 60 秒|+30% de velocidad de movimiento y ataque durante 60 s|+30% velocità di movimento e attacco per 60 s|+30% szybkości ruchu i ataku przez 60 s|+30% de velocidade de movimento e ataque por 60 s|60秒間 移動・攻撃速度 +30%|60초간 이동·공격 속도 +30%|60 sn boyunca +%30 hareket ve saldırı hızı|+30% kecepatan gerak dan serang selama 60 dtk|60 सेकंड तक +30% चाल और वार गति|+30% tốc độ chạy và đánh trong 60 giây|ความเร็วเคลื่อนที่และโจมตี +30% เป็นเวลา 60 วิ|+30% loop- en aanvalssnelheid gedurende 60 s")},
+ {k:"luck",ic:"🍀",col:"#7fe0a8",fx:[["rarBonus",6],["dropBonus",40]],n:S8("Вівтар удачі|Shrine of Luck|Autel de chance|Schrein des Glücks|幸运神殿|Santuario de la suerte|Santuario della fortuna|Kapliczka szczęścia|Santuário da sorte|幸運の祠|행운의 제단|Şans Tapınağı|Kuil Keberuntungan|भाग्य का मंदिर|Đền may mắn|ศาลแห่งโชค|Heiligdom van geluk"),d:S8("Удача +6 і більше дропу на 60 с|Luck +6 and more drops for 60 s|Chance +6 et plus de butin pendant 60 s|Glück +6 und mehr Beute für 60 s|幸运 +6，掉落更多，持续 60 秒|Suerte +6 y más botín durante 60 s|Fortuna +6 e più bottino per 60 s|Szczęście +6 i więcej łupów przez 60 s|Sorte +6 e mais saque por 60 s|60秒間 運+6、ドロップ増加|60초간 행운 +6, 드롭 증가|60 sn boyunca şans +6 ve daha çok ganimet|Keberuntungan +6 dan lebih banyak drop selama 60 dtk|60 सेकंड तक भाग्य +6 और ज़्यादा लूट|May mắn +6 và rơi đồ nhiều hơn trong 60 giây|โชค +6 และดรอปมากขึ้น 60 วิ|Geluk +6 en meer buit gedurende 60 s")},
+ {k:"greed",ic:"💰",col:"#ffd34e",fx:[["goldBonus",120],["xpBonus",60]],n:S8("Вівтар скарбів|Shrine of Riches|Autel des richesses|Schrein des Reichtums|财富神殿|Santuario de riquezas|Santuario delle ricchezze|Kapliczka bogactwa|Santuário das riquezas|富の祠|부의 제단|Zenginlik Tapınağı|Kuil Kekayaan|धन का मंदिर|Đền của cải|ศาลแห่งความมั่งคั่ง|Heiligdom van rijkdom"),d:S8("+120% золота і +60% досвіду на 60 с|+120% gold and +60% XP for 60 s|+120% d'or et +60% d'XP pendant 60 s|+120% Gold und +60% EP für 60 s|金币 +120%，经验 +60%，持续 60 秒|+120% de oro y +60% de XP durante 60 s|+120% oro e +60% XP per 60 s|+120% złota i +60% PD przez 60 s|+120% de ouro e +60% de XP por 60 s|60秒間 ゴールド+120%・経験値+60%|60초간 골드 +120%, 경험치 +60%|60 sn boyunca +%120 altın ve +%60 XP|+120% emas dan +60% XP selama 60 dtk|60 सेकंड तक +120% सोना और +60% XP|+120% vàng và +60% KN trong 60 giây|ทอง +120% และ XP +60% เป็นเวลา 60 วิ|+120% goud en +60% XP gedurende 60 s")},
+ {k:"life",ic:"💚",col:"#6bf0ae",fx:[["regen",8],["dmgRed",15]],n:S8("Вівтар життя|Shrine of Life|Autel de vie|Schrein des Lebens|生命神殿|Santuario de vida|Santuario della vita|Kapliczka życia|Santuário da vida|命の祠|생명의 제단|Hayat Tapınağı|Kuil Kehidupan|जीवन का मंदिर|Đền sự sống|ศาลแห่งชีวิต|Heiligdom van het leven"),d:S8("Повне здоров'я, реген і −15% шкоди на 60 с|Full health, regen and −15% damage taken for 60 s|Santé pleine, régén et −15% de dégâts subis pendant 60 s|Volles Leben, Regeneration und −15% Schaden für 60 s|生命回满，60 秒内回血且受伤 −15%|Salud completa, regeneración y −15% de daño recibido durante 60 s|Salute piena, rigenerazione e −15% danni subiti per 60 s|Pełne zdrowie, regeneracja i −15% obrażeń przez 60 s|Vida cheia, regeneração e −15% de dano sofrido por 60 s|体力全回復、60秒間 再生と被ダメ −15%|체력 완전 회복, 60초간 재생과 받는 피해 −15%|Tam can, yenilenme ve 60 sn boyunca −%15 hasar|Darah penuh, regen, dan −15% damage diterima selama 60 dtk|पूरी सेहत, रीजेन और 60 सेकंड तक −15% नुक़सान|Đầy máu, hồi máu và −15% sát thương nhận vào trong 60 giây|พลังชีวิตเต็ม ฟื้นฟู และรับความเสียหาย −15% เป็นเวลา 60 วิ|Volle gezondheid, regen en −15% schade gedurende 60 s")}];
+let evt=null,shrines=[],bufT=0;
+function addBuf(o){buffs=buffs.filter(b=>b.k!==o.k);buffs.push(o);recalc();hudBufs()}
+function dropWaveBufs(){const n=buffs.length;buffs=buffs.filter(b=>!b.wave);if(buffs.length!==n)recalc();hudBufs()}
+const evM=(k,v)=>evt&&evt.k===k?v:1;
+/* about every third battle (from #3, never with a boss) brings an event that changes how it plays */
+function rollEvent(bi,dl){
+ evtEnd();
+ const wave=enemies.filter(e=>!e.wild);if(battleNo<3||Math.random()>.42||!wave.length||wave.some(e=>e.boss))return;
+ const E=EVTS[rint(0,EVTS.length-1)],ref=mainFor(battleNo),wb=fx=>addBuf({k:"ev",wave:1,ic:E.ic,col:E.col,fx});evt={k:E.k};
+ switch(E.k){
+  case "blood":for(const e of wave){e.hp=e.maxhp=Math.round(e.maxhp*1.4);e.atk=Math.round(e.atk*1.25)}wb([["rarBonus",6],["dropBonus",30]]);break;
+  case "swarm":for(let i=0;i<3;i++){let x,z;if(isFP()){const a=rnd(0,PI*2),d=rnd(220,300);x=hero.x+Math.cos(a)*d;z=clamp(hero.z-Math.sin(a)*d/ZS,zLo(15),zHi(15))}else{x=arenaX+LW+60+i*30;z=rnd(15,DEPTH-15)}enemies.push(makeEnemy(pickOfTier(rint(0,1),bi),false,x,z,1.6+i*.5,{ref}))}wb([]);break;
+  case "elite":{const e=wave[rint(0,wave.length-1)],k=Math.min(10,5+rint(0,Math.min(5,Math.floor(battleNo/12)))),m=makeEnemy(pickOfTier(k,bi),false,e.x,e.z,e.delay,{ref});enemies[enemies.indexOf(e)]=m;wb([]);break}
+  case "frenzy":wb([["atkSpd",30],["speed",30]]);break;
+  case "bless":wb([["regen",Math.max(2,Math.round(P.maxhp*.02))]]);break;
+  case "treasure":wave[rint(0,wave.length-1)].treasure=true;wb([]);break;
+  default:wb([])}
+ const tn=$("evTint");tn.style.setProperty("--ec",E.col);tn.style.opacity=E.k==="blood"?.6:.3;
+ const hasR=enemies.some(o=>o.rarI&&!o.wild);
+ setTimeout(()=>{if(evt&&evt.k===E.k&&locked){banner(E.ic+" "+L(E.n),L(E.d));E.k==="blood"?SFX.roar():SFX.unlock()}},dl+(hasR?3100:1500))}
+function evtEnd(){evt=null;dropWaveBufs();const tn=$("evTint");if(tn)tn.style.opacity=0}
+/* shrines stand in the fields between battles: touch one for a 60 s blessing */
+function placeShrine(gx){if(Math.random()>.55)return;const far=Math.random()<.5,x=rnd(hero.x+240,Math.max(hero.x+300,gx-60)),z=far?rnd(zLo(14),zLo(60)):rnd(zHi(60),zHi(14));shrines.push({x,z,k:rint(0,SHR.length-1),used:0,t:0})}
+function shrineTick(dt){
+ for(const sh of shrines){if(sh.used){sh.t+=dt;continue}
+  if(hero.state!=="dead"&&Math.hypot(hero.x-sh.x,(hero.z-sh.z)*ZS)<34){sh.used=1;sh.t=0;const D=SHR[sh.k];
+   if(D.k==="life"){const g=P.maxhp-P.hp;P.hp=P.maxhp;if(g>0)addText(hero.x,hero.z,62,"+"+Math.round(g),"#6bf0ae",13)}
+   addBuf({k:"sh_"+D.k,ic:D.ic,col:D.col,fx:D.fx.map(f=>f.slice()),t:60,max:60});
+   for(let i=0;i<34;i++){const a=rnd(0,PI*2),sp=rnd(30,110);parts.push({x:sh.x,z:sh.z,h:rnd(10,50),vx:Math.cos(a)*sp,vz:Math.sin(a)*sp*.35,vh:rnd(40,140),g:60,life:rnd(.6,1.1),max:1.1,col:i%3?D.col:"#ffffff",size:rnd(1.6,3.2),t:"spark"})}
+   parts.push({x:sh.x,z:sh.z,h:0,life:1,max:1,t:"ring",col:D.col,size:46});flashA=.22;flashCol=D.col;
+   banner(D.ic+" "+L(D.n),L(D.d));SFX.unlock();hud()}}
+ shrines=shrines.filter(sh=>!sh.used||sh.t<4);
+ let ch=false;for(const b of buffs)if(b.t!=null){b.t-=dt;if(b.t<=0)ch=true}
+ if(ch){buffs=buffs.filter(b=>b.t==null||b.t>0);recalc()}
+ bufT-=dt;if(bufT<=0||ch){bufT=.5;hudBufs()}}
+function hudBufs(){const el=$("bufs");if(!el)return;const h=buffs.map(b=>`<span class="buf${b.t!=null&&b.t<8?" low":""}" style="--c:${b.col}">${b.ic}${b.t!=null?`<i>${Math.ceil(b.t)}</i>`:""}</span>`).join("");if(el._h!==h){el._h=h;el.innerHTML=h}}
 /* trees, rocks and big props of the 3D world block the hero (they are listed per decor chunk) */
 function bumpCols(h){if(!G3||!G3.chunks)return;const ci=Math.floor(h.x/CHW),hz=h.z*ZS;
  for(let i=ci-1;i<=ci+1;i++){const ch=G3.chunks.get(i);if(!ch||!ch.col)continue;
@@ -5506,8 +5587,8 @@ function update(dt){
  updateFx(dt);updateLoot(dt);
  enemies=enemies.filter(e=>!(e.wild&&e.state==="roam"&&e.x<hero.x-1600));
  const target=isFP()?hero.x-LW*.35:locked?arenaX:Math.max(arenaX,hero.x-LW*.35);camX+=(target-camX)*Math.min(1,dt*5);
- chestTick(dt);
- if(locked&&!enemies.some(e=>e.state!=="dead"&&!e.wild)){locked=false;cleared=true;openWorldNext();hero.victT=1.4;SFX.clear();{const sw=$("sweep");sw.classList.remove("go");void sw.offsetWidth;sw.classList.add("go")}projs=projs.filter(q=>q.k==="fire");const reg=Math.round(P.maxhp*.35);if(P.hp<P.maxhp&&hero.state!=="dead"){P.hp=Math.min(P.maxhp,P.hp+reg)}banner(t("cleared"),t("goRight"));fireworks();save()}
+ chestTick(dt);shrineTick(dt);
+ if(locked&&!enemies.some(e=>e.state!=="dead"&&!e.wild)){locked=false;cleared=true;evtEnd();openWorldNext();hero.victT=1.4;SFX.clear();{const sw=$("sweep");sw.classList.remove("go");void sw.offsetWidth;sw.classList.add("go")}projs=projs.filter(q=>q.k==="fire");const reg=Math.round(P.maxhp*.35);if(P.hp<P.maxhp&&hero.state!=="dead"){P.hp=Math.min(P.maxhp,P.hp+reg)}banner(t("cleared"),t("goRight"));fireworks();save()}
  if(cleared&&!locked&&(isFP()?goal&&Math.hypot(hero.x-goal.x,(hero.z-goal.z)*ZS)<60:hero.x>arenaX+LW*.97)){battleNo++;startWave()}
  if(hero.state==="dead"){deadTimer+=dt;if(deadTimer>1.5&&modalOpen!=="mDead")openModal("mDead")}
 }
