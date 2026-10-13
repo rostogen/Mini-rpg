@@ -389,6 +389,12 @@ svg.iart{width:100%;height:100%;display:block;overflow:visible;filter:drop-shado
 .trHd .r1{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0}.trHd .ci{font-size:16px;line-height:1.1}.trHd b{font:700 12px Cinzel,Georgia,serif;color:var(--cc);overflow-wrap:anywhere;line-height:1.15}.trHd small{font:700 10.5px system-ui,sans-serif;color:var(--gold)}
 @media(max-width:620px){.trTable{grid-template-columns:repeat(5,minmax(122px,1fr));overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:6px}.trHd,.trc{scroll-snap-align:start}.trHd{position:static}}
 .tab.fgBtn{margin-left:auto;color:var(--gold);border-color:#8a6424;background:linear-gradient(180deg,#3a2616,#1c1210)}
+.trc.tier{background:linear-gradient(180deg,#160d18,#0f0910)}
+.trc.lk{opacity:.55;filter:saturate(.4)}
+.trc.lk .buy{font-size:10px;line-height:1.2;white-space:normal}
+.trc .ic{position:relative}
+.trT{position:absolute;right:-6px;bottom:-5px;font-style:normal;font-size:9px;font-weight:900;background:var(--cc,#d6a24a);color:#10080c;border-radius:6px;padding:0 3px;line-height:13px}
+.trCnt{margin-left:auto;font-weight:800;font-size:12.5px;color:var(--gold)}
 .trc{background:#0f0910;border:1px solid var(--line);box-shadow:inset 0 2px 0 var(--cc,#d6a24a);border-radius:12px;padding:8px 7px 7px;display:flex;flex-direction:column;gap:4px;min-width:0;text-align:center}
 .trc .trh{display:flex;align-items:center;justify-content:space-between;gap:4px}
 .trc .ic{font-size:20px;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:#1d121c;border:1px solid var(--line);flex:none}
@@ -689,7 +695,7 @@ body[data-gfx="hi"] .vig{display:block}
     </div>
     <div class="tpane" id="tTrain">
       <p class="sub" data-i="trainHint">Покращення можна купувати безкінечно. Кожен рівень дорожчий за попередній.</p>
-      <div class="buyAllBar"><button class="btn main" id="trAll" type="button"></button><span class="m" id="trAllInfo"></span></div>
+      <div class="buyAllBar"><button class="btn main" id="trAll" type="button"></button><span class="m" id="trAllInfo"></span><span class="trCnt" id="trCnt"></span></div>
       <div id="trGrid"></div>
     </div>
   </div></div>
@@ -869,6 +875,7 @@ loggedOut:"Ти вийшов з акаунта|You logged out|Tu es déconnecté
 resume:"▶ Продовжити|▶ Resume|▶ Reprendre|▶ Weiter|▶ 继续|▶ Continuar|▶ Riprendi|▶ Wznów|▶ Continuar|▶ 再開|▶ 계속|▶ Devam et|▶ Lanjutkan|▶ जारी रखें|▶ Tiếp tục|▶ เล่นต่อ|▶ Verder spelen",
 tree:"Дерево навичок|Skill Tree|Arbre de compétences|Skillbaum|技能树|Árbol de habilidades|Albero delle abilità|Drzewko umiejętności|Árvore de habilidades|スキルツリー|스킬 트리|Yetenek Ağacı|Pohon Skill|कौशल वृक्ष|Cây kỹ năng|ต้นไม้ทักษะ|Vaardighedenboom",
 tabTree:"Дерево|Tree|Arbre|Baum|技能树|Árbol|Albero|Drzewko|Árvore|ツリー|트리|Ağaç|Pohon|वृक्ष|Cây|ต้นไม้|Boom",
+perLvl:"за рівень|per level|par niveau|pro Stufe|每级|por nivel|per livello|na poziom|por nível|毎レベル|레벨당|seviye başına|per level|प्रति स्तर|mỗi cấp|ต่อเลเวล|per niveau",
 tabTrain:"Покращення|Upgrades|Améliorations|Verbesserungen|强化|Mejoras|Potenziamenti|Ulepszenia|Melhorias|強化|강화|Geliştirmeler|Peningkatan|अपग्रेड|Nâng cấp|อัปเกรด|Upgrades",
 treeHint:"Починай із центру. Нові вузли з'являються, щойно купиш сусідній. Наведи курсор або затисни вузол, щоб побачити, що він дає. Ціна — під кожним вузлом.|Start from the center. New nodes appear when you buy a neighboring one. Hover or press and hold a node to see what it gives. Each node shows its price below it.|Commence au centre. De nouveaux nœuds apparaissent quand tu achètes un nœud voisin. Survole ou maintiens un nœud pour voir ce qu'il donne. Son prix est affiché dessous.|Beginne in der Mitte. Neue Knoten erscheinen, wenn du einen benachbarten kaufst. Fahre über einen Knoten oder halte ihn gedrückt, um seinen Effekt zu sehen. Der Preis steht darunter.|从中心开始。购买相邻节点后会出现新节点。悬停或长按节点查看效果，价格显示在下方。|Empieza por el centro. Aparecen nodos nuevos cuando compras uno vecino. Pasa el cursor o mantén pulsado un nodo para ver qué da. Su precio aparece debajo.|Inizia dal centro. Nuovi nodi compaiono quando ne compri uno vicino. Passa sopra o tieni premuto un nodo per vedere cosa dà. Il prezzo è sotto.|Zacznij od środka. Nowe węzły pojawiają się, gdy kupisz sąsiedni. Najedź lub przytrzymaj węzeł, aby zobaczyć, co daje. Cena jest pod nim.|Comece pelo centro. Novos nós aparecem quando você compra um vizinho. Passe o mouse ou segure um nó para ver o que ele dá. O preço fica abaixo de cada nó.|中央から始めよう。隣のノードを買うと新しいノードが現れます。ノードにカーソルを合わせるか長押しすると効果が見られます。価格は各ノードの下に表示されます。|중앙에서 시작하세요. 이웃 노드를 사면 새 노드가 나타납니다. 노드에 마우스를 올리거나 길게 누르면 효과를 볼 수 있습니다. 가격은 각 노드 아래에 있습니다.|Merkezden başla. Komşu bir düğümü satın aldığında yeni düğümler görünür. Bir düğümün ne verdiğini görmek için üzerine gel ya da basılı tut. Her düğümün fiyatı altında yazar.|Mulailah dari tengah. Node baru muncul saat kamu membeli node di sebelahnya. Arahkan kursor atau tekan dan tahan node untuk melihat manfaatnya. Harga setiap node tertera di bawahnya.|केंद्र से शुरू करो। पड़ोसी नोड ख़रीदने पर नए नोड दिखते हैं। किसी नोड से क्या मिलता है यह देखने के लिए उस पर कर्सर ले जाओ या दबाकर रखो। हर नोड की क़ीमत उसके नीचे लिखी है।|Bắt đầu từ trung tâm. Nút mới xuất hiện khi bạn mua nút bên cạnh. Di chuột hoặc nhấn giữ một nút để xem nó cho gì. Giá ghi bên dưới mỗi nút.|เริ่มจากตรงกลาง โหนดใหม่จะปรากฏเมื่อคุณซื้อโหนดข้างเคียง ชี้หรือกดค้างที่โหนดเพื่อดูว่าได้อะไร ราคาแสดงอยู่ใต้แต่ละโหนด|Begin in het midden. Nieuwe knooppunten verschijnen als je een buur koopt. Beweeg erover of houd ingedrukt om te zien wat het geeft. De prijs staat onder elk knooppunt.",
 trainHint:"Покращення можна купувати без обмежень. Кожен наступний рівень дорожчий.|Upgrades can be bought forever. Each level costs more than the last.|Les améliorations s'achètent à l'infini. Chaque niveau coûte plus cher.|Verbesserungen sind unbegrenzt kaufbar. Jede Stufe kostet mehr.|强化可以无限购买，每级都比上一级更贵。|Las mejoras se pueden comprar sin límite. Cada nivel cuesta más.|I potenziamenti si comprano all'infinito. Ogni livello costa di più.|Ulepszenia można kupować bez końca. Każdy poziom kosztuje więcej.|As melhorias podem ser compradas sem limite. Cada nível custa mais que o anterior.|強化は無制限に購入できます。レベルが上がるごとに高くなります。|강화는 제한 없이 살 수 있습니다. 레벨마다 가격이 오릅니다.|Geliştirmeler sonsuza dek satın alınabilir. Her seviye bir öncekinden pahalıdır.|Peningkatan bisa dibeli tanpa batas. Setiap level lebih mahal dari sebelumnya.|अपग्रेड हमेशा ख़रीदे जा सकते हैं। हर स्तर पिछले से महँगा होता है।|Nâng cấp có thể mua mãi mãi. Mỗi cấp đắt hơn cấp trước.|อัปเกรดซื้อได้ไม่จำกัด แต่ละเลเวลแพงกว่าเลเวลก่อน|Upgrades kun je eindeloos kopen. Elk niveau kost meer dan het vorige.",
@@ -1933,7 +1940,7 @@ const ICK={atk:"sword",dmgMul:"sword+up",critDmg:"burst",crit:"crit",atkSpd:"che
  fireBonus:"fire",fireRad:"fire+up",fireCd:"fire+clock",burn:"fire+plus",burnDmg:"fire+up",fireMulti:"fire+plus",blazeBonus:"sword",
  lightningBonus:"bolt",chain:"bolt+plus",boltCd:"bolt+clock",boltTwice:"bolt+plus"};
 const TRIK={luckT:"clover",merchT:"coin+up",scavT:"gem",plunderT:"coins",flareT:"burst",cycloneT:"spin",mag:"sparkle",fury:"sword+up",smolderT:"fire+up",blazeT:"fire+plus",wisdomT:"book+up",openT:"sword+plus",heavyT:"axe",slayer:"crown"};
-const trIk=T=>TRIK[T.id]||ICK[T.fx[0][0]]||"star";
+const trIk=T=>TRIK[T.root?T.root.id:T.id]||ICK[T.fx[0][0]]||"star";
 const TCOL={str:"#ff7a6a",spd:"#5fd0ff",hp:"#ff8fb0",mag:"#b98cff",wealth:"#ffd24a"},TCI={str:"sword",spd:"wind",hp:"heart",mag:"sparkle",wealth:"coin"};
 const ikOf=n=>n.cap?"star":ICK[n.fx[0][0]]||"star";
 
@@ -1977,6 +1984,21 @@ SECT.forEach((S,i)=>{S.nodes.push(...[[[["atk",44]],[["critDmg",60]],[["dmgMul",
 [S8("Меч Вічності|Sword of Eternity|Épée de l'éternité|Schwert der Ewigkeit|永恒之剑|Espada de la eternidad|Spada dell'eternità|Miecz Wieczności|Espada da Eternidade|永遠の剣|영원의 검|Sonsuzluk Kılıcı|Pedang Keabadian|अनंतता की तलवार|Thanh kiếm vĩnh hằng|ดาบแห่งนิรันดร์|Zwaard van de eeuwigheid"),S8("Егіда Вічності|Aegis of Eternity|Égide de l'éternité|Aigis der Ewigkeit|永恒神盾|Égida de la eternidad|Egida dell'eternità|Egida Wieczności|Égide da Eternidade|永遠のイージス|영원의 이지스|Sonsuzluk Kalkanı|Aegis Keabadian|अनंतता की ढाल|Khiên vĩnh hằng|โล่แห่งนิรันดร์|Aegis van de eeuwigheid"),S8("Дерево Життя|Tree of Life|Arbre de vie|Baum des Lebens|生命之树|Árbol de la vida|Albero della vita|Drzewo Życia|Árvore da Vida|生命の樹|생명의 나무|Hayat Ağacı|Pohon Kehidupan|जीवन वृक्ष|Cây sự sống|ต้นไม้แห่งชีวิต|Levensboom"),S8("Скарбниця Всесвіту|Treasury of the Cosmos|Trésor du cosmos|Schatzkammer des Kosmos|宇宙宝库|Tesoro del cosmos|Tesoro del cosmo|Skarbiec Kosmosu|Tesouro do Cosmos|宇宙の宝物庫|우주의 보고|Kozmos Hazinesi|Perbendaharaan Kosmos|ब्रह्मांड का ख़ज़ाना|Kho báu vũ trụ|คลังสมบัติจักรวาล|Schatkamer van de kosmos"),S8("Король Блискавок|King of Lightning|Roi de la foudre|König des Blitzes|雷霆之王|Rey del rayo|Re del fulmine|Król Błyskawic|Rei do Raio|雷の王|번개의 왕|Yıldırım Kralı|Raja Petir|बिजली का राजा|Vua sấm sét|ราชาแห่งสายฟ้า|Koning van de bliksem"),S8("Серце Сонця|Heart of the Sun|Cœur du soleil|Herz der Sonne|太阳之心|Corazón del sol|Cuore del sole|Serce Słońca|Coração do Sol|太陽の心臓|태양의 심장|Güneşin Kalbi|Jantung Matahari|सूर्य का हृदय|Trái tim mặt trời|หัวใจแห่งดวงอาทิตย์|Hart van de zon")].forEach((c,i)=>SECT[i].cap5=c);
 const RING_R=[96,168,240,312,384,452,524,596,668,740,812,880,952,1024,1096,1172,1248,1324,1400,1476,1552,1628,1704,1780,1856,1932,2008,2084],RING_N=[1,2,3,3,2,1,2,3,3,3,2,1,2,3,3,1,2,3,3,3,2,3,1,2,3,3,2,1],RING_COST=[60,110,180,280,420,700,1000,1400,1900,2500,3300,5000,7000,9500,12500,20000,26000,34000,44000,56000,72000,92000,150000,200000,260000,340000,440000,600000];
 const LINKP=[null,[[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0,1],[1,2]],[[0,1]],[[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0],[1],[2]],[[0,1],[1,2]],[[0,1]],[[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0,1,2]],[[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0],[1],[2]],[[0,1],[1,2]],[[0],[0,1],[1]],[[0,1,2]],[[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0,1],[1,2]],[[0,1]]];
+/* ring 28-35: 21 more nodes per branch (the tree grows to 500), the last one is the sixth capstone */
+RING_R.push(2160,2236,2312,2388,2464,2540,2616,2700);RING_N.push(2,3,3,3,3,3,3,1);RING_COST.push(780000,1000000,1300000,1700000,2200000,2900000,3800000,5200000);
+LINKP.push([[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0],[1],[2]],[[0],[1],[2]],[[0],[1],[2]],[[0],[1],[2]],[[0,1,2]]);
+SECT.forEach((S,i)=>{S.nodes.push(...[[[["atk",65]],[["critDmg",90]],[["dmgMul",45]],[["atkSpd",8]],[["bossDmg",45]],[["atk",70]],[["execute",35]],[["crit",4]],[["heavyBonus",70]],[["spinBonus",70]],[["atk",80]],[["critDmg",100]],[["dmgMul",50]],[["opener",40]],[["reach",5]],[["atk",90]],[["bossDmg",50]],[["critDmg",120]],[["dmgMul",60]],[["atk",100]],[["dmgMul",150],["atk",200],["critDmg",200],["bossDmg",80],["crit",8]]],
+ [[["maxhp",300]],[["armor",32]],[["maxhpPct",9]],[["thorns",70]],[["armorPct",12]],[["evade",3]],[["maxhp",340]],[["dmgRed",3]],[["armor",36]],[["shieldCd",10]],[["maxhpPct",10]],[["thorns",80]],[["maxhp",380]],[["armorPct",14]],[["armor",40]],[["dodgeCd",10]],[["maxhp",420]],[["maxhpPct",12]],[["thorns",90]],[["armor",45]],[["maxhpPct",25],["armorPct",20],["maxhp",800],["armor",60],["evade",5]]],
+ [[["regen",10]],[["healBonus",80]],[["killHeal",18]],[["lifesteal",2]],[["maxhpPct",7]],[["critHeal",14]],[["healCd",8]],[["regen",12]],[["healBonus",90]],[["killHeal",20]],[["lifesteal",2]],[["critHeal",16]],[["maxhpPct",8]],[["regen",14]],[["healBonus",100]],[["killHeal",24]],[["healCd",8]],[["regen",16]],[["critHeal",18]],[["maxhpPct",9]],[["regen",30],["healBonus",200],["killHeal",60],["lifesteal",4],["maxhpPct",20]]],
+ [[["goldBonus",90]],[["xpBonus",80]],[["dropBonus",55]],[["goldFlat",25]],[["xpFlat",30]],[["rarBonus",1]],[["goldBonus",100]],[["xpBonus",90]],[["dropBonus",60]],[["goldFlat",30]],[["speed",4]],[["goldBonus",110]],[["xpBonus",100]],[["rarBonus",1]],[["dropBonus",65]],[["goldFlat",35]],[["xpFlat",40]],[["goldBonus",120]],[["rarBonus",1]],[["xpBonus",110]],[["goldBonus",300],["xpBonus",200],["dropBonus",120],["rarBonus",6],["goldFlat",80]]],
+ [[["lightningBonus",280]],[["chain",1]],[["boltCd",8]],[["lightningBonus",300]],[["cdr",3]],[["lightningBonus",320]],[["chain",1]],[["lightningBonus",340]],[["boltCd",8]],[["lightningBonus",360]],[["chain",1]],[["lightningBonus",380]],[["cdr",3]],[["lightningBonus",400]],[["boltCd",8]],[["lightningBonus",420]],[["chain",1]],[["lightningBonus",440]],[["boltCd",8]],null,[["lightningBonus",900],["chain",5],["boltCd",15],["cdr",5]]],
+ [[["fireBonus",280]],[["fireRad",15]],[["burnDmg",130]],[["blazeBonus",90]],[["fireCd",8]],[["fireBonus",300]],[["burnDmg",140]],[["fireRad",15]],[["blazeBonus",100]],[["fireBonus",320]],[["cdr",3]],[["burnDmg",150]],[["fireBonus",340]],[["blazeBonus",110]],[["fireCd",8]],[["fireBonus",360]],[["burnDmg",160]],[["fireBonus",380]],[["blazeBonus",120]],null,[["fireBonus",900],["blazeBonus",300],["burnDmg",300],["fireCd",15],["fireRad",30]]]][i])});
+[S8("Бог війни|God of War|Dieu de la guerre|Kriegsgott|战神|Dios de la guerra|Dio della guerra|Bóg wojny|Deus da guerra|軍神|전쟁의 신|Savaş Tanrısı|Dewa Perang|युद्ध देवता|Thần chiến tranh|เทพแห่งสงคราม|God van de oorlog"),
+ S8("Вічна фортеця|Eternal Fortress|Forteresse éternelle|Ewige Festung|永恒堡垒|Fortaleza eterna|Fortezza eterna|Wieczna twierdza|Fortaleza eterna|永遠の要塞|영원한 요새|Ebedi Kale|Benteng Abadi|शाश्वत किला|Pháo đài vĩnh cửu|ป้อมปราการนิรันดร์|Eeuwige vesting"),
+ S8("Серце світу|Heart of the World|Cœur du monde|Herz der Welt|世界之心|Corazón del mundo|Cuore del mondo|Serce świata|Coração do mundo|世界の心臓|세계의 심장|Dünyanın Kalbi|Jantung Dunia|विश्व का हृदय|Trái tim thế giới|หัวใจแห่งโลก|Hart van de wereld"),
+ S8("Король скарбів|King of Treasures|Roi des trésors|König der Schätze|宝藏之王|Rey de los tesoros|Re dei tesori|Król skarbów|Rei dos tesouros|財宝の王|보물의 왕|Hazinelerin Kralı|Raja Harta|ख़ज़ानों का राजा|Vua kho báu|ราชาแห่งสมบัติ|Koning der schatten"),
+ S8("Повелитель блискавок|Lord of Lightning|Seigneur de la foudre|Herr der Blitze|雷电之主|Señor del rayo|Signore dei fulmini|Władca błyskawic|Senhor dos relâmpagos|稲妻の王|번개의 군주|Yıldırım Efendisi|Penguasa Petir|बिजली का स्वामी|Chúa tể sấm sét|เจ้าแห่งสายฟ้า|Heer van de bliksem"),
+ S8("Серце вулкана|Heart of the Volcano|Cœur du volcan|Herz des Vulkans|火山之心|Corazón del volcán|Cuore del vulcano|Serce wulkanu|Coração do vulcão|火山の心臓|화산의 심장|Volkanın Kalbi|Jantung Gunung Api|ज्वालामुखी का हृदय|Trái tim núi lửa|หัวใจภูเขาไฟ|Hart van de vulkaan")].forEach((n,i)=>SECT[i].cap6=n);
 const TALN={},TALL=[];
 (function(){const rom=n=>{let r="";for(const [v,c] of [[50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]])while(n>=v){r+=c;n-=v}return r},ROM=["",""].concat(Array.from({length:70},(_,i)=>rom(i+2)));
  SECT.forEach((S,si)=>{const ca=(-90+si*60)*Math.PI/180;let k=0;const seen={};
@@ -1984,11 +2006,11 @@ const TALN={},TALL=[];
    for(let i=0;i<n;i++){const a=ca+(i-(n-1)/2)*step,id=si+"-"+r+"-"+i,fx=S.nodes[k++];if(!fx)continue;
     const par=r===0?["c"]:LINKP[r][i].map(j=>si+"-"+(r-1)+"-"+j).filter(q=>TALN[q]);
     const st=fx[0][0];seen[st]=(seen[st]||0)+1;
-    const node={id,si,r,i,x:Math.cos(a)*R,y:Math.sin(a)*R,fx,par,nb:par.slice(),cost:RING_COST[r],cap:r===5||r===11||r===15||r===22||r===27,rn:ROM[seen[st]]||""};
+    const node={id,si,r,i,x:Math.cos(a)*R,y:Math.sin(a)*R,fx,par,nb:par.slice(),cost:RING_COST[r],cap:r===5||r===11||r===15||r===22||r===27||r===35,rn:ROM[seen[st]]||""};
     TALN[id]=node;TALL.push(node)}}});
  TALL.forEach(n=>n.par.forEach(p=>{if(TALN[p])TALN[p].nb.push(n.id)}));
 })();
-function talName(n){const S=SECT[n.si];if(n.r===5&&S.cap1)return L(S.cap1);if(n.r===11&&S.cap2)return L(S.cap2);if(n.r===15&&S.cap3)return L(S.cap3);if(n.r===22&&S.cap4)return L(S.cap4);if(n.r===27&&S.cap5)return L(S.cap5);const b=L(STN[n.fx[0][0]][0]);return n.rn?b+" "+n.rn:b}
+function talName(n){const S=SECT[n.si];if(n.r===5&&S.cap1)return L(S.cap1);if(n.r===11&&S.cap2)return L(S.cap2);if(n.r===15&&S.cap3)return L(S.cap3);if(n.r===22&&S.cap4)return L(S.cap4);if(n.r===27&&S.cap5)return L(S.cap5);if(n.r===35&&S.cap6)return L(S.cap6);const b=L(STN[n.fx[0][0]][0]);return n.rn?b+" "+n.rn:b}
 function talDesc(n){return n.fx.map(([k,v])=>statTxt(k,v)).join(", ")}
 const TRAIN=[
  {id:"atk",cat:"str",fx:[["atk",2]],u:"",ic:"⚔",n:S8("Сила удару|Strength|Force|Stärke|力量训练|Fuerza|Forza|Siła|Força|筋力|힘|Güç|Kekuatan|बल|Sức mạnh|ความแข็งแกร่ง|Kracht"),d:S8("+2 до атаки за рівень|+2 attack per level|+2 d'attaque par niveau|+2 Angriff pro Stufe|每级攻击 +2|+2 de ataque por nivel|+2 attacco per livello|+2 ataku na poziom|+2 de ataque por nível|レベルごとに攻撃力 +2|레벨당 공격력 +2|Seviye başına +2 saldırı|+2 serangan per level|हर स्तर पर +2 हमला|+2 tấn công mỗi cấp|+2 พลังโจมตีต่อเลเวล|+2 aanval per niveau"),per:2,base:40,grow:1.16,max:0},
@@ -2043,7 +2065,15 @@ const TRAIN=[
  {id:"plunderT",cat:"wealth",fx:[["goldFlat",2]],u:"",ic:"🪙",n:S8("Хабар|Plunder|Butin|Plünderung|掠夺|Saqueo|Saccheggio|Łup|Pilhagem|略奪|약탈|Yağma|Jarahan|लूटपाट|Cướp bóc|ปล้นสะดม|Plundering"),d:S8("+2 золота за вбивство за рівень|+2 gold per kill per level|+2 or par victoire par niveau|+2 Gold pro Kill pro Stufe|每级每次击杀金币 +2|+2 de oro por muerte por nivel|+2 oro per uccisione per livello|+2 złota za zabójstwo na poziom|+2 de ouro por morte por nível|レベルごとに撃破ごとのゴールド +2|레벨당 처치당 골드 +2|Seviye başına öldürme başına +2 altın|+2 emas per kill per level|हर स्तर पर हर मार पर +2 सोना|+2 vàng mỗi lần hạ địch mỗi cấp|+2 ทองต่อการสังหารต่อเลเวล|+2 goud per kill per niveau"),per:2,base:120,grow:1.2,max:0,},
 ];
 const TCAT=[["str","⚔",S8("Сила|Strength|Force|Stärke|力量|Fuerza|Forza|Siła|Força|筋力|힘|Güç|Kekuatan|बल|Sức mạnh|ความแข็งแกร่ง|Kracht")],["spd","💨",S8("Швидкість|Speed|Vitesse|Tempo|速度|Velocidad|Velocità|Szybkość|Velocidade|スピード|속도|Hız|Kecepatan|गति|Tốc độ|ความเร็ว|Snelheid")],["hp","❤",S8("Здоров'я|Health|Santé|Leben|生命|Salud|Salute|Zdrowie|Vida|体力|체력|Sağlık|Kesehatan|सेहत|Máu|พลังชีวิต|Gezondheid")],["mag","✨",S8("Магія|Magic|Magie|Magie|魔法|Magia|Magia|Magia|Magia|魔法|마법|Büyü|Sihir|जादू|Phép thuật|เวทมนตร์|Magie")],["wealth","🪙",S8("Багатство|Wealth|Richesse|Reichtum|财富|Riqueza|Ricchezza|Bogactwo|Riqueza|富|부|Servet|Kekayaan|दौलत|Giàu có|ความมั่งคั่ง|Rijkdom")]];
+/* every upgrade has 9 stronger tiers (II-X, 20 levels each): a tier opens when the one before reaches its max (or level 25) and starts at that price. 50 x 10 = 500 upgrades */
+const TROM=["","","II","III","IV","V","VI","VII","VIII","IX","X"];
+{const out=[];for(const B of TRAIN){out.push(B);let prev=B;for(let k=2;k<=10;k++){const m=1+(k-1)*.5,T={id:B.id+"~"+k,cat:B.cat,fx:B.fx.map(([a,v])=>[a,Math.round(v*m*100)/100]),u:B.u,neg:B.neg,ic:B.ic,per:Math.round(B.per*m*100)/100,max:20,tier:k,root:B,prev,req:prev.max||25};T.base=Math.round(prev.base*Math.pow(prev.grow,T.req-1)*1.15);T.grow=1+(B.grow-1)*.5;out.push(T);prev=T}}TRAIN.length=0;TRAIN.push(...out)}
+const trOpen=T=>!T.prev||(trOpen(T.prev)&&(train[T.prev.id]||0)>=T.req);
+const trN=T=>T.root?L(T.root.n)+" "+TROM[T.tier]:L(T.n);
+const trD=T=>T.root?T.fx.map(([k,v])=>statTxt(k,v)).join(", ")+" "+t("perLvl"):L(T.d);
 const trainCost=(T,l)=>Math.round(T.base*Math.pow(T.grow,l)/5)*5;
+/* short price: 1.57M, 13.1B, 4.4T */
+const fmtC=n=>{if(n<1e6)return String(n);const [d,u]=n<1e9?[1e6,"M"]:n<1e12?[1e9,"B"]:n<1e15?[1e12,"T"]:[1e15,"Q"],x=n/d;return(x<10?x.toFixed(2):x<100?x.toFixed(1):x.toFixed(0)).replace(/\.?0+$/,"")+u};
 /* ---- loot ---- */
 const RAR=[
  {k:"common",col:"#c2c2c2",w:600,mul:1,ns:1,n:S8("Звичайна|Common|Commun|Gewöhnlich|普通|Común|Comune|Zwykły|Comum|コモン|일반|Yaygın|Biasa|साधारण|Thường|ธรรมดา|Gewoon")},
@@ -5964,27 +5994,32 @@ function buildTrain(){
   const hd=document.createElement("div");hd.className="trHd";hd.style.gridColumn=cx;hd.style.gridRow=1;hd.innerHTML=`<div class="r1"><span class="ci">${icoSvg(TCI[ck],TCOL[ck],"1.25em")}</span><b>${L(cn)}</b></div><small></small>`;col.appendChild(hd);trUI.cols[ck]=hd.querySelector("small");
   list.forEach((T,ri)=>{const d=document.createElement("div");d.className="trc";d.style.gridColumn=cx;d.style.gridRow=ri+2;
    const sic=[...new Set(T.fx.map(f=>ICK[f[0]]).filter(Boolean))].slice(0,2).map(n=>icoSvg(n,TCOL[ck],"1.2em")).join("");
-   d.innerHTML=`<div class="trh"><div class="ic">${icoSvg(trIk(T),TCOL[ck],"22px")}</div><span class="lvl"></span></div><b>${L(T.n)}</b><div class="m dd">${L(T.d)}</div><div class="m nw"><span class="nwi">${sic}</span><span class="nwt"></span></div><button class="buy" type="button"></button><span class="ok"></span>`;
-   const u={lvl:d.querySelector(".lvl"),nw:d.querySelector(".nwt"),buy:d.querySelector(".buy"),ok:d.querySelector(".ok")};u.buy.onclick=()=>buyTrain(T.id);trUI.cards[T.id]=u;col.appendChild(d)})}
+   if(T.root)d.classList.add("tier");d.innerHTML=`<div class="trh"><div class="ic">${icoSvg(trIk(T),TCOL[ck],"22px")}${T.root?`<i class="trT">${TROM[T.tier]}</i>`:""}</div><span class="lvl"></span></div><b>${trN(T)}</b><div class="m dd">${trD(T)}</div><div class="m nw"><span class="nwi">${sic}</span><span class="nwt"></span></div><button class="buy" type="button"></button><span class="ok"></span>`;
+   const u={el:d,lvl:d.querySelector(".lvl"),nw:d.querySelector(".nwt"),buy:d.querySelector(".buy"),ok:d.querySelector(".ok")};u.buy.onclick=()=>buyTrain(T.id);trUI.cards[T.id]=u;col.appendChild(d)})}
  trKey=lang}
 function renderTrain(){
  if(trKey!==lang||!$("trGrid").firstChild)buildTrain();
  for(const [ck] of TCAT){const el=trUI.cols[ck];if(el)setT(el,t("lv")+" "+TRAIN.reduce((a,T)=>a+(T.cat===ck?train[T.id]||0:0),0))}
- for(const T of TRAIN){const u=trUI.cards[T.id];if(!u)continue;const l=train[T.id]||0,mx=T.max&&l>=T.max,cost=trainCost(T,l),v=Math.round(l*T.per*10)/10,unit=T.u==="ps"?t("perSec"):T.u===""?"":"%";
+ {const row={};let open=0;for(const T of TRAIN){const u=trUI.cards[T.id];if(!u)continue;const op=trOpen(T),sh=!T.prev||trOpen(T.prev);if(op)open++;
+  if(u._sh!==sh){u._sh=sh;u.el.style.display=sh?"":"none"}if(sh){row[T.cat]=(row[T.cat]||1)+1;if(u._row!==row[T.cat]){u._row=row[T.cat];u.el.style.gridRow=row[T.cat]}}
+  if(u._lk!==!op){u._lk=!op;u.el.classList.toggle("lk",!op)}}
+  const c=$("trCnt");if(c)setT(c,"🔓 "+open+"/"+TRAIN.length)}
+ for(const T of TRAIN){const u=trUI.cards[T.id];if(!u||!u._sh)continue;const l=train[T.id]||0,mx=T.max&&l>=T.max,cost=trainCost(T,l),v=Math.round(l*T.per*10)/10,unit=T.u==="ps"?t("perSec"):T.u===""?"":"%";
   setT(u.lvl,l+(T.max?"/"+T.max:""));setT(u.nw,t("now")+": "+(T.neg?"−":"+")+v+unit);
-  if(mx){u.buy.style.display="none";u.ok.style.display="block";setT(u.ok,t("maxed"))}
-  else{u.ok.style.display="none";u.buy.style.display="";setH(u.buy,cIc()+" "+cost);u.buy.disabled=P.gold<cost}}
- {const b=$("trAll");if(b){let mc=1e18;for(const T of TRAIN){const l=train[T.id]||0;if(T.max&&l>=T.max)continue;const c=trainCost(T,l);if(c<mc)mc=c}
-  setH(b,cIc()+" "+t("buyAll"));b.disabled=P.gold<mc;const i=$("trAllInfo");if(i)setT(i,mc<1e18?t("cheapest")+": "+mc:"")}}
+  if(u._lk){u.ok.style.display="none";u.buy.style.display="";setH(u.buy,"🔒 "+trN(T.prev)+" · "+t("lv")+" "+T.req);u.buy.disabled=true}
+  else if(mx){u.buy.style.display="none";u.ok.style.display="block";setT(u.ok,t("maxed"))}
+  else{u.ok.style.display="none";u.buy.style.display="";setH(u.buy,cIc()+" "+fmtC(cost));u.buy.disabled=P.gold<cost}}
+ {const b=$("trAll");if(b){let mc=1e18;for(const T of TRAIN){const l=train[T.id]||0;if(T.max&&l>=T.max||!trOpen(T))continue;const c=trainCost(T,l);if(c<mc)mc=c}
+  setH(b,cIc()+" "+t("buyAll"));b.disabled=P.gold<mc;const i=$("trAllInfo");if(i)setT(i,mc<1e18?t("cheapest")+": "+fmtC(mc):"")}}
 }
 /* Buy all: always takes the cheapest affordable upgrade first, again and again, until the gold runs out */
 function buyAllTrain(){let n=0,spent=0;const old=P.maxhp;
- for(let g=0;g<4000;g++){let best=null,bc=1e18;for(const T of TRAIN){const l=train[T.id]||0;if(T.max&&l>=T.max)continue;const c=trainCost(T,l);if(c<bc){bc=c;best=T}}
+ for(let g=0;g<4000;g++){let best=null,bc=1e18;for(const T of TRAIN){const l=train[T.id]||0;if(T.max&&l>=T.max||!trOpen(T))continue;const c=trainCost(T,l);if(c<bc){bc=c;best=T}}
   if(!best||bc>P.gold)break;P.gold-=bc;spent+=bc;train[best.id]=(train[best.id]||0)+1;n++}
  if(!n){toast(t("buyAllNone"));SFX.buzz();return}
  recalc();P.hp=Math.min(P.maxhp,P.hp+Math.max(0,P.maxhp-old));SFX.buy();toast(t("buyAllDone",{n:n,g:spent}));save();statChips();renderTrain();renderTInfo();hud()}
 $("trAll").onclick=buyAllTrain;
-function buyTrain(id){const T=TRAIN.find(x=>x.id===id),l=train[id]||0;if(T.max&&l>=T.max)return;const cost=trainCost(T,l);if(P.gold<cost){toast(t("need"));SFX.buzz();return}
+function buyTrain(id){const T=TRAIN.find(x=>x.id===id),l=train[id]||0;if(T.max&&l>=T.max||!trOpen(T))return;const cost=trainCost(T,l);if(P.gold<cost){toast(t("need"));SFX.buzz();return}
  P.gold-=cost;const old=P.maxhp;train[id]=l+1;recalc();P.hp=Math.min(P.maxhp,P.hp+Math.max(0,P.maxhp-old));SFX.buy();save();statChips();renderTrain();renderTInfo();hud()}
 document.querySelectorAll(".tab[data-tab]").forEach(b=>b.addEventListener("click",()=>{SFX.tab();document.querySelectorAll(".tab[data-tab]").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll(".tpane").forEach(x=>x.classList.toggle("on",x.id===b.dataset.tab))}));
 /* ---- inventory ---- */
