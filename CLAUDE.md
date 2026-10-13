@@ -8,3 +8,4 @@
 - When work is done: commit, push, open a PR, merge it into `main`, and give the link where the branch can be deleted.
 - Do not publish the game on Netlify: the owner asked to take it down.
 - Every wearable item must have its own custom look (icon, hero doll and first-person arms). New items get it through `itemLook()`: colours from the words in the name, an emblem, a pattern and a shape twist.
+  Each armour piece also gets its own build from `lkV()` (second hash of the look): chest plate, collar, belt, hem, shoulder studs, helmet crest, knuckles, knee guards, cloak collar, and parts on the first-person forearm.
