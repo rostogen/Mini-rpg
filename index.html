@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.13-b",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.13-c",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -17,12 +17,12 @@ if(m){if(m[1]==="0")del("r2_boot");else s("r2_boot",m[1])}
 function add(x){if(B.err.length<30)B.err.push(String(x).slice(0,160))}
 W.addEventListener("error",function(e){var t=e.target;if(t&&t!==W&&(t.src||t.href))add("blocked: "+String(t.src||t.href).replace(/^https?:\/\//,"").slice(0,80));else add((e.message||"error")+(e.lineno?" (line "+e.lineno+")":""))},true);
 W.addEventListener("unhandledrejection",function(e){var r=e.reason;add("promise: "+(r&&r.message||r))});
-var TX={ /* uk|en|fr|de|zh|es|it|pl|pt|ja|ko|tr|id|hi|vi|th|nl */
+var TX={ /* uk|en|fr|de|zh|es|it|pl|pt|ja|ko|tr|id|hi|vi|th|nl|ar|bn|fil */
 slow:"Гра довго вантажиться|The game is taking long to load|Le jeu met du temps à charger|Das Spiel lädt lange|游戏加载时间过长|El juego tarda en cargar|Il gioco ci mette a caricare|Gra długo się wczytuje|O jogo está demorando para carregar|ゲームの読み込みに時間がかかっています|게임을 불러오는 데 오래 걸립니다|Oyunun yüklenmesi uzun sürüyor|Game memuat cukup lama|गेम को लोड होने में काफ़ी समय लग रहा है|Trò chơi tải hơi lâu|เกมโหลดนานเกินไป|Het spel laadt lang",
 retry:"Спробувати знову|Try again|Réessayer|Erneut versuchen|重试|Reintentar|Riprova|Spróbuj ponownie|Tentar novamente|もう一度試す|다시 시도|Tekrar dene|Coba lagi|फिर से कोशिश करें|Thử lại|ลองอีกครั้ง|Opnieuw proberen",
 no3d:"Запустити без 3D|Start without 3D|Démarrer sans 3D|Ohne 3D starten|不使用3D启动|Iniciar sin 3D|Avvia senza 3D|Uruchom bez 3D|Iniciar sem 3D|3Dなしで開始|3D 없이 시작|3D olmadan başlat|Mulai tanpa 3D|बिना 3D के शुरू करें|Chơi không có 3D|เริ่มแบบไม่มี 3D|Starten zonder 3D",
 reset:"Скинути налаштування|Reset settings|Réinitialiser les réglages|Einstellungen zurücksetzen|重置设置|Restablecer ajustes|Ripristina impostazioni|Zresetuj ustawienia|Redefinir configurações|設定をリセット|설정 초기화|Ayarları sıfırla|Reset pengaturan|सेटिंग्स रीसेट करें|Đặt lại cài đặt|รีเซ็ตการตั้งค่า|Instellingen herstellen"};
-var CODES="uk,en,fr,de,zh,es,it,pl,pt,ja,ko,tr,id,hi,vi,th,nl".split(",");
+var CODES="uk,en,fr,de,zh,es,it,pl,pt,ja,ko,tr,id,hi,vi,th,nl,ar,bn,fil".split(",");
 function tr(k){var l=null,a=TX[k].split("|"),i;try{l=JSON.parse(g("r2_lang"))}catch(e){}i=CODES.indexOf(l);return a[i<0?0:i]||a[1]}
 function gfxS(){try{return JSON.parse(g("r2_set")).gfx||"auto"}catch(e){return "auto"}}
 function r3(){try{return "ok="+R3.ok+" fail="+R3.failed+" load="+R3.loading}catch(e){return "n/a"}}
@@ -621,7 +621,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="evTint" id="evTint"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.12-a</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.13-c</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -783,7 +783,7 @@ const $=id=>document.getElementById(id);
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
 /* ============ TEXT ============ */
-const LANGS=[["uk","Українська"],["en","English"],["fr","Français"],["de","Deutsch"],["zh","中文"],["es","Español"],["it","Italiano"],["pl","Polski"],["pt","Português"],["ja","日本語"],["ko","한국어"],["tr","Türkçe"],["id","Bahasa Indonesia"],["hi","हिन्दी"],["vi","Tiếng Việt"],["th","ไทย"],["nl","Nederlands"]];
+const LANGS=[["uk","Українська"],["en","English"],["fr","Français"],["de","Deutsch"],["zh","中文"],["es","Español"],["it","Italiano"],["pl","Polski"],["pt","Português"],["ja","日本語"],["ko","한국어"],["tr","Türkçe"],["id","Bahasa Indonesia"],["hi","हिन्दी"],["vi","Tiếng Việt"],["th","ไทย"],["nl","Nederlands"],["ar","العربية"],["bn","বাংলা"],["fil","Filipino"]];
 const S8=s=>s.split("|");
 const T8src={
 lv:"Рів.|Lv.|Niv.|St.|等级|Nv.|Liv.|Poz.|Nv.|Lv.|Lv.|Sv.|Lv.|स्तर|Cấp|เลเวล|Niv.",
@@ -6466,7 +6466,7 @@ function selCard(){try{const r=document.createRange();r.selectNodeContents($("do
 $("nickOk").onclick=()=>{nickname=$("nickIn").value.trim().slice(0,18);save();hud();toast(t("saved"))};
 $("nickIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("nickOk").click()});
 $("langSel").innerHTML=LANGS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
-const FLAG={uk:"🇺🇦",en:"🇬🇧",fr:"🇫🇷",de:"🇩🇪",zh:"🇨🇳",es:"🇪🇸",it:"🇮🇹",pl:"🇵🇱",pt:"🇵🇹",ja:"🇯🇵",ko:"🇰🇷",tr:"🇹🇷",id:"🇮🇩",hi:"🇮🇳",vi:"🇻🇳",th:"🇹🇭",nl:"🇳🇱"};
+const FLAG={uk:"🇺🇦",en:"🇬🇧",fr:"🇫🇷",de:"🇩🇪",zh:"🇨🇳",es:"🇪🇸",it:"🇮🇹",pl:"🇵🇱",pt:"🇵🇹",ja:"🇯🇵",ko:"🇰🇷",tr:"🇹🇷",id:"🇮🇩",hi:"🇮🇳",vi:"🇻🇳",th:"🇹🇭",nl:"🇳🇱",ar:"🇸🇦",bn:"🇧🇩",fil:"🇵🇭"};
 function fillPickers(){const ln=LANGS.find(x=>x[0]===lang)||LANGS[0];$("langB").innerHTML=`<span class="fl">${FLAG[ln[0]]||"🌐"}</span><span>${ln[1]}</span><i>›</i>`;
  const md=gfxMode();$("gfxT").innerHTML=[["lo","🔋","gfxLoN","gfxLoD",1],["hi","✨","gfxHiN","gfxHiD",2],["ultra","💎","gfxUlN","gfxUlD",3]].map(([k,ic,n,d,q])=>`<button type="button" class="gt g${k}${k===md?" on":""}" data-g="${k}"><span class="gi">${ic}</span><b>${t(n)}</b><small>${t(d)}</small><span class="gq">${[1,2,3].map(j=>`<u class="${j<=q?"f":""}"></u>`).join("")}</span></button>`).join("");
  $("lgrid").innerHTML=LANGS.map(([k,n])=>`<button type="button" data-l="${k}" class="${k===lang?"on":""}"><span class="fl">${FLAG[k]||"🌐"}</span>${n}</button>`).join("")}
@@ -6560,7 +6560,10 @@ const EMO=(()=>{
   IN:F(R(0,0,30,6.7,"#ff9933")+R(0,6.7,30,6.7,"#fff")+R(0,13.4,30,6.6,"#138808")+`<circle cx="15" cy="10" r="2.6" fill="none" stroke="#000080" stroke-width=".7"/><path d="M15 7.4v5.2M12.4 10h5.2M13.2 8.2l3.6 3.6M16.8 8.2l-3.6 3.6" stroke="#000080" stroke-width=".4"/>`),
   VN:F(R(0,0,30,20,"#da251d")+`<path d="${sp(15,10,5.6,2.2,-Math.PI/2)}" fill="#ffff00"/>`),
   TH:F(R(0,0,30,20,"#a51931")+R(0,3.33,30,13.34,"#f4f5f8")+R(0,6.67,30,6.66,"#2d2a4a")),
-  NL:F(R(0,0,30,6.7,"#ae1c28")+R(0,6.7,30,6.7,"#fff")+R(0,13.4,30,6.6,"#21468b"))},
+  NL:F(R(0,0,30,6.7,"#ae1c28")+R(0,6.7,30,6.7,"#fff")+R(0,13.4,30,6.6,"#21468b")),
+  SA:F(R(0,0,30,20,"#006c35")+`<path d="M8 8.4c1.2-1.6 2.4.8 3.6-.6s2.2.6 3.4-.6 2.2.8 3.6-.4 2 .6 3.4-.2" fill="none" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/><path d="M8.4 13.2h12.6l1.6-.9" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round"/>`),
+  BD:F(R(0,0,30,20,"#006a4e")+`<circle cx="13.4" cy="10" r="5.4" fill="#f42a41"/>`),
+  PH:F(R(0,0,30,10,"#0038a8")+R(0,10,30,10,"#ce1126")+`<path d="M0 0L14.6 10L0 20Z" fill="#fff"/><circle cx="5.2" cy="10" r="2.1" fill="#fcd116"/>`+[[1.8,2.8],[1.8,17.2],[11.4,10]].map(([x,y])=>`<path d="${sp(x,y,1.1,.45,-Math.PI/2)}" fill="#fcd116"/>`).join(""))},
   M={"🪙":"coin","🔒":"lock","🔨":"hammer","⚔":"swords","❤":"heart","💚":"heartG","💛":"heartY","💓":"heartP","🎒":"bag","🛡":"shield","✨":"spark","🗡":"sword","🍀":"clover","💰":"money","🌳":"tree","🎲":"dice","📖":"book","⛶":"full","⚡":"bolt","🔥":"flame","💎":"gem","👹":"oni","👑":"crown","🌐":"globe","📋":"clip","👁":"eye","⏳":"glass","🔄":"refresh","🔋":"batt","▶":"play","🪖":"helm","👢":"boot","💍":"ring","📿":"beads","🧤":"glove","🧥":"coat","🔮":"orb","💥":"burst"};
  return{I,FL,M}})();
 const EMO_RE=new RegExp("(?:[\\u{1F1E6}-\\u{1F1FF}]{2}|"+Object.keys(EMO.M).sort((a,b)=>b.length-a.length).join("|")+")\\uFE0F?","gu");
