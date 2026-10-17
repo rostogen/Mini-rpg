@@ -11,3 +11,5 @@
   Each armour piece also gets its own build from `lkV()` (second hash of the look): chest plate, collar, belt, hem, shoulder studs, helmet crest, knuckles, knee guards, cloak collar, and parts on the first-person forearm.
 - Rarities (0-12): common … ancient one, eternal (10, red), shadow (11, black with a violet edge, `dark:true`, text class `shd`), heavenly (12, rainbow, `rainbow:true`).
   Enemy tiers use the same names (`TL`, `RARM`). New enemies get their own motion with `fx`/`fxc` (see `fx3()`): halo, orbs, wings, rays, prism, shards, void, smoke, embers, dust, flicker.
+- Swords live only in the forge: `eq.weapon` is the sword in hand, `forge.owned` keeps the other bought swords; buying equips at once. Swords never drop (`DROP_SL` skips the weapon slot).
+- The inventory's weapon place is the Spirit (slot 10, `SLOTI.spirit`): drawings in `IA[10]`, shown on the doll (`dlSpirit`), in first person (`vmSpirit`) and in 2D; it shoots nearby enemies by itself (`spiritTick`, projectile `sbolt`, stat `spPow`).
