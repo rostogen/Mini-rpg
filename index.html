@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.13-d",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.17-a",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -154,6 +154,17 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 @keyframes paneIn{from{opacity:0;transform:translateY(8px)}}
 .modal.on .trc{animation:tileIn .4s ease-out backwards}
 @media (prefers-reduced-motion:reduce){.pHero,.pHero::before,.phS span,.set .pacts .btn,.set .pacts .btn.main::after,.set .row,.tpane.on,.trc,.buf{animation:none!important}}
+.dollStk{position:absolute;inset:0;z-index:2;pointer-events:none}.dollStk .dollSvg{pointer-events:auto}.dollStk .dlL{pointer-events:none}
+.dollBob{position:absolute;inset:0;animation:dBob2 3s ease-in-out infinite;will-change:transform}@keyframes dBob2{50%{transform:translateY(-1.2%)}}
+.dollStk .dHero,.dollStk .dFm,.dollStk .dEye,.dollStk .dRb,.dollStk .dTw,.dollStk .dRel{animation:none!important}
+.cell.r5,.slot.r5,.cell.r6,.slot.r6,.cell.r7,.slot.r7,.cell.r8,.slot.r8,.cell.r9,.slot.r9,.cell.r10,.slot.r10,.cell.r11,.slot.r11,.cell.r12,.slot.r12{animation:none}
+.cell,.slot{position:relative}
+.cell.r5::after,.slot.r5::after,.cell.r6::after,.slot.r6::after,.cell.r7::after,.slot.r7::after,.cell.r8::after,.slot.r8::after,.cell.r9::after,.slot.r9::after,.cell.r10::after,.slot.r10::after,.cell.r11::after,.slot.r11::after,.cell.r12::after,.slot.r12::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:0 0 16px 1px var(--gl,var(--rc));opacity:.3;animation:cGlow 1.6s ease-in-out infinite;will-change:opacity}
+.cell.r8::after,.slot.r8::after{--gl:#ff2a2a}.cell.r9::after,.slot.r9::after{--gl:#c2a272;animation-duration:3.2s}
+@keyframes cGlow{50%{opacity:1}}
+/* fast graphics (default on phones): menus keep only the cheap motion */
+body[data-gfx=lo] .dSp{display:none}body[data-gfx=lo] .dAura{animation:none!important}body[data-gfx=lo] .cell::after,body[data-gfx=lo] .slot::after{animation:none;opacity:.7}body[data-gfx=lo] .cell .nw{animation:none}body[data-gfx=lo] .dEmb{display:none}
+@media (prefers-reduced-motion:reduce){.dollBob,.cell::after,.slot::after{animation:none!important}}
 .bufs{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;max-width:190px}
 .buf{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:2px;min-width:26px;height:24px;padding:0 5px;border-radius:9px;background:rgba(12,7,13,.82);border:1.5px solid var(--c);box-shadow:0 0 9px var(--c),inset 0 0 6px var(--c);font-size:13px;line-height:1;animation:bufIn .45s cubic-bezier(.2,1.7,.4,1)}
 .buf i{font-style:normal;font-size:10px;font-weight:800;color:#fff}
@@ -621,7 +632,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="evTint" id="evTint"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.13-d</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.17-a</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -748,7 +759,7 @@ body[data-gfx="hi"] .vig{display:block}
     <div class="row"><div><b data-i="stickL">Стік повертає камеру</b><div class="m" data-i="stickHint"></div></div><button class="btn" id="stickB">✕</button></div>
     <div class="row"><b data-i="resetL">Прогрес</b><button class="btn warn" id="resetB" data-i="reset">Скинути прогрес</button></div>
     <p class="ctrlText" data-i="ctrl"></p>
-    <div class="donate"><div><b>💛 <span data-i="donate">Підтримати автора</span></b><div class="m"><span data-i="donateBank">монобанк</span> · <span class="card" id="donCard">4441114438533190</span></div></div><button class="btn" id="donCopy">📋 <span data-i="copy">Копіювати</span></button></div>
+    <div class="donate"><div><b>💛 <span data-i="donate">Підтримати автора</span></b><div class="m"><span class="card" id="donCard">4441114438533190</span></div></div><button class="btn" id="donCopy">📋 <span data-i="copy">Копіювати</span></button></div>
   </div></div>
 
   <div class="pop" id="langPop"><div class="popIn"><div class="shead"><h2 data-i="langPick">Обери мову</h2><button class="x" id="langX" type="button" aria-label="✕">✕</button></div><div class="lgrid" id="lgrid"></div></div></div>
@@ -1982,10 +1993,10 @@ SECT.forEach((S,i)=>{S.nodes.push(...[[[["atk",44]],[["critDmg",60]],[["dmgMul",
  [[["lightningBonus",160]],[["chain",1]],[["lightningBonus",180]],[["boltCd",10]],[["lightningBonus",200]],[["chain",1]],[["lightningBonus",220]],[["boltCd",10]],[["lightningBonus",260]],[["chain",1]],[["lightningBonus",500],["chain",4],["boltCd",15]]],
  [[["fireBonus",160]],[["fireRad",30]],[["burnDmg",100]],[["fireBonus",180]],[["blazeBonus",70]],[["fireBonus",200]],[["fireCd",10]],[["burnDmg",110]],[["blazeBonus",80]],[["fireBonus",240]],[["fireBonus",500],["blazeBonus",200],["burnDmg",200],["fireCd",15],["fireRad",40]]]][i])});
 [S8("Меч Вічності|Sword of Eternity|Épée de l'éternité|Schwert der Ewigkeit|永恒之剑|Espada de la eternidad|Spada dell'eternità|Miecz Wieczności|Espada da Eternidade|永遠の剣|영원의 검|Sonsuzluk Kılıcı|Pedang Keabadian|अनंतता की तलवार|Thanh kiếm vĩnh hằng|ดาบแห่งนิรันดร์|Zwaard van de eeuwigheid|سيف الأبدية|অনন্তকালের তরবারি|Espada ng Kawalang-hanggan"),S8("Егіда Вічності|Aegis of Eternity|Égide de l'éternité|Aigis der Ewigkeit|永恒神盾|Égida de la eternidad|Egida dell'eternità|Egida Wieczności|Égide da Eternidade|永遠のイージス|영원의 이지스|Sonsuzluk Kalkanı|Aegis Keabadian|अनंतता की ढाल|Khiên vĩnh hằng|โล่แห่งนิรันดร์|Aegis van de eeuwigheid|إيجيس الأبدية|অনন্তকালের ইজিস|Aegis ng Kawalang-hanggan"),S8("Дерево Життя|Tree of Life|Arbre de vie|Baum des Lebens|生命之树|Árbol de la vida|Albero della vita|Drzewo Życia|Árvore da Vida|生命の樹|생명의 나무|Hayat Ağacı|Pohon Kehidupan|जीवन वृक्ष|Cây sự sống|ต้นไม้แห่งชีวิต|Levensboom|شجرة الحياة|জীবনবৃক্ষ|Puno ng Buhay"),S8("Скарбниця Всесвіту|Treasury of the Cosmos|Trésor du cosmos|Schatzkammer des Kosmos|宇宙宝库|Tesoro del cosmos|Tesoro del cosmo|Skarbiec Kosmosu|Tesouro do Cosmos|宇宙の宝物庫|우주의 보고|Kozmos Hazinesi|Perbendaharaan Kosmos|ब्रह्मांड का ख़ज़ाना|Kho báu vũ trụ|คลังสมบัติจักรวาล|Schatkamer van de kosmos|خزانة الكون|মহাবিশ্বের ভান্ডার|Kabang-yaman ng Kosmos"),S8("Король Блискавок|King of Lightning|Roi de la foudre|König des Blitzes|雷霆之王|Rey del rayo|Re del fulmine|Król Błyskawic|Rei do Raio|雷の王|번개의 왕|Yıldırım Kralı|Raja Petir|बिजली का राजा|Vua sấm sét|ราชาแห่งสายฟ้า|Koning van de bliksem|ملك البرق|বজ্রের রাজা|Hari ng Kidlat"),S8("Серце Сонця|Heart of the Sun|Cœur du soleil|Herz der Sonne|太阳之心|Corazón del sol|Cuore del sole|Serce Słońca|Coração do Sol|太陽の心臓|태양의 심장|Güneşin Kalbi|Jantung Matahari|सूर्य का हृदय|Trái tim mặt trời|หัวใจแห่งดวงอาทิตย์|Hart van de zon|قلب الشمس|সূর্যের হৃদয়|Puso ng Araw")].forEach((c,i)=>SECT[i].cap5=c);
-const RING_R=[96,168,240,312,384,452,524,596,668,740,812,880,952,1024,1096,1172,1248,1324,1400,1476,1552,1628,1704,1780,1856,1932,2008,2084],RING_N=[1,2,3,3,2,1,2,3,3,3,2,1,2,3,3,1,2,3,3,3,2,3,1,2,3,3,2,1],RING_COST=[60,110,180,280,420,700,1000,1400,1900,2500,3300,5000,7000,9500,12500,20000,26000,34000,44000,56000,72000,92000,150000,200000,260000,340000,440000,600000];
+const RING_R=[96,168,240,312,384,452,524,596,668,740,812,880,952,1024,1096,1172,1248,1324,1400,1476,1552,1628,1704,1780,1856,1932,2008,2084],RING_N=[1,2,3,3,2,1,2,3,3,3,2,1,2,3,3,1,2,3,3,3,2,3,1,2,3,3,2,1],RING_COST=[30,50,80,120,170,260,360,480,620,800,1000,1400,1800,2300,2900,4200,5200,6400,7800,9400,11500,14000,20000,25000,31000,38000,46000,60000];
 const LINKP=[null,[[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0,1],[1,2]],[[0,1]],[[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0],[1],[2]],[[0,1],[1,2]],[[0,1]],[[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0,1,2]],[[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0],[1],[2]],[[0,1],[1,2]],[[0],[0,1],[1]],[[0,1,2]],[[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0,1],[1,2]],[[0,1]]];
 /* ring 28-35: 21 more nodes per branch (the tree grows to 500), the last one is the sixth capstone */
-RING_R.push(2160,2236,2312,2388,2464,2540,2616,2700);RING_N.push(2,3,3,3,3,3,3,1);RING_COST.push(780000,1000000,1300000,1700000,2200000,2900000,3800000,5200000);
+RING_R.push(2160,2236,2312,2388,2464,2540,2616,2700);RING_N.push(2,3,3,3,3,3,3,1);RING_COST.push(72000,86000,102000,120000,140000,165000,195000,260000);
 LINKP.push([[0],[0]],[[0],[0,1],[1]],[[0],[1],[2]],[[0],[1],[2]],[[0],[1],[2]],[[0],[1],[2]],[[0],[1],[2]],[[0,1,2]]);
 SECT.forEach((S,i)=>{S.nodes.push(...[[[["atk",65]],[["critDmg",90]],[["dmgMul",45]],[["atkSpd",8]],[["bossDmg",45]],[["atk",70]],[["execute",35]],[["crit",4]],[["heavyBonus",70]],[["spinBonus",70]],[["atk",80]],[["critDmg",100]],[["dmgMul",50]],[["opener",40]],[["reach",5]],[["atk",90]],[["bossDmg",50]],[["critDmg",120]],[["dmgMul",60]],[["atk",100]],[["dmgMul",150],["atk",200],["critDmg",200],["bossDmg",80],["crit",8]]],
  [[["maxhp",300]],[["armor",32]],[["maxhpPct",9]],[["thorns",70]],[["armorPct",12]],[["evade",3]],[["maxhp",340]],[["dmgRed",3]],[["armor",36]],[["shieldCd",10]],[["maxhpPct",10]],[["thorns",80]],[["maxhp",380]],[["armorPct",14]],[["armor",40]],[["dodgeCd",10]],[["maxhp",420]],[["maxhpPct",12]],[["thorns",90]],[["armor",45]],[["maxhpPct",25],["armorPct",20],["maxhp",800],["armor",60],["evade",5]]],
@@ -2081,12 +2092,12 @@ const RAR=[
  {k:"rare",col:"#4f9dff",w:100,mul:1.55,ns:2,n:S8("Рідкісна|Rare|Rare|Selten|稀有|Raro|Raro|Rzadki|Raro|レア|희귀|Nadir|Langka|दुर्लभ|Hiếm|หายาก|Zeldzaam|نادر|বিরল|Bihira")},
  {k:"epic",col:"#b36bff",w:38,mul:1.95,ns:3,n:S8("Епічна|Epic|Épique|Episch|史诗|Épico|Epico|Epicki|Épico|エピック|에픽|Destansı|Epik|एपिक|Sử thi|มหากาพย์|Episch|ملحمي|মহাকাব্যিক|Epiko")},
  {k:"legendary",col:"#ffb03a",w:10,mul:2.5,ns:4,n:S8("Легендарна|Legendary|Légendaire|Legendär|传说|Legendario|Leggendario|Legendarny|Lendário|レジェンダリー|전설|Efsanevi|Legendaris|लेजेंडरी|Huyền thoại|ตำนาน|Legendarisch|أسطوري|কিংবদন্তি|Maalamat")},
- {k:"mythic",col:"#ff4d6d",w:5,mul:3.3,ns:5,n:S8("Міфічна|Mythic|Mythique|Mythisch|神话|Mítico|Mitico|Mityczny|Mítico|ミシック|신화|Mitik|Mitos|मिथिक|Thần thoại|เทพนิยาย|Mythisch|خرافي|পৌরাণিক|Mitiko")},
- {k:"ancient",col:"#2ff0c8",w:1.8,mul:4.3,ns:6,n:S8("Стародавня|Ancient|Ancestral|Uralt|远古|Ancestral|Ancestrale|Pradawny|Ancestral|エンシェント|고대|Kadim|Kuno|प्राचीन|Cổ xưa|โบราณ|Oeroud|عتيق|প্রাচীন|Sinauna")},
- {k:"divine",col:"#fff1a0",w:.6,mul:5.6,ns:7,n:S8("Божественна|Divine|Divin|Göttlich|神圣|Divino|Divino|Boski|Divino|ディバイン|신성|İlahi|Ilahi|दिव्य|Thần thánh|ศักดิ์สิทธิ์|Goddelijk|إلهي|ঐশ্বরিক|Banal")},
- {k:"eclipse",col:"#ff2a2a",w:.22,mul:7.2,ns:8,n:S8("Затемнення|Eclipse|Éclipse|Finsternis|日蚀|Eclipse|Eclissi|Zaćmienie|Eclipse|エクリプス|일식|Tutulma|Gerhana|ग्रहण|Nhật thực|สุริยุปราคา|Verduistering|كسوف|গ্রহণ|Eklipse")},
- {k:"ancientone",col:"#c2a272",w:.08,mul:9.5,ns:9,n:S8("Предвічна|Ancient One|Primordial|Urahn|太古|Primigenio|Primordiale|Prastary|Primordial|エンシェントワン|태초의 존재|Ezeli Olan|Sang Purba|आदिदेव|Cổ Thần|ผู้ดึกดำบรรพ์|Oerwezen|أزلي|অনাদি|Primordyal")},
- {k:"eternal",get col(){return rbCol()},rainbow:true,w:.03,mul:12.5,ns:10,n:S8("Вічна|Eternal|Éternelle|Ewig|永恒|Eterna|Eterna|Wieczna|Eterna|エターナル|영원|Ebedi|Abadi|अनंत|Vĩnh hằng|นิรันดร์|Eeuwig|أبدي|চিরন্তন|Walang Hanggan")}
+ {k:"mythic",col:"#ff4d6d",w:2.4,mul:3.3,ns:5,n:S8("Міфічна|Mythic|Mythique|Mythisch|神话|Mítico|Mitico|Mityczny|Mítico|ミシック|신화|Mitik|Mitos|मिथिक|Thần thoại|เทพนิยาย|Mythisch|خرافي|পৌরাণিক|Mitiko")},
+ {k:"ancient",col:"#2ff0c8",w:.65,mul:4.3,ns:6,n:S8("Стародавня|Ancient|Ancestral|Uralt|远古|Ancestral|Ancestrale|Pradawny|Ancestral|エンシェント|고대|Kadim|Kuno|प्राचीन|Cổ xưa|โบราณ|Oeroud|عتيق|প্রাচীন|Sinauna")},
+ {k:"divine",col:"#fff1a0",w:.18,mul:5.6,ns:7,n:S8("Божественна|Divine|Divin|Göttlich|神圣|Divino|Divino|Boski|Divino|ディバイン|신성|İlahi|Ilahi|दिव्य|Thần thánh|ศักดิ์สิทธิ์|Goddelijk|إلهي|ঐশ্বরিক|Banal")},
+ {k:"eclipse",col:"#ff2a2a",w:.05,mul:7.2,ns:8,n:S8("Затемнення|Eclipse|Éclipse|Finsternis|日蚀|Eclipse|Eclissi|Zaćmienie|Eclipse|エクリプス|일식|Tutulma|Gerhana|ग्रहण|Nhật thực|สุริยุปราคา|Verduistering|كسوف|গ্রহণ|Eklipse")},
+ {k:"ancientone",col:"#c2a272",w:.015,mul:9.5,ns:9,n:S8("Предвічна|Ancient One|Primordial|Urahn|太古|Primigenio|Primordiale|Prastary|Primordial|エンシェントワン|태초의 존재|Ezeli Olan|Sang Purba|आदिदेव|Cổ Thần|ผู้ดึกดำบรรพ์|Oerwezen|أزلي|অনাদি|Primordyal")},
+ {k:"eternal",get col(){return rbCol()},rainbow:true,w:.0045,mul:12.5,ns:10,n:S8("Вічна|Eternal|Éternelle|Ewig|永恒|Eterna|Eterna|Wieczna|Eterna|エターナル|영원|Ebedi|Abadi|अनंत|Vĩnh hằng|นิรันดร์|Eeuwig|أبدي|চিরন্তন|Walang Hanggan")}
 ];
 const RAR_EP=[[S8("{n} дороги|{n} of the Road|{n} de la route|{n} der Straße|旅途{n}|{n} del camino|{n} della strada|{n} drogi|{n} da estrada|旅路の{n}|길의 {n}|Yol {n}|{n} Jalanan|राह {n}|{n} của Con Đường|{n}แห่งถนน|{n} van de weg|{n} الطريق|পথের {n}|{n} ng Daan"),S8("{n} дощу|{n} of Rain|{n} de pluie|{n} des Regens|雨之{n}|{n} de lluvia|{n} della pioggia|{n} deszczu|{n} da chuva|雨の{n}|비의 {n}|Yağmur {n}|{n} Hujan|बारिश {n}|{n} của Mưa|{n}แห่งสายฝน|{n} van de regen|{n} المطر|বৃষ্টির {n}|{n} ng Ulan"),S8("{n} вогнища|{n} of the Hearth|{n} du foyer|{n} des Herdes|炉火{n}|{n} del hogar|{n} del focolare|{n} ogniska|{n} da lareira|炉辺の{n}|화롯가의 {n}|Ocak {n}|{n} Perapian|चूल्हा {n}|{n} của Bếp Lửa|{n}แห่งเตาผิง|{n} van de haard|{n} الموقد|উনুনের {n}|{n} ng Apuyan"),S8("{n} селища|{n} of the Village|{n} du village|{n} des Dorfes|村落{n}|{n} de la aldea|{n} del villaggio|{n} wioski|{n} da aldeia|村の{n}|마을의 {n}|Köy {n}|{n} Desa|गाँव {n}|{n} của Làng Quê|{n}แห่งหมู่บ้าน|{n} van het dorp|{n} القرية|গ্রামের {n}|{n} ng Nayon"),S8("{n} ополченця|{n} of the Militia|{n} de la milice|{n} der Miliz|民兵{n}|{n} de la milicia|{n} della milizia|{n} milicji|{n} da milícia|民兵の{n}|민병대의 {n}|Milis {n}|{n} Milisi|मिलिशिया {n}|{n} của Dân Quân|{n}แห่งทหารอาสา|{n} van de militie|{n} الميليشيا|মিলিশিয়ার {n}|{n} ng Milisya")],
 [S8("{n} лиса|{n} of the Fox|{n} du renard|{n} des Fuchses|狐之{n}|{n} del zorro|{n} della volpe|{n} lisa|{n} da raposa|狐の{n}|여우의 {n}|Tilki {n}|{n} Rubah|लोमड़ी {n}|{n} của Cáo|{n}แห่งจิ้งจอก|{n} van de vos|{n} الثعلب|শেয়ালের {n}|{n} ng Soro"),S8("{n} дуба|{n} of Oak|{n} du chêne|{n} der Eiche|橡木{n}|{n} del roble|{n} della quercia|{n} dębu|{n} do carvalho|樫の{n}|참나무의 {n}|Meşe {n}|{n} Pohon Ek|बलूत {n}|{n} của Cây Sồi|{n}แห่งต้นโอ๊ก|{n} van eik|{n} البلوط|ওকের {n}|{n} ng Roble"),S8("{n} полювання|{n} of the Hunt|{n} de la chasse|{n} der Jagd|狩猎{n}|{n} de la caza|{n} della caccia|{n} łowów|{n} da caçada|狩りの{n}|사냥의 {n}|Av {n}|{n} Perburuan|शिकार {n}|{n} của Cuộc Săn|{n}แห่งการล่า|{n} van de jacht|{n} الصيد|শিকারের {n}|{n} ng Pangangaso"),S8("{n} вітерця|{n} of the Breeze|{n} de la brise|{n} der Brise|微风{n}|{n} de la brisa|{n} della brezza|{n} bryzy|{n} da brisa|そよ風の{n}|산들바람의 {n}|Meltem {n}|{n} Angin Sepoi|समीर {n}|{n} của Làn Gió|{n}แห่งสายลม|{n} van de bries|{n} النسيم|সমীরণের {n}|{n} ng Simoy"),S8("{n} вартового|{n} of the Guard|{n} du garde|{n} der Wache|卫兵{n}|{n} del guardia|{n} della guardia|{n} strażnika|{n} da guarda|衛兵の{n}|경비병의 {n}|Muhafız {n}|{n} Penjaga|प्रहरी {n}|{n} của Lính Canh|{n}แห่งองครักษ์|{n} van de wacht|{n} الحارس|প্রহরীর {n}|{n} ng Bantay")],
@@ -2706,10 +2717,10 @@ function loadForge(){const f=LS.get(PK("r2_forge"),null),o={seed:-1,stock:[],rr:
 const ISTAT={atk:[2,.6,0,0],maxhp:[10,4,0,0],armor:[1,.25,0,0],crit:[1,.08,12,0],critDmg:[5,.6,60,0],atkSpd:[2,.12,15,0],speed:[2,.1,12,0],fireBonus:[5,.8,0,0],lightningBonus:[5,.8,0,0],healBonus:[5,.8,0,0],regen:[.3,.04,0,1],lifesteal:[.5,.04,6,1],goldBonus:[3,.3,60,0],xpBonus:[3,.3,60,0],dmgRed:[1,.06,10,0],cdr:[1,.05,8,0],thorns:[3,.3,40,0],dropBonus:[2,.15,25,0],evade:[1,.05,10,0],killHeal:[1,.15,0,0],execute:[4,.3,40,0],bossDmg:[4,.3,40,0]};
 const LUCK_MAX=50;
 const luckCost=l=>Math.round(120*(l+1)*(1+l*.22)/10)*10;
-const luckTime=l=>Math.max(5,Math.round(6*(l+1)*(1+l*.1)));
+const luckTime=l=>Math.max(4,Math.round(2.5*(l+1)*(1+l*.05)));
 const FOE_MAX=35;
 const foeCost=l=>Math.round(160*(l+1)*(1+l*.24)/10)*10;
-const foeTime=l=>Math.max(6,Math.round(7*(l+1)*(1+l*.1)));
+const foeTime=l=>Math.max(5,Math.round(3*(l+1)*(1+l*.05)));
 const BIOMES=[
  {sky:["#170914","#3b1426","#6e2434"],moon:"#f4d9c4",far:"#2a1020",far2:"#210c19",mid:"#1a0a14",near:"#10060c",ground:["#2e1b1d","#1a0f11"],stone:"#3f2a2d",accent:"#ff6a5a",fog:"rgba(170,40,60,0.16)"},
  {sky:["#080d1a","#18223c","#33405c"],moon:"#dfe8f5",far:"#1c2436",far2:"#161c2b",mid:"#121826",near:"#0a0e17",ground:["#20262a","#121619"],stone:"#2f363c",accent:"#8fb4ff",fog:"rgba(120,150,210,0.12)"},
@@ -2791,7 +2802,7 @@ loadState();
 (function migrate(){const old=LS.get("r2_bought",null);if(!session&&old&&old.length){const OC=[70,110,180,280,420];P.gold+=old.reduce((a,i)=>a+(OC[i%5]||0),0)}LS.set("r2_bought",[])})();
 let S=Object.assign({sfx:70,music:30,musicOn:false},LS.get("r2_set",{}));
 /* if the last start never finished: 2nd try = Fast graphics, 3rd try = 2D without three.js (counter is cleared once the game has really run) */
-{const n=(+LS.get("r2_boot",0)||0)+1;LS.set("r2_boot",n);BOOT.safe=n>=3?2:n===2?1:0;if(BOOT.safe&&S.gfx!=="lo"){S.gfx="lo";LS.set("r2_set",S)}}
+{const n=(+LS.get("r2_boot",0)||0)+1;LS.set("r2_boot",n);BOOT.safe=n>=6?2:n>=3?1:0;if(BOOT.safe&&S.gfx!=="lo"){S.gfx="lo";LS.set("r2_set",S)}}
 function save(){LS.set(PK("r2_hero"),{level:P.level,xp:P.xp,gold:P.gold,hp:P.hp});LS.set(PK("r2_tal"),tal);LS.set(PK("r2_train"),train);LS.set(PK("r2_kills"),kills);LS.set(PK("r2_nick"),nickname);LS.set(PK("r2_battle"),battleNo);LS.set(PK("r2_bag"),bag);LS.set(PK("r2_eq"),eq);LS.set(PK("r2_luck"),luck);LS.set(PK("r2_foe"),foe);LS.set(PK("r2_iseq"),itemSeq);LS.set(PK("r2_forge"),forge);LS.set("r2_session",session);LS.set("r2_lang",lang);LS.set("r2_set",S)}
 
 var _sh={}; // colour cache for shade(); must exist before the first recalc() runs at start-up
@@ -3225,7 +3236,7 @@ function makeEnemy(ti,boss,x,z,delay,opt){
    The Foes upgrade makes the rare tiers more likely and brings them in earlier. ---- */
 const ENEMY_BOOST=1.5;
 const TL=["common","uncommon","rare","epic","elite","mythic","ancient","divine","eclipse","ancientone","eternal"];
-const TW0=[100,50,25,12.5,6.5,5,3,1.8,1.1,.7,.45],TG=[0,0,6,14,24,30,42,56,72,90,110];
+const TW0=[100,50,25,12.5,6.5,3.6,1.9,1,.55,.3,.16],TG=[0,0,6,14,24,36,50,68,88,110,134];
 const TIERIDS=TL.map(k=>ETYPES.map((C,i)=>i).filter(i=>ETYPES[i].tier===k&&!ETYPES[i].bossOnly));
 // every rarity tier must have at least 2 enemies that live in every biome (so foes of any rarity always look at home); the closest-themed ones get the biome added
 {const GR=[[0,5,6,9,15,24],[3,15,22],[1,9,18,12],[2,12,19,23],[8,14,16,17],[1,9,16,20],[7,10,11,13,21,22,23],[12,18,19,23],[4,13,20,3],[5,7,9,24]];
@@ -3241,7 +3252,7 @@ function tierW(n,l){return TW0.map((w,k)=>{
  if(k===0)return w/(1+n/110)/(1+l*.06);
  if(k===1)return w;
  const g=TG[k]*(1-Math.min(l,FOE_MAX)*.018),r=Math.pow(clamp((n+3)/(g+3),.12,1),1.2);
- return w*r*(1+l*.2*(k-1))*(k>=5?1+l*.08*(k-4):1)})}
+ return w*r*(1+l*.16*(k-1))*(k>=5?1+l*.02*(k-4):1)})}
 function tierDist(n,l){const w=tierW(n,l),s=w.reduce((a,b)=>a+b,0);return w.map(x=>x/s)}
 const foeAny=(n,l)=>{const q=tierDist(n,l).slice(5).reduce((a,b)=>a+b,0);return 1-Math.pow(1-q,waveCnt(n))};
 function pickTier(n,l){const w=tierW(n,l);let x=Math.random()*w.reduce((a,b)=>a+b,0);for(let k=0;k<w.length;k++){x-=w[k];if(x<=0)return k}return 0}
@@ -3420,31 +3431,33 @@ function killEnemy(e,dir){
  if(e.boss){SFX.bossDie();setTimeout(()=>SFX.jackpot(),450);for(let i=0;i<60;i++)parts.push({x:e.x+rnd(-8,8),z:e.z,h:rnd(10,40),vx:rnd(-90,90),vz:rnd(-20,20),vh:rnd(120,260),g:300,life:rnd(.8,1.4),max:1.4,col:i%3?"#ffd34e":"#fff6d0",size:rnd(1.6,3.2),t:"spark"});
   hitStop=.32;shake+=10;flashA=.5;flashCol="#ffe0a0";setTimeout(()=>banner(t("bossDown"),"+"+gold+" 🪙"),300)}
 }
-function gainXP(x){P.xp+=x;let up=false;while(P.xp>=100+P.level*45){P.xp-=100+P.level*45;P.level++;recalc();P.hp=P.maxhp;up=true}
+/* XP needed for the next level: grows fast, so levels take real grinding */
+function xpNeed(L){return Math.round(100+12*Math.pow(L,2.2))}
+function gainXP(x,raw){if(!raw)x=Math.min(x,Math.ceil(xpNeed(P.level)*.5));P.xp+=x;let up=false;while(P.xp>=xpNeed(P.level)){P.xp-=xpNeed(P.level);P.level++;recalc();P.hp=P.maxhp;up=true}
  if(up){beams.push({x:hero.x,z:hero.z,life:1.6,max:1.6,col:"#ffd34e",r:18});decal("rune",hero.x,hero.z,40,1.8,"#ffd34e");setTimeout(()=>SFX.levelChoir(),200)}
  if(up){setTimeout(()=>{banner(t("levelUp",{n:P.level}),t("lvlSub"));SFX.level()},250);for(let i=0;i<34;i++)parts.push({x:hero.x+rnd(-14,14),z:hero.z,h:rnd(0,20),vx:rnd(-30,30),vz:0,vh:rnd(60,140),g:-40,life:rnd(.8,1.3),max:1.3,col:i%2?"#ffd34e":"#b59cff",size:rnd(1.5,3.2),t:"dot"});parts.push({x:hero.x,z:hero.z,h:0,life:.8,max:.8,t:"ring",col:"#ffd34e",size:14});for(let i=0;i<48;i++){const a=i*.52;parts.push({x:hero.x+Math.cos(a)*16,z:hero.z+Math.sin(a)*5,h:i*1.6,vx:-Math.sin(a)*40,vz:Math.cos(a)*14,vh:70,g:0,life:1.1,max:1.1,col:i%3?"#ffd34e":"#fff6d0",size:2.2,t:"dot"})}[0,.25,.5].forEach(d=>setTimeout(()=>parts.push({x:hero.x,z:hero.z,h:0,life:.7,max:.7,t:"ring",col:"#ffe9a0",size:10+d*20}),d*1000));save()}}
 
 /* ============ LOOT ============ */
-const goldGrow=()=>1+Math.min(3,battleNo*.03);
-const BAG_MAX=40,AS_MAX=6;let asellN=0,asellG=0,asellT=null;
+const goldGrow=()=>(1+Math.min(2,battleNo*.015))*.5;
+const BAG_MAX=150,AS_MAX=6;let asellN=0,asellG=0,asellT=null;
 function asMask(){if(S.asm==null)S.asm=S.asell!=null&&S.asell>=0?(1<<(Math.min(S.asell,AS_MAX)+1))-1:0;return S.asm|0}
 const asOn=r=>r<=AS_MAX&&!!(asMask()>>r&1);
 let loots=[],newItems=0;
-const DROP_CAP=.85;
-const dropBase=l=>.3+l*.02;
+const DROP_CAP=.4;
+const dropBase=l=>.1+l*.005;
 function dropChance(){return Math.min(DROP_CAP,dropBase(luck.lvl)*(1+P.dropBonus/100))}
 function luckLevel(){return luck.lvl+(P.rarBonus||0)}
 /* luck makes every rarer step much more likely (and plain commons rarer): each level is a big, visible jump */
-function rarWeights(minR,LLo){const LL=LLo!=null?LLo:luckLevel();return RAR.map((r,i)=>i<minR?0:i===0?r.w/(1+LL*.06):r.w*(1+LL*.5*i)*Math.pow(1+LL*.03,i*.5)*(i>=5?1+LL*.12*(i-4):1))}
+function rarWeights(minR,LLo){const LL=LLo!=null?LLo:luckLevel();return RAR.map((r,i)=>i<minR?0:i===0?r.w/(1+LL*.06):r.w*(1+LL*.4*i)*Math.pow(1+LL*.02,i*.5)*(i>=5?1+LL*.03*(i-4):1))}
 function rarProbs(minR,LL){const w=rarWeights(minR||0,LL),tot=w.reduce((a,b)=>a+b,0);return w.map(x=>x/tot)}
 function rollRarity(minR){const w=rarWeights(minR);const tot=w.reduce((a,b)=>a+b,0);let x=Math.random()*tot;for(let i=0;i<w.length;i++){x-=w[i];if(x<=0&&w[i]>0)return i}return w.length-1}
 function tryDrop(e){
- if(e.rarI&&!e.summoned&&!e.small){const rm=RARM[e.cfg.tier];spawnLoot(e,makeItem(Math.random()<Math.min(.95,(rm.sig+.15)*(1+foe.lvl*.04))?rm.i:rollRarity(2)));setTimeout(()=>spawnLoot(e,makeItem(rollRarity(1))),240);if(Math.random()<.5)setTimeout(()=>spawnLoot(e,makeItem(rollRarity(0))),480);return}
- if(e.boss){spawnLoot(e,makeItem(rollRarity(e.cfg.bossOnly?3:2)));setTimeout(()=>spawnLoot(e,makeItem(rollRarity(e.cfg.bossOnly?2:1))),260);if(e.cfg.bossOnly)setTimeout(()=>spawnLoot(e,makeItem(rollRarity(1))),520);return}
- let ch=dropChance()+({common:0,uncommon:.02,rare:.04,epic:.07,elite:.1}[e.cfg.tier]||0);
+ if(e.rarI&&!e.summoned&&!e.small){const rm=RARM[e.cfg.tier];if(Math.random()<Math.min(.6,rm.sig*(1+foe.lvl*.02)))spawnLoot(e,makeItem(rm.i));else if(Math.random()<.6)spawnLoot(e,makeItem(rollRarity(2)));return}
+ if(e.boss){spawnLoot(e,makeItem(rollRarity(e.cfg.bossOnly?3:2)));if(e.cfg.bossOnly&&Math.random()<.4)setTimeout(()=>spawnLoot(e,makeItem(rollRarity(1))),260);return}
+ let ch=dropChance()+({common:0,uncommon:.01,rare:.02,epic:.035,elite:.05}[e.cfg.tier]||0);
  if(e.summoned||e.small)ch*=.3;
  if(e.cfg.lootX){for(let i=0;i<e.cfg.lootX;i++)setTimeout(()=>spawnLoot(e,makeItem(rollRarity(i?1:2))),i*180);return}
- if(Math.random()<ch){spawnLoot(e,makeItem(rollRarity(0)));if((e.cfg.tier==="elite"||e.cfg.tier==="epic")&&Math.random()<.25)setTimeout(()=>spawnLoot(e,makeItem(rollRarity(0))),220)}
+ if(Math.random()<ch)spawnLoot(e,makeItem(rollRarity(0)))
 }
 function makeItem(r,slot,lvlOverride,armIdx){
  const si=slot!=null?slot:rint(0,SLOTS.length-1),S=SLOTS[si],R=RAR[r],lvl=lvlOverride||battleNo,st=[],used=new Set(),isA=armIdx!=null,uq=isA||Math.random()<.2,um=uq?1.1:1;
@@ -4160,32 +4173,33 @@ const gfxMode=()=>S.gfx==="lo"||S.gfx==="hi"||S.gfx==="ultra"?S.gfx:(window.matc
 const use3D=()=>R3.ok;
 const isFP=()=>use3D();
 function applyView(){stage.classList.toggle("fp",isFP())}
-const THREE_URLS=["https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","https://unpkg.com/three@0.160.0/build/three.module.min.js"];
+const THREE_URLS=["https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js","https://unpkg.com/three@0.160.0/build/three.module.min.js"];
 function load3D(){
  if(R3.ok||R3.loading||R3.failed)return;
  if(BOOT.safe===2){R3.failed=true;BOOT.err.push("3D skipped (safe mode)");return}
  R3.loading=true;let i=0;
- const next=()=>{if(i>=THREE_URLS.length){R3.loading=false;R3.failed=true;toast(t("gfxFail"));return}
+ const next=()=>{if(i>=THREE_URLS.length){if(!R3.round2){R3.round2=true;i=0;setTimeout(next,1500);return}R3.loading=false;R3.failed=true;toast(t("gfxFail"));return}
   const u=THREE_URLS[i++],j=i;let fin=false;
   /* a slow or silent server must not block the start: after 7 s try the next address */
-  const to=setTimeout(()=>{if(!fin){fin=true;BOOT.err.push("3D slow: "+u.split("/")[2]);next()}},7000);
-  import(u).then(m=>{if(fin)return;fin=true;clearTimeout(to);T3=m;R3.jsd=j===1;
+  const to=setTimeout(()=>{if(!fin){fin=true;BOOT.err.push("3D slow: "+u.split("/")[2]);next()}},R3.round2?16000:9000);
+  import(u).then(m=>{if(fin)return;fin=true;clearTimeout(to);T3=m;R3.jsd=j===1;R3.cdn=u.split("/")[2];
    try{init3D();R3.ok=true}catch(err){console.error(err);BOOT.err.push("3D: "+(err&&err.message||err));R3.failed=true;G3=null;const g=document.getElementById("gl3");if(g)g.remove();toast(t("gfxFail"))}
    R3.loading=false;try{applyGfx()}catch(err){console.error(err);BOOT.err.push("gfx: "+(err&&err.message||err))}},
    err=>{if(fin)return;fin=true;clearTimeout(to);BOOT.err.push("3D load: "+(err&&err.message||err));next()})};
  next();
 }
 /* --- adaptive resolution: keeps the frame rate near 60 by lowering the render scale when frames run long --- */
-function applyPR3(){if(!G3)return;const P=G3.perf||(G3.perf={acc:0,n:0,cool:3,good:0,scale:G3.hi?1:.8,fps:60});const base=Math.min(G3.ultra?2.5:G3.hi?2:1.15,window.devicePixelRatio||1);G3.rr.setPixelRatio(base*P.scale);resize3D()}
+function applyPR3(){if(!G3)return;const P=G3.perf||(G3.perf={acc:0,n:0,cool:3,good:0,scale:1,fps:60});const base=Math.min(G3.ultra?2.6:G3.hi?2.2:1.6,window.devicePixelRatio||1);G3.rr.setPixelRatio(base*P.scale);resize3D()}
 function perf3(dt){const P=G3.perf;if(!P)return;P.acc+=dt;P.n++;P.cool-=dt;if(P.acc<1)return;const avg=P.acc/P.n;P.fps=P.n/P.acc;P.acc=0;P.n=0;
- if(paused||document.hidden||modalOpen)return;const mn=G3.ultra?.75:G3.hi?.6:.5;
+ if(paused||document.hidden||modalOpen)return;const mn=G3.ultra?.75:G3.hi?.65:.6;
  if(avg>1/50){P.good=0;if(P.scale>mn&&P.cool<=0){P.scale=Math.max(mn,P.scale*(avg>1/30?.8:.9));P.cool=1.5;applyPR3()}}
  else if(avg<1/56){if(++P.good>=4&&P.scale<1){P.scale=Math.min(1,P.scale*1.08);P.good=0;P.cool=2;applyPR3()}}else P.good=0}
 function applyGfx(){
- if(G3){const on=use3D(),md=gfxMode(),hi=md!=="lo",ul=md==="ultra";G3.rr.domElement.style.display=on?"block":"none";G3.hi=hi;G3.sun.castShadow=hi;document.body.dataset.gfx=md;if(G3.chunks&&G3.gfxB!==md){const was=G3.gfxB;G3.gfxB=md;if(was)rebuildWorld3()}
-  const ms=ul?4096:2048;if(G3.sun.shadow.mapSize.x!==ms){G3.sun.shadow.mapSize.set(ms,ms);if(G3.sun.shadow.map){G3.sun.shadow.map.dispose();G3.sun.shadow.map=null}}
+ if(G3){const on=use3D(),md=gfxMode(),hi=md!=="lo",ul=md==="ultra";G3.rr.domElement.style.display=on?"block":"none";G3.hi=hi;G3.sun.castShadow=true;G3.rr.shadowMap.type=hi?T3.PCFSoftShadowMap:T3.PCFShadowMap;document.body.dataset.gfx=md;if(G3.chunks&&G3.gfxB!==md){const was=G3.gfxB;G3.gfxB=md;if(was)rebuildWorld3()}
+  const ms=ul?4096:hi?2048:1024;if(G3.sun.shadow.mapSize.x!==ms){G3.sun.shadow.mapSize.set(ms,ms);if(G3.sun.shadow.map){G3.sun.shadow.map.dispose();G3.sun.shadow.map=null}}
   if(G3.ultra!==ul){G3.ultra=ul;if(G3.perf)G3.perf.scale=1;if(ul)initBloom3()}applyPR3()}
  if(!R3.ok)load3D();
+ document.body.dataset.gfx=gfxMode();
  applyView();
 }
 /* --- round world: the ground bends away with distance (applied to every lit/basic material and sprites) --- */
@@ -4225,12 +4239,14 @@ function W3(o,x,z,h){o.position.set(x,(h||0)+terrH(x,z*ZS),z*ZS);return o}
 function init3D(){
  const T=T3,hi=gfxMode()!=="lo";
  curveWorld3();
- const rr=new T.WebGLRenderer({antialias:gfxMode()!=="lo",powerPreference:"high-performance"});
+ const rr=new T.WebGLRenderer({antialias:true,powerPreference:"high-performance"});
  rr.outputColorSpace=T.SRGBColorSpace;rr.toneMapping=T.ACESFilmicToneMapping;rr.toneMappingExposure=1.25;
  rr.shadowMap.enabled=true;rr.shadowMap.type=T.PCFSoftShadowMap;
  const el=rr.domElement;el.id="gl3";el.style.cssText="position:absolute;inset:0;width:100%;height:100%;display:block";
  stage.insertBefore(el,cv);
- el.addEventListener("webglcontextlost",e=>{e.preventDefault();R3.ok=false;R3.failed=true;el.style.display="none"});
+ el.addEventListener("webglcontextlost",e=>{e.preventDefault();R3.ok=false;R3.lost=true;el.style.display="none";BOOT.err.push("3D context lost");
+  clearTimeout(R3.lostT);R3.lostT=setTimeout(()=>{if(R3.lost)try{rr.forceContextRestore()}catch(_){}},2500)});
+ el.addEventListener("webglcontextrestored",()=>{R3.lost=false;R3.failed=false;R3.ok=true;el.style.display="block";try{G3.biome=-1;if(G3.chunks)rebuildWorld3();if(G3.vm){G3.vmScene.remove(G3.vm.root);G3.vm=null}}catch(err){console.error(err)}applyGfx()});
  const scene=new T.Scene(),cam=new T.PerspectiveCamera(CAM.fov,1,4,14000);
  G3={rr,scene,cam,hi,W:1,H:1,biome:-1,emap:new Map(),pmap:new Map(),lmap:new Map(),bmap:new Map(),rmap:new Map(),pools:{},chunks:new Map(),torches:[],shieldUntil:0,lastLook:null,D:800};
  const tGlow=cvTex(128,128,(g)=>{const gr=g.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,"rgba(255,255,255,1)");gr.addColorStop(.22,"rgba(255,255,255,.6)");gr.addColorStop(.55,"rgba(255,255,255,.16)");gr.addColorStop(1,"rgba(255,255,255,0)");g.fillStyle=gr;g.fillRect(0,0,128,128)});
@@ -5801,16 +5817,16 @@ function drawImpact(){if(IMP.t<=0)return;const k=1-Math.max(0,IMP.t)/IMP.max;let
  c.strokeStyle=`rgba(255,255,255,${(1-k)*.9})`;c.lineWidth=(1-k)*6*IMP.lv;c.beginPath();c.arc(sx,sy,8+k*70*IMP.lv,0,7);c.stroke();
  if(k<.35){c.fillStyle=`rgba(255,255,255,${(.35-k)*1.6})`;c.beginPath();c.arc(sx,sy,14+IMP.lv*10,0,7);c.fill()}
  c.restore()}
-let bgAcc=0; /* while a menu covers the screen the 3D world is redrawn only ~4x/s (saves battery, removes menu lag) */
+let bgAcc=0; /* while a menu covers the screen the world is redrawn only every 2 s (it is paused there): saves battery and keeps menus smooth */
 function frame(ts){
  const rdt=Math.min(1,Math.max(0,(ts-last)/1000)),dt=Math.min(.05,rdt);last=ts;realT+=dt;
  requestAnimationFrame(frame);BOOT.fr++;
  try{
- if(booting){if(R3.ok||R3.failed||realT>12||performance.now()-BOOT.t0>15000){booting=false;$("boot").classList.add("off");last=performance.now()}else return}
  if(BOOT.f<45&&++BOOT.f===45)LS.set("r2_boot",0);
+ if(booting){if(R3.ok||R3.failed||realT>12||performance.now()-BOOT.t0>15000){booting=false;$("boot").classList.add("off");last=performance.now()}else return}
  if(!paused){tNow+=dt;let g=dt;if(hitStop>0){hitStop-=dt;g=dt*.06}update(g)}
  shake*=Math.pow(.004,dt);if(shake<.2)shake=0;flashA=Math.max(0,flashA-dt*2);
- if(use3D()){bgAcc+=rdt;if(!modalOpen||modalOpen==="mBest"||bgAcc>=.22){bgAcc=0;if(G3)perf3(rdt);try{render3D(dt)}catch(err){console.error(err);if(++R3.errN>4){R3.ok=false;R3.failed=true;applyGfx();toast(t("gfxFail"))}}}}else render();
+ if(use3D()){bgAcc+=rdt;if(!modalOpen||modalOpen==="mBest"||bgAcc>=2){bgAcc=0;if(G3)perf3(rdt);try{render3D(dt);R3.okT=(R3.okT||0)+rdt;if(R3.okT>5){R3.okT=0;R3.errN=0}}catch(err){console.error(err);R3.okT=0;if(++R3.errN>6){R3.errN=0;R3.ok=false;R3.paused3=true;stage.classList.toggle("fp",false);setTimeout(()=>{if(G3&&R3.paused3&&!R3.lost){R3.paused3=false;R3.ok=true;applyGfx()}},2500)}}}}else if(!modalOpen||modalOpen==="mBest"||(bgAcc+=rdt)>=2){bgAcc=0;render()}
  {const v3=use3D();if(frame.vg!==v3){frame.vg=v3;$("vig3").style.display=v3?"block":"none"}}
  fpsTick(rdt);
  impTick(rdt);drawImpact();
@@ -5826,11 +5842,11 @@ function setW(id,p){const v=(Math.round(p*10)/10)+"%";if(_dc[id+"w"]!==v){_dc[id
 function hud(){
  {const lv=String(P.level),gd=String(P.gold);if(_dc.hLv!==undefined&&_dc.hLv!==lv)popCls($("hLv"),"popN");if(_dc.hGold!==undefined&&_dc.hGold!==gd)popCls($("hGold"),"bump")}
  setTx("hName",nickname);setTx("hLv",P.level);if(_dc.nn!==!!nickname){_dc.nn=!!nickname;$("hName").parentNode.classList.toggle("nonick",!nickname)}
- {const need=100+P.level*45;setW("xpBar",P.xp/need*100);setTx("xpTxt",Math.floor(P.xp)+" / "+need)}
+ {const need=xpNeed(P.level);setW("xpBar",P.xp/need*100);setTx("xpTxt",Math.floor(P.xp)+" / "+need)}
  setTx("hGold",P.gold);
  if(goldAcc>0&&realT-goldT>.45){goldT=realT;const el=document.createElement("span");el.className="gfly";el.textContent="+"+goldAcc+" 🪙";$("gflyW").appendChild(el);setTimeout(()=>el.remove(),1100);goldAcc=0}setTx("hWave","#"+battleNo);
  luckTick();luckLive();
- const nn=bag.filter(x=>x.nw).length,ib=$("invBdg");setTx("invBdg",nn>9?"9+":nn);ib.classList.toggle("on",nn>0);
+ const nn=bag.filter(x=>x.nw).length,ib=$("invBdg");setTx("invBdg",nn>99?"99+":nn);ib.classList.toggle("on",nn>0);
  $("luckBdg").classList.toggle("on",(!luck.until&&luck.lvl<LUCK_MAX&&P.gold>=luckCost(luck.lvl))||(!foe.until&&foe.lvl<FOE_MAX&&P.gold>=foeCost(foe.lvl)));
  const hpr=clamp((P.hp||0)/(P.maxhp||1),0,1);setW("hpBar",hpr*100);setTx("hpTxt",Math.ceil(P.hp)+" / "+P.maxhp);
  (hud.sk||(hud.sk=[...document.querySelectorAll(".sk")])).forEach(b=>{const a=b.dataset.a;if(a==="turn")return;
@@ -5846,11 +5862,12 @@ function banner(a,b){const el=$("banner");$("banT").textContent=a;$("banS").text
 let toastT=null;function toast(s,col){const el=$("toast");el.textContent=s;el.style.background=col||"";el.style.color=col?"#10080c":"";el.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),col?1900:1200)}
 /* pause menu: a hero card with the paper doll and the run so far */
 function fillPHero(){
- const d=$("phDoll");if(d)d.innerHTML=dollHTML();
+ /* the inventory doll lives in the DOM too (hidden): give this copy its own gradient/filter ids, otherwise it paints black */
+ const d=$("phDoll");if(d)d.innerHTML=dollHTML().replace(/id="([^"]+)"/g,'id="ph_$1"').replace(/url\(#([^)]+)\)/g,"url(#ph_$1)").replace(/href="#([^"]+)"/g,'href="#ph_$1"');
  $("phName").textContent=(nickname?nickname+" · ":"")+t("lv")+" "+P.level;
  const kl=Object.values(kills).reduce((a,b)=>a+b,0);
  $("phStats").innerHTML=[["🪙",P.gold],["⚔",battleNo],["💀",kl],["🌳",tal.length+"/"+TALL.length],["🎒",bag.length]].map(([i,v],k)=>`<span style="animation-delay:${.12+k*.05}s">${i} ${v}</span>`).join("");
- const need=100+P.level*45,x=$("phXp");x.style.width="0";requestAnimationFrame(()=>requestAnimationFrame(()=>{x.style.width=clamp(P.xp/need*100,0,100)+"%"}))}
+ const need=xpNeed(P.level),x=$("phXp");x.style.width="0";requestAnimationFrame(()=>requestAnimationFrame(()=>{x.style.width=clamp(P.xp/need*100,0,100)+"%"}))}
 document.querySelectorAll("#mPause .row").forEach((r,i)=>r.style.setProperty("--ri",i));
 function openModal(id){closeModal(true);modalOpen=id;paused=true;$(id).classList.add("on");attackHeld=false;joy.id=null;joy.x=joy.y=0;look.id=null;joyRest();for(const k in keys)keys[k]=false;
  if(id==="mTree")renderTree();if(id==="mBest")buildBestiary();if(id==="mPause"){fillSettings();fillPHero()}if(id==="mInv"){iSel=null;renderInv()}if(id==="mDrops")renderDrops();if(id==="mForge"){forgeCheck();renderForge()}SFX.open()}
@@ -6270,7 +6287,9 @@ function dollSvg(){
  const head=`<g transform="translate(60 68) scale(.86) translate(-60 -68)">${dlP(E.helmet,"helmet",dlHead(E.helmet))}</g>`;
  const wp=dlP(E.weapon,"weapon",dlWeapon(E.weapon,90,101));
  const jew=dlP(E.necklace,"necklace",dlNeck(E.necklace))+dlP(E.amulet,"amulet",dlAmulet(E.amulet))+dlP(E.ring,"ring",dlRing(E.ring));
- return`<svg class="dollSvg" viewBox="0 -9 120 199" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${defs}${floor}<g class="dHero">${wings}${cloakBk}<ellipse cx="60" cy="68.5" rx="5.5" ry="4.5" fill="${DL_SK2}"/>${legs}${lgs}${body}${tso}${cloakFt}${armL}${armR}${armHi}${A.pd||""}${wp}${hands}${head}${jew}</g>${dlRelic(E.relic)}${emb}</svg>`}
+ /* layered so only the small animated layers repaint: floor, wings, the static hero (with all filters) and the embers; the bob moves the layers on the GPU */
+ const VB=`viewBox="0 -9 120 199" preserveAspectRatio="xMidYMid meet" aria-hidden="true"`;
+ return`<div class="dollStk"><svg class="dollSvg dlL" ${VB}>${floor}</svg><div class="dollBob"><svg class="dollSvg dlL" ${VB}>${wings}</svg><svg class="dollSvg" ${VB}>${defs}<g class="dHero">${cloakBk}<ellipse cx="60" cy="68.5" rx="5.5" ry="4.5" fill="${DL_SK2}"/>${legs}${lgs}${body}${tso}${cloakFt}${armL}${armR}${armHi}${A.pd||""}${wp}${hands}${head}${jew}</g>${dlRelic(E.relic)}</svg><svg class="dollSvg dlL" ${VB}>${emb}</svg></div></div>`}
 let dllCache={sig:"",html:""};
 const dollHTML=()=>{const sg=dllSig();if(dllCache.sig!==sg)dllCache={sig:sg,html:dollSvg()};return dllCache.html};
 let eqFx=null;
