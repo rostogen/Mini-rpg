@@ -17,3 +17,8 @@
   At most `GEM_CAP` (200) gems a day from all sources; quests leave room for the day's reward (`qRoom`). The gem shop sells a chest (epic or better) and finishing luck/foe upgrades at once.
   Nickname: setting it and the first change are free, every later change costs `NICK_COST` (250) and needs a second tap to pay.
 - Dialogues: `say(who,text,colour,icon)` shows one typed line at a time (`#dlg`). Bosses taunt and the hero answers (`bossTalk`); the Spirit (or the treasure keeper when there is no Spirit) comments through `spSay(key)`. Lines live in `DLGsrc`.
+- The hero's own look (`HERO_BASE`, `dlArmor0/dlHand0/dlLegSide0` with no item) is a plain tunic: armour, steel bracers and plates only appear when armour or gloves are worn.
+- Forge shop: no refresh. `forge.stock[r]` holds one plain sword per rarity opened by battles (`SW_GATE`), replaced at once when bought; named blades come from `armStock`.
+- Friends work without a server: a friend code (`MRPG1.` + base64 JSON from `frMe()`) carries the profile; `frParse` reads it from any pasted text. Players on the same phone are listed too (`frLocal`).
+- What's new: add a line to `NEWS` (newest first, strings `n…` in `T8src`) with every update; it opens once by itself.
+- Resetting progress goes through the warning window `#resetPop` (button wakes after 3 s), then `doReset()`.
