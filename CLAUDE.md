@@ -13,3 +13,7 @@
   Enemy tiers use the same names (`TL`, `RARM`). New enemies get their own motion with `fx`/`fxc` (see `fx3()`): halo, orbs, wings, rays, prism, shards, void, smoke, embers, dust, flicker.
 - Swords live only in the forge: `eq.weapon` is the sword in hand, `forge.owned` keeps the other bought swords; buying equips at once. Swords never drop (`DROP_SL` skips the weapon slot).
 - The inventory's weapon place is the Spirit (slot 10, `SLOTI.spirit`): drawings in `IA[10]`, shown on the doll (`dlSpirit`), in first person (`vmSpirit`) and in 2D; it shoots nearby enemies by itself (`spiritTick`, projectile `sbolt`, stat `spPow`).
+- Gems 💎 (`gem`, saved as `r2_gems` per profile) come only from the 🎁 menu (`mDaily`, `renderDaily()`): a daily reward that grows with the streak (`dayGem`, a chest every 7th day) and daily/weekly quests (`QT`, `qMake`, progress through `qHit(kind,n)`).
+  At most `GEM_CAP` (200) gems a day from all sources; quests leave room for the day's reward (`qRoom`). The gem shop sells a chest (epic or better) and finishing luck/foe upgrades at once.
+  Nickname: setting it and the first change are free, every later change costs `NICK_COST` (250) and needs a second tap to pay.
+- Dialogues: `say(who,text,colour,icon)` shows one typed line at a time (`#dlg`). Bosses taunt and the hero answers (`bossTalk`); the Spirit (or the treasure keeper when there is no Spirit) comments through `spSay(key)`. Lines live in `DLGsrc`.
