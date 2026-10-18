@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.17-c",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.17-d",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -133,7 +133,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .phX{height:6px;border-radius:4px;background:rgba(0,0,0,.5);margin-top:9px;overflow:hidden}
 .phX i{display:block;height:100%;width:0;background:linear-gradient(90deg,#7a5cff,#d6c2ff);border-radius:4px;transition:width .9s cubic-bezier(.2,.9,.3,1);box-shadow:0 0 8px #8a6bff}
 .set .pacts{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-.set .pacts .btn{grid-column:span 2}.set .pacts .btn:nth-child(5),.set .pacts .btn:nth-child(6){grid-column:span 3}
+.set .pacts .btn{grid-column:span 2}
 .set .pacts .btn{flex-direction:column;gap:4px;padding:10px 4px 9px;min-width:0;white-space:normal;text-align:center;line-height:1.15;font-size:12.5px;transition:transform .15s,box-shadow .2s,border-color .2s;background:linear-gradient(180deg,#2e1a26,#1c1018)}
 .set .pacts .btn .pi{font-style:normal;font-size:24px;line-height:1;display:block;transition:transform .3s cubic-bezier(.2,1.6,.4,1)}
 .set .pacts .btn:hover{border-color:#8a6424;box-shadow:0 0 12px rgba(232,176,74,.25)}
@@ -512,6 +512,7 @@ body[data-gfx=lo] .cell::before,body[data-gfx=lo] .slot::before{animation:none}
 .defeat .acts{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
 .toast{position:absolute;left:50%;top:84px;transform:translate(-50%,-10px);opacity:0;background:var(--gold);color:#1a1108;padding:8px 16px;border-radius:99px;font-weight:700;transition:.22s;z-index:30;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+.toast{width:max-content;max-width:calc(100vw - 24px);white-space:normal;text-align:center}
 @media (max-width:520px){.me{width:168px}.ibs{gap:4px}.ib{width:32px;height:32px;font-size:15px;border-radius:9px}.ibl{font-size:8px}.bossbar{top:124px}.rrow{grid-template-columns:106px 1fr auto;gap:6px;font-size:13px}.rrow b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 @media (prefers-reduced-motion:reduce){.banner.show{animation-duration:2.6s;animation-name:banFade}@keyframes banFade{0%,100%{opacity:0}10%,80%{opacity:1}}}
 /* graphics: soft vignette on High (Ultra does it in the colour grade) */
@@ -556,6 +557,67 @@ body[data-gfx="hi"] .vig{display:block}
 .sk.atk.on{box-shadow:inset 0 3px 2px rgba(255,200,200,.3),inset 0 -8px 12px rgba(0,0,0,.5),0 0 0 3px rgba(0,0,0,.4),0 0 26px 2px rgba(255,77,98,.95),0 8px 20px rgba(0,0,0,.5)}
 
 /* forge */
+/* ---- gems, daily rewards, quests, dialogues ---- */
+.res .gm{color:#7fe8ff;text-shadow:0 0 8px rgba(80,220,255,.45)}
+.ib.gift{background:linear-gradient(180deg,rgba(120,48,90,.97),rgba(40,12,34,.97));border-color:rgba(255,190,120,.4)}
+.ib.gift.rdy{animation:giftW 1.6s ease-in-out infinite}
+@keyframes giftW{0%,70%,100%{transform:rotate(0)}76%{transform:rotate(-12deg) scale(1.08)}82%{transform:rotate(10deg) scale(1.08)}88%{transform:rotate(-6deg)}94%{transform:rotate(4deg)}}
+.gfly.gm{color:#8ff0ff;top:20px}
+.gsheet{width:min(720px,100%)}
+.gpane{display:none}.gpane.on{display:block;animation:gpIn .32s ease}
+@keyframes gpIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.gHead{display:flex;gap:12px;align-items:center;margin:2px 0 12px;flex-wrap:wrap}
+.gPill{font:900 20px Cinzel,Georgia,serif;color:#bff6ff;padding:6px 16px;border-radius:99px;background:radial-gradient(circle at 30% 20%,#1d6a86,#0b2230 70%);border:1px solid #4fd2f0;box-shadow:0 0 18px -4px #3fd0ff,inset 0 1px 0 rgba(255,255,255,.25)}
+.gPill.bump{animation:gBump .5s cubic-bezier(.2,1.8,.4,1)}@keyframes gBump{40%{transform:scale(1.18)}}
+.gCap{flex:1;min-width:170px;font-size:12.5px;color:var(--muted);font-weight:700}
+.gCapB{height:7px;border-radius:5px;background:rgba(0,0,0,.5);margin-top:5px;overflow:hidden;border:1px solid var(--line)}
+.gCapB i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2fb8e8,#a8f4ff);box-shadow:0 0 8px #3fd0ff;transition:width .6s cubic-bezier(.2,.9,.3,1)}
+.tab .tdot{display:none;width:8px;height:8px;border-radius:50%;background:#4fd67a;margin-left:6px;vertical-align:middle;box-shadow:0 0 6px #4fd67a}.tab .tdot.on{display:inline-block}
+.kpr{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.kprI{flex:none;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:32px;font-style:normal;background:radial-gradient(circle at 40% 30%,#5a3a6e,#1c1022 72%);border:2px solid #b98cff;box-shadow:0 0 16px -2px #9a6bff;animation:kprB 2.4s ease-in-out infinite}
+@keyframes kprB{50%{transform:translateY(-4px) rotate(-3deg)}}
+.kprB{position:relative;flex:1;background:#1b111c;border:1px solid #5a3a6e;border-radius:12px;padding:9px 12px}
+.kprB::before{content:"";position:absolute;left:-7px;top:20px;width:12px;height:12px;background:#1b111c;border-left:1px solid #5a3a6e;border-bottom:1px solid #5a3a6e;transform:rotate(45deg)}
+.kprB b{color:#d9c2ff;font-size:13px}.kprB p{margin:3px 0 0;font-size:13.5px;line-height:1.4;color:#eadff0}
+.streak{font-weight:800;color:#ffb86a;margin:0 0 8px;font-size:14px}
+.dlad{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-bottom:12px}
+@media (max-width:620px){.dlad{grid-template-columns:repeat(4,1fr)}}
+.dday{position:relative;text-align:center;border-radius:12px;padding:9px 4px 8px;background:linear-gradient(180deg,#24161f,#140c13);border:1px solid var(--line);animation:tileIn .45s cubic-bezier(.2,1.5,.4,1) backwards;animation-delay:calc(var(--i)*45ms)}
+.dday small{display:block;font-size:10.5px;color:var(--muted);font-weight:800;white-space:nowrap}
+.dday b{display:block;font:900 15px system-ui,sans-serif;color:#9feeff;margin-top:3px}
+.dday em{display:block;font-style:normal;font-size:10px;color:#ffd98a;margin-top:2px;font-weight:800}
+.dday.big{background:linear-gradient(180deg,#3a1f48,#1a0d22);border-color:#8a5cc8}
+.dday.got{opacity:.55}.dday.got .ck{position:absolute;right:5px;top:3px;font-style:normal;color:#6bf0ae;font-weight:900}
+.dday.now{border-color:#ffd24a;box-shadow:0 0 0 1px #ffd24a,0 0 18px -3px #ffc23a;animation:tileIn .45s cubic-bezier(.2,1.5,.4,1) backwards,dNow 1.4s ease-in-out infinite alternate;animation-delay:calc(var(--i)*45ms),0s}
+@keyframes dNow{to{box-shadow:0 0 0 1px #ffe48a,0 0 26px -2px #ffd24a;transform:translateY(-2px)}}
+.dday.just{animation:dJust .7s cubic-bezier(.2,1.7,.4,1)}@keyframes dJust{0%{transform:scale(1.25);filter:brightness(2)}}
+.gNext{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px;border-radius:12px;background:#120b12;border:1px solid var(--line)}
+.gOk{color:#6bf0ae;font-weight:800}
+.gWarn{color:#ffb070;font-size:12.5px;font-weight:700;margin:6px 0 0}
+.qh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:12px 0 6px}.qh .h3{margin:0}.qh span{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap}
+.qc{display:flex;gap:10px;align-items:center;padding:9px 10px;border-radius:12px;background:#140c14;border:1px solid var(--line);margin-bottom:7px;animation:tileIn .45s cubic-bezier(.2,1.5,.4,1) backwards;animation-delay:calc(var(--i)*60ms)}
+.qc.rdy{border-color:#4fd67a;box-shadow:0 0 14px -6px #4fd67a}.qc.fin{opacity:.55}
+.qi{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:20px;background:#221522;border:1px solid var(--line)}
+.qm{flex:1;min-width:0}.qm b{display:block;font-size:13.5px;line-height:1.25}
+.qbar{position:relative;height:15px;border-radius:8px;background:rgba(0,0,0,.5);margin-top:5px;overflow:hidden;border:1px solid #2c1a26}
+.qbar i{display:block;height:100%;background:linear-gradient(90deg,#7a3cff,#c79cff);transition:width .5s}.qc.rdy .qbar i,.qc.fin .qbar i{background:linear-gradient(90deg,#2f9a5e,#6bf0ae)}
+.qbar span{position:absolute;inset:0;text-align:center;font:800 10.5px/15px system-ui,sans-serif;color:#fff;text-shadow:0 1px 2px #000}
+.qr{flex:none;text-align:right}.qg{font-weight:900;color:#9feeff;white-space:nowrap}
+.gsc{display:flex;gap:12px;align-items:center;padding:11px 12px;border-radius:12px;background:linear-gradient(180deg,#1d121c,#120b12);border:1px solid var(--line);margin-bottom:8px;animation:tileIn .45s cubic-bezier(.2,1.5,.4,1) backwards;animation-delay:calc(var(--i)*60ms)}
+.gsI{flex:none;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:24px;background:radial-gradient(circle,#3a2346,#150b18);border:1px solid #5a3a6e}
+.gsM{flex:1;min-width:0}.gsM b{font-size:14px}.gsc .btn{flex:none;white-space:nowrap}
+.gLast{margin-top:4px;font-size:12.5px;font-weight:800}
+@media (max-width:520px){.gsc{flex-wrap:wrap}.gsM{flex:1 1 60%}.gsc .btn{flex:1 1 100%}}
+.gpop{position:fixed;z-index:60;pointer-events:none;font-size:18px;animation:gPop .9s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes gPop{0%{transform:translate(0,0) scale(.4);opacity:0}20%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1.1);opacity:0}}
+.nkc{color:#9feeff}
+.dlg{position:absolute;left:50%;top:142px;transform:translate(-50%,-10px) scale(.96);width:min(460px,74vw);display:flex;gap:10px;align-items:center;padding:8px 14px 9px 9px;border-radius:14px;background:linear-gradient(180deg,rgba(34,19,32,.95),rgba(14,8,14,.95));border:1px solid var(--dc,#d6a24a);box-shadow:0 8px 24px rgba(0,0,0,.6),0 0 18px -6px var(--dc,#d6a24a);z-index:7;pointer-events:none;opacity:0;transition:opacity .3s,transform .35s cubic-bezier(.2,1.5,.4,1)}
+.dlg.on{opacity:1;transform:translate(-50%,0) scale(1)}
+.dlgI{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:21px;font-style:normal;background:radial-gradient(circle at 40% 35%,rgba(255,255,255,.18),rgba(0,0,0,.5) 70%);border:2px solid var(--dc,#d6a24a);animation:kprB 1.6s ease-in-out infinite}
+.dlgM{min-width:0}.dlgM b{display:block;font:800 11.5px system-ui,sans-serif;color:var(--dc,#d6a24a);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dlgM p{margin:2px 0 0;font-size:14px;line-height:1.3;color:#f3e9ee;min-height:18px}
+@media (max-width:520px){.dlg{top:172px;width:90vw}}
+@media (prefers-reduced-motion:reduce){.dlgI,.kprI,.ib.gift.rdy,.dday.now{animation:none}}
 .fgGold{display:flex;justify-content:flex-end;font-weight:800;color:#ffd98a;margin:-2px 0 8px;font-size:15px}
 .fpane{display:none}.fpane.on{display:block}
 .fgBtns{display:flex;gap:6px;margin-top:auto}.fgBtns .btn{flex:1 1 auto;padding:8px 6px;font-size:12px}.fgBtns .fgBuy{flex:1.2}.fgTag{display:inline-block;margin-left:4px;padding:0 6px;border-radius:99px;font-size:10.5px;font-weight:800;background:#241a22;color:var(--muted)}.fgTag.up{background:#12301f;color:#6bf0ae}.fgTag.dn{background:#331619;color:#ff8a8a}.fgJump{display:flex;gap:8px;margin:0 0 6px}.fgJump .chip{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#120b12;color:var(--muted);font-weight:700;font-size:12.5px}.fgJump .chip:active{background:#1c1220}
@@ -640,7 +702,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="evTint" id="evTint"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.17-a</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.17-d</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -649,8 +711,9 @@ body[data-gfx="hi"] .vig{display:block}
       <div class="bufs" id="bufs"></div>
     </div>
     <div class="rightHud">
-      <div class="plate res"><span class="g">🪙 <b id="hGold">0</b></span><span>⚔ <b id="hWave">#1</b></span></div>
+      <div class="plate res"><span class="g">🪙 <b id="hGold">0</b></span><span class="gm">💎 <b id="hGem">0</b></span><span>⚔ <b id="hWave">#1</b></span></div>
       <div class="ibs">
+        <button class="ib gift" id="bDaily" data-tk="hbDaily">🎁<i class="bdg dot" id="dayBdg"></i><small class="ibl" data-i="hbDaily">Нагороди</small></button>
         <button class="ib" id="bTree" data-tk="tree">🌳<small class="ibl" data-i="hbTree">Навички</small></button>
         <button class="ib" id="bForge" data-tk="forge">🔨<small class="ibl" data-i="hbForge">Кузня</small></button>
         <button class="ib" id="bInv" data-tk="inv">🎒<i class="bdg" id="invBdg"></i><small class="ibl" data-i="hbInv">Речі</small></button>
@@ -666,6 +729,7 @@ body[data-gfx="hi"] .vig{display:block}
   <div class="banner" id="banner"><h1 id="banT"></h1><p id="banS"></p></div>
   <div class="mapFx" id="mapFx"><div class="mfCard"><small id="mfSub"></small><b id="mfName"></b><i></i></div></div>
   <div class="toast" id="toast"></div>
+  <div class="dlg" id="dlg" aria-live="polite"><i class="dlgI" id="dlgI"></i><div class="dlgM"><b id="dlgN"></b><p id="dlgT"></p></div></div>
   <div class="cine" id="cine"><i></i><i></i></div><div class="gflyW" id="gflyW"></div>
   <div class="ttip" id="ttip"></div>
 
@@ -743,6 +807,15 @@ body[data-gfx="hi"] .vig{display:block}
     <div class="fpane" id="fgB"><div id="fgS"></div></div>
   </div></div>
 
+  <div class="modal" id="mDaily"><div class="sheet gsheet">
+    <div class="shead"><h2>🎁 <span data-i="hbDaily"></span></h2><button class="x" data-close aria-label="✕">✕</button></div>
+    <div class="gHead"><div class="gPill">💎 <b id="gmN">0</b></div><div class="gCap"><span id="gmToday"></span><div class="gCapB"><i id="gmCapI"></i></div></div></div>
+    <div class="tabs"><button class="tab gtab on" type="button" data-gt="gDay"><span data-i="tDaily"></span><i class="tdot" id="gtD"></i></button><button class="tab gtab" type="button" data-gt="gQ"><span data-i="tQuests"></span><i class="tdot" id="gtQ"></i></button><button class="tab gtab" type="button" data-gt="gShop" data-i="tGemShop"></button></div>
+    <div class="gpane on" id="gDay"></div>
+    <div class="gpane" id="gQ"></div>
+    <div class="gpane" id="gShop"></div>
+  </div></div>
+
   <div class="modal" id="mDrops"><div class="sheet">
     <div class="shead"><h2 data-i="drops">Шанси дропу</h2><button class="x" data-close aria-label="✕">✕</button></div>
     <div class="tabs"><button class="tab dtab on" data-dt="dChance" data-i="tabChance"></button><button class="tab dtab" data-dt="dLuck" data-i="tabLuck"></button><button class="tab dtab" data-dt="dFoe" data-i="tabFoes"></button></div>
@@ -754,10 +827,10 @@ body[data-gfx="hi"] .vig{display:block}
   <div class="modal" id="mPause"><div class="sheet set">
     <div class="shead"><h2 data-i="pause">Пауза</h2><button class="x" data-close aria-label="Закрити">✕</button></div>
     <div class="pHero" id="pHero"><div class="phD" id="phDoll"></div><div class="phI"><b id="phName"></b><div class="phS" id="phStats"></div><div class="phX"><i id="phXp"></i></div></div></div>
-    <div class="pacts"><button class="btn main" data-close data-i="resume">▶ Продовжити</button><button class="btn" id="pTree"></button><button class="btn" id="pInv"></button><button class="btn" id="pDrops"></button><button class="btn" id="pBest"></button><button class="btn" id="pForge"></button></div>
+    <div class="pacts"><button class="btn main" data-close data-i="resume">▶ Продовжити</button><button class="btn" id="pTree"></button><button class="btn" id="pInv"></button><button class="btn" id="pDrops"></button><button class="btn" id="pBest"></button><button class="btn" id="pForge"></button><button class="btn" id="pDaily"></button></div>
     <h3 class="h3" data-i="settings">Налаштування</h3>
     <div class="row"><div><b data-i="acc">Акаунт</b><div class="m" id="accWho"></div></div><div class="accb" id="accBtns"></div></div>
-    <div class="row"><div><b data-i="nick">Нікнейм</b><div class="m" data-i="nickHint">Показується над героєм</div></div><div><input id="nickIn" class="inp" maxlength="18" placeholder="…"> <button class="btn" id="nickOk" data-i="save">Зберегти</button></div></div>
+    <div class="row"><div><b data-i="nick">Нікнейм</b><div class="m" data-i="nickHint">Показується над героєм</div><div class="m nkc" id="nickCostM"></div></div><div><input id="nickIn" class="inp" maxlength="18" placeholder="…"> <button class="btn" id="nickOk" data-i="save">Зберегти</button></div></div>
     <div class="row"><b data-i="lang">Мова</b><button class="pickB" id="langB" type="button"></button><select id="langSel" class="sel" hidden></select></div>
     <div class="row"><b data-i="sfx">Звукові ефекти</b><input id="sfxR" class="rng" type="range" min="0" max="100"></div>
     <div class="row"><b data-i="music">Гучність музики</b><input id="musR" class="rng" type="range" min="0" max="100"></div>
@@ -1019,9 +1092,78 @@ fgShopHint2:"Мечі живуть тут, не в сумці. Купив — і
 fgNoSword2:"Ще немає меча. Купи його тут, у кузні, — він вдягнеться сам.|No sword yet. Buy one here in the forge and it equips itself.|Pas encore d'épée. Achète-en une ici, à la forge : elle s'équipe toute seule.|Noch kein Schwert. Kauf eins hier in der Schmiede, es wird von selbst angelegt.|还没有剑。在锻造坊这里买一把，会自动装备。|Aún no tienes espada. Compra una aquí en la forja y se equipará sola.|Ancora nessuna spada. Comprane una qui in fucina e si equipaggia da sola.|Nie masz jeszcze miecza. Kup go tutaj, w kuźni, a założy się sam.|Ainda sem espada. Compre uma aqui na forja e ela se equipa sozinha.|まだ剣がない。この鍛冶場で買えば自動で装備されるよ。|아직 검이 없어요. 여기 대장간에서 사면 자동으로 장착돼요.|Henüz kılıç yok. Burada, demircide bir tane al; kendiliğinden kuşanılır.|Belum ada pedang. Beli di bengkel ini, nanti terpasang otomatis.|अभी तलवार नहीं है। यहीं भट्टी में खरीदो, वह खुद पहन ली जाएगी।|Chưa có kiếm. Mua ngay tại lò rèn này, kiếm sẽ tự trang bị.|ยังไม่มีดาบ ซื้อที่โรงตีเหล็กนี้แล้วจะสวมให้อัตโนมัติ|Nog geen zwaard. Koop er hier in de smidse een, dan wordt het vanzelf uitgerust.|لا سيف بعد. اشترِ واحدًا هنا في الحدادة وسيُجهَّز تلقائيًا.|এখনও তলোয়ার নেই। এই কামারশালাতেই কেনো, নিজে থেকেই পরে নেবে।|Wala pang espada. Bumili rito sa pandayan at kusa itong maisusuot.",
 swLocked:"🔒 Нові мечі відкриються з бою {n}|🔒 New swords unlock at battle {n}|🔒 De nouvelles épées dès le combat {n}|🔒 Neue Schwerter ab Kampf {n}|🔒 第 {n} 场战斗解锁新剑|🔒 Nuevas espadas desde la batalla {n}|🔒 Nuove spade dalla battaglia {n}|🔒 Nowe miecze od bitwy {n}|🔒 Novas espadas a partir da batalha {n}|🔒 新しい剣はバトル {n} から|🔒 {n}번째 전투부터 새 검 해금|🔒 Yeni kılıçlar {n}. savaşta açılır|🔒 Pedang baru terbuka di pertempuran {n}|🔒 नई तलवारें लड़ाई {n} से खुलेंगी|🔒 Kiếm mới mở từ trận {n}|🔒 ดาบใหม่ปลดล็อกที่การต่อสู้ {n}|🔒 Nieuwe zwaarden vanaf gevecht {n}|🔒 سيوف جديدة من المعركة {n}|🔒 নতুন তলোয়ার খুলবে লড়াই {n} থেকে|🔒 Bagong espada mula sa laban {n}",
 swSell:"Продати · 🪙 {n}|Sell · 🪙 {n}|Vendre · 🪙 {n}|Verkaufen · 🪙 {n}|出售 · 🪙 {n}|Vender · 🪙 {n}|Vendi · 🪙 {n}|Sprzedaj · 🪙 {n}|Vender · 🪙 {n}|売る · 🪙 {n}|판매 · 🪙 {n}|Sat · 🪙 {n}|Jual · 🪙 {n}|बेचो · 🪙 {n}|Bán · 🪙 {n}|ขาย · 🪙 {n}|Verkopen · 🪙 {n}|بيع · 🪙 {n}|বিক্রি · 🪙 {n}|Ibenta · 🪙 {n}",
-spShot:"✨ Сам стріляє у ворогів поруч кожні {n} с|✨ Shoots nearby enemies by itself every {n} s|✨ Tire seul sur les ennemis proches toutes les {n} s|✨ Schießt alle {n} s von selbst auf nahe Gegner|✨ 每 {n} 秒自动攻击附近的敌人|✨ Dispara solo a enemigos cercanos cada {n} s|✨ Colpisce da solo i nemici vicini ogni {n} s|✨ Sam strzela do pobliskich wrogów co {n} s|✨ Atira sozinho nos inimigos próximos a cada {n} s|✨ {n}秒ごとに近くの敵を自動で攻撃|✨ {n}초마다 가까운 적을 스스로 공격|✨ Her {n} sn'de yakındaki düşmanlara kendi ateş eder|✨ Menembak musuh terdekat sendiri setiap {n} dtk|✨ हर {n} सेकंड में पास के दुश्मनों पर खुद वार करता है|✨ Tự bắn kẻ thù gần mỗi {n} giây|✨ ยิงศัตรูใกล้ ๆ เองทุก {n} วินาที|✨ Schiet elke {n} s vanzelf op vijanden in de buurt|✨ يطلق بنفسه على الأعداء القريبين كل {n} ث|✨ প্রতি {n} সেকেন্ডে নিজে থেকেই কাছের শত্রুকে আঘাত করে|✨ Kusang tumitira sa malalapit na kalaban bawat {n} s"
+spShot:"✨ Сам стріляє у ворогів поруч кожні {n} с|✨ Shoots nearby enemies by itself every {n} s|✨ Tire seul sur les ennemis proches toutes les {n} s|✨ Schießt alle {n} s von selbst auf nahe Gegner|✨ 每 {n} 秒自动攻击附近的敌人|✨ Dispara solo a enemigos cercanos cada {n} s|✨ Colpisce da solo i nemici vicini ogni {n} s|✨ Sam strzela do pobliskich wrogów co {n} s|✨ Atira sozinho nos inimigos próximos a cada {n} s|✨ {n}秒ごとに近くの敵を自動で攻撃|✨ {n}초마다 가까운 적을 스스로 공격|✨ Her {n} sn'de yakındaki düşmanlara kendi ateş eder|✨ Menembak musuh terdekat sendiri setiap {n} dtk|✨ हर {n} सेकंड में पास के दुश्मनों पर खुद वार करता है|✨ Tự bắn kẻ thù gần mỗi {n} giây|✨ ยิงศัตรูใกล้ ๆ เองทุก {n} วินาที|✨ Schiet elke {n} s vanzelf op vijanden in de buurt|✨ يطلق بنفسه على الأعداء القريبين كل {n} ث|✨ প্রতি {n} সেকেন্ডে নিজে থেকেই কাছের শত্রুকে আঘাত করে|✨ Kusang tumitira sa malalapit na kalaban bawat {n} s",
+hbDaily:"Нагороди|Rewards|Récompenses|Belohnungen|奖励|Premios|Premi|Nagrody|Prêmios|報酬|보상|Ödüller|Hadiah|इनाम|Phần thưởng|รางวัล|Beloningen|المكافآت|পুরস্কার|Gantimpala",
+gems:"Геми|Gems|Gemmes|Edelsteine|宝石|Gemas|Gemme|Klejnoty|Gemas|ジェム|보석|Mücevherler|Permata|रत्न|Đá quý|อัญมณี|Edelstenen|جواهر|রত্ন|Hiyas",
+tDaily:"Щодня|Daily|Chaque jour|Täglich|每日|Diario|Ogni giorno|Codziennie|Diário|毎日|매일|Günlük|Harian|रोज़ाना|Hằng ngày|รายวัน|Dagelijks|يومي|প্রতিদিন|Araw-araw",
+tQuests:"Квести|Quests|Quêtes|Quests|任务|Misiones|Missioni|Zadania|Missões|クエスト|퀘스트|Görevler|Misi|क्वेस्ट|Nhiệm vụ|เควสต์|Opdrachten|المهام|কোয়েস্ট|Mga Misyon",
+tGemShop:"Магазин|Shop|Boutique|Laden|商店|Tienda|Negozio|Sklep|Loja|ショップ|상점|Mağaza|Toko|दुकान|Cửa hàng|ร้านค้า|Winkel|المتجر|দোকান|Tindahan",
+keeper:"Хранитель скарбів|Keeper of Treasures|Gardien des trésors|Hüter der Schätze|宝藏守护者|Guardián de tesoros|Custode dei tesori|Strażnik skarbów|Guardião dos tesouros|宝の番人|보물 관리인|Hazine Bekçisi|Penjaga Harta|ख़ज़ाने का रखवाला|Người giữ kho báu|ผู้พิทักษ์สมบัติ|Hoeder der schatten|حارس الكنوز|ধনভাণ্ডারের রক্ষক|Tagapag-ingat ng Kayamanan",
+keeperHi:"Повертайся щодня — і нагорода росте, аж до 💎200 на день. Пропустиш день — серія почнеться спочатку.|Come back every day and the reward grows, up to 💎200 a day. Miss a day and the streak starts over.|Reviens chaque jour et la récompense grandit, jusqu'à 💎200 par jour. Rate un jour et la série recommence.|Komm jeden Tag wieder und die Belohnung wächst, bis zu 💎200 am Tag. Verpasst du einen Tag, beginnt die Serie von vorn.|每天回来，奖励就会增长，最多每天 💎200。错过一天，连续记录从头开始。|Vuelve cada día y el premio crece, hasta 💎200 al día. Si faltas un día, la racha empieza de nuevo.|Torna ogni giorno e il premio cresce, fino a 💎200 al giorno. Salti un giorno e la serie ricomincia.|Wracaj codziennie, a nagroda rośnie, aż do 💎200 dziennie. Opuścisz dzień, a seria zacznie się od nowa.|Volte todo dia e o prêmio cresce, até 💎200 por dia. Perdeu um dia, a sequência recomeça.|毎日戻ってくれば報酬が増える。1日最大💎200。1日休むと連続記録は最初から。|매일 돌아오면 보상이 커져요. 하루 최대 💎200. 하루 빠지면 연속 기록이 처음부터 시작돼요.|Her gün gel, ödül büyüsün; günde en fazla 💎200. Bir gün kaçırırsan seri baştan başlar.|Kembali setiap hari dan hadiah makin besar, sampai 💎200 sehari. Lewatkan sehari, rangkaian mulai dari awal.|रोज़ लौटो और इनाम बढ़ता जाएगा, दिन में 💎200 तक। एक दिन छोड़ा तो सिलसिला फिर से शुरू।|Quay lại mỗi ngày, phần thưởng sẽ tăng, tối đa 💎200 một ngày. Bỏ một ngày là chuỗi bắt đầu lại.|กลับมาทุกวัน รางวัลจะเพิ่มขึ้น สูงสุด 💎200 ต่อวัน ถ้าพลาดหนึ่งวัน สถิติต่อเนื่องจะเริ่มใหม่|Kom elke dag terug en de beloning groeit, tot 💎200 per dag. Mis je een dag, dan begint de reeks opnieuw.|عُد كل يوم وستكبر المكافأة حتى 💎200 في اليوم. إن فوّتَّ يومًا تبدأ السلسلة من جديد.|প্রতিদিন ফিরে এসো, পুরস্কার বাড়বে, দিনে 💎200 পর্যন্ত। একদিন বাদ দিলে ধারা আবার শুরু হবে।|Bumalik araw-araw at lalaki ang gantimpala, hanggang 💎200 bawat araw. Lumiban ng isang araw at magsisimula ulit ang sunod-sunod.",
+dayN:"День {n}|Day {n}|Jour {n}|Tag {n}|第 {n} 天|Día {n}|Giorno {n}|Dzień {n}|Dia {n}|{n}日目|{n}일차|{n}. Gün|Hari {n}|दिन {n}|Ngày {n}|วันที่ {n}|Dag {n}|اليوم {n}|দিন {n}|Araw {n}",
+streak:"Серія: {n} дн.|Streak: {n} days|Série : {n} jours|Serie: {n} Tage|连续：{n} 天|Racha: {n} días|Serie: {n} giorni|Seria: {n} dni|Sequência: {n} dias|連続：{n}日|연속: {n}일|Seri: {n} gün|Rangkaian: {n} hari|सिलसिला: {n} दिन|Chuỗi: {n} ngày|ต่อเนื่อง: {n} วัน|Reeks: {n} dagen|السلسلة: {n} أيام|ধারা: {n} দিন|Sunod-sunod: {n} araw",
+claim:"Забрати|Claim|Récupérer|Abholen|领取|Reclamar|Riscuoti|Odbierz|Resgatar|受け取る|받기|Al|Klaim|लो|Nhận|รับ|Ophalen|استلم|নাও|Kunin",
+claimed:"Забрано ✓|Claimed ✓|Récupéré ✓|Abgeholt ✓|已领取 ✓|Reclamado ✓|Riscosso ✓|Odebrano ✓|Resgatado ✓|受け取り済み ✓|받음 ✓|Alındı ✓|Diklaim ✓|ले लिया ✓|Đã nhận ✓|รับแล้ว ✓|Opgehaald ✓|تم الاستلام ✓|নেওয়া হয়েছে ✓|Nakuha na ✓",
+tomorrow:"Завтра|Tomorrow|Demain|Morgen|明天|Mañana|Domani|Jutro|Amanhã|明日|내일|Yarın|Besok|कल|Ngày mai|พรุ่งนี้|Morgen|غدًا|আগামীকাল|Bukas",
+comeBack:"Наступна нагорода через {t}|Next reward in {t}|Prochaine récompense dans {t}|Nächste Belohnung in {t}|下次奖励：{t} 后|Próximo premio en {t}|Prossimo premio tra {t}|Następna nagroda za {t}|Próximo prêmio em {t}|次の報酬まで {t}|다음 보상까지 {t}|Sonraki ödül {t} sonra|Hadiah berikutnya dalam {t}|अगला इनाम {t} में|Phần thưởng tiếp theo sau {t}|รางวัลถัดไปใน {t}|Volgende beloning over {t}|المكافأة التالية بعد {t}|পরের পুরস্কার {t} পরে|Susunod na gantimpala sa loob ng {t}",
+bonusChest:"+ скриня|+ chest|+ coffre|+ Truhe|+ 宝箱|+ cofre|+ forziere|+ skrzynia|+ baú|+ 宝箱|+ 상자|+ sandık|+ peti|+ संदूक|+ rương|+ หีบ|+ kist|+ صندوق|+ সিন্দুক|+ baul",
+qDaily:"Щоденні квести|Daily quests|Quêtes du jour|Tägliche Quests|每日任务|Misiones diarias|Missioni giornaliere|Zadania dzienne|Missões diárias|デイリークエスト|일일 퀘스트|Günlük görevler|Misi harian|दैनिक क्वेस्ट|Nhiệm vụ hằng ngày|เควสต์รายวัน|Dagelijkse opdrachten|المهام اليومية|দৈনিক কোয়েস্ট|Pang-araw-araw na misyon",
+qWeekly:"Тижневі квести|Weekly quests|Quêtes de la semaine|Wöchentliche Quests|每周任务|Misiones semanales|Missioni settimanali|Zadania tygodniowe|Missões semanais|ウィークリークエスト|주간 퀘스트|Haftalık görevler|Misi mingguan|साप्ताहिक क्वेस्ट|Nhiệm vụ hằng tuần|เควสต์รายสัปดาห์|Wekelijkse opdrachten|المهام الأسبوعية|সাপ্তাহিক কোয়েস্ট|Lingguhang misyon",
+qReset:"Нові через {t}|New in {t}|Nouvelles dans {t}|Neu in {t}|{t} 后刷新|Nuevas en {t}|Nuove tra {t}|Nowe za {t}|Novas em {t}|{t}後に更新|{t} 후 갱신|{t} sonra yenisi|Baru dalam {t}|{t} में नए|Mới sau {t}|ใหม่ใน {t}|Nieuw over {t}|جديدة بعد {t}|{t} পরে নতুন|Bago sa loob ng {t}",
+qDone:"Виконано!|Done!|Terminé !|Geschafft!|完成！|¡Hecho!|Fatto!|Gotowe!|Feito!|達成！|완료!|Tamamlandı!|Selesai!|पूरा!|Hoàn thành!|สำเร็จ!|Klaar!|تم!|সম্পন্ন!|Tapos na!",
+q_kill:"Переможи {n} ворогів|Defeat {n} enemies|Vaincs {n} ennemis|Besiege {n} Gegner|击败 {n} 个敌人|Derrota a {n} enemigos|Sconfiggi {n} nemici|Pokonaj {n} wrogów|Derrote {n} inimigos|敵を{n}体倒す|적 {n}명 처치|{n} düşman yen|Kalahkan {n} musuh|{n} दुश्मन हराओ|Hạ {n} kẻ thù|ชนะศัตรู {n} ตัว|Versla {n} vijanden|اهزم {n} من الأعداء|{n}টি শত্রু হারাও|Talunin ang {n} kalaban",
+q_win:"Виграй {n} боїв|Win {n} battles|Gagne {n} combats|Gewinne {n} Kämpfe|赢得 {n} 场战斗|Gana {n} batallas|Vinci {n} battaglie|Wygraj {n} bitew|Vença {n} batalhas|バトルに{n}回勝つ|전투 {n}회 승리|{n} savaş kazan|Menangkan {n} pertempuran|{n} लड़ाइयाँ जीतो|Thắng {n} trận|ชนะการต่อสู้ {n} ครั้ง|Win {n} gevechten|انتصر في {n} معارك|{n}টি লড়াই জেতো|Manalo sa {n} laban",
+q_loot:"Знайди {n} речей|Find {n} items|Trouve {n} objets|Finde {n} Gegenstände|找到 {n} 件物品|Encuentra {n} objetos|Trova {n} oggetti|Znajdź {n} przedmiotów|Encontre {n} itens|アイテムを{n}個見つける|아이템 {n}개 찾기|{n} eşya bul|Temukan {n} barang|{n} चीज़ें ढूँढो|Tìm {n} vật phẩm|หาไอเทม {n} ชิ้น|Vind {n} voorwerpen|اعثر على {n} من الأغراض|{n}টি জিনিস খুঁজে পাও|Maghanap ng {n} gamit",
+q_rare:"Переможи рідкісних ворогів: {n}|Rare enemies to defeat: {n}|Ennemis rares à vaincre : {n}|Seltene Gegner besiegen: {n}|击败稀有敌人：{n}|Enemigos raros a derrotar: {n}|Nemici rari da sconfiggere: {n}|Pokonaj rzadkich wrogów: {n}|Inimigos raros a derrotar: {n}|レアな敵を倒す：{n}|희귀한 적 처치: {n}|Yenilecek nadir düşman: {n}|Kalahkan musuh langka: {n}|दुर्लभ दुश्मन हराओ: {n}|Hạ kẻ thù hiếm: {n}|ชนะศัตรูหายาก: {n}|Zeldzame vijanden verslaan: {n}|الأعداء النادرون المطلوب هزيمتهم: {n}|বিরল শত্রু হারাও: {n}|Talunin ang bihirang kalaban: {n}",
+q_gold:"Збери {n} золота|Collect {n} gold|Récolte {n} pièces d'or|Sammle {n} Gold|收集 {n} 金币|Reúne {n} de oro|Raccogli {n} oro|Zbierz {n} złota|Junte {n} de ouro|ゴールドを{n}集める|골드 {n} 모으기|{n} altın topla|Kumpulkan {n} emas|{n} सोना इकट्ठा करो|Thu {n} vàng|เก็บทอง {n}|Verzamel {n} goud|اجمع {n} ذهبًا|{n} সোনা জোগাড় করো|Mangolekta ng {n} ginto",
+q_cast:"Використай уміння {n} разів|Use skills {n} times|Utilise des compétences {n} fois|Setze {n}-mal Fähigkeiten ein|使用技能 {n} 次|Usa habilidades {n} veces|Usa abilità {n} volte|Użyj umiejętności {n} razy|Use habilidades {n} vezes|スキルを{n}回使う|스킬 {n}회 사용|Yetenekleri {n} kez kullan|Gunakan skill {n} kali|कौशल {n} बार इस्तेमाल करो|Dùng kỹ năng {n} lần|ใช้สกิล {n} ครั้ง|Gebruik {n} keer vaardigheden|استخدم المهارات {n} مرات|দক্ষতা {n} বার ব্যবহার করো|Gumamit ng kakayahan nang {n} beses",
+q_chest:"Відкрий {n} скринь|Open {n} chests|Ouvre {n} coffres|Öffne {n} Truhen|打开 {n} 个宝箱|Abre {n} cofres|Apri {n} forzieri|Otwórz {n} skrzyń|Abra {n} baús|宝箱を{n}個開ける|상자 {n}개 열기|{n} sandık aç|Buka {n} peti|{n} संदूक खोलो|Mở {n} rương|เปิดหีบ {n} ใบ|Open {n} kisten|افتح {n} صناديق|{n}টি সিন্দুক খোলো|Magbukas ng {n} baul",
+q_forge:"Прокачай меч {n} разів|Upgrade your sword {n} times|Améliore ton épée {n} fois|Verbessere dein Schwert {n}-mal|强化你的剑 {n} 次|Mejora tu espada {n} veces|Potenzia la spada {n} volte|Ulepsz miecz {n} razy|Melhore sua espada {n} vezes|剣を{n}回強化する|검 {n}회 강화|Kılıcını {n} kez geliştir|Tingkatkan pedangmu {n} kali|अपनी तलवार {n} बार मज़बूत करो|Nâng cấp kiếm {n} lần|อัปเกรดดาบ {n} ครั้ง|Verbeter je zwaard {n} keer|طوّر سيفك {n} مرات|তলোয়ার {n} বার উন্নত করো|I-upgrade ang espada nang {n} beses",
+q_boss:"Переможи босів: {n}|Bosses to defeat: {n}|Boss à vaincre : {n}|Bosse besiegen: {n}|击败首领：{n}|Jefes a derrotar: {n}|Boss da sconfiggere: {n}|Pokonaj bossów: {n}|Chefes a derrotar: {n}|ボスを倒す：{n}|보스 처치: {n}|Yenilecek boss: {n}|Kalahkan bos: {n}|बॉस हराओ: {n}|Hạ trùm: {n}|ชนะบอส: {n}|Eindbazen verslaan: {n}|الزعماء المطلوب هزيمتهم: {n}|বস হারাও: {n}|Talunin ang boss: {n}",
+q_epic:"Знайди {n} речі епічної рідкості або краще|Find {n} epic or better items|Trouve {n} objets épiques ou mieux|Finde {n} epische oder bessere Gegenstände|找到 {n} 件史诗或更好的物品|Encuentra {n} objetos épicos o mejores|Trova {n} oggetti epici o migliori|Znajdź {n} epickie lub lepsze przedmioty|Encontre {n} itens épicos ou melhores|エピック以上のアイテムを{n}個見つける|에픽 이상 아이템 {n}개 찾기|{n} destansı ya da daha iyi eşya bul|Temukan {n} barang epik atau lebih|{n} एपिक या बेहतर चीज़ें ढूँढो|Tìm {n} vật phẩm sử thi trở lên|หาไอเทมมหากาพย์ขึ้นไป {n} ชิ้น|Vind {n} epische of betere voorwerpen|اعثر على {n} من الأغراض الملحمية أو أفضل|{n}টি মহাকাব্যিক বা ভালো জিনিস খুঁজে পাও|Maghanap ng {n} epikong gamit o mas mahusay",
+gemChest:"Скриня гемів|Gem chest|Coffre de gemmes|Edelsteintruhe|宝石宝箱|Cofre de gemas|Forziere di gemme|Skrzynia klejnotów|Baú de gemas|ジェムの宝箱|보석 상자|Mücevher sandığı|Peti permata|रत्न संदूक|Rương đá quý|หีบอัญมณี|Edelsteenkist|صندوق الجواهر|রত্নের সিন্দুক|Baul ng hiyas",
+gemChestD:"Одна річ: епічна або ще рідкісніша.|One item: epic or even rarer.|Un objet : épique ou encore plus rare.|Ein Gegenstand: episch oder noch seltener.|一件物品：史诗或更稀有。|Un objeto: épico o aún más raro.|Un oggetto: epico o ancora più raro.|Jeden przedmiot: epicki lub rzadszy.|Um item: épico ou ainda mais raro.|アイテム1個：エピック以上。|아이템 1개: 에픽 이상.|Bir eşya: destansı ya da daha nadir.|Satu barang: epik atau lebih langka.|एक चीज़: एपिक या उससे भी दुर्लभ।|Một vật phẩm: sử thi hoặc hiếm hơn.|ไอเทม 1 ชิ้น: มหากาพย์หรือหายากกว่า|Eén voorwerp: episch of nog zeldzamer.|غرض واحد: ملحمي أو أندر.|একটি জিনিস: মহাকাব্যিক বা আরও বিরল।|Isang gamit: epiko o mas bihira pa.",
+gemSkip:"Прискорити покращення|Finish upgrades now|Terminer les améliorations|Verbesserungen sofort fertig|立即完成升级|Terminar mejoras ya|Completa i potenziamenti|Zakończ ulepszenia teraz|Concluir melhorias agora|強化を今すぐ完了|강화 즉시 완료|Geliştirmeleri hemen bitir|Selesaikan peningkatan sekarang|सुधार अभी पूरे करो|Hoàn tất nâng cấp ngay|ทำการอัปเกรดให้เสร็จทันที|Verbeteringen nu afronden|أنهِ التحسينات الآن|উন্নতি এখনই শেষ করো|Tapusin agad ang upgrade",
+gemSkipD:"Удача і рідкісні вороги покращуються одразу, без чекання.|Luck and rare-enemy upgrades finish at once, no waiting.|Les améliorations de chance et d'ennemis rares se terminent aussitôt.|Glücks- und Seltene-Gegner-Verbesserungen sind sofort fertig.|幸运和稀有敌人的升级立即完成，无需等待。|Las mejoras de suerte y enemigos raros terminan al instante.|I potenziamenti di fortuna e nemici rari finiscono subito.|Ulepszenia szczęścia i rzadkich wrogów kończą się od razu.|As melhorias de sorte e inimigos raros terminam na hora.|運とレア敵の強化がすぐ終わる。|행운과 희귀 적 강화가 바로 끝나요.|Şans ve nadir düşman geliştirmeleri hemen biter.|Peningkatan keberuntungan dan musuh langka langsung selesai.|भाग्य और दुर्लभ दुश्मन के सुधार तुरंत पूरे।|Nâng cấp may mắn và kẻ thù hiếm xong ngay.|อัปเกรดโชคและศัตรูหายากเสร็จทันที|Geluk- en zeldzame-vijandverbeteringen zijn meteen klaar.|تكتمل تحسينات الحظ والأعداء النادرين فورًا.|ভাগ্য ও বিরল শত্রুর উন্নতি সঙ্গে সঙ্গে শেষ।|Agad matatapos ang upgrade ng suwerte at bihirang kalaban.",
+gemBuy:"Купити · 💎{n}|Buy · 💎{n}|Acheter · 💎{n}|Kaufen · 💎{n}|购买 · 💎{n}|Comprar · 💎{n}|Compra · 💎{n}|Kup · 💎{n}|Comprar · 💎{n}|購入 · 💎{n}|구매 · 💎{n}|Satın al · 💎{n}|Beli · 💎{n}|खरीदो · 💎{n}|Mua · 💎{n}|ซื้อ · 💎{n}|Kopen · 💎{n}|اشترِ · 💎{n}|কেনো · 💎{n}|Bilhin · 💎{n}",
+noSkip:"Зараз нічого не покращується.|Nothing is upgrading right now.|Rien ne s'améliore en ce moment.|Gerade wird nichts verbessert.|现在没有正在进行的升级。|Ahora no se mejora nada.|Al momento non si potenzia nulla.|Teraz nic się nie ulepsza.|Nada está melhorando agora.|今は何も強化中ではない。|지금 강화 중인 것이 없어요.|Şu an geliştirilen bir şey yok.|Saat ini tidak ada yang ditingkatkan.|अभी कुछ भी सुधर नहीं रहा।|Hiện không có gì đang nâng cấp.|ตอนนี้ไม่มีอะไรกำลังอัปเกรด|Er wordt nu niets verbeterd.|لا شيء قيد التحسين الآن.|এখন কিছুই উন্নত হচ্ছে না।|Walang ina-upgrade ngayon.",
+needGems:"Не вистачає гемів|Not enough gems|Pas assez de gemmes|Nicht genug Edelsteine|宝石不足|No tienes suficientes gemas|Gemme insufficienti|Za mało klejnotów|Gemas insuficientes|ジェムが足りない|보석이 부족해요|Yeterli mücevher yok|Permata tidak cukup|रत्न कम हैं|Không đủ đá quý|อัญมณีไม่พอ|Niet genoeg edelstenen|لا تكفي الجواهر|রত্ন যথেষ্ট নয়|Kulang ang hiyas",
+nickFree:"Ще одна зміна безкоштовна|One more change is free|Encore un changement gratuit|Noch eine Änderung gratis|还有一次免费修改|Un cambio más gratis|Ancora un cambio gratis|Jeszcze jedna zmiana za darmo|Mais uma troca grátis|あと1回は無料で変更|한 번 더 무료로 변경|Bir değişiklik daha ücretsiz|Satu perubahan lagi gratis|एक और बदलाव मुफ़्त|Còn một lần đổi miễn phí|เปลี่ยนได้ฟรีอีก 1 ครั้ง|Nog één wijziging gratis|تغيير واحد آخر مجاني|আর একবার বদল বিনামূল্যে|Isa pang libreng pagpapalit",
+nickCost:"Зміна ніка коштує 💎{n}|A name change costs 💎{n}|Changer de pseudo coûte 💎{n}|Namensänderung kostet 💎{n}|改名需要 💎{n}|Cambiar el nombre cuesta 💎{n}|Cambiare nome costa 💎{n}|Zmiana nicku kosztuje 💎{n}|Trocar o nome custa 💎{n}|名前の変更は💎{n}|닉네임 변경은 💎{n}|İsim değiştirmek 💎{n}|Ganti nama butuh 💎{n}|नाम बदलने में 💎{n} लगते हैं|Đổi tên tốn 💎{n}|เปลี่ยนชื่อใช้ 💎{n}|Naam wijzigen kost 💎{n}|تغيير الاسم يكلّف 💎{n}|নাম বদলাতে লাগে 💎{n}|Ang pagpapalit ng pangalan ay 💎{n}",
+hero:"Герой|Hero|Héros|Held|英雄|Héroe|Eroe|Bohater|Herói|勇者|영웅|Kahraman|Pahlawan|नायक|Anh hùng|ฮีโร่|Held|البطل|নায়ক|Bayani",
+gemToday:"Сьогодні зароблено: 💎{n} / {m}|Earned today: 💎{n} / {m}|Gagné aujourd'hui : 💎{n} / {m}|Heute verdient: 💎{n} / {m}|今日已获得：💎{n} / {m}|Ganado hoy: 💎{n} / {m}|Guadagnati oggi: 💎{n} / {m}|Zdobyte dziś: 💎{n} / {m}|Ganho hoje: 💎{n} / {m}|今日の獲得：💎{n} / {m}|오늘 획득: 💎{n} / {m}|Bugün kazanılan: 💎{n} / {m}|Didapat hari ini: 💎{n} / {m}|आज कमाए: 💎{n} / {m}|Hôm nay đã nhận: 💎{n} / {m}|ได้รับวันนี้: 💎{n} / {m}|Vandaag verdiend: 💎{n} / {m}|المكتسب اليوم: 💎{n} / {m}|আজ পাওয়া: 💎{n} / {m}|Nakuha ngayong araw: 💎{n} / {m}",
+gemCap:"Ліміт на сьогодні вичерпано. Решту забереш завтра!|Today's limit is reached. Take the rest tomorrow!|La limite du jour est atteinte. Prends le reste demain !|Das Tageslimit ist erreicht. Hol dir den Rest morgen!|今日上限已达到。剩下的明天再领！|Has llegado al límite de hoy. ¡Recoge el resto mañana!|Limite di oggi raggiunto. Prendi il resto domani!|Dzisiejszy limit osiągnięty. Resztę odbierzesz jutro!|Limite de hoje atingido. Pegue o resto amanhã!|今日の上限に達しました。残りは明日受け取ってね！|오늘 한도에 도달했어요. 나머지는 내일 받아요!|Bugünün sınırına ulaşıldı. Kalanını yarın al!|Batas hari ini tercapai. Ambil sisanya besok!|आज की सीमा पूरी हो गई। बाकी कल लेना!|Đã đạt giới hạn hôm nay. Nhận phần còn lại vào ngày mai nhé!|ถึงขีดจำกัดของวันนี้แล้ว รับที่เหลือพรุ่งนี้นะ!|De limiet van vandaag is bereikt. Haal de rest morgen!|وصلت إلى حد اليوم. خذ الباقي غدًا!|আজকের সীমা পূর্ণ। বাকিটা কাল নিও!|Naabot na ang limitasyon ngayon. Kunin ang natitira bukas!",
+dShort:"{n} дн.|{n}d|{n} j|{n} T.|{n}天|{n} d|{n} g|{n} dni|{n} d|{n}日|{n}일|{n} g|{n} hr|{n} दिन|{n} ngày|{n} วัน|{n} d|{n} يوم|{n} দিন|{n} araw",
+nickPay:"Ще раз — і заплатиш 💎{n}|Tap again to pay 💎{n}|Touche encore pour payer 💎{n}|Nochmal tippen zum Bezahlen: 💎{n}|再点一次支付 💎{n}|Toca otra vez para pagar 💎{n}|Tocca ancora per pagare 💎{n}|Dotknij ponownie, by zapłacić 💎{n}|Toque de novo para pagar 💎{n}|もう一度タップで 💎{n} 支払い|한 번 더 누르면 💎{n} 결제|Ödemek için tekrar dokun: 💎{n}|Ketuk lagi untuk bayar 💎{n}|💎{n} देने के लिए फिर दबाओ|Chạm lần nữa để trả 💎{n}|แตะอีกครั้งเพื่อจ่าย 💎{n}|Tik nog eens om 💎{n} te betalen|اضغط مرة أخرى لدفع 💎{n}|💎{n} দিতে আবার চাপো|I-tap muli para magbayad ng 💎{n}",
+qNew:"Новий квест|New quest|Nouvelle quête|Neue Quest|新任务|Nueva misión|Nuova missione|Nowe zadanie|Nova missão|新しいクエスト|새 퀘스트|Yeni görev|Misi baru|नया क्वेस्ट|Nhiệm vụ mới|เควสต์ใหม่|Nieuwe opdracht|مهمة جديدة|নতুন কোয়েস্ট|Bagong misyon"
 };
 const T8={};for(const k in T8src)T8[k]=S8(T8src[k]);
+/* lines for dialogues: bt = boss taunts, hr = hero replies, s* = the Spirit talking */
+const DLGsrc={
+bt1:"Ти прийшов по свою загибель?|Have you come for your doom?|Viens-tu chercher ta perte ?|Kommst du, um unterzugehen?|你是来送死的吗？|¿Has venido a por tu perdición?|Sei venuto a cercare la tua fine?|Przyszedłeś po swoją zgubę?|Veio buscar sua ruína?|滅びに来たのか？|파멸하러 왔느냐?|Kıyametini mi aramaya geldin?|Kau datang untuk menjemput ajalmu?|क्या तुम अपनी मौत लेने आए हो?|Ngươi đến tìm cái chết sao?|เจ้ามาหาความตายหรือ?|Kom je je ondergang halen?|هل جئت إلى هلاكك؟|তুমি কি নিজের সর্বনাশ ডেকে আনতে এলে?|Naparito ka ba para sa iyong kapahamakan?",
+bt2:"Мої кігті давно чекали на тебе.|My claws have waited long for you.|Mes griffes t'attendent depuis longtemps.|Meine Klauen warten schon lange auf dich.|我的利爪等你很久了。|Mis garras te han esperado mucho tiempo.|I miei artigli ti aspettano da tempo.|Moje szpony długo na ciebie czekały.|Minhas garras esperaram muito por você.|この爪はずっとお前を待っていた。|내 발톱이 너를 오래 기다렸다.|Pençelerim seni uzun zamandır bekliyordu.|Cakarku sudah lama menunggumu.|मेरे पंजे कब से तुम्हारा इंतज़ार कर रहे थे।|Móng vuốt của ta đã chờ ngươi từ lâu.|กรงเล็บของข้ารอเจ้ามานานแล้ว|Mijn klauwen wachten al lang op je.|مخالبي انتظرتك طويلًا.|আমার নখর অনেকদিন তোমার অপেক্ষায়।|Matagal ka nang hinihintay ng aking mga kuko.",
+bt3:"Ще ніхто не пройшов повз мене!|No one has ever got past me!|Personne n'est jamais passé devant moi !|Noch niemand ist an mir vorbeigekommen!|还没有人能越过我！|¡Nadie ha logrado pasar de mí!|Nessuno mi ha mai superato!|Nikt jeszcze mnie nie minął!|Ninguém jamais passou por mim!|誰一人として私を越えた者はいない！|아무도 나를 지나간 적 없다!|Henüz kimse beni geçemedi!|Belum ada yang bisa melewatiku!|आज तक कोई मुझसे आगे नहीं निकला!|Chưa ai từng vượt qua được ta!|ยังไม่มีใครผ่านข้าไปได้!|Niemand is ooit langs mij gekomen!|لم يتجاوزني أحد قط!|আজ পর্যন্ত কেউ আমাকে পেরোতে পারেনি!|Wala pang nakalampas sa akin!",
+bt4:"Ти смілий... і дурний.|You are brave... and foolish.|Tu es brave... et insensé.|Du bist mutig... und töricht.|你很勇敢……也很愚蠢。|Eres valiente... y necio.|Sei coraggioso... e sciocco.|Jesteś odważny... i głupi.|Você é corajoso... e tolo.|勇敢だな……そして愚かだ。|용감하군... 그리고 어리석어.|Cesursun... ve aptal.|Kau berani... dan bodoh.|तुम बहादुर हो... और मूर्ख भी।|Ngươi dũng cảm... và ngu ngốc.|เจ้ากล้าหาญ... และโง่เขลา|Je bent dapper... en dwaas.|أنت شجاع... وأحمق.|তুমি সাহসী... আর বোকা।|Matapang ka... at hangal.",
+bt5:"Цей світ належить мені!|This world belongs to me!|Ce monde m'appartient !|Diese Welt gehört mir!|这个世界属于我！|¡Este mundo me pertenece!|Questo mondo appartiene a me!|Ten świat należy do mnie!|Este mundo pertence a mim!|この世界は私のものだ！|이 세상은 내 것이다!|Bu dünya bana ait!|Dunia ini milikku!|यह दुनिया मेरी है!|Thế giới này thuộc về ta!|โลกนี้เป็นของข้า!|Deze wereld is van mij!|هذا العالم ملكي!|এই পৃথিবী আমার!|Akin ang mundong ito!",
+bt6:"Я відчуваю твій страх.|I can smell your fear.|Je sens ta peur.|Ich rieche deine Angst.|我闻到了你的恐惧。|Huelo tu miedo.|Sento l'odore della tua paura.|Czuję twój strach.|Sinto o cheiro do seu medo.|お前の恐怖が匂うぞ。|네 두려움의 냄새가 난다.|Korkunun kokusunu alıyorum.|Aku bisa mencium ketakutanmu.|मुझे तुम्हारे डर की गंध आ रही है।|Ta ngửi thấy nỗi sợ của ngươi.|ข้าได้กลิ่นความกลัวของเจ้า|Ik ruik je angst.|أشمّ رائحة خوفك.|তোমার ভয়ের গন্ধ পাচ্ছি।|Naaamoy ko ang iyong takot.",
+bt7:"Ну ж бо, покажи, що вмієш!|Come on, show me what you've got!|Allez, montre-moi ce que tu sais faire !|Los, zeig mir, was du kannst!|来吧，让我看看你的本事！|¡Vamos, muéstrame lo que tienes!|Forza, fammi vedere cosa sai fare!|No dalej, pokaż, co potrafisz!|Vamos, mostre do que é capaz!|さあ、実力を見せてみろ！|자, 실력을 보여 봐라!|Hadi, neler yapabildiğini göster!|Ayo, tunjukkan kemampuanmu!|आओ, दिखाओ तुममें कितना दम है!|Nào, cho ta xem bản lĩnh của ngươi!|มาสิ แสดงฝีมือให้ข้าดู!|Kom op, laat zien wat je kunt!|هيا، أرني ما لديك!|এসো, দেখাও তোমার কী আছে!|Sige, ipakita mo ang kaya mo!",
+bt8:"Після мене буде тільки тиша.|After me there will be only silence.|Après moi, il n'y aura que le silence.|Nach mir bleibt nur Stille.|我之后，只剩寂静。|Después de mí solo quedará silencio.|Dopo di me ci sarà solo silenzio.|Po mnie zostanie tylko cisza.|Depois de mim, só haverá silêncio.|私の後には静寂だけが残る。|내 뒤에는 침묵만 남으리라.|Benden sonra yalnızca sessizlik kalacak.|Setelahku hanya ada kesunyian.|मेरे बाद बस सन्नाटा रहेगा।|Sau ta chỉ còn lại sự im lặng.|หลังจากข้า จะเหลือเพียงความเงียบ|Na mij blijft er alleen stilte.|بعدي لن يبقى إلا الصمت.|আমার পরে থাকবে শুধু নীরবতা।|Pagkatapos ko, katahimikan na lamang.",
+hr1:"Побачимо, хто сьогодні впаде!|We'll see who falls today!|On verra qui tombera aujourd'hui !|Mal sehen, wer heute fällt!|看看今天谁会倒下！|¡Veremos quién cae hoy!|Vedremo chi cadrà oggi!|Zobaczymy, kto dziś padnie!|Veremos quem cai hoje!|今日倒れるのはどっちかな！|오늘 누가 쓰러질지 보자!|Bugün kimin düşeceğini göreceğiz!|Kita lihat siapa yang tumbang hari ini!|देखते हैं आज कौन गिरता है!|Để xem hôm nay ai gục ngã!|มาดูกันว่าวันนี้ใครจะล้ม!|We zullen zien wie er vandaag valt!|سنرى من سيسقط اليوم!|দেখা যাক আজ কে পড়ে!|Tingnan natin kung sino ang babagsak ngayon!",
+hr2:"Я зайшов надто далеко, щоб зупинитись.|I've come too far to stop now.|Je suis allé trop loin pour m'arrêter.|Ich bin zu weit gekommen, um aufzuhören.|我已走得太远，不能停下。|He llegado demasiado lejos para parar.|Sono arrivato troppo lontano per fermarmi.|Zaszedłem za daleko, by się zatrzymać.|Cheguei longe demais para parar.|ここまで来て止まれるか。|여기까지 와서 멈출 순 없어.|Durmak için çok uzağa geldim.|Aku sudah terlalu jauh untuk berhenti.|मैं रुकने के लिए बहुत दूर आ चुका हूँ।|Ta đã đi quá xa để dừng lại.|ข้ามาไกลเกินกว่าจะหยุดแล้ว|Ik ben te ver gekomen om nu te stoppen.|لقد قطعتُ شوطًا بعيدًا لأتوقف الآن.|থামার জন্য অনেক দূর এসে গেছি।|Napakalayo na ng narating ko para tumigil.",
+hr3:"Мій меч каже інакше.|My sword says otherwise.|Mon épée dit le contraire.|Mein Schwert sagt etwas anderes.|我的剑可不这么认为。|Mi espada dice lo contrario.|La mia spada dice il contrario.|Mój miecz mówi co innego.|Minha espada diz o contrário.|俺の剣はそうは言ってない。|내 검은 다르게 말하는데.|Kılıcım başka söylüyor.|Pedangku berkata lain.|मेरी तलवार कुछ और कहती है।|Thanh kiếm của ta nói khác đấy.|ดาบของข้าบอกเป็นอย่างอื่น|Mijn zwaard zegt iets anders.|سيفي يقول غير ذلك.|আমার তলোয়ার অন্য কথা বলে।|Iba ang sinasabi ng aking espada.",
+hr4:"Готуйся до бою!|Get ready to fight!|Prépare-toi au combat !|Mach dich bereit zum Kampf!|准备战斗吧！|¡Prepárate para luchar!|Preparati a combattere!|Szykuj się do walki!|Prepare-se para lutar!|戦う準備をしろ！|싸울 준비나 해라!|Savaşa hazırlan!|Bersiaplah bertarung!|लड़ने के लिए तैयार हो जाओ!|Chuẩn bị chiến đấu đi!|เตรียมตัวสู้ได้เลย!|Maak je klaar om te vechten!|استعد للقتال!|লড়াইয়ের জন্য তৈরি হও!|Humanda ka sa laban!",
+sLow:"Обережно! Ти майже без сил!|Careful! You're almost out of strength!|Attention ! Tu es presque à bout de forces !|Vorsicht! Du bist fast am Ende!|小心！你快撑不住了！|¡Cuidado! ¡Casi no te quedan fuerzas!|Attento! Sei quasi senza forze!|Uważaj! Prawie nie masz sił!|Cuidado! Você está quase sem forças!|気をつけて！もう力が残ってない！|조심해! 힘이 거의 없어!|Dikkat! Neredeyse gücün kalmadı!|Hati-hati! Tenagamu hampir habis!|सावधान! तुममें ताकत लगभग खत्म है!|Cẩn thận! Ngươi gần cạn sức rồi!|ระวัง! เจ้าแทบหมดแรงแล้ว!|Pas op! Je bent bijna uitgeput!|احذر! قوتك على وشك النفاد!|সাবধান! তোমার শক্তি প্রায় শেষ!|Mag-ingat! Halos ubos na ang lakas mo!",
+sKeep:"Я з тобою, не здавайся!|I'm with you, don't give up!|Je suis avec toi, n'abandonne pas !|Ich bin bei dir, gib nicht auf!|我和你在一起，别放弃！|Estoy contigo, ¡no te rindas!|Sono con te, non arrenderti!|Jestem z tobą, nie poddawaj się!|Estou com você, não desista!|一緒だよ、諦めないで！|내가 함께야, 포기하지 마!|Seninleyim, pes etme!|Aku bersamamu, jangan menyerah!|मैं तुम्हारे साथ हूँ, हार मत मानो!|Ta ở bên ngươi, đừng bỏ cuộc!|ข้าอยู่กับเจ้า อย่ายอมแพ้!|Ik ben bij je, geef niet op!|أنا معك، لا تستسلم!|আমি তোমার সাথে আছি, হাল ছেড়ো না!|Kasama mo ako, huwag kang susuko!",
+sRare:"Відчуваю рідкісного ворога! З нього може щось випасти!|I sense a rare enemy! It may drop something good!|Je sens un ennemi rare ! Il pourrait lâcher un bon objet !|Ich spüre einen seltenen Gegner! Er lässt vielleicht etwas Gutes fallen!|我感觉到稀有敌人了！它可能会掉好东西！|¡Siento un enemigo raro! ¡Puede soltar algo bueno!|Sento un nemico raro! Potrebbe lasciare qualcosa di buono!|Wyczuwam rzadkiego wroga! Może coś upuścić!|Sinto um inimigo raro! Pode soltar algo bom!|レアな敵の気配！いい物を落とすかも！|희귀한 적이 느껴져! 좋은 걸 떨굴지도 몰라!|Nadir bir düşman seziyorum! İyi bir şey düşürebilir!|Aku merasakan musuh langka! Mungkin menjatuhkan barang bagus!|मुझे दुर्लभ दुश्मन महसूस हो रहा है! इससे कुछ अच्छा मिल सकता है!|Ta cảm nhận được kẻ thù hiếm! Nó có thể rơi đồ tốt!|ข้าสัมผัสได้ถึงศัตรูหายาก! มันอาจดรอปของดี!|Ik voel een zeldzame vijand! Hij laat misschien iets goeds vallen!|أشعر بعدو نادر! قد يُسقط شيئًا جيدًا!|একটা বিরল শত্রু টের পাচ্ছি! ভালো কিছু ফেলতে পারে!|Nararamdaman ko ang bihirang kalaban! Baka may mahulog na maganda!",
+sLoot:"Ого! Яка гарна знахідка!|Wow! What a find!|Waouh ! Quelle trouvaille !|Wow! Was für ein Fund!|哇！好东西！|¡Guau! ¡Qué hallazgo!|Wow! Che bel ritrovamento!|Ojej! Ale znalezisko!|Uau! Que achado!|わあ！すごい掘り出し物！|와! 대단한 걸 찾았어!|Vay! Ne buluntu ama!|Wah! Temuan yang hebat!|वाह! क्या शानदार चीज़ मिली!|Ồ! Vớ được món hời rồi!|ว้าว! ได้ของดีมาก!|Wauw! Wat een vondst!|واو! يا لها من غنيمة!|বাহ! কী দারুণ জিনিস!|Wow! Napakagandang nahanap!",
+sWin:"Чиста перемога!|A clean victory!|Une victoire nette !|Ein sauberer Sieg!|干净利落的胜利！|¡Una victoria limpia!|Una vittoria pulita!|Czyste zwycięstwo!|Uma vitória limpa!|見事な勝利！|깔끔한 승리야!|Temiz bir zafer!|Kemenangan yang bersih!|साफ़-सुथरी जीत!|Một chiến thắng gọn gàng!|ชนะอย่างสะอาด!|Een schone overwinning!|نصر نظيف!|পরিষ্কার জয়!|Isang malinis na tagumpay!",
+sMore:"Ще один бій — і ми сильніші!|One more battle and we're stronger!|Encore un combat et nous serons plus forts !|Noch ein Kampf und wir sind stärker!|再打一场，我们就更强了！|¡Una batalla más y seremos más fuertes!|Un'altra battaglia e saremo più forti!|Jeszcze jedna bitwa i będziemy silniejsi!|Mais uma batalha e ficamos mais fortes!|あと一戦で、もっと強くなれる！|한 번만 더 싸우면 더 강해질 거야!|Bir savaş daha ve daha güçlüyüz!|Satu pertempuran lagi dan kita lebih kuat!|बस एक लड़ाई और, और हम ज़्यादा ताकतवर!|Thêm một trận nữa là ta mạnh hơn!|อีกศึกเดียว เราจะแข็งแกร่งขึ้น!|Nog één gevecht en we zijn sterker!|معركة أخرى ونصبح أقوى!|আর একটা লড়াই, তাহলেই আমরা আরও শক্তিশালী!|Isa pang laban at mas lalakas tayo!",
+sLvl:"Новий рівень! Відчуваю силу!|New level! I can feel the power!|Nouveau niveau ! Je sens la puissance !|Neue Stufe! Ich spüre die Kraft!|升级了！我感受到力量了！|¡Nuevo nivel! ¡Siento el poder!|Nuovo livello! Sento il potere!|Nowy poziom! Czuję moc!|Novo nível! Sinto o poder!|レベルアップ！力を感じる！|레벨 업! 힘이 느껴져!|Yeni seviye! Gücü hissediyorum!|Level baru! Aku merasakan kekuatannya!|नया स्तर! मुझे ताकत महसूस हो रही है!|Lên cấp! Ta cảm nhận được sức mạnh!|เลเวลใหม่! สัมผัสได้ถึงพลัง!|Nieuw niveau! Ik voel de kracht!|مستوى جديد! أشعر بالقوة!|নতুন স্তর! শক্তি টের পাচ্ছি!|Bagong antas! Ramdam ko ang lakas!",
+sHi:"Привіт! Я твій Дух. Я сам стрілятиму у ворогів поруч!|Hi! I'm your Spirit. I'll shoot the enemies near you myself!|Salut ! Je suis ton Esprit. Je tirerai moi-même sur les ennemis proches !|Hallo! Ich bin dein Geist. Ich schieße selbst auf Gegner in deiner Nähe!|你好！我是你的灵宠。我会自己攻击你身边的敌人！|¡Hola! Soy tu Espíritu. ¡Dispararé yo solo a los enemigos cercanos!|Ciao! Sono il tuo Spirito. Colpirò da solo i nemici vicini!|Cześć! Jestem twoim Duchem. Sam będę strzelał do pobliskich wrogów!|Olá! Sou seu Espírito. Vou atirar sozinho nos inimigos próximos!|やあ！君のスピリットだよ。近くの敵は僕が撃つね！|안녕! 나는 너의 정령이야. 가까운 적은 내가 알아서 공격할게!|Merhaba! Ben senin Ruhunum. Yakındaki düşmanlara kendim ateş edeceğim!|Halo! Aku Rohmu. Aku akan menembak musuh di dekatmu sendiri!|नमस्ते! मैं तुम्हारी आत्मा हूँ। पास के दुश्मनों पर मैं खुद वार करूँगा!|Xin chào! Ta là Linh thú của ngươi. Ta sẽ tự bắn kẻ thù gần ngươi!|สวัสดี! ข้าคือภูตของเจ้า ข้าจะยิงศัตรูใกล้ ๆ เอง!|Hoi! Ik ben je Geest. Ik schiet zelf op vijanden in de buurt!|مرحبًا! أنا روحك. سأطلق بنفسي على الأعداء القريبين!|হাই! আমি তোমার আত্মা। কাছের শত্রুদের আমি নিজেই আঘাত করব!|Kumusta! Ako ang iyong Espiritu. Ako mismo ang titira sa malalapit na kalaban!",
+sQuest:"Завдання виконано! Забери геми в нагородах 🎁.|Quest complete! Grab your gems in Rewards 🎁.|Quête terminée ! Récupère tes gemmes dans Récompenses 🎁.|Quest geschafft! Hol deine Edelsteine bei den Belohnungen 🎁.|任务完成！到奖励 🎁 里领取宝石。|¡Misión cumplida! Recoge tus gemas en Premios 🎁.|Missione compiuta! Prendi le gemme nei Premi 🎁.|Zadanie wykonane! Odbierz klejnoty w Nagrodach 🎁.|Missão cumprida! Pegue suas gemas em Prêmios 🎁.|クエスト達成！報酬 🎁 でジェムを受け取ろう。|퀘스트 완료! 보상 🎁에서 보석을 받아.|Görev tamam! Mücevherlerini Ödüller 🎁 bölümünden al.|Misi selesai! Ambil permatamu di Hadiah 🎁.|क्वेस्ट पूरा! इनाम 🎁 में अपने रत्न लो।|Nhiệm vụ hoàn thành! Nhận đá quý ở Phần thưởng 🎁.|เควสต์สำเร็จ! ไปรับอัญมณีที่รางวัล 🎁|Opdracht voltooid! Haal je edelstenen bij Beloningen 🎁.|المهمة مكتملة! خذ جواهرك من المكافآت 🎁.|কোয়েস্ট সম্পন্ন! পুরস্কার 🎁-এ গিয়ে রত্ন নাও।|Tapos ang misyon! Kunin ang iyong mga hiyas sa Gantimpala 🎁.",
+sDay:"Новий день — нова нагорода! Зазирни в 🎁.|A new day, a new reward! Check 🎁.|Nouveau jour, nouvelle récompense ! Regarde 🎁.|Ein neuer Tag, eine neue Belohnung! Schau in 🎁.|新的一天，新的奖励！看看 🎁。|¡Nuevo día, nuevo premio! Mira 🎁.|Nuovo giorno, nuovo premio! Guarda 🎁.|Nowy dzień, nowa nagroda! Zajrzyj do 🎁.|Novo dia, novo prêmio! Veja 🎁.|新しい日、新しい報酬！🎁 を見てね。|새로운 날, 새로운 보상! 🎁 를 확인해.|Yeni gün, yeni ödül! 🎁 bölümüne bak.|Hari baru, hadiah baru! Cek 🎁.|नया दिन, नया इनाम! 🎁 देखो।|Ngày mới, phần thưởng mới! Xem 🎁 nhé.|วันใหม่ รางวัลใหม่! ดูที่ 🎁|Nieuwe dag, nieuwe beloning! Kijk bij 🎁.|يوم جديد ومكافأة جديدة! ألقِ نظرة على 🎁.|নতুন দিন, নতুন পুরস্কার! 🎁 দেখো।|Bagong araw, bagong gantimpala! Tingnan ang 🎁."
+};
+const DLG={};for(const k in DLGsrc)DLG[k]=S8(DLGsrc[k]);
 const TIERS={common:S8("Звичайний|Common|Commun|Gewöhnlich|普通|Común|Comune|Zwykły|Comum|コモン|일반|Yaygın|Biasa|साधारण|Thường|ธรรมดา|Gewoon|شائع|সাধারণ|Karaniwan"),uncommon:S8("Незвичайний|Uncommon|Peu commun|Ungewöhnlich|罕见|Poco común|Non comune|Niezwykły|Incomum|アンコモン|고급|Seyrek|Tidak Biasa|असामान्य|Khá hiếm|ไม่ธรรมดา|Ongewoon|غير شائع|কম সাধারণ|Di-karaniwan"),rare:S8("Рідкісний|Rare|Rare|Selten|稀有|Raro|Raro|Rzadki|Raro|レア|희귀|Nadir|Langka|दुर्लभ|Hiếm|หายาก|Zeldzaam|نادر|বিরল|Bihira"),elite:S8("Легендарний|Legendary|Légendaire|Legendär|传说|Legendario|Leggendario|Legendarny|Lendário|レジェンダリー|전설|Efsanevi|Legendaris|लेजेंडरी|Huyền thoại|ตำนาน|Legendarisch|أسطوري|কিংবদন্তি|Maalamat"),epic:S8("Епічний|Epic|Épique|Episch|史诗|Épico|Epico|Epicki|Épico|エピック|에픽|Destansı|Epik|एपिक|Sử thi|มหากาพย์|Episch|ملحمي|মহাকাব্যিক|Epiko"),boss:S8("Бос|Boss|Boss|Boss|首领|Jefe|Boss|Boss|Chefe|ボス|보스|Boss|Boss|बॉस|Trùm|บอส|Baas|زعيم|বস|Boss"),mythic:S8("Міфічний|Mythic|Mythique|Mythisch|神话|Mítico|Mitico|Mityczny|Mítico|ミシック|신화|Mitik|Mitos|मिथिक|Thần thoại|เทพนิยาย|Mythisch|خرافي|পৌরাণিক|Mitiko"),ancient:S8("Стародавній|Ancient|Ancestral|Uralt|远古|Ancestral|Ancestrale|Pradawny|Ancestral|エンシェント|고대|Kadim|Kuno|प्राचीन|Cổ xưa|โบราณ|Oeroud|عتيق|প্রাচীন|Sinauna"),divine:S8("Божественний|Divine|Divin|Göttlich|神圣|Divino|Divino|Boski|Divino|ディバイン|신성|İlahi|Ilahi|दिव्य|Thần thánh|ศักดิ์สิทธิ์|Goddelijk|إلهي|ঐশ্বরিক|Banal"),eclipse:S8("Затемнення|Eclipse|Éclipse|Finsternis|日蚀|Eclipse|Eclissi|Zaćmienie|Eclipse|エクリプス|일식|Tutulma|Gerhana|ग्रहण|Nhật thực|สุริยุปราคา|Verduistering|كسوف|গ্রহণ|Eklipse"),ancientone:S8("Предвічний|Ancient One|Primordial|Urahn|太古|Primigenio|Primordiale|Prastary|Primordial|エンシェントワン|태초의 존재|Ezeli Olan|Sang Purba|आदिदेव|Cổ Thần|ผู้ดึกดำบรรพ์|Oerwezen|الأزلي|অনাদি|Ang Sinauna"),eternal:S8("Вічний|Eternal|Éternel|Ewig|永恒|Eterno|Eterno|Wieczny|Eterno|エターナル|영원|Ebedi|Abadi|अनंत|Vĩnh hằng|นิรันดร์|Eeuwig|أبدي|চিরন্তন|Walang Hanggan")};
 TIERS.shadow=S8("Тіньовий|Shadow|Ombre|Schatten|暗影|Sombra|Ombra|Cienia|Sombra|シャドウ|섀도우|Gölge|Bayangan|छाया|Bóng tối|เงา|Schaduw|ظلي|ছায়া|Anino");TIERS.heavenly=S8("Небесний|Heavenly|Céleste|Himmlisch|天界|Celestial|Celeste|Niebiański|Celestial|ヘブンリー|천상|Göksel|Surgawi|स्वर्गीय|Thiên giới|สวรรค์|Hemels|سماوي|স্বর্গীয়|Makalangit");
 const BIOME_N=[S8("Багряний ліс|Crimson Wood|Bois écarlate|Karmesinwald|猩红森林|Bosque carmesí|Bosco cremisi|Szkarłatny las|Bosque carmesim|深紅の森|진홍의 숲|Kızıl Orman|Hutan Merah Tua|लाल जंगल|Rừng Đỏ Thẫm|ป่าสีเลือด|Karmijnwoud|الغابة القرمزية|রক্তিম বন|Pulang Gubat"),S8("Мертві болота|Dead Marsh|Marais mort|Totes Moor|死亡沼泽|Pantano muerto|Palude morta|Martwe bagna|Pântano morto|死の沼|죽음의 늪|Ölü Bataklık|Rawa Mati|मृत दलदल|Đầm Chết|บึงมรณะ|Dode Moeras|المستنقع الميت|মৃত জলাভূমি|Patay na Latian"),S8("Попелясті пустища|Ashen Wastes|Terres de cendre|Aschenöde|灰烬荒原|Páramo de ceniza|Lande di cenere|Popielne pustkowia|Ermos de cinzas|灰の荒野|잿빛 황무지|Kül Çorağı|Tanah Abu|राख का बंजर|Hoang Mạc Tro|ดินแดนเถ้าถ่าน|Asvlakte|قفار الرماد|ছাইয়ের প্রান্তর|Abuhing Kaparangan"),S8("Крижаний перевал|Frozen Pass|Col gelé|Gefrorener Pass|冰封山口|Paso helado|Passo ghiacciato|Zamarznięta przełęcz|Passo congelado|凍てつく峠|얼어붙은 고개|Donmuş Geçit|Celah Beku|जमा हुआ दर्रा|Đèo Băng Giá|ช่องเขาเยือกแข็ง|Bevroren Pas|الممر المتجمد|হিমায়িত গিরিপথ|Nagyelong Daanan"),S8("Смарагдові руїни|Emerald Ruins|Ruines d'émeraude|Smaragdruinen|翡翠遗迹|Ruinas esmeralda|Rovine di smeraldo|Szmaragdowe ruiny|Ruínas esmeralda|翠玉の遺跡|에메랄드 유적|Zümrüt Harabeleri|Reruntuhan Zamrud|पन्ना खंडहर|Tàn Tích Ngọc Lục Bảo|ซากปรักมรกต|Smaragdruïnes|الأطلال الزمردية|পান্নার ধ্বংসাবশেষ|Esmeraldang Guho"),S8("Сонячна долина|Sunny Vale|Val ensoleillé|Sonnental|阳光谷地|Valle soleado|Valle soleggiata|Słoneczna dolina|Vale ensolarado|陽だまりの谷|햇살 골짜기|Güneşli Vadi|Lembah Cerah|धूपभरी घाटी|Thung Lũng Nắng|หุบเขาแสงแดด|Zonnige Vallei|الوادي المشمس|রৌদ্রোজ্জ্বল উপত্যকা|Maaraw na Lambak"),S8("Осінній ліс|Autumn Forest|Forêt d'automne|Herbstwald|秋日森林|Bosque otoñal|Foresta autunnale|Jesienny las|Floresta outonal|秋の森|가을 숲|Sonbahar Ormanı|Hutan Musim Gugur|पतझड़ का जंगल|Rừng Mùa Thu|ป่าฤดูใบไม้ร่วง|Herfstbos|غابة الخريف|হেমন্তের বন|Gubat ng Taglagas"),S8("Сакуровий сад|Sakura Garden|Jardin de sakura|Kirschblütengarten|樱花庭园|Jardín de sakura|Giardino dei ciliegi|Ogród sakury|Jardim de sakura|桜の庭|벚꽃 정원|Sakura Bahçesi|Taman Sakura|साकुरा बाग़|Vườn Anh Đào|สวนซากุระ|Sakuratuin|حديقة الساكورا|সাকুরা বাগান|Hardin ng Sakura"),S8("Піщаний каньйон|Sand Canyon|Canyon de sable|Sandschlucht|沙岩峡谷|Cañón de arena|Canyon di sabbia|Piaskowy kanion|Cânion de areia|砂の峡谷|모래 협곡|Kum Kanyonu|Ngarai Pasir|रेतीला कैन्यन|Hẻm Núi Cát|หุบผาทราย|Zandkloof|الأخدود الرملي|বালুর গিরিখাত|Kanyon ng Buhangin"),S8("Тропічні джунглі|Tropic Jungle|Jungle tropicale|Tropendschungel|热带丛林|Selva tropical|Giungla tropicale|Tropikalna dżungla|Selva tropical|熱帯ジャングル|열대 정글|Tropik Orman|Hutan Tropis|उष्णकटिबंधीय जंगल|Rừng Nhiệt Đới|ป่าเขตร้อน|Tropische Jungle|الأدغال الاستوائية|গ্রীষ্মমণ্ডলীয় জঙ্গল|Tropikal na Gubat"),S8("Грибний гай|Mushroom Grove|Bosquet des champignons|Pilzhain|蘑菇林|Arboleda de hongos|Boschetto dei funghi|Grzybowy gaj|Bosque de cogumelos|キノコの森|버섯 숲|Mantar Koruluğu|Rimba Jamur|मशरूम वन|Lùm Nấm|ป่าเห็ด|Paddenstoelenbos|بستان الفطر|মাশরুম কুঞ্জ|Kakahuyan ng Kabute"),S8("Лавандові поля|Lavender Fields|Champs de lavande|Lavendelfelder|薰衣草花田|Campos de lavanda|Campi di lavanda|Lawendowe pola|Campos de lavanda|ラベンダー畑|라벤더 들판|Lavanta Tarlaları|Ladang Lavender|लैवेंडर के खेत|Cánh Đồng Oải Hương|ทุ่งลาเวนเดอร์|Lavendelvelden|حقول الخزامى|ল্যাভেন্ডার খেত|Bukid ng Lavender"),S8("Готичний собор|Gothic Cathedral|Cathédrale gothique|Gotische Kathedrale|哥特大教堂|Catedral gótica|Cattedrale gotica|Gotycka katedra|Catedral gótica|ゴシック大聖堂|고딕 대성당|Gotik Katedral|Katedral Gotik|गॉथिक गिरजाघर|Thánh Đường Gothic|มหาวิหารกอทิก|Gotische Kathedraal|الكاتدرائية القوطية|গথিক ক্যাথেড্রাল|Gotikong Katedral"),S8("Неонова прірва|Neon Abyss|Abysse néon|Neon-Abgrund|霓虹深渊|Abismo de neón|Abisso neon|Neonowa otchłań|Abismo neon|ネオンの深淵|네온 심연|Neon Uçurum|Jurang Neon|नियॉन खाई|Vực Neon|ห้วงลึกนีออน|Neonafgrond|الهاوية النيونية|নিয়ন অতল|Neon na Kailaliman"),S8("Золоті поля|Golden Fields|Champs dorés|Goldene Felder|金色田野|Campos dorados|Campi dorati|Złote pola|Campos dourados|黄金の野|황금 들판|Altın Tarlalar|Ladang Emas|सुनहरे खेत|Cánh Đồng Vàng|ทุ่งทองคำ|Gouden Velden|الحقول الذهبية|সোনালি মাঠ|Gintong Bukirin"),S8("Соснова тайга|Pine Taiga|Taïga de pins|Kiefern-Taiga|松林针叶林|Taiga de pinos|Taiga di pini|Sosnowa tajga|Taiga de pinheiros|松のタイガ|소나무 타이가|Çam Tayga|Taiga Pinus|चीड़ का टैगा|Rừng Thông Taiga|ไทกาสน|Dennentaiga|تايغا الصنوبر|পাইনের তাইগা|Taiga ng Pino"),S8("Сонячне узбережжя|Sunny Coast|Côte ensoleillée|Sonnenküste|阳光海岸|Costa soleada|Costa soleggiata|Słoneczne wybrzeże|Costa ensolarada|陽光の海岸|햇살 해안|Güneşli Sahil|Pantai Cerah|धूपभरा तट|Bờ Biển Nắng|ชายฝั่งแสงแดด|Zonnige Kust|الساحل المشمس|রৌদ্রোজ্জ্বল উপকূল|Maaraw na Baybayin"),S8("Золота савана|Golden Savanna|Savane dorée|Goldene Savanne|金色草原|Sabana dorada|Savana dorata|Złota sawanna|Savana dourada|黄金のサバンナ|황금 사바나|Altın Savan|Sabana Emas|सुनहरा सवाना|Thảo Nguyên Vàng|ทุ่งหญ้าสะวันนาทอง|Gouden Savanne|السافانا الذهبية|সোনালি সাভানা|Gintong Sabana"),S8("Туманна трясовина|Misty Bog|Marécage brumeux|Nebelmoor|雾霭沼泽|Ciénaga brumosa|Palude nebbiosa|Mgliste trzęsawisko|Pântano nebuloso|霧の湿原|안개 늪|Sisli Bataklık|Rawa Berkabut|धुंधला दलदल|Đầm Lầy Sương|บึงหมอก|Mistig Veen|المستنقع الضبابي|কুয়াশাচ্ছন্ন বাদা|Mahamog na Lusak"),S8("Обсидіанова пустка|Obsidian Waste|Désert d'obsidienne|Obsidianöde|黑曜石荒原|Yermo de obsidiana|Landa d'ossidiana|Obsydianowa pustka|Ermo de obsidiana|黒曜石の荒野|흑요석 황무지|Obsidyen Çölü|Gurun Obsidian|ऑब्सिडियन बंजर|Hoang Mạc Obsidian|ดินแดนออบซิเดียน|Obsidiaanvlakte|قفر السبج|অবসিডিয়ান প্রান্তর|Obsidyang Kaparangan"),S8("Сяйливий риф|Glowing Reef|Récif lumineux|Leuchtriff|发光珊瑚礁|Arrecife luminoso|Barriera luminosa|Świecąca rafa|Recife luminoso|輝く珊瑚礁|빛나는 산호초|Parlayan Resif|Terumbu Bercahaya|चमकती रीफ़|Rạn San Hô Phát Sáng|แนวปะการังเรืองแสง|Gloeiend Rif|الشعاب المتوهجة|দীপ্ত প্রবালপ্রাচীর|Nagliliwanag na Bahura"),S8("Цукрова галявина|Candy Meadow|Prairie sucrée|Zuckerwiese|糖果草地|Prado de caramelo|Prato di caramelle|Cukierkowa łąka|Prado de doces|キャンディ草原|사탕 초원|Şeker Çayırı|Padang Permen|मिठाई का मैदान|Đồng Cỏ Kẹo|ทุ่งลูกกวาด|Snoepweide|مرج الحلوى|ক্যান্ডির মাঠ|Parang ng Kendi"),S8("Небесний храм|Sky Temple|Temple céleste|Himmelstempel|天空神殿|Templo celeste|Tempio celeste|Niebiańska świątynia|Templo celeste|天空の神殿|하늘 신전|Gökyüzü Tapınağı|Kuil Langit|आकाश मंदिर|Đền Trên Trời|วิหารลอยฟ้า|Hemeltempel|معبد السماء|আকাশ মন্দির|Templo sa Langit"),S8("Зоряна рівнина|Starfall Plains|Plaines des étoiles filantes|Sternschnuppenebene|星陨平原|Llanuras de estrellas fugaces|Piane delle stelle cadenti|Równiny spadających gwiazd|Planícies das estrelas cadentes|流星の平原|별똥별 평원|Yıldız Yağmuru Ovası|Dataran Bintang Jatuh|तारों की बारिश के मैदान|Đồng Bằng Sao Rơi|ที่ราบดาวตก|Sterrenvalvlakte|سهول الشهب|তারাপতনের প্রান্তর|Kapatagan ng Bulalakaw"),S8("Бамбуковий гай|Bamboo Grove|Bambouseraie|Bambushain|竹林|Bosque de bambú|Bosco di bambù|Gaj bambusowy|Bosque de bambu|竹林|대나무 숲|Bambu Korusu|Rumpun Bambu|बाँस का वन|Rừng Tre|ป่าไผ่|Bamboebos|بستان الخيزران|বাঁশবন|Kawayanan")];
@@ -2987,6 +3129,38 @@ function mapTick(dt){
 const mainFor=n=>regNear((n-1)%REGT.length,biomeAt(n));
 const bossFor=n=>{const bi=biomeAt(n),fb=BOSST.filter(i=>bioFit(i,bi)),bp=fb.length?fb:BOSST;return bp[Math.floor((n/7-1)/2)%bp.length]};
 
+/* ============ GEMS: daily rewards, quests (shared state, saved per profile) ============ */
+const GEM_CAP=200,NICK_COST=250,GCH_COST=120;
+/* the daily reward grows with the streak; every 7th day also gives a chest */
+const DAY_GEM=[15,25,35,50,65,80,100],dayGem=n=>n<=7?DAY_GEM[Math.max(1,n)-1]:Math.min(140,100+(n-7)*5);
+const p2=v=>String(v).padStart(2,"0"),dayKey=d=>{d=d||new Date();return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate())};
+const wkKey=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-(d.getDay()+6)%7);return dayKey(d)};
+const dayDiff=(a,b)=>Math.round((new Date(b+"T00:00:00")-new Date(a+"T00:00:00"))/864e5);
+const toMid=()=>{const d=new Date();d.setHours(24,0,0,0);return(d-Date.now())/1000},toWk=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+7-(d.getDay()+6)%7);return(d-Date.now())/1000};
+/* quest kinds: [key, daily amount, daily gems]; weekly ones are bigger and pay more */
+const QT=[["kill",40,25],["win",5,25],["loot",8,20],["rare",1,30],["gold",0,20],["cast",25,20],["chest",3,20],["forge",3,25],["boss",1,30],["epic",2,30]];
+const QIC={kill:"⚔️",win:"🏆",loot:"🎒",rare:"👹",gold:"🪙",cast:"✨",chest:"🧰",forge:"🔨",boss:"👑",epic:"💜"};
+const qRng=seed=>{let h=2166136261;for(const c of seed)h=Math.imul(h^c.charCodeAt(0),16777619);return()=>{h=Math.imul(h^h>>>15,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}};
+function qMake(id,wk){const r=qRng(id+(wk?"w":"d")+(session||"")),pool=QT.filter(q=>q[0]!=="forge"||(eq&&eq.weapon)),out=[];
+ while(out.length<3&&pool.length){const q=pool.splice(Math.floor(r()*pool.length),1)[0];let n=q[1];
+  if(q[0]==="gold")n=Math.max(200,Math.round((6+battleNo*2)*40/50)*50);
+  if(wk)n=q[0]==="boss"?3:q[0]==="rare"?5:n*6;
+  out.push({k:q[0],n,h:0,g:wk?Math.round(q[2]*3.2/5)*5:q[2],got:0})}
+ return out}
+const GEM0=()=>({n:0,day:"",earned:0,streak:0,last:"",nk:0,qd:null,qw:null,hi:0});
+let gem=GEM0();
+function gemRoll(){const d=dayKey(),w=wkKey();
+ if(gem.day!==d){gem.day=d;gem.earned=0}
+ if(!gem.qd||gem.qd.id!==d)gem.qd={id:d,list:qMake(d,0)};
+ if(!gem.qw||gem.qw.id!==w)gem.qw={id:w,list:qMake(w,1)}}
+function loadGem(){const o=LS.get(PK("r2_gems"),{})||{};gem=Object.assign(GEM0(),o);gem.n=Math.max(0,gem.n|0);gem.earned=Math.max(0,gem.earned|0);gem.streak=Math.max(0,gem.streak|0);
+ for(const q of ["qd","qw"])if(!gem[q]||!Array.isArray(gem[q].list))gem[q]=null;gemRoll()}
+const canDay=()=>gem.last!==dayKey();
+const dayNext=()=>{const d=dayKey();if(gem.last===d)return gem.streak;return gem.last&&dayDiff(gem.last,d)===1?gem.streak+1:1};
+const gemRoom=()=>{gemRoll();return Math.max(0,GEM_CAP-gem.earned)};
+/* quests may not eat the room that today's daily reward still needs */
+const qRoom=()=>Math.max(0,gemRoom()-(canDay()?dayGem(dayNext()):0));
+
 /* ============ SAVE STATE ============ */
 const DEF_P={level:1,xp:0,gold:120,hp:100};
 let accounts=LS.get("r2_accounts",{});
@@ -3005,18 +3179,19 @@ function loadState(){
  for(const it of bag.concat(Object.values(eq)))if(it.up||it.inv){it.up=it.s===SLOTI.weapon?clampN(it.up|0,0,UP_MAX):0;it.inv=Math.max(0,it.inv|0)}
  luck=Object.assign({lvl:0,until:0},LS.get(PK("r2_luck"),{}));luck.lvl=clampN(luck.lvl|0,0,LUCK_MAX);
  foe=Object.assign({lvl:0,until:0},LS.get(PK("r2_foe"),{}));foe.lvl=clampN(foe.lvl|0,0,FOE_MAX);
- itemSeq=LS.get(PK("r2_iseq"),1);forge=loadForge();
+ itemSeq=LS.get(PK("r2_iseq"),1);forge=loadForge();loadGem();
  {const ws=bag.filter(it=>it.s===SLOTI.weapon);if(ws.length){bag=bag.filter(it=>it.s!==SLOTI.weapon);forge.owned=forge.owned.concat(ws)}
   forge.owned.sort((a,b)=>b.r-a.r||b.l-a.l||(b.up|0)-(a.up|0));while(forge.owned.length>OWN_MAX){const x=forge.owned.pop();P.gold+=Math.round((5+x.l*2)*RAR[x.r].mul*RAR[x.r].mul)}}
 }
 function clampN(v,a,b){return v<a?a:v>b?b:v}
 function validItem(it){return it&&typeof it==="object"&&SLOTS[it.s]&&RAR[it.r]&&Array.isArray(it.st)&&it.st.every(x=>Array.isArray(x)&&STN[x[0]]&&isFinite(x[1]))}
 loadState();
+setTimeout(()=>{try{if(canDay())spSay("sDay",1)}catch(e){}},4500);
 (function migrate(){const old=LS.get("r2_bought",null);if(!session&&old&&old.length){const OC=[70,110,180,280,420];P.gold+=old.reduce((a,i)=>a+(OC[i%5]||0),0)}LS.set("r2_bought",[])})();
 let S=Object.assign({sfx:70,music:30,musicOn:false},LS.get("r2_set",{}));
 /* if the last start never finished: 2nd try = Fast graphics, 3rd try = 2D without three.js (counter is cleared once the game has really run) */
 {const n=(+LS.get("r2_boot",0)||0)+1;LS.set("r2_boot",n);BOOT.safe=n>=6?2:n>=3?1:0;if(BOOT.safe&&S.gfx!=="lo"){S.gfx="lo";LS.set("r2_set",S)}}
-function save(){LS.set(PK("r2_hero"),{level:P.level,xp:P.xp,gold:P.gold,hp:P.hp});LS.set(PK("r2_tal"),tal);LS.set(PK("r2_train"),train);LS.set(PK("r2_kills"),kills);LS.set(PK("r2_nick"),nickname);LS.set(PK("r2_battle"),battleNo);LS.set(PK("r2_bag"),bag);LS.set(PK("r2_eq"),eq);LS.set(PK("r2_luck"),luck);LS.set(PK("r2_foe"),foe);LS.set(PK("r2_iseq"),itemSeq);LS.set(PK("r2_forge"),forge);LS.set("r2_session",session);LS.set("r2_lang",lang);LS.set("r2_set",S)}
+function save(){LS.set(PK("r2_hero"),{level:P.level,xp:P.xp,gold:P.gold,hp:P.hp});LS.set(PK("r2_tal"),tal);LS.set(PK("r2_train"),train);LS.set(PK("r2_kills"),kills);LS.set(PK("r2_nick"),nickname);LS.set(PK("r2_battle"),battleNo);LS.set(PK("r2_bag"),bag);LS.set(PK("r2_eq"),eq);LS.set(PK("r2_luck"),luck);LS.set(PK("r2_foe"),foe);LS.set(PK("r2_iseq"),itemSeq);LS.set(PK("r2_forge"),forge);LS.set(PK("r2_gems"),gem);LS.set("r2_session",session);LS.set("r2_lang",lang);LS.set("r2_set",S)}
 
 var _sh={}; // colour cache for shade(); must exist before the first recalc() runs at start-up
 function recalc(){
@@ -3315,7 +3490,7 @@ function tryAction(a){
  if(a==="dodge"){if(h.cd.dodge>0||h.state==="dodge")return;if(!(free()||h.state==="attack"||h.state==="hurt"))return;const m=moveVec();let vx=m.x,vz=m.z;if(Math.hypot(vx,vz)<.2){const fd=hdir();vx=fd.x;vz=fd.z*MZ}const d=Math.hypot(vx,vz);h.dvx=vx/d;h.dvz=vz/d;if(Math.abs(vx)>.1&&!isFP())h.face=vx>0?1:-1;setHero("dodge");h.inv=.42;h.cd.dodge=CD.dodge*cdMul("dodge");SFX.dodge();skFx("dodge");return}
  if(!free()||h.cd[a]>0)return;
  if(a==="heal"&&P.hp>=P.maxhp){toast("❤ "+Math.ceil(P.hp)+"/"+P.maxhp);return}
- h.cd[a]=CD[a]*cdMul(a);setHero(a);skFx(a);
+ h.cd[a]=CD[a]*cdMul(a);setHero(a);skFx(a);qHit("cast");
  if(a==="heavy")SFX.swing();
  if(a==="spin"){h.hit1=false;SFX.spin()}
 }
@@ -3422,6 +3597,7 @@ function hurtHero(dmg,dir,att){
  const h=hero;if(h.inv>0||h.state==="dead"){if(h.state!=="dead"&&tNow<(h.shUntil||0)&&(h.blkT||0)<tNow){h.blkT=tNow+.25;SFX.block();sparks(h.x+dir*-14,h.z,30,"#bfe9ff",8,-dir)}return false}
  if(P.evade>0&&Math.random()<P.evade/100){h.inv=Math.max(h.inv,.25);addText(h.x,h.z,66,t("dodged"),"#bfe9ff",12);for(let i=0;i<8;i++)parts.push({x:h.x+rnd(-10,10),z:h.z,h:rnd(10,50),vx:-dir*rnd(40,90),vz:0,vh:rnd(-10,20),g:0,life:.3,max:.3,col:"#bfe9ff",size:rnd(1.4,2.4),t:"spark"});SFX.dodge();return false}
  const d=Math.max(1,Math.round((dmg-P.armor)*(1-P.dmgRed/100)));P.hp=Math.max(0,P.hp-d);
+ if(P.hp>0&&P.hp/P.maxhp<.3)spSay(Math.random()<.6?"sLow":"sKeep");
  if(att&&att.cfg&&h.state!=="dead"){if(att.cfg.chill){h.slow=Math.max(h.slow,1.3);for(let i=0;i<14;i++)parts.push({x:h.x+rnd(-12,12),z:h.z,h:rnd(5,55),vx:rnd(-30,30),vz:0,vh:rnd(-10,30),g:0,life:.6,max:.6,col:i%2?"#bff8ff":"#ffffff",size:rnd(1.4,2.6),t:"spark"});SFX.frost()}if(att.cfg.poison){h.poison={t:4,tick:.5,dps:Math.max(1,Math.round(dmg*.12))};SFX.poison()}}
  if(P.thorns&&att&&att.state!=="dead"){const r=Math.round(dmg*P.thorns/100);if(r>=1)damageEnemy(att,r,false,-dir,0,"thorns")}
  if(h.state==="spin"?!h.hit1:(!h.done&&(h.state==="fire"||h.state==="bolt"||h.state==="heal"||h.state==="heavy"||h.state==="blaze"||h.state==="shield")))h.cd[h.state]=0;h.flash=.14;h.inv=.55;
@@ -3494,7 +3670,7 @@ function startWave(){
  else if(dl){setTimeout(()=>{banner(t("wave",{n:battleNo}),L(BIOME_N[biomeIdx()]));SFX.horn()},dl)}
  else{banner(t("wave",{n:battleNo}),L(BIOME_N[biomeIdx()]));SFX.horn()}
  const re=enemies.find(o=>o.rarI);
- if(re)setTimeout(()=>{if(!enemies.includes(re)||re.state==="dead")return;banner(t("rarMob"),L(TIERS[re.cfg.tier])+" · "+L(re.cfg.n));flashA=.3;flashCol=RAR[re.rarI].col;re.rarI>=7?SFX.divine():SFX.unlock()},1500+dl);
+ if(re)setTimeout(()=>{if(!enemies.includes(re)||re.state==="dead")return;banner(t("rarMob"),L(TIERS[re.cfg.tier])+" · "+L(re.cfg.n));flashA=.3;flashCol=RAR[re.rarI].col;re.rarI>=7?SFX.divine():SFX.unlock();setTimeout(()=>spSay("sRare"),1200)},1500+dl);
  save();
 }
 const aliveCount=()=>enemies.filter(o=>o.state!=="dead").length;
@@ -3506,7 +3682,7 @@ function enemyUpdate(e,dt){
  if(e.delay>0){e.delay-=dt;return}
  if(!e.spawned){e.spawned=true;const col=e.boss?"#ffb03a":"#9a6bff";decal("portal",e.x,e.z,C.rad*e.s*2.6+10,1.1,col);for(let i=0;i<16;i++){const a=i/16*PI*2;parts.push({x:e.x+Math.cos(a)*22,z:e.z+Math.sin(a)*8,h:rnd(2,30),vx:-Math.cos(a)*40,vz:-Math.sin(a)*14,vh:rnd(10,40),g:0,life:.6,max:.6,col,size:rnd(1.5,2.8),t:"dot"})}if(Math.abs(e.x-hero.x)<LW*.7)SFX.portal()}
  e.st+=dt;e.lastHit+=dt;
- if(e.boss&&!e.intro&&e.x>arenaX+20&&e.x<arenaX+LW-20){e.intro=true;shake+=7;dustRing(e.x,e.z,34);parts.push({x:e.x,z:e.z,h:0,life:.8,max:.8,t:"ring",col:"#ffb03a",size:26});parts.push({x:e.x,z:e.z,h:0,life:1.1,max:1.1,t:"ring",col:"#ffe0a0",size:40});SFX.bossIntro();decal("rune",e.x,e.z,70,2.6,"#ffb03a");cine()}
+ if(e.boss&&!e.intro&&e.x>arenaX+20&&e.x<arenaX+LW-20){e.intro=true;shake+=7;dustRing(e.x,e.z,34);parts.push({x:e.x,z:e.z,h:0,life:.8,max:.8,t:"ring",col:"#ffb03a",size:26});parts.push({x:e.x,z:e.z,h:0,life:1.1,max:1.1,t:"ring",col:"#ffe0a0",size:40});SFX.bossIntro();decal("rune",e.x,e.z,70,2.6,"#ffb03a");cine();setTimeout(()=>bossTalk(e),700)}
  if(C.aura&&e.state!=="dead"&&Math.random()<dt*(e.boss?22:12))parts.push({x:e.x+rnd(-C.rad,C.rad)*e.s,z:e.z+rnd(-3,3),h:e.h+rnd(2,C.hgt*e.s*.9),vx:rnd(-8,8),vz:0,vh:rnd(18,42),g:0,life:rnd(.5,.9),max:.9,col:C.aura,size:rnd(1.2,2.4),t:"dot"});
  if(e.treasure&&e.state!=="dead"&&Math.random()<dt*18)parts.push({x:e.x+rnd(-e.cfg.rad,e.cfg.rad)*e.s,z:e.z+rnd(-3,3),h:e.h+rnd(0,e.cfg.hgt*e.s),vx:rnd(-12,12),vz:0,vh:rnd(30,70),g:0,life:rnd(.6,1),max:1,col:Math.random()<.5?"#ffd34e":"#2ff0c8",size:rnd(1.6,3),t:"dot"});
  if(C.fx&&e.state!=="dead"){const k=C.rad*e.s,hh=C.hgt*e.s;
@@ -3631,6 +3807,7 @@ function killEnemy(e,dir){
  e.hp=0;e.state="dead";e.st=0;e.kb=dir*170;e.burn=null;
  {const bc=bloodCol(C),lq=bloodLiquid(C);blood(e.x,e.z,e.h+C.hgt*e.s*.5,dir,11,bc,1.1,lq);if(lq){stain(e.x+dir*6,e.z,C.rad*e.s*rnd(1,1.35),bc,true);if(Math.random()<.6)stain(e.x+dir*rnd(14,30),e.z+rnd(-6,6),C.rad*e.s*rnd(.45,.7),bc,false,dir)}}
  kills[C.k]=(kills[C.k]||0)+1;
+ if(!e.summoned&&!e.small){qHit("kill");if(e.rarI)qHit("rare");if(e.boss)qHit("boss")}
  const tm=RARM[C.tier]?RARM[C.tier].g:({common:1,uncommon:1.2,rare:1.45,epic:1.7,elite:2}[C.tier]||1);
  const rm=e.summoned?.3:e.small?.35:1;
  const xp=Math.max(1,Math.round((((12+battleNo*4)*tm*(e.boss?4:1)+(e.boss?100:0))*1.25*(1+P.xpBonus/100)*rm+P.xpFlat*rm)*evM("swarm",1.5)));
@@ -3655,7 +3832,7 @@ function killEnemy(e,dir){
 function xpNeed(L){return Math.round(100+12*Math.pow(L,2.2))}
 function gainXP(x,raw){if(!raw)x=Math.min(x,Math.ceil(xpNeed(P.level)*.5));P.xp+=x;let up=false;while(P.xp>=xpNeed(P.level)){P.xp-=xpNeed(P.level);P.level++;recalc();P.hp=P.maxhp;up=true}
  if(up){beams.push({x:hero.x,z:hero.z,life:1.6,max:1.6,col:"#ffd34e",r:18});decal("rune",hero.x,hero.z,40,1.8,"#ffd34e");setTimeout(()=>SFX.levelChoir(),200)}
- if(up){setTimeout(()=>{banner(t("levelUp",{n:P.level}),t("lvlSub"));SFX.level()},250);for(let i=0;i<34;i++)parts.push({x:hero.x+rnd(-14,14),z:hero.z,h:rnd(0,20),vx:rnd(-30,30),vz:0,vh:rnd(60,140),g:-40,life:rnd(.8,1.3),max:1.3,col:i%2?"#ffd34e":"#b59cff",size:rnd(1.5,3.2),t:"dot"});parts.push({x:hero.x,z:hero.z,h:0,life:.8,max:.8,t:"ring",col:"#ffd34e",size:14});for(let i=0;i<48;i++){const a=i*.52;parts.push({x:hero.x+Math.cos(a)*16,z:hero.z+Math.sin(a)*5,h:i*1.6,vx:-Math.sin(a)*40,vz:Math.cos(a)*14,vh:70,g:0,life:1.1,max:1.1,col:i%3?"#ffd34e":"#fff6d0",size:2.2,t:"dot"})}[0,.25,.5].forEach(d=>setTimeout(()=>parts.push({x:hero.x,z:hero.z,h:0,life:.7,max:.7,t:"ring",col:"#ffe9a0",size:10+d*20}),d*1000));save()}}
+ if(up){setTimeout(()=>{banner(t("levelUp",{n:P.level}),t("lvlSub"));SFX.level()},250);setTimeout(()=>spSay("sLvl"),2200);for(let i=0;i<34;i++)parts.push({x:hero.x+rnd(-14,14),z:hero.z,h:rnd(0,20),vx:rnd(-30,30),vz:0,vh:rnd(60,140),g:-40,life:rnd(.8,1.3),max:1.3,col:i%2?"#ffd34e":"#b59cff",size:rnd(1.5,3.2),t:"dot"});parts.push({x:hero.x,z:hero.z,h:0,life:.8,max:.8,t:"ring",col:"#ffd34e",size:14});for(let i=0;i<48;i++){const a=i*.52;parts.push({x:hero.x+Math.cos(a)*16,z:hero.z+Math.sin(a)*5,h:i*1.6,vx:-Math.sin(a)*40,vz:Math.cos(a)*14,vh:70,g:0,life:1.1,max:1.1,col:i%3?"#ffd34e":"#fff6d0",size:2.2,t:"dot"})}[0,.25,.5].forEach(d=>setTimeout(()=>parts.push({x:hero.x,z:hero.z,h:0,life:.7,max:.7,t:"ring",col:"#ffe9a0",size:10+d*20}),d*1000));save()}}
 
 /* ============ LOOT ============ */
 const goldGrow=()=>(1+Math.min(2,battleNo*.015))*.5;
@@ -3701,6 +3878,7 @@ function spawnLoot(e,it){
  if(it.r>=4){setTimeout(()=>banner(L(RAR[it.r].n)+"!",SLOTS[it.s].ic+" "+itemName(it)),200);flashA=.45;flashCol=RAR[it.r].col}
 }
 function addItem(it){
+ qHit("loot");if(it.r>=3)qHit("epic");if(it.r>=5)spSay("sLoot");
  if(asOn(it.r)){const g=sellPrice(it);P.gold+=g;asellN++;asellG+=g;clearTimeout(asellT);asellT=setTimeout(()=>{toast("💰 "+t("asSold",{n:asellN,g:asellG}),"#d6a24a");asellN=0;asellG=0},350);SFX.cash();return}
  if(bag.length>=BAG_MAX){const g=sellPrice(it);P.gold+=g;toast(t("bagFull",{n:g}),RAR[it.r].col);SFX.sell();return}
  bag.push(it);newItems++;toast(SLOTS[it.s].ic+" "+t("found",{n:itemName(it)}),RAR[it.r].col);SFX.pickup(it.r);save();
@@ -3760,7 +3938,7 @@ function updateFx(dt){
  for(const d of decals)d.life-=dt;decals=decals.filter(d=>d.life>0);for(const b of beams)b.life-=dt;beams=beams.filter(b=>b.life>0);
  for(const st of stains){st.life-=dt;if(st.g<1)st.g=Math.min(1,st.g+dt*1.8)}stains=stains.filter(st=>st.life>0);
  for(const q of texts){q.life-=dt;q.h+=38*dt;q.x+=q.vx*dt}texts=texts.filter(q=>q.life>0);
- for(const k of coins){k.t+=dt;k.spin+=dt*9;if(k.t<.7){k.x+=k.vx*dt;k.z=clamp(k.z+k.vz*dt,zLo(2),zHi(2));k.h+=k.vh*dt;k.vh-=420*dt;if(k.h<0){k.h=0;k.vh*=-.45;k.vx*=.6;k.vz*=.6}}else{const dx=hero.x-k.x,dz=hero.z-k.z,dh=30-k.h,d=Math.hypot(dx,dz,dh),sp=240+k.t*300;k.x+=dx/d*sp*dt;k.z+=dz/d*sp*dt;k.h+=dh/d*sp*dt;if(d<12){k.dead=true;P.gold+=k.v;goldAcc+=k.v;SFX.coin()}}}
+ for(const k of coins){k.t+=dt;k.spin+=dt*9;if(k.t<.7){k.x+=k.vx*dt;k.z=clamp(k.z+k.vz*dt,zLo(2),zHi(2));k.h+=k.vh*dt;k.vh-=420*dt;if(k.h<0){k.h=0;k.vh*=-.45;k.vx*=.6;k.vz*=.6}}else{const dx=hero.x-k.x,dz=hero.z-k.z,dh=30-k.h,d=Math.hypot(dx,dz,dh),sp=240+k.t*300;k.x+=dx/d*sp*dt;k.z+=dz/d*sp*dt;k.h+=dh/d*sp*dt;if(d<12){k.dead=true;P.gold+=k.v;goldAcc+=k.v;qHit("gold",k.v);SFX.coin()}}}
  coins=coins.filter(k=>!k.dead);
  for(const b of bolts){if(b.delay>0){b.delay-=dt;continue}b.life-=dt;if(b.e&&!b.hit){b.hit=true;if(b.snd)SFX.bolt();decal("scorch",b.e.x,b.e.z,22,4,"#000000");if(b.e.state!=="dead")damageEnemy(b.e,b.dmg,false,b.e.x>hero.x?1:-1,120,"bolt");b.x=b.e.x;b.z=b.e.z;b.h=b.e.h;sparks(b.x,b.z,b.h+20,"#bfe6ff",12,1);shake+=2}if(!b.pts||Math.random()<.4)b.pts=boltPts(b)}
  bolts=bolts.filter(b=>b.life>0);
@@ -5918,7 +6096,7 @@ function chestTick(dt){
    const g=Math.max(5,Math.round((14+battleNo*5)*(c.gold?2.2:1)*(1+P.goldBonus/100)*goldGrow()));spawnCoins(c.x,c.z,10,g);
    const o={x:c.x,z:c.z,h:8};spawnLoot(o,makeItem(rollRarity(c.gold?2:1)));if(c.gold)setTimeout(()=>spawnLoot(o,makeItem(rollRarity(1))),260);
    for(let i=0;i<26;i++){const a=rnd(0,PI*2),sp=rnd(40,120);parts.push({x:c.x,z:c.z,h:12,vx:Math.cos(a)*sp,vz:Math.sin(a)*sp*.35,vh:rnd(60,160),g:200,life:rnd(.5,.9),max:.9,col:i%3?"#ffd34e":"#fff6c0",size:rnd(1.5,3),t:"spark"})}
-   SFX.unlock();toast("💰 "+t("chestOpen"),"#ffd34e");save()}}
+   SFX.unlock();toast("💰 "+t("chestOpen"),"#ffd34e");qHit("chest");save()}}
  chests=chests.filter(c=>!c.open||c.t<20)}
 /* ---- variety: random battle events and roadside shrines with short buffs ---- */
 const EVTS=[
@@ -6070,7 +6248,7 @@ function update(dt){
  enemies=enemies.filter(e=>!(e.wild&&e.state==="roam"&&e.x<hero.x-1600));
  const target=isFP()?hero.x-LW*.35:locked?arenaX:Math.max(arenaX,hero.x-LW*.35);camX+=(target-camX)*Math.min(1,dt*5);
  chestTick(dt);shrineTick(dt);
- if(locked&&!enemies.some(e=>e.state!=="dead"&&!e.wild)){locked=false;cleared=true;evtEnd();openWorldNext();hero.victT=1.4;SFX.clear();{const sw=$("sweep");sw.classList.remove("go");void sw.offsetWidth;sw.classList.add("go")}projs=projs.filter(q=>q.k==="fire");const reg=Math.round(P.maxhp*.35);if(P.hp<P.maxhp&&hero.state!=="dead"){P.hp=Math.min(P.maxhp,P.hp+reg)}banner(t("cleared"),t("goRight"));fireworks();save()}
+ if(locked&&!enemies.some(e=>e.state!=="dead"&&!e.wild)){locked=false;cleared=true;evtEnd();openWorldNext();hero.victT=1.4;SFX.clear();{const sw=$("sweep");sw.classList.remove("go");void sw.offsetWidth;sw.classList.add("go")}projs=projs.filter(q=>q.k==="fire");const reg=Math.round(P.maxhp*.35);if(P.hp<P.maxhp&&hero.state!=="dead"){P.hp=Math.min(P.maxhp,P.hp+reg)}banner(t("cleared"),t("goRight"));fireworks();qHit("win");if(Math.random()<.45)setTimeout(()=>spSay(Math.random()<.5?"sWin":"sMore"),1600);save()}
  if(cleared&&!locked&&(isFP()?goal&&Math.hypot(hero.x-goal.x,(hero.z-goal.z)*ZS)<60:hero.x>arenaX+LW*.97)){battleNo++;startWave()}
  if(hero.state==="dead"){deadTimer+=dt;if(deadTimer>1.5&&modalOpen!=="mDead")openModal("mDead")}
 }
@@ -6119,9 +6297,9 @@ function hud(){
  {const lv=String(P.level),gd=String(P.gold);if(_dc.hLv!==undefined&&_dc.hLv!==lv)popCls($("hLv"),"popN");if(_dc.hGold!==undefined&&_dc.hGold!==gd)popCls($("hGold"),"bump")}
  setTx("hName",nickname);setTx("hLv",P.level);if(_dc.nn!==!!nickname){_dc.nn=!!nickname;$("hName").parentNode.classList.toggle("nonick",!nickname)}
  {const need=xpNeed(P.level);setW("xpBar",P.xp/need*100);setTx("xpTxt",Math.floor(P.xp)+" / "+need)}
- setTx("hGold",P.gold);
+ setTx("hGold",P.gold);{const gs=nfm(gem.n);if(_dc.hGem!==undefined&&_dc.hGem!==gs)popCls($("hGem"),"bump");setTx("hGem",gs)}
  if(goldAcc>0&&realT-goldT>.45){goldT=realT;const el=document.createElement("span");el.className="gfly";el.textContent="+"+goldAcc+" 🪙";$("gflyW").appendChild(el);setTimeout(()=>el.remove(),1100);goldAcc=0}setTx("hWave","#"+battleNo);
- luckTick();luckLive();
+ luckTick();luckLive();gemTick();
  const nn=bag.filter(x=>x.nw).length,ib=$("invBdg");setTx("invBdg",nn>99?"99+":nn);ib.classList.toggle("on",nn>0);
  $("luckBdg").classList.toggle("on",(!luck.until&&luck.lvl<LUCK_MAX&&P.gold>=luckCost(luck.lvl))||(!foe.until&&foe.lvl<FOE_MAX&&P.gold>=foeCost(foe.lvl)));
  const hpr=clamp((P.hp||0)/(P.maxhp||1),0,1);setW("hpBar",hpr*100);setTx("hpTxt",Math.ceil(P.hp)+" / "+P.maxhp);
@@ -6146,7 +6324,7 @@ function fillPHero(){
  const need=xpNeed(P.level),x=$("phXp");x.style.width="0";requestAnimationFrame(()=>requestAnimationFrame(()=>{x.style.width=clamp(P.xp/need*100,0,100)+"%"}))}
 document.querySelectorAll("#mPause .row").forEach((r,i)=>r.style.setProperty("--ri",i));
 function openModal(id){closeModal(true);modalOpen=id;paused=true;$(id).classList.add("on");attackHeld=false;joy.id=null;joy.x=joy.y=0;look.id=null;joyRest();for(const k in keys)keys[k]=false;
- if(id==="mTree")renderTree();if(id==="mBest")buildBestiary();if(id==="mPause"){fillSettings();fillPHero()}if(id==="mInv"){iSel=null;renderInv()}if(id==="mDrops")renderDrops();if(id==="mForge"){forgeCheck();renderForge()}SFX.open()}
+ if(id==="mTree")renderTree();if(id==="mBest")buildBestiary();if(id==="mPause"){fillSettings();fillPHero()}if(id==="mInv"){iSel=null;renderInv()}if(id==="mDrops")renderDrops();if(id==="mForge"){forgeCheck();renderForge()}if(id==="mDaily")renderDaily();SFX.open()}
 function closeModal(silent){if(!modalOpen)return;if(typeof hideTip2==="function")hideTip2();if(modalOpen==="mInv")bag.forEach(x=>x.nw=false);if(!silent)SFX.close();$(modalOpen).classList.remove("on");modalOpen=null;paused=false;last=performance.now();if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();if(!silent)save()}
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal()));
 document.querySelectorAll(".modal").forEach(m=>m.addEventListener("pointerdown",e=>{if(e.target!==m||m.id==="mDead")return;if(m.id==="mAuth")openModal("mPause");else closeModal()}));
@@ -6656,7 +6834,7 @@ function forgeUp(n){
  while(done<n&&(it.up|0)<UP_MAX){const c=forgeUpCost(it);if(P.gold<c)break;P.gold-=c;it.inv=(it.inv|0)+c;it.up=(it.up|0)+1;done++}
  if(!done){if((it.up|0)>=UP_MAX){toast(t("maxed"))}else fgNeed();return}
  SFX.hit();SFX.coin();if(it.up%5===0||it.up>=UP_MAX){SFX.unlock();banner("🔨 +"+it.up,itemName0(it))}
- toast("🔨 "+t("fgDone",{n:it.up}),RAR[it.r].col);
+ toast("🔨 "+t("fgDone",{n:it.up}),RAR[it.r].col);qHit("forge",done);
  applyEq();renderForge();
  const ic=$("fgIc");if(ic){popCls(ic,"fgHit");fgBurst(ic,RAR[it.r].col)}
 }
@@ -6764,6 +6942,73 @@ function luckStart(){const l=luck.lvl;if(luck.until||l>=LUCK_MAX)return;const co
 document.querySelectorAll(".dtab").forEach(x=>x.addEventListener("click",()=>{SFX.tab();dTab=x.dataset.dt;renderDrops()}));
 function luckLive(){if(modalOpen!=="mDrops")return;if(foe.until){const l=foe.lvl,dur=(foe.dur||foeTime(l))*1000,left=foe.until-Date.now();const a=$("fpT"),b=$("fpI");if(a)a.textContent="⏳ "+t("luckRun",{t:fmtT(left/1000)});if(b)b.style.width=clamp(100-left/dur*100,0,100).toFixed(1)+"%"}if(!luck.until)return;const l=luck.lvl,dur=(luck.dur||luckTime(l))*1000,left=luck.until-Date.now();const a=$("lpT"),b=$("lpI");if(a)a.textContent="⏳ "+t("luckRun",{t:fmtT(left/1000)});if(b)b.style.width=clamp(100-left/dur*100,0,100).toFixed(1)+"%"}
 
+/* ---- gems: earning, quests, the 🎁 screen, the gem shop ---- */
+let gTab="gDay",gJust=0,gLast=null,gChk=0,nickArm=0;
+const nfm=v=>v>=1e6?(v/1e6).toFixed(1).replace(/\.0$/,"")+"M":v>=1e4?Math.round(v/1e3)+"k":String(v);
+const fmtL=sec=>sec>=86400?t("dShort",{n:Math.floor(sec/86400)})+" "+fmtT(sec%86400):fmtT(sec);
+function gemAdd(n){const k=Math.max(0,Math.min(n|0,gemRoom()));if(!k)return 0;gem.n+=k;gem.earned+=k;
+ const el=document.createElement("span");el.className="gfly gm";el.textContent="+"+k+" 💎";$("gflyW").appendChild(el);setTimeout(()=>el.remove(),1100);return k}
+function gemPop(src,n){const r=src&&src.getBoundingClientRect?src.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0};
+ for(let i=0;i<Math.min(14,4+n/10|0);i++){const e=document.createElement("i");e.className="gpop";e.textContent="💎";e.style.left=r.left+r.width/2+"px";e.style.top=r.top+r.height/2+"px";e.style.setProperty("--dx",rnd(-90,90)+"px");e.style.setProperty("--dy",rnd(-120,-30)+"px");e.style.animationDelay=i*35+"ms";document.body.appendChild(e);setTimeout(()=>e.remove(),1100+i*35)}}
+SFX.gem=()=>{[1568,2093,2637,3136].forEach((f,i)=>tone(f,.16,"sine",.045,f*1.02,i*.055));noise(.25,.06,"highpass",5000)};
+SFX.quest=()=>{[523,659,784,1047].forEach((f,i)=>tone(f,.2,"triangle",.06,0,i*.08));tone(1568,.35,"sine",.04,0,.32)};
+SFX.talk=()=>{tone(620,.05,"sine",.025,820);tone(940,.05,"sine",.02,0,.05)};
+function qHit(k,v){if(!gem.qd)return;gemRoll();
+ for(const [w,L0] of [[0,gem.qd.list],[1,gem.qw.list]])for(const q of L0){if(q.k!==k||q.h>=q.n)continue;q.h=Math.min(q.n,q.h+(v||1));
+  if(q.h>=q.n){setTimeout(()=>{toast((w?"📅 ":"✅ ")+t("qDone")+" "+t("q_"+q.k,{n:nfm(q.n)}),"#6bf0ae");SFX.quest();spSay("sQuest",1)},w?900:400)}}}
+function gemReady(){if(canDay())return true;const r=qRoom();return r>0&&[...gem.qd.list,...gem.qw.list].some(q=>q.h>=q.n&&q.got<q.g)}
+function claimDay(btn){gemRoll();if(!canDay())return;const n=dayNext(),g=dayGem(n);gem.streak=n;gem.last=dayKey();const k=gemAdd(g);
+ if(n%7===0)setTimeout(()=>addItem(makeItem(rollRarity(3))),350);
+ gJust=n;gemPop(btn,k);SFX.gem();SFX.jackpot();toast("💎 +"+k,"#7fe8ff");save();renderDaily();hud()}
+function claimQ(w,i,btn){const q=(w?gem.qw:gem.qd).list[i];if(!q||q.h<q.n||q.got>=q.g)return;const room=qRoom();if(room<=0){toast(t("gemCap"),"#ffb070");SFX.buzz();return}
+ const k=gemAdd(Math.min(q.g-q.got,room));q.got+=k;gemPop(btn,k);SFX.gem();toast("💎 +"+k,"#7fe8ff");save();renderDaily();hud()}
+function skipCost(){const now=Date.now();let sec=0;if(luck.until>now)sec+=(luck.until-now)/1000;if(foe.until>now)sec+=(foe.until-now)/1000;return sec>0?Math.max(5,Math.ceil(sec/10)):0}
+function renderDaily(){gemRoll();const can=canDay(),nx=dayNext(),room=qRoom();
+ $("gmN").textContent=nfm(gem.n);$("gmToday").textContent=t("gemToday",{n:gem.earned,m:GEM_CAP});$("gmCapI").style.width=Math.min(100,gem.earned/GEM_CAP*100)+"%";
+ const base=Math.floor((nx-1)/7)*7;
+ let h=`<div class="kpr"><i class="kprI">🧙</i><div class="kprB"><b>${t("keeper")}</b><p>${t("keeperHi")}</p></div></div><div class="streak">🔥 ${t("streak",{n:can?nx-1:gem.streak})}</div><div class="dlad">`;
+ for(let i=1;i<=7;i++){const n=base+i,st=n<nx||(!can&&n===nx)?"got":n===nx?"now":"fut";
+  h+=`<div class="dday ${st}${n%7===0?" big":""}${gJust===n?" just":""}" style="--i:${i}"><small>${t("dayN",{n})}</small><b>💎${dayGem(n)}</b>${n%7===0?`<em>🧰 ${t("bonusChest")}</em>`:""}${st==="got"?`<i class="ck">✓</i>`:""}</div>`}
+ h+=`</div>`+(can?`<button class="btn main wide" id="gClaim" type="button">${t("claim")} · 💎${dayGem(nx)}</button>`:`<div class="gNext"><span class="gOk">${t("claimed")}</span><span class="m" id="gNextT">${t("comeBack",{t:fmtT(toMid())})}</span></div>`);
+ $("gDay").innerHTML=h;gJust=0;
+ const qRow=(q,w,i)=>{const done=q.h>=q.n,left=q.g-q.got,fin=left<=0;
+  return`<div class="qc${fin?" fin":done?" rdy":""}" style="--i:${i+w*3}"><div class="qi">${QIC[q.k]}</div><div class="qm"><b>${t("q_"+q.k,{n:nfm(q.n)})}</b><div class="qbar"><i style="width:${(q.h/q.n*100).toFixed(1)}%"></i><span>${nfm(q.h)} / ${nfm(q.n)}</span></div></div><div class="qr">${fin?`<span class="gOk">✓</span>`:done?`<button class="btn main sm" type="button" data-q="${w}${i}" ${room<=0?"disabled":""}>${t("claim")} 💎${left}</button>`:`<span class="qg">💎${left}</span>`}</div></div>`};
+ const anyRdy=[...gem.qd.list,...gem.qw.list].some(q=>q.h>=q.n&&q.got<q.g);
+ $("gQ").innerHTML=`<div class="qh"><h3 class="h3">${t("qDaily")}</h3><span id="qdT">⏳ ${t("qReset",{t:fmtL(toMid())})}</span></div>${gem.qd.list.map((q,i)=>qRow(q,0,i)).join("")}<div class="qh"><h3 class="h3">${t("qWeekly")}</h3><span id="qwT">⏳ ${t("qReset",{t:fmtL(toWk())})}</span></div>${gem.qw.list.map((q,i)=>qRow(q,1,i)).join("")}${anyRdy&&room<=0?`<p class="gWarn">⚠ ${t("gemCap")}</p>`:""}`;
+ const sc=skipCost(),nkFree=!nickname||gem.nk<1;
+ $("gShop").innerHTML=`<div class="gsc" style="--i:0"><div class="gsI">🧰</div><div class="gsM"><b>${t("gemChest")}</b><div class="m">${t("gemChestD")}</div>${gLast?`<div class="gLast" style="color:${RAR[gLast.r].col}">${SLOTS[gLast.s].ic} ${itemName(gLast)}</div>`:""}</div><button class="btn main" type="button" id="gBuyC" ${gem.n<GCH_COST?"disabled":""}>${t("gemBuy",{n:GCH_COST})}</button></div>
+<div class="gsc" style="--i:1"><div class="gsI">⏩</div><div class="gsM"><b>${t("gemSkip")}</b><div class="m">${sc?t("gemSkipD"):t("noSkip")}</div></div><button class="btn main" type="button" id="gBuyS" ${!sc||gem.n<sc?"disabled":""}>${sc?t("gemBuy",{n:sc}):"—"}</button></div>
+<div class="gsc" style="--i:2"><div class="gsI">✏️</div><div class="gsM"><b>${t("nick")}</b><div class="m">${nkFree?t("nickFree"):t("nickCost",{n:NICK_COST})}</div></div><button class="btn" type="button" id="gNick">${t("settings")}</button></div>`;
+ $("gtD").classList.toggle("on",can);$("gtQ").classList.toggle("on",anyRdy&&room>0);
+ document.querySelectorAll(".gtab").forEach(x=>x.classList.toggle("on",x.dataset.gt===gTab));document.querySelectorAll(".gpane").forEach(x=>x.classList.toggle("on",x.id===gTab));
+ const cb=$("gClaim");if(cb)cb.onclick=()=>claimDay(cb)}
+document.querySelectorAll(".gtab").forEach(x=>x.addEventListener("click",()=>{SFX.tab();gTab=x.dataset.gt;renderDaily()}));
+$("gQ").addEventListener("click",e=>{const b=e.target.closest("[data-q]");if(!b||b.disabled)return;claimQ(+b.dataset.q[0],+b.dataset.q.slice(1),b)});
+$("gShop").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.disabled)return;
+ if(b.id==="gBuyC"){if(gem.n<GCH_COST){toast(t("needGems"));SFX.buzz();return}gem.n-=GCH_COST;const it=makeItem(rollRarity(3));gLast=it;addItem(it);SFX.buy();SFX.divine();gemPop(b,20);save();renderDaily();hud()}
+ else if(b.id==="gBuyS"){const c=skipCost();if(!c){toast(t("noSkip"));return}if(gem.n<c){toast(t("needGems"));SFX.buzz();return}gem.n-=c;const now=Date.now();if(luck.until>now)luck.until=now;if(foe.until>now)foe.until=now;luckTick();SFX.buy();save();renderDaily();hud()}
+ else if(b.id==="gNick"){openModal("mPause");setTimeout(()=>{const n=$("nickIn");if(n){n.scrollIntoView({block:"center"});n.focus()}},60)}});
+$("bDaily").onclick=$("pDaily").onclick=()=>openModal("mDaily");
+/* light checks, about once a second: new day, the 🎁 badge, live timers */
+function gemTick(){if(realT-gChk<1)return;gChk=realT;
+ const d=dayKey();if(d!==gem.day){const wasNew=gem.last!==d;gemRoll();if(wasNew)spSay("sDay",1);save();if(modalOpen==="mDaily")renderDaily()}
+ const rdy=gemReady();$("dayBdg").classList.toggle("on",rdy);$("bDaily").classList.toggle("rdy",rdy&&canDay());
+ if(eq.spirit&&!gem.hi&&!paused){gem.hi=1;spSay("sHi",1);save()}
+ if(modalOpen==="mDaily"){const a=$("gNextT"),b=$("qdT"),c=$("qwT");if(a)a.textContent=t("comeBack",{t:fmtT(toMid())});if(b)b.textContent="⏳ "+t("qReset",{t:fmtL(toMid())});if(c)c.textContent="⏳ "+t("qReset",{t:fmtL(toWk())})}}
+function fillNickCost(){const el=$("nickCostM");if(el)el.textContent="✏️ "+((!nickname||gem.nk<1)?t("nickFree"):t("nickCost",{n:NICK_COST}))}
+
+/* ---- dialogues: one line at a time, typed out (bosses, the hero, the Spirit, the keeper) ---- */
+const dlgQ=[];let dlgOn=null,dlgTy=null,dlgTo=null,spLast=-99;const spKeyT={};
+function say(who,txt,col,ic){if(dlgQ.length>3)dlgQ.shift();dlgQ.push({who,txt,col,ic});if(!dlgOn)dlgNext()}
+function dlgNext(){const el=$("dlg"),d=dlgQ.shift();clearInterval(dlgTy);if(!d){dlgOn=null;el.classList.remove("on");return}dlgOn=d;
+ $("dlgN").textContent=d.who;$("dlgI").textContent=d.ic||"💬";el.style.setProperty("--dc",d.col||"#d6a24a");const p=$("dlgT"),ch=[...d.txt];p.textContent="";
+ el.classList.remove("on");void el.offsetWidth;el.classList.add("on");SFX.talk();
+ const t0=performance.now();dlgTy=setInterval(()=>{const i=Math.ceil((performance.now()-t0)/22);p.textContent=ch.slice(0,i).join("");if(i>=ch.length)clearInterval(dlgTy)},30);
+ clearTimeout(dlgTo);dlgTo=setTimeout(()=>{el.classList.remove("on");setTimeout(dlgNext,320)},Math.max(2400,ch.length*60+1400))}
+function spSay(k,force){const it=eq.spirit,keeper=k==="sQuest"||k==="sDay";if(!it&&!keeper)return;if(!DLG[k])return;const now=performance.now()/1000;
+ if(!force&&(now-spLast<14||now-(spKeyT[k]||-99)<50))return;spLast=now;spKeyT[k]=now;
+ if(it)say(itemName0(it),L(DLG[k]),spCol(it),"✨");else say(t("keeper"),L(DLG[k]),"#c9a8ff","🧙")}
+function bossTalk(e){say(L(e.cfg.n),L(DLG["bt"+rint(1,8)]),"#ffb03a","👹");say(nickname||t("hero"),L(DLG["hr"+rint(1,4)]),"#8fc6ff","🗡️")}
 
 let bestCv=[];
 const TIERCOL={common:"#b9a6b0",uncommon:"#7fe0a8",rare:"#8fc6ff",epic:"#c79cff",elite:"#e6c46a",boss:"#ffd98a",mythic:"#ff4d6d",ancient:"#2ff0c8",divine:"#fff1a0",eclipse:"#ff2a2a",ancientone:"#c2a272",eternal:"#ff5640",shadow:"#8f7cc8",heavenly:"#fff1c8"};
@@ -6818,7 +7063,7 @@ async function hashPw(pw,salt){
  try{if(window.crypto&&crypto.subtle){const enc=new TextEncoder(),key=await crypto.subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveBits"]);const bits=await crypto.subtle.deriveBits({name:"PBKDF2",salt:enc.encode(salt),iterations:120000,hash:"SHA-256"},key,256);return"p2$"+bufHex(bits)}}catch(e){}
  let h1=0xdeadbeef,h2=0x41c6ce57;const str=salt+"|"+pw;for(let r=0;r<2000;r++)for(let i=0;i<str.length;i++){const ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}return"f1$"+(h1>>>0).toString(16)+(h2>>>0).toString(16)}
 function resetWorld(){goal=null;chests=[];slashes=[];debris=[];enemies=[];projs=[];coins=[];bolts=[];parts=[];texts=[];stains=[];loots=[];decals=[];beams=[];hero.slow=0;setHero("idle");hero.inv=1;hero.x=LW*.3;hero.z=60;camX=0;arenaX=0;locked=false;cleared=false;tSel=null;renderTree.did=0;mapCancel();startWave()}
-function switchTo(email,fresh){save();session=email;if(fresh){P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};foe={lvl:0,until:0};itemSeq=1;forge={seed:-1,stock:[],rr:0,owned:[]};nickname=LS.get(PK("r2_nick"),"")}else loadState();prevVis=null;iSel=null;recalc();if(!(P.hp>0))P.hp=P.maxhp;save();resetWorld();hud()}
+function switchTo(email,fresh){save();session=email;if(fresh){P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};foe={lvl:0,until:0};itemSeq=1;forge={seed:-1,stock:[],rr:0,owned:[]};nickname=LS.get(PK("r2_nick"),"");gem=GEM0();gemRoll()}else loadState();prevVis=null;iSel=null;recalc();if(!(P.hp>0))P.hp=P.maxhp;save();resetWorld();hud()}
 $("aGo").onclick=async()=>{
  const err=m=>{$("aErr").textContent=m};
  const email=$("aEmail").value.trim().toLowerCase(),pw=$("aPass").value;
@@ -6845,10 +7090,15 @@ $("aGo").onclick=async()=>{
 };
 function logOut(){switchTo(null,false);toast(t("loggedOut"));fillSettings()}
 function tglSet(id,on){const b=$(id);b.className="tgl"+(on?" on":"");b.setAttribute("aria-pressed",on?"true":"false");if(!b.firstChild||b.firstChild.tagName!=="I")b.innerHTML="<i></i>"}
-function fillSettings(){fillAccount();$("nickIn").value=nickname;$("langSel").value=lang;$("sfxR").value=S.sfx;$("musR").value=S.music;tglSet("musB",S.musicOn);$("gfxSel").innerHTML=[["ultra","gfxUltra"],["hi","gfxHi"],["lo","gfxLo"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("gfxSel").value=gfxMode();tglSet("fpsB",S.fps);tglSet("stickB",!!S.stickTurn);if(typeof fillPickers==="function")fillPickers()}
+function fillSettings(){fillAccount();$("nickIn").value=nickname;$("langSel").value=lang;$("sfxR").value=S.sfx;$("musR").value=S.music;tglSet("musB",S.musicOn);$("gfxSel").innerHTML=[["ultra","gfxUltra"],["hi","gfxHi"],["lo","gfxLo"]].map(([k,n])=>`<option value="${k}">${t(n)}</option>`).join("");$("gfxSel").value=gfxMode();tglSet("fpsB",S.fps);tglSet("stickB",!!S.stickTurn);fillNickCost();if(typeof fillPickers==="function")fillPickers()}
 $("donCopy").onclick=()=>{const v=$("donCard").textContent.trim();const ok=()=>{toast("✓ "+t("copied"),"#d6a24a");SFX.cash()};try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(ok,()=>{selCard();ok()});else{selCard();document.execCommand("copy");ok()}}catch(e){selCard()}};
 function selCard(){try{const r=document.createRange();r.selectNodeContents($("donCard"));const sl=getSelection();sl.removeAllRanges();sl.addRange(r)}catch(e){}}
-$("nickOk").onclick=()=>{nickname=$("nickIn").value.trim().slice(0,18);save();hud();toast(t("saved"))};
+$("nickOk").onclick=()=>{const v=$("nickIn").value.trim().slice(0,18);if(v===nickname){toast(t("saved"));return}
+ const paid=!!nickname&&gem.nk>=1;
+ if(paid){if(gem.n<NICK_COST){toast(t("needGems")+" · 💎"+NICK_COST);SFX.buzz();return}
+  if(Date.now()-nickArm>3000){nickArm=Date.now();$("nickOk").textContent="💎 "+NICK_COST+"?";toast(t("nickPay",{n:NICK_COST}),"#7fe8ff");setTimeout(()=>{if(nickArm&&Date.now()-nickArm>=2900){nickArm=0;$("nickOk").textContent=t("save")}},3000);return}
+  gem.n-=NICK_COST;SFX.gem()}
+ nickArm=0;$("nickOk").textContent=t("save");if(nickname)gem.nk++;nickname=v;save();hud();fillNickCost();toast(t("saved"))};
 $("nickIn").addEventListener("keydown",e=>{if(e.key==="Enter")$("nickOk").click()});
 $("langSel").innerHTML=LANGS.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
 const FLAG={uk:"🇺🇦",en:"🇬🇧",fr:"🇫🇷",de:"🇩🇪",zh:"🇨🇳",es:"🇪🇸",it:"🇮🇹",pl:"🇵🇱",pt:"🇵🇹",ja:"🇯🇵",ko:"🇰🇷",tr:"🇹🇷",id:"🇮🇩",hi:"🇮🇳",vi:"🇻🇳",th:"🇹🇭",nl:"🇳🇱",ar:"🇸🇦",bn:"🇧🇩",fil:"🇵🇭"};
@@ -6870,10 +7120,10 @@ $("musR").oninput=e=>{S.music=+e.target.value};
 $("musB").onclick=()=>{S.musicOn=!S.musicOn;if(S.musicOn)musicStart();else musicStop();fillSettings();save()};
 let resetArm=0;
 $("resetB").onclick=()=>{if(Date.now()-resetArm>3000){resetArm=Date.now();$("resetB").textContent=t("resetQ");setTimeout(()=>{if(resetArm&&Date.now()-resetArm>=2900)$("resetB").textContent=t("reset")},3000);return}
- resetArm=0;$("resetB").textContent=t("reset");P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};foe={lvl:0,until:0};itemSeq=1;forge={seed:-1,stock:[],rr:0,owned:[]};tSel=null;prevVis=null;iSel=null;recalc();P.hp=P.maxhp;save();closeModal(true);enemies=[];projs=[];coins=[];loots=[];hero.x=150;hero.z=60;setHero("idle");camX=0;arenaX=0;mapCancel();startWave()};
+ resetArm=0;$("resetB").textContent=t("reset");P=Object.assign({},DEF_P);tal=[];train={};kills={};battleNo=1;bag=[];eq={};luck={lvl:0,until:0};foe={lvl:0,until:0};itemSeq=1;forge={seed:-1,stock:[],rr:0,owned:[]};gem=Object.assign(GEM0(),{nk:gem.nk});gemRoll();tSel=null;prevVis=null;iSel=null;recalc();P.hp=P.maxhp;save();closeModal(true);enemies=[];projs=[];coins=[];loots=[];hero.x=150;hero.z=60;setHero("idle");camX=0;arenaX=0;mapCancel();startWave()};
 function applyLang(){LX=Math.max(0,LANGS.findIndex(l=>l[0]===lang));document.documentElement.lang=lang;document.querySelectorAll("[data-i]").forEach(el=>el.textContent=t(el.dataset.i));
  document.querySelectorAll("[data-tk]").forEach(el=>{const em=el.querySelector("em"),lab=t(el.dataset.tk)+(em?" ("+em.textContent+")":"");el.dataset.tip=lab;el.setAttribute("aria-label",lab)});
- $("nickIn").placeholder=t("nickPh");[["pTree","🌳","tree"],["pInv","🎒","inv"],["pDrops","🎲","drops"],["pBest","📖","best"],["pForge","🔨","forge"]].forEach(([id,ic,k])=>{$(id).innerHTML=`<i class="pi">${ic}</i><span>${t(k)}</span>`});
+ $("nickIn").placeholder=t("nickPh");[["pTree","🌳","tree"],["pInv","🎒","inv"],["pDrops","🎲","drops"],["pBest","📖","best"],["pForge","🔨","forge"],["pDaily","🎁","hbDaily"]].forEach(([id,ic,k])=>{$(id).innerHTML=`<i class="pi">${ic}</i><span>${t(k)}</span>`});
  if(modalOpen==="mForge")renderForge();if(modalOpen==="mTree")renderTree();if(modalOpen==="mInv")renderInv();if(modalOpen==="mDrops")renderDrops();if(modalOpen==="mBest")buildBestiary()}
 
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&!modalOpen&&hero.state!=="dead"){openModal("mPause")}});
