@@ -27,3 +27,5 @@
 - Tutorial: `TUT` steps with a spotlight (`tutStart`, `tutShow`), reward once per profile (`r2_tutR`), replay button in the settings.
 - Bestiary shows one tier at a time (`bFil`, chips in `#bFilt`), never every card at once.
 - Boss lines: `bossTalk` (intro), `bossMid` (half health), `bossFall` (defeat); keys bt*, hr*, bm*, bd*, hv* in `DLGsrc`.
+- 🎁 menu tabs: Daily, Quests (4 daily + 4 weekly, 22 kinds in `QT`), Achievements (`ACH`, tiers paid by `achPay`; new rarities found pay `rfGem`), Wheel (`WHEEL`, one free spin a day, then `SPIN_COST`), Shop (chests by tier, `BOOSTS` for 15 min, shown in the buff bar).
+- Maps: 35 biomes (`BIOMES`, `BIOME_ORDER`, names in `BIOME_N`); each map plays its own nature sounds (`AMB_K`, `ambTick`). Skill tree has 42 rings (608 nodes).
