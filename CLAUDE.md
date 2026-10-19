@@ -22,3 +22,8 @@
 - Friends work without a server: a friend code (`MRPG1.` + base64 JSON from `frMe()`) carries the profile; `frParse` reads it from any pasted text. Players on the same phone are listed too (`frLocal`).
 - What's new: add a line to `NEWS` (newest first, strings `n…` in `T8src`) with every update; it opens once by itself.
 - Resetting progress goes through the warning window `#resetPop` (button wakes after 3 s), then `doReset()`.
+- Portrait HUD: a grid (HP plate + gold on row 1, all buttons on row 2), so every button stays on screen; keep that in mind when adding HUD buttons.
+- Friend codes are short now: `MR2.<id>.<nick b64>.<lvl>.<battle>.<kills>.<power>.<rarity per slot>` (`frShort`); old `MRPG1.` codes still parse.
+- Tutorial: `TUT` steps with a spotlight (`tutStart`, `tutShow`), reward once per profile (`r2_tutR`), replay button in the settings.
+- Bestiary shows one tier at a time (`bFil`, chips in `#bFilt`), never every card at once.
+- Boss lines: `bossTalk` (intro), `bossMid` (half health), `bossFall` (defeat); keys bt*, hr*, bm*, bd*, hv* in `DLGsrc`.
