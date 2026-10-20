@@ -23,7 +23,7 @@
 - What's new: add a line to `NEWS` (newest first, strings `n…` in `T8src`) with every update; it opens once by itself.
 - Resetting progress goes through the warning window `#resetPop` (button wakes after 3 s), then `doReset()`.
 - Portrait HUD: a grid (HP plate + gold on row 1, all buttons on row 2), so every button stays on screen; keep that in mind when adding HUD buttons.
-- Friend codes are short now: `MR2.<id>.<nick b64>.<lvl>.<battle>.<kills>.<power>.<rarity per slot>` (`frShort`); old `MRPG1.` codes still parse.
+- Friend codes: `Nick#XXXX-XXXX-XXXX-XXXX` (MR3, `frCode3`/`frShort3`: 80 bits in Crockford base32 with a check nibble, rarity stored by stable id `rId`/`rById`) so they can be typed by hand; old `MR2.` and `MRPG1.` codes still parse.
 - Tutorial: `TUT` steps with a spotlight (`tutStart`, `tutShow`), reward once per profile (`r2_tutR`), replay button in the settings.
 - Bestiary shows one tier at a time (`bFil`, chips in `#bFilt`), never every card at once.
 - Boss lines: `bossTalk` (intro), `bossMid` (half health), `bossFall` (defeat); keys bt*, hr*, bm*, bd*, hv* in `DLGsrc`.
@@ -31,3 +31,7 @@
 - Maps: 35 biomes (`BIOMES`, `BIOME_ORDER`, names in `BIOME_N`); each map plays its own nature sounds (`AMB_K`, `ambTick`). Skill tree has 42 rings (608 nodes).
 - Languages: 20 main ones (`LANGS`, 20-field `S8` strings) + 32 extra (`LANGX`). Extra ones translate menus, quests, the tutorial and dialogues through packed dictionaries keyed by the English text (`XEN`, `XPK`, unpacked by `xlLoad` into `XD`); enemy and item names stay English there. The picker can be searched by native or English name (`LEN`, `lgRender`). New UI text shows in English for the extra languages until `XEN`/`XPK` are rebuilt with its translations.
 - Named items: `UNQ2[rarity][slot]` (slot 10 = the Spirit) holds about 13 named items per rarity per slot; the drawing kind is picked from the words in the English name.
+- Emoji inside SVG drawings are left as text (`emoText` skips SVG); use `svgEmo()` to draw our own icon as an SVG <image>.
+- Wheel of Fortune shows every prize with its chance (`wPrizeHTML`) and the spin stats in `gem.ws` (`wStatsHTML`). Achievements tab starts with a Statistics card.
+- Side roads: `sRoad(chunk)` makes dirt paths left/right off the main road (`srX`/`srZ`, built in `buildChunk`, drawn on the minimap); a chest waits at the end, opened ones are kept in `gem.srd`.
+- Tutorial pays `TUT_STEP` gold per new step (`r2_tutS`) and the big prize once (`tutPay`, shown in the card).
