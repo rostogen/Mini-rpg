@@ -8,7 +8,7 @@
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
 (function(){
-var W=window,D=document,B=W.__boot={v:"2026.10.20-b",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
+var W=window,D=document,B=W.__boot={v:"2026.10.20-c",err:[],main:0,started:0,fr:0},T0=new Date().getTime(),box=null;
 function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
@@ -772,6 +772,11 @@ body[data-gfx="hi"] .vig{display:block}
 .lgrid .lgN{display:flex;flex-direction:column;min-width:0;line-height:1.15}.lgrid .lgN small{font-size:11px;font-weight:600;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lgNo{grid-column:1/-1;text-align:center;color:var(--muted);margin:18px 0}
 .ibl{max-width:56px;overflow:hidden;text-overflow:ellipsis}
+.wPz .wpR{display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid rgba(255,255,255,.06)}.wPz .wpR:last-child{border-bottom:0}.wpI{width:28px;height:28px;flex:none;border-radius:8px;display:grid;place-items:center;background:var(--c);font-style:normal;font-size:16px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.25)}.wpR span{flex:1;font-size:13px}.wpR b{color:var(--gold);font-size:12.5px}
+.wsG{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:6px}.wsG span{background:#140c14;border:1px solid var(--line);border-radius:10px;padding:6px 8px;display:flex;flex-direction:column;min-width:0}.wsG small{color:var(--muted);font-size:11px}.wsG b{font-size:16px}.wsG em{font-size:10.5px;color:var(--muted);font-style:normal}.wsB{margin:8px 0 0;font-size:13px}.wRes small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.stBox summary{cursor:pointer;list-style:none}.stBox summary::-webkit-details-marker{display:none}.stG{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}.stG span{background:#140c14;border:1px solid var(--line);border-radius:10px;padding:6px 4px;text-align:center;display:flex;flex-direction:column;align-items:center;min-width:0}.stG i{font-style:normal;font-size:16px}.stG b{font-size:15px;color:var(--gold)}.stG small{font-size:10px;color:var(--muted);line-height:1.15}
+.tutPv{display:block;margin-top:8px;padding:6px 8px;border-radius:10px;background:rgba(255,210,74,.1);border:1px solid rgba(255,210,74,.35);font-size:13px}.tutRw{display:flex;flex-direction:column;gap:3px;margin-top:8px;padding:8px 10px;border-radius:12px;background:rgba(255,210,74,.12);border:1px solid rgba(255,210,74,.45);animation:tileIn .5s}.tutRw em{font-style:normal;font-weight:800}.tutRw small{color:var(--muted)}
+.frCode.fr3{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:18px;letter-spacing:.05em;text-align:center;word-break:break-all}.frTy{font-size:12px}
 </style>
 </head>
 <body>
@@ -780,7 +785,7 @@ body[data-gfx="hi"] .vig{display:block}
   <canvas id="cv" aria-label="Ігрове поле"></canvas>
   <div class="vig3" id="vig3"></div><div class="evTint" id="evTint"></div><div class="sweep" id="sweep"></div><div class="fpsBox" id="fpsBox"></div>
 
-  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.20-b</small></div></div>
+  <div class="boot" id="boot"><div class="bootIn"><b>Mini RPG</b><i class="bootSpin"></i><span data-i="loading">Завантаження 3D…</span><small class="bootV">2026.10.20-c</small></div></div>
   <div class="hud">
     <div class="plate me">
       <div class="nm"><span id="hName"></span><span class="lv"><span data-i="lv">Рів.</span> <b id="hLv">1</b></span></div>
@@ -1410,7 +1415,48 @@ n8b6:"108 нових вузлів у дереві навичок і 2 нові �
 n8b7:"Понад 100 нових звуків: у кожної мапи свої звуки природи|Over 100 new sounds: every map has its own nature sounds|Plus de 100 nouveaux sons : chaque carte a ses propres sons de la nature|Über 100 neue Sounds: Jede Karte hat ihre eigenen Naturgeräusche|超过 100 种新音效：每张地图都有专属的自然声音|Más de 100 sonidos nuevos: cada mapa tiene sus propios sonidos de la naturaleza|Oltre 100 nuovi suoni: ogni mappa ha i suoi suoni della natura|Ponad 100 nowych dźwięków: każda mapa ma własne odgłosy natury|Mais de 100 sons novos: cada mapa tem seus próprios sons da natureza|100以上の新サウンド：マップごとに専用の自然の音が鳴るよ|100개 이상의 새 사운드: 맵마다 고유한 자연의 소리가 있어요|100'den fazla yeni ses: her haritanın kendine özgü doğa sesleri var|Lebih dari 100 suara baru: setiap peta punya suara alam sendiri|100 से ज़्यादा नई आवाज़ें: हर नक्शे की अपनी प्रकृति की आवाज़ें|Hơn 100 âm thanh mới: mỗi bản đồ có âm thanh thiên nhiên riêng|เสียงใหม่มากกว่า 100 เสียง: ทุกแผนที่มีเสียงธรรมชาติเป็นของตัวเอง|Meer dan 100 nieuwe geluiden: elke kaart heeft eigen natuurgeluiden|أكثر من 100 صوت جديد: لكل خريطة أصوات طبيعة خاصة بها|100টিরও বেশি নতুন শব্দ: প্রতিটি মানচিত্রের নিজস্ব প্রকৃতির শব্দ আছে|Mahigit 100 bagong tunog: bawat mapa ay may sariling tunog ng kalikasan",
 langFind:"Пошук: назва мови (можна англійською)|Search: language name (English works too)|Rechercher : nom de la langue (en anglais aussi)|Suche: Name der Sprache (auch auf Englisch)|搜索：语言名称（也可用英文）|Buscar: nombre del idioma (también en inglés)|Cerca: nome della lingua (anche in inglese)|Szukaj: nazwa języka (także po angielsku)|Buscar: nome do idioma (também em inglês)|検索：言語名（英語でもOK）|검색: 언어 이름 (영어도 가능)|Ara: dil adı (İngilizce de olur)|Cari: nama bahasa (bahasa Inggris juga bisa)|खोजें: भाषा का नाम (अंग्रेज़ी में भी)|Tìm: tên ngôn ngữ (gõ tiếng Anh cũng được)|ค้นหา: ชื่อภาษา (ภาษาอังกฤษก็ได้)|Zoeken: naam van de taal (Engels kan ook)|ابحث: اسم اللغة (بالإنجليزية أيضًا)|খুঁজুন: ভাষার নাম (ইংরেজিতেও)|Hanapin: pangalan ng wika (puwede rin sa Ingles)",
 langNone:"Такої мови поки нема|No such language yet|Cette langue n'existe pas encore|Diese Sprache gibt es noch nicht|暂时没有这种语言|Ese idioma aún no está|Questa lingua non c'è ancora|Tego języka jeszcze nie ma|Esse idioma ainda não existe|その言語はまだありません|아직 그 언어는 없어요|Bu dil henüz yok|Bahasa itu belum ada|यह भाषा अभी नहीं है|Chưa có ngôn ngữ này|ยังไม่มีภาษานี้|Die taal is er nog niet|هذه اللغة غير متوفرة بعد|এই ভাষা এখনো নেই|Wala pang ganitong wika",
-n8c1:"52 мови! 32 нові (шведська, чеська, грецька, іврит та інші), а мову можна шукати англійською|52 languages! 32 new ones (Swedish, Czech, Greek, Hebrew and more), and you can search for a language in English|52 langues ! 32 nouvelles (suédois, tchèque, grec, hébreu et d'autres), et tu peux chercher une langue en anglais|52 Sprachen! 32 neue (Schwedisch, Tschechisch, Griechisch, Hebräisch und mehr), und du kannst Sprachen auch auf Englisch suchen|52种语言！新增32种（瑞典语、捷克语、希腊语、希伯来语等），还能用英文搜索语言|¡52 idiomas! 32 nuevos (sueco, checo, griego, hebreo y más), y puedes buscar un idioma en inglés|52 lingue! 32 nuove (svedese, ceco, greco, ebraico e altre), e puoi cercare una lingua anche in inglese|52 języki! 32 nowe (szwedzki, czeski, grecki, hebrajski i inne), a język można szukać po angielsku|52 idiomas! 32 novos (sueco, tcheco, grego, hebraico e mais), e dá para buscar um idioma em inglês|52言語に！新しく32言語（スウェーデン語、チェコ語、ギリシャ語、ヘブライ語など）、言語は英語でも検索できます|52개 언어! 새 언어 32개(스웨덴어, 체코어, 그리스어, 히브리어 등), 언어는 영어로도 검색할 수 있어요|52 dil! 32 yeni dil (İsveççe, Çekçe, Yunanca, İbranice ve daha fazlası), dili İngilizce de arayabilirsin|52 bahasa! 32 bahasa baru (Swedia, Ceko, Yunani, Ibrani, dan lainnya), dan bahasa bisa dicari dalam bahasa Inggris|52 भाषाएँ! 32 नई (स्वीडिश, चेक, ग्रीक, हिब्रू और भी), और भाषा को अंग्रेज़ी में भी खोज सकते हो|52 ngôn ngữ! 32 ngôn ngữ mới (Thụy Điển, Séc, Hy Lạp, Do Thái và nhiều nữa), có thể tìm ngôn ngữ bằng tiếng Anh|52 ภาษา! เพิ่มใหม่ 32 ภาษา (สวีเดน เช็ก กรีก ฮีบรู และอื่น ๆ) และค้นหาภาษาด้วยภาษาอังกฤษได้|52 talen! 32 nieuwe (Zweeds, Tsjechisch, Grieks, Hebreeuws en meer), en je kunt een taal ook in het Engels zoeken|52 لغة! 32 لغة جديدة (السويدية والتشيكية واليونانية والعبرية وغيرها)، ويمكنك البحث عن اللغة بالإنجليزية|৫২টি ভাষা! ৩২টি নতুন (সুইডিশ, চেক, গ্রিক, হিব্রু আরও), আর ইংরেজিতেও ভাষা খোঁজা যায়|52 wika! 32 bago (Swedish, Czech, Greek, Hebrew at iba pa), at puwedeng hanapin ang wika sa Ingles"
+n8c1:"52 мови! 32 нові (шведська, чеська, грецька, іврит та інші), а мову можна шукати англійською|52 languages! 32 new ones (Swedish, Czech, Greek, Hebrew and more), and you can search for a language in English|52 langues ! 32 nouvelles (suédois, tchèque, grec, hébreu et d'autres), et tu peux chercher une langue en anglais|52 Sprachen! 32 neue (Schwedisch, Tschechisch, Griechisch, Hebräisch und mehr), und du kannst Sprachen auch auf Englisch suchen|52种语言！新增32种（瑞典语、捷克语、希腊语、希伯来语等），还能用英文搜索语言|¡52 idiomas! 32 nuevos (sueco, checo, griego, hebreo y más), y puedes buscar un idioma en inglés|52 lingue! 32 nuove (svedese, ceco, greco, ebraico e altre), e puoi cercare una lingua anche in inglese|52 języki! 32 nowe (szwedzki, czeski, grecki, hebrajski i inne), a język można szukać po angielsku|52 idiomas! 32 novos (sueco, tcheco, grego, hebraico e mais), e dá para buscar um idioma em inglês|52言語に！新しく32言語（スウェーデン語、チェコ語、ギリシャ語、ヘブライ語など）、言語は英語でも検索できます|52개 언어! 새 언어 32개(스웨덴어, 체코어, 그리스어, 히브리어 등), 언어는 영어로도 검색할 수 있어요|52 dil! 32 yeni dil (İsveççe, Çekçe, Yunanca, İbranice ve daha fazlası), dili İngilizce de arayabilirsin|52 bahasa! 32 bahasa baru (Swedia, Ceko, Yunani, Ibrani, dan lainnya), dan bahasa bisa dicari dalam bahasa Inggris|52 भाषाएँ! 32 नई (स्वीडिश, चेक, ग्रीक, हिब्रू और भी), और भाषा को अंग्रेज़ी में भी खोज सकते हो|52 ngôn ngữ! 32 ngôn ngữ mới (Thụy Điển, Séc, Hy Lạp, Do Thái và nhiều nữa), có thể tìm ngôn ngữ bằng tiếng Anh|52 ภาษา! เพิ่มใหม่ 32 ภาษา (สวีเดน เช็ก กรีก ฮีบรู และอื่น ๆ) และค้นหาภาษาด้วยภาษาอังกฤษได้|52 talen! 32 nieuwe (Zweeds, Tsjechisch, Grieks, Hebreeuws en meer), en je kunt een taal ook in het Engels zoeken|52 لغة! 32 لغة جديدة (السويدية والتشيكية واليونانية والعبرية وغيرها)، ويمكنك البحث عن اللغة بالإنجليزية|৫২টি ভাষা! ৩২টি নতুন (সুইডিশ, চেক, গ্রিক, হিব্রু আরও), আর ইংরেজিতেও ভাষা খোঁজা যায়|52 wika! 32 bago (Swedish, Czech, Greek, Hebrew at iba pa), at puwedeng hanapin ang wika sa Ingles",
+wPrizes:"Що можна виграти|What you can win|Ce que tu peux gagner|Was du gewinnen kannst|可赢得的奖励|Lo que puedes ganar|Cosa puoi vincere|Co możesz wygrać|O que você pode ganhar|当たる景品|받을 수 있는 상품|Neler kazanabilirsin|Hadiah yang bisa didapat|तुम क्या जीत सकते हो|Phần thưởng có thể nhận|รางวัลที่ลุ้นได้|Wat je kunt winnen|ما يمكنك ربحه|যা জিততে পারো|Puwedeng mapanalunan",
+wGoldN:"{n} золота|{n} gold|{n} or|{n} Gold|{n} 金币|{n} de oro|{n} oro|{n} złota|{n} de ouro|{n} ゴールド|골드 {n}|{n} altın|{n} emas|{n} सोना|{n} vàng|{n} ทอง|{n} goud|{n} ذهب|{n} সোনা|{n} ginto",
+wGemN:"{n} гемів|{n} gems|{n} gemmes|{n} Edelsteine|{n} 宝石|{n} gemas|{n} gemme|{n} klejnotów|{n} gemas|{n} ジェム|젬 {n}개|{n} mücevher|{n} permata|{n} रत्न|{n} ngọc|{n} อัญมณี|{n} edelstenen|{n} جوهرة|{n} রত্ন|{n} hiyas",
+wXpN:"Досвід ×2 на 10 хв|XP ×2 for 10 min|XP ×2 pendant 10 min|EP ×2 für 10 Min.|经验 ×2，持续10分钟|XP ×2 durante 10 min|XP ×2 per 10 min|PD ×2 na 10 min|XP ×2 por 10 min|経験値×2（10分）|경험치 ×2 (10분)|10 dk boyunca TP ×2|XP ×2 selama 10 menit|10 मिनट के लिए XP ×2|XP ×2 trong 10 phút|XP ×2 นาน 10 นาที|XP ×2 voor 10 min|خبرة ×2 لمدة 10 دقائق|১০ মিনিটের জন্য XP ×2|XP ×2 sa loob ng 10 min",
+wItemN:"Випадкова річ (рідкісна або краща)|A random item (rare or better)|Un objet au hasard (rare ou mieux)|Ein zufälliges Item (selten oder besser)|随机物品（稀有或更好）|Un objeto al azar (raro o mejor)|Un oggetto a caso (raro o migliore)|Losowy przedmiot (rzadki lub lepszy)|Um item aleatório (raro ou melhor)|ランダムなアイテム（レア以上）|무작위 아이템 (희귀 이상)|Rastgele bir eşya (nadir veya daha iyi)|Barang acak (langka atau lebih baik)|कोई भी चीज़ (दुर्लभ या बेहतर)|Vật phẩm ngẫu nhiên (hiếm trở lên)|ไอเทมสุ่ม (หายากขึ้นไป)|Een willekeurig voorwerp (zeldzaam of beter)|عنصر عشوائي (نادر أو أفضل)|এলোমেলো জিনিস (বিরল বা ভালো)|Random na item (bihira o mas mataas)",
+wStats:"Твої оберти|Your spins|Tes tours|Deine Drehungen|你的转盘记录|Tus giros|I tuoi giri|Twoje obroty|Seus giros|あなたのスピン記録|내 회전 기록|Çevirmelerin|Putaranmu|तुम्हारे स्पिन|Lượt quay của bạn|การหมุนของคุณ|Jouw draaien|دوراتك|তোমার স্পিন|Mga ikot mo",
+wsTot:"Усього обертів|Total spins|Tours en tout|Drehungen gesamt|总转动次数|Giros en total|Giri totali|Wszystkie obroty|Total de giros|合計スピン|총 회전|Toplam çevirme|Total putaran|कुल स्पिन|Tổng lượt quay|หมุนทั้งหมด|Totaal draaien|مجموع الدورات|মোট স্পিন|Kabuuang ikot",
+wsFree:"безкоштовних|free|gratuits|gratis|免费|gratis|gratis|darmowych|grátis|無料|무료|ücretsiz|gratis|मुफ़्त|miễn phí|ฟรี|gratis|مجانية|ফ্রি|libre",
+wsPaid:"за геми|for gems|contre gemmes|für Edelsteine|用宝石|con gemas|con gemme|za klejnoty|com gemas|ジェムで|젬으로|mücevherle|pakai permata|रत्नों से|bằng ngọc|ใช้อัญมณี|voor edelstenen|بالجواهر|রত্ন দিয়ে|gamit ang hiyas",
+wsGold:"Виграно золота|Gold won|Or gagné|Gold gewonnen|赢得金币|Oro ganado|Oro vinto|Wygrane złoto|Ouro ganho|獲得ゴールド|획득한 골드|Kazanılan altın|Emas didapat|जीता सोना|Vàng đã thắng|ทองที่ได้|Gewonnen goud|الذهب الذي ربحته|জেতা সোনা|Napanalunang ginto",
+wsGems:"Виграно гемів|Gems won|Gemmes gagnées|Edelsteine gewonnen|赢得宝石|Gemas ganadas|Gemme vinte|Wygrane klejnoty|Gemas ganhas|獲得ジェム|획득한 젬|Kazanılan mücevher|Permata didapat|जीते रत्न|Ngọc đã thắng|อัญมณีที่ได้|Gewonnen edelstenen|الجواهر التي ربحتها|জেতা রত্ন|Napanalunang hiyas",
+wsItems:"Виграно речей|Items won|Objets gagnés|Items gewonnen|赢得物品|Objetos ganados|Oggetti vinti|Wygrane przedmioty|Itens ganhos|獲得アイテム|획득한 아이템|Kazanılan eşya|Barang didapat|जीती चीज़ें|Vật phẩm đã thắng|ไอเทมที่ได้|Gewonnen voorwerpen|العناصر التي ربحتها|জেতা জিনিস|Napanalunang item",
+wsBest:"Найкращий приз|Best prize|Meilleur lot|Bester Preis|最佳奖品|Mejor premio|Premio migliore|Najlepsza nagroda|Melhor prêmio|最高の景品|최고의 상품|En iyi ödül|Hadiah terbaik|सबसे अच्छा इनाम|Giải thưởng tốt nhất|รางวัลที่ดีที่สุด|Beste prijs|أفضل جائزة|সেরা পুরস্কার|Pinakamagandang premyo",
+wBag:"вона вже в сумці|it is in your bag|il est dans ton sac|es ist in deiner Tasche|已放入背包|ya está en tu bolsa|è già nella tua borsa|jest już w torbie|já está na sua bolsa|バッグに入ったよ|가방에 들어갔어요|çantana eklendi|sudah di tasmu|यह तुम्हारे थैले में है|đã vào túi của bạn|อยู่ในกระเป๋าแล้ว|het zit in je tas|إنه في حقيبتك|এটা তোমার ব্যাগে আছে|nasa bag mo na",
+tStats:"Статистика|Statistics|Statistiques|Statistik|统计|Estadísticas|Statistiche|Statystyki|Estatísticas|統計|통계|İstatistikler|Statistik|आँकड़े|Thống kê|สถิติ|Statistieken|الإحصائيات|পরিসংখ্যান|Estadistika",
+stBat:"Виграно боїв|Battles won|Combats gagnés|Gewonnene Kämpfe|胜利战斗|Batallas ganadas|Battaglie vinte|Wygrane bitwy|Batalhas vencidas|勝利したバトル|승리한 전투|Kazanılan savaş|Pertarungan menang|जीती लड़ाइयाँ|Trận thắng|ศึกที่ชนะ|Gewonnen gevechten|معارك مربوحة|জেতা যুদ্ধ|Napanalunang laban",
+stKill:"Переможено ворогів|Enemies defeated|Ennemis vaincus|Besiegte Feinde|击败敌人|Enemigos vencidos|Nemici sconfitti|Pokonani wrogowie|Inimigos derrotados|倒した敵|처치한 적|Yenilen düşman|Musuh dikalahkan|हराए दुश्मन|Kẻ địch bị hạ|ศัตรูที่ปราบ|Verslagen vijanden|أعداء مهزومون|পরাজিত শত্রু|Natalong kalaban",
+stLvl:"Рівень|Level|Niveau|Stufe|等级|Nivel|Livello|Poziom|Nível|レベル|레벨|Seviye|Level|स्तर|Cấp|เลเวล|Niveau|المستوى|লেভেল|Level",
+stCrit:"Критичні удари|Critical hits|Coups critiques|Kritische Treffer|暴击|Golpes críticos|Colpi critici|Trafienia krytyczne|Golpes críticos|クリティカル|치명타|Kritik vuruş|Serangan kritis|क्रिटिकल वार|Đòn chí mạng|คริติคอล|Kritieke treffers|ضربات حاسمة|ক্রিটিক্যাল আঘাত|Kritikal na tama",
+stDodge:"Ухилень|Dodges|Esquives|Ausweichen|闪避|Esquivas|Schivate|Uniki|Esquivas|回避|회피|Kaçınma|Menghindar|बचाव|Né tránh|หลบ|Ontwijkingen|مراوغات|এড়ানো|Pag-iwas",
+stWalk:"Пройдено метрів|Metres walked|Mètres parcourus|Gelaufene Meter|行走米数|Metros recorridos|Metri percorsi|Przebyte metry|Metros percorridos|歩いた距離 (m)|걸은 거리 (m)|Yürünen metre|Meter berjalan|चले मीटर|Mét đã đi|เมตรที่เดิน|Gelopen meters|أمتار مشيتها|হাঁটা মিটার|Metrong nilakad",
+stQuest:"Виконано квестів|Quests done|Quêtes finies|Erledigte Quests|完成任务|Misiones hechas|Missioni fatte|Wykonane zadania|Missões feitas|達成クエスト|완료한 퀘스트|Biten görev|Misi selesai|पूरे किए क्वेस्ट|Nhiệm vụ đã xong|เควสต์ที่สำเร็จ|Voltooide quests|مهام منجزة|শেষ করা কোয়েস্ট|Natapos na quest",
+stChest:"Відкрито скринь|Chests opened|Coffres ouverts|Geöffnete Truhen|开启宝箱|Cofres abiertos|Forzieri aperti|Otwarte skrzynie|Baús abertos|開けた宝箱|연 상자|Açılan sandık|Peti dibuka|खोले संदूक|Rương đã mở|หีบที่เปิด|Geopende kisten|صناديق مفتوحة|খোলা সিন্দুক|Nabuksang baul",
+stShrine:"Вівтарів|Shrines touched|Autels touchés|Berührte Schreine|触碰神殿|Santuarios tocados|Santuari toccati|Dotknięte kapliczki|Santuários tocados|触れた祠|만진 제단|Dokunulan tapınak|Kuil disentuh|छुए मंदिर|Đền đã chạm|ศาลที่แตะ|Aangeraakte heiligdommen|مزارات لمستها|ছোঁয়া মন্দির|Nahawakang dambana",
+stGob:"Скарбових гоблінів|Treasure goblins|Gobelins au trésor|Schatzkobolde|宝藏哥布林|Duendes del tesoro|Goblin del tesoro|Gobliny ze skarbem|Goblins do tesouro|宝ゴブリン|보물 고블린|Hazine goblini|Goblin harta|ख़ज़ाने वाले गॉब्लिन|Yêu tinh kho báu|ก็อบลินสมบัติ|Schatgoblins|عفاريت الكنز|গুপ্তধন গবলিন|Goblin ng kayamanan",
+stSpin:"Обертів колеса|Wheel spins|Tours de roue|Raddrehungen|转盘次数|Giros de rueda|Giri della ruota|Obroty koła|Giros da roda|ルーレット回数|룰렛 회전|Çark çevirme|Putaran roda|पहिया स्पिन|Lượt quay vòng|หมุนวงล้อ|Raddraaien|دورات العجلة|চাকা ঘোরানো|Ikot ng gulong",
+stTal:"Вузлів навичок|Skill nodes|Nœuds de talent|Talentknoten|技能节点|Nodos de habilidad|Nodi abilità|Węzły umiejętności|Nós de habilidade|スキルノード|스킬 노드|Yetenek düğümü|Simpul skill|कौशल नोड|Nút kỹ năng|โหนดสกิล|Vaardigheidsknopen|عقد المهارات|দক্ষতার নোড|Skill node",
+stStreak:"Найдовша серія днів|Longest day streak|Plus longue série|Längste Serie|最长连续天数|Racha más larga|Serie più lunga|Najdłuższa seria|Maior sequência|最長連続日数|최장 연속 일수|En uzun seri|Rentetan terpanjang|सबसे लंबी लगातार दिन|Chuỗi ngày dài nhất|ต่อเนื่องนานสุด|Langste reeks|أطول سلسلة أيام|দীর্ঘতম ধারা|Pinakamahabang sunod",
+stLeg:"Легендарних і кращих|Legendary or better found|Légendaires ou mieux|Legendär oder besser|传说及以上|Legendarios o mejores|Leggendari o migliori|Legendarne i lepsze|Lendários ou melhores|レジェンダリー以上|전설 이상|Efsanevi ve üstü|Legendaris atau lebih|लेजेंडरी या बेहतर|Huyền thoại trở lên|ตำนานขึ้นไป|Legendarisch of beter|أسطوري أو أفضل|কিংবদন্তি বা ভালো|Maalamat o mas mataas",
+stFr:"Друзів|Friends|Amis|Freunde|好友|Amigos|Amici|Przyjaciele|Amigos|フレンド|친구|Arkadaş|Teman|दोस्त|Bạn bè|เพื่อน|Vrienden|الأصدقاء|বন্ধু|Kaibigan",
+srHint:"Бокова стежка! В її кінці — скарб|A side path! There is treasure at its end|Un sentier ! Un trésor t'attend au bout|Ein Seitenpfad! An seinem Ende wartet ein Schatz|一条小路！尽头有宝藏|¡Un sendero! Hay un tesoro al final|Un sentiero! In fondo c'è un tesoro|Boczna ścieżka! Na jej końcu czeka skarb|Uma trilha! Tem um tesouro no fim|わき道だ！先に宝がある|옆길이다! 끝에 보물이 있어|Bir yan yol! Sonunda hazine var|Jalan setapak! Ada harta di ujungnya|एक पगडंडी! इसके अंत में ख़ज़ाना है|Một lối rẽ! Cuối đường có kho báu|ทางแยก! ปลายทางมีสมบัติ|Een zijpad! Aan het eind ligt een schat|طريق جانبي! في نهايته كنز|একটা পাশের পথ! শেষে গুপ্তধন আছে|Isang daan sa gilid! May kayamanan sa dulo",
+tutPrev:"За весь туторіал отримаєш|Finish the tutorial to get|Termine le tutoriel pour obtenir|Schließe das Tutorial ab und erhalte|完成教程可获得|Termina el tutorial y consigue|Finisci il tutorial per ottenere|Ukończ samouczek i zdobądź|Termine o tutorial para ganhar|チュートリアルを終えると|튜토리얼을 마치면|Eğitimi bitir ve kazan|Selesaikan tutorial untuk dapat|ट्यूटोरियल पूरा करो और पाओ|Hoàn thành hướng dẫn để nhận|จบบทแนะนำเพื่อรับ|Rond de uitleg af en krijg|أكمل الشرح لتحصل على|টিউটোরিয়াল শেষ করে পাও|Tapusin ang tutorial para makuha",
+tutStep:"за крок|for this step|pour cette étape|für diesen Schritt|本步奖励|por este paso|per questo passo|za ten krok|por esta etapa|このステップの報酬|이 단계 보상|bu adım için|untuk langkah ini|इस कदम के लिए|cho bước này|สำหรับขั้นนี้|voor deze stap|لهذه الخطوة|এই ধাপের জন্য|para sa hakbang na ito",
+tutGot:"Твої нагороди|Your rewards|Tes récompenses|Deine Belohnungen|你的奖励|Tus recompensas|Le tue ricompense|Twoje nagrody|Suas recompensas|あなたの報酬|내 보상|Ödüllerin|Hadiahmu|तुम्हारे इनाम|Phần thưởng của bạn|รางวัลของคุณ|Je beloningen|مكافآتك|তোমার পুরস্কার|Mga gantimpala mo",
+tutLater:"Можна пройти пізніше в налаштуваннях — нагорода чекає|You can play it later in the settings — the reward will wait|Tu peux le faire plus tard dans les réglages : la récompense t'attend|Du kannst es später in den Einstellungen machen – die Belohnung wartet|之后可在设置中重玩，奖励会等你|Puedes hacerlo luego en ajustes: la recompensa te espera|Puoi farlo dopo nelle impostazioni: la ricompensa ti aspetta|Możesz przejść go później w ustawieniach — nagroda poczeka|Você pode fazer depois nas configurações: a recompensa espera|あとで設定から遊べるよ。報酬は待ってるよ|나중에 설정에서 할 수 있어요. 보상은 기다릴게요|Daha sonra ayarlardan oynayabilirsin, ödül bekler|Bisa dimainkan nanti di pengaturan — hadiahnya menunggu|बाद में सेटिंग्स से कर सकते हो — इनाम इंतज़ार करेगा|Bạn có thể chơi sau trong cài đặt — phần thưởng vẫn chờ|เล่นทีหลังได้ในตั้งค่า รางวัลยังรออยู่|Je kunt het later in de instellingen doen — de beloning wacht|يمكنك لعبه لاحقًا من الإعدادات، والمكافأة ستنتظر|পরে সেটিংসে খেলতে পারো — পুরস্কার অপেক্ষা করবে|Puwede mo itong laruin mamaya sa settings — maghihintay ang gantimpala",
+frType:"Короткий код — легко вписати руками|A short code: easy to type by hand|Un code court : facile à taper à la main|Ein kurzer Code: leicht von Hand einzutippen|短代码：手动输入也很方便|Un código corto: fácil de escribir a mano|Un codice corto: facile da scrivere a mano|Krótki kod: łatwo wpisać ręcznie|Um código curto: fácil de digitar à mão|短いコード：手で入力しやすい|짧은 코드: 손으로 입력하기 쉬워요|Kısa kod: elle yazması kolay|Kode pendek: mudah diketik manual|छोटा कोड: हाथ से लिखना आसान|Mã ngắn: dễ gõ bằng tay|รหัสสั้น พิมพ์เองได้ง่าย|Een korte code: makkelijk met de hand te typen|رمز قصير: سهل الكتابة باليد|ছোট কোড: হাতে লেখা সহজ|Maikling code: madaling i-type",
+frType2:"Друг вводить: нік, знак #, потім 16 букв і цифр|Your friend types: the nick, a # sign, then the 16 letters and digits|Ton ami tape : le pseudo, un #, puis les 16 lettres et chiffres|Dein Freund tippt: den Namen, ein #, dann die 16 Buchstaben und Ziffern|好友输入：昵称、#号，然后是16个字母和数字|Tu amigo escribe: el apodo, un #, y luego las 16 letras y números|Il tuo amico scrive: il nick, un #, poi le 16 lettere e cifre|Znajomy wpisuje: nick, znak #, potem 16 liter i cyfr|Seu amigo digita: o apelido, um #, e depois as 16 letras e números|フレンドは「ニックネーム」「#」「16文字の英数字」を入力|친구는 닉네임, # 기호, 그리고 16자의 문자와 숫자를 입력해요|Arkadaşın şunu yazar: takma ad, # işareti, sonra 16 harf ve rakam|Temanmu mengetik: nama, tanda #, lalu 16 huruf dan angka|दोस्त लिखे: निक, # चिह्न, फिर 16 अक्षर और अंक|Bạn bè gõ: biệt danh, dấu #, rồi 16 chữ và số|เพื่อนพิมพ์: ชื่อเล่น เครื่องหมาย # แล้วตามด้วยตัวอักษรและตัวเลข 16 ตัว|Je vriend typt: de naam, een #, en dan de 16 letters en cijfers|يكتب صديقك: الاسم، ثم علامة #، ثم الحروف والأرقام الـ16|বন্ধু লিখবে: নিক, # চিহ্ন, তারপর ১৬টি অক্ষর ও সংখ্যা|I-type ng kaibigan mo: ang nick, isang #, at ang 16 na titik at numero",
+n9a1:"Колесо удачі: видно всі призи і шанси, а ще статистика твоїх обертів|Wheel of Fortune: every prize and its chance are shown, plus your spin stats|Roue de la fortune : tous les lots et leurs chances sont affichés, avec tes statistiques de tours|Glücksrad: alle Preise und ihre Chancen werden angezeigt, dazu deine Dreh-Statistik|幸运转盘：显示所有奖品和概率，还有你的转盘统计|Rueda de la fortuna: se ven todos los premios y sus probabilidades, y tus estadísticas de giros|Ruota della fortuna: si vedono tutti i premi e le probabilità, più le statistiche dei tuoi giri|Koło fortuny: widać wszystkie nagrody i szanse, a także statystyki twoich obrotów|Roda da fortuna: todos os prêmios e chances aparecem, além das estatísticas dos seus giros|ルーレット：すべての景品と確率、スピンの記録が見られるように|행운의 룰렛: 모든 상품과 확률, 회전 통계를 볼 수 있어요|Şans çarkı: tüm ödüller ve şansları görünüyor, ayrıca çevirme istatistiklerin|Roda keberuntungan: semua hadiah dan peluangnya terlihat, plus statistik putaranmu|भाग्य का पहिया: हर इनाम और उसकी संभावना दिखती है, साथ में तुम्हारे स्पिन के आँकड़े|Vòng quay may mắn: hiện mọi phần thưởng và tỉ lệ, cùng thống kê lượt quay|วงล้อนำโชค: เห็นรางวัลทั้งหมดและโอกาส พร้อมสถิติการหมุน|Rad van fortuin: alle prijzen en kansen zijn te zien, plus je draai-statistieken|عجلة الحظ: تظهر كل الجوائز وفرصها، مع إحصائيات دوراتك|ভাগ্যের চাকা: সব পুরস্কার আর সম্ভাবনা দেখা যায়, সাথে তোমার স্পিনের পরিসংখ্যান|Gulong ng Kapalaran: makikita ang lahat ng premyo at tsansa, pati ang stats ng ikot mo",
+n9a2:"Бокові стежки ліворуч і праворуч від дороги, зі скринею в кінці|Side paths turn left and right off the road, with a chest at the end|Des sentiers partent à gauche et à droite de la route, avec un coffre au bout|Seitenpfade zweigen links und rechts von der Straße ab, mit einer Truhe am Ende|道路左右出现岔路，尽头有宝箱|Senderos a la izquierda y a la derecha del camino, con un cofre al final|Sentieri a sinistra e a destra della strada, con un forziere in fondo|Boczne ścieżki w lewo i w prawo od drogi, ze skrzynią na końcu|Trilhas à esquerda e à direita da estrada, com um baú no fim|道の左右にわき道が。先には宝箱|길 왼쪽과 오른쪽에 옆길이 생겼고, 끝에는 상자가 있어요|Yolun soluna ve sağına sapan patikalar, sonunda bir sandık|Jalan setapak ke kiri dan kanan jalan, dengan peti di ujungnya|सड़क से बाएँ और दाएँ पगडंडियाँ, अंत में एक संदूक|Lối rẽ trái và phải khỏi đường chính, cuối đường có rương|ทางแยกซ้ายและขวาจากถนน ปลายทางมีหีบ|Zijpaden links en rechts van de weg, met een kist aan het eind|طرق جانبية يمينًا ويسارًا من الطريق، وفي نهايتها صندوق|রাস্তার বাঁয়ে আর ডানে পাশের পথ, শেষে একটা সিন্দুক|Mga daan pakaliwa at pakanan mula sa kalsada, may baul sa dulo",
+n9a3:"Новий френд-код: 16 знаків, легко вписати руками|New friend code: 16 characters, easy to type by hand|Nouveau code ami : 16 caractères, facile à taper à la main|Neuer Freundescode: 16 Zeichen, leicht von Hand einzutippen|新的好友码：16个字符，手动输入很方便|Nuevo código de amigo: 16 caracteres, fácil de escribir a mano|Nuovo codice amico: 16 caratteri, facile da scrivere a mano|Nowy kod znajomego: 16 znaków, łatwo wpisać ręcznie|Novo código de amigo: 16 caracteres, fácil de digitar à mão|新しいフレンドコード：16文字で手入力しやすい|새 친구 코드: 16자라서 손으로 입력하기 쉬워요|Yeni arkadaş kodu: 16 karakter, elle yazması kolay|Kode teman baru: 16 karakter, mudah diketik manual|नया फ्रेंड कोड: 16 अक्षर, हाथ से लिखना आसान|Mã bạn bè mới: 16 ký tự, dễ gõ bằng tay|รหัสเพื่อนใหม่: 16 ตัว พิมพ์เองได้ง่าย|Nieuwe vriendcode: 16 tekens, makkelijk met de hand te typen|رمز صديق جديد: 16 حرفًا، سهل الكتابة باليد|নতুন ফ্রেন্ড কোড: ১৬টি অক্ষর, হাতে লেখা সহজ|Bagong friend code: 16 karakter, madaling i-type",
+n9a4:"Нагорода за кожен крок туторіалу і великий приз у кінці; статистика в досягненнях|A reward for every tutorial step and a big prize at the end; statistics in Achievements|Une récompense à chaque étape du tutoriel et un gros lot à la fin ; statistiques dans les Succès|Eine Belohnung für jeden Tutorial-Schritt und ein großer Preis am Ende; Statistik bei den Erfolgen|教程每一步都有奖励，最后还有大奖；成就里新增统计|Una recompensa por cada paso del tutorial y un gran premio al final; estadísticas en Logros|Una ricompensa per ogni passo del tutorial e un grande premio alla fine; statistiche negli Obiettivi|Nagroda za każdy krok samouczka i duża nagroda na końcu; statystyki w Osiągnięciach|Uma recompensa por cada etapa do tutorial e um grande prêmio no fim; estatísticas em Conquistas|チュートリアルの各ステップに報酬、最後に大きな景品。実績に統計も|튜토리얼 단계마다 보상, 마지막엔 큰 상품; 업적에 통계 추가|Eğitimin her adımı için ödül ve sonda büyük ödül; Başarımlarda istatistikler|Hadiah di setiap langkah tutorial dan hadiah besar di akhir; statistik di Pencapaian|ट्यूटोरियल के हर कदम पर इनाम और अंत में बड़ा इनाम; उपलब्धियों में आँकड़े|Thưởng cho mỗi bước hướng dẫn và giải lớn ở cuối; thống kê trong Thành tựu|รางวัลทุกขั้นของบทแนะนำและรางวัลใหญ่ตอนจบ; สถิติในความสำเร็จ|Een beloning voor elke stap van de uitleg en een grote prijs aan het eind; statistieken bij Prestaties|مكافأة لكل خطوة في الشرح وجائزة كبيرة في النهاية؛ إحصائيات في الإنجازات|টিউটোরিয়ালের প্রতিটি ধাপে পুরস্কার আর শেষে বড় পুরস্কার; অর্জনে পরিসংখ্যান|May gantimpala sa bawat hakbang ng tutorial at malaking premyo sa dulo; stats sa Achievements"
 };
 const T8={};for(const k in T8src)T8[k]=S8(T8src[k]);
 /* lines for dialogues: bt = boss taunts, hr = hero replies, s* = the Spirit talking */
@@ -4960,7 +5006,7 @@ function qMake(id,wk){const r=qRng(id+(wk?"w":"d")+(session||"")),pool=QT.filter
   if(wk)n={boss:3,rare:5,gob:2,legend:3,level:4,shrine:8,event:5}[q[0]]||n*6;
   out.push({k:q[0],n,h:0,g:wk?Math.round(q[2]*3.2/5)*5:q[2],got:0})}
  return out}
-const GEM0=()=>({n:0,day:"",earned:0,streak:0,last:"",nk:0,qd:null,qw:null,hi:0,st:{},ach:{},rf:0,rfc:0,wd:"",bst:{}});
+const GEM0=()=>({n:0,day:"",earned:0,streak:0,last:"",nk:0,qd:null,qw:null,hi:0,st:{},ach:{},rf:0,rfc:0,wd:"",bst:{},ws:{},srd:[]});
 let gem=GEM0();
 function gemRoll(){const d=dayKey(),w=wkKey();
  if(gem.day!==d){gem.day=d;gem.earned=0}
@@ -4968,7 +5014,7 @@ function gemRoll(){const d=dayKey(),w=wkKey();
  if(!gem.qw||gem.qw.id!==w)gem.qw={id:w,list:qMake(w,1)}}
 function loadGem(){const o=LS.get(PK("r2_gems"),{})||{};gem=Object.assign(GEM0(),o);gem.n=Math.max(0,gem.n|0);gem.earned=Math.max(0,gem.earned|0);gem.streak=Math.max(0,gem.streak|0);
  for(const q of ["qd","qw"])if(!gem[q]||!Array.isArray(gem[q].list))gem[q]=null;
- for(const k of ["st","ach","bst"])if(!gem[k]||typeof gem[k]!=="object")gem[k]={};gem.rf|=0;gem.rfc|=0;
+ for(const k of ["st","ach","bst","ws"])if(!gem[k]||typeof gem[k]!=="object")gem[k]={};if(!Array.isArray(gem.srd))gem.srd=[];gem.rf|=0;gem.rfc|=0;
  /* the rarities you already own count as found */
  for(const it of [...bag,...Object.values(eq),...forge.owned])if(it&&RAR[it.r])gem.rf|=1<<it.r;gemRoll()}
 const canDay=()=>gem.last!==dayKey();
@@ -6898,7 +6944,7 @@ function buildChunk(i){
     else{put(o,HS,CC[q%4],px,py-.5,pz,R*1.5,R*1.2,R*1.5);put(o,SP,M.white,px,py+R*1.1,pz,R*.35,R*.3,R*.35)}}}
  };
  // behind the lane: trees, rocks, biome props
- for(let j=0;j<(B.day?14:8);j++){const x=x0+h(j+30)*CHW,z=-60-h(j+40)*(OPEN*ZS+60),k=h(j+50),s=.5+h(j+60)*.45;
+ for(let j=0;j<(B.day?14:8);j++){const x=x0+h(j+30)*CHW,z=-60-h(j+40)*(OPEN*ZS+60),k=h(j+50),s=.5+h(j+60)*.45;if(srBlock(x,z))continue;
   if(k<(B.day?.58:.55)){tree(G3.treeGeo[Math.floor(h(j+70)*6)],x,z,s*(1+(-z)/500),h(j+80)*6,j);col.push([x,z,7*s*(1+(-z)/500)])}
   else if(k<(B.day?.7:.82)){mesh(G3.rockGeo[j%3],M.stone2,x,0,z,[10+h(j)*16,8+h(j+1)*16,10+h(j+2)*14],h(j+3)*6);col.push([x,z,12+h(j)*8])}
   else{prop(B.props,x,z,j);col.push([x,z,20])}}
@@ -6988,12 +7034,25 @@ function buildChunk(i){
  if(!B.day){const tx=x0+310,tz=DEPTH*ZS+14;mesh(geo("tp",()=>new T.CylinderGeometry(1.4,1.9,30,6).translate(0,15,0)),M.wood,tx,0,tz);mesh(geo("tb",()=>new T.CylinderGeometry(5,3,5,7).translate(0,2.5,0)),M.iron,tx,29,tz);
   const fl=sprite(G3.tFlame,0xffffff,1,1);fl.scale.set(11,20,1);fl.position.set(tx,40,tz);fp.add(fl);const gl=sprite(G3.tGlow,0xff8a3a,110,.35);gl.position.set(tx,36,tz);fp.add(gl);
   G3.torches.push({x:tx,y:40,z:tz,fl,gl,i,fp:1})}
- for(let j=0;j<(B.day?14:8);j++){const x=x0+h(j+300)*CHW,z=DEPTH*ZS+150+h(j+310)*(OPEN*ZS+120),k=h(j+320),s=.55+h(j+330)*.5;
+ for(let j=0;j<(B.day?14:8);j++){const x=x0+h(j+300)*CHW,z=DEPTH*ZS+150+h(j+310)*(OPEN*ZS+120),k=h(j+320),s=.55+h(j+330)*.5;if(srBlock(x,z))continue;
   if(k<(B.day?.66:.6)){tree(G3.treeGeo[Math.floor(h(j+340)*6)],x,z,s*(1+(z-DEPTH*ZS)/500),h(j+350)*6,j);col.push([x,z,7*s*(1+(z-DEPTH*ZS)/500)])}
   else if(B.day&&k<.8){prop(B.props,x,z,j+40);col.push([x,z,20])}
   else{mesh(G3.rockGeo[j%3],M.stone2,x,0,z,[10+h(j)*16,8+h(j+1)*14,10+h(j+2)*14],h(j+3)*6);col.push([x,z,12+h(j)*8])}}
  for(let j=0;j<(B.day?4:2);j++){const x=x0+h(j+360)*CHW,z=DEPTH*ZS+800+h(j+370)*600;tree(G3.treeGeoLo[Math.floor(h(j+380)*6)],x,z,1.6+h(j+390)*1.2,h(j)*6,j)}
  mergeChunk3(g,fp);mergeChunk3(fp);
+ // side road: a dirt ribbon on the ground, a signpost where it leaves the road, standing stones (and lanterns at night) around the clearing
+ {const R=sRoad(i);if(R){const pm=M.path||(M.path=new T.MeshLambertMaterial({color:roadColor(bi).clone().lerp(new T.Color(B.ground[0]),.35)})),sg=M.sign||(M.sign=new T.MeshLambertMaterial({color:"#b07a3a"})),
+   add=(gg,mt,x,y,z,sx,sy,sz,ry,rz)=>{const m=new T.Mesh(gg,mt);m.position.set(x,terrH(x,z)+y,z);m.scale.set(sx,sy,sz);m.rotation.set(0,ry||0,rz||0);m.castShadow=G3.hi;m.receiveShadow=true;g.add(m);return m},
+   BX1=geo("ubox",()=>new T.BoxGeometry(1,1,1).translate(0,.5,0)),CY1=geo("ucyl",()=>new T.CylinderGeometry(1,1,1,10).translate(0,.5,0)),CN1=geo("ucone",()=>new T.ConeGeometry(1,1,7).translate(0,.5,0));
+  for(const sd of R.sd){const N=Math.ceil((R.len+26)/14),pos=[],idx=[];
+   for(let q=0;q<=N;q++){const d=-26+q*14,x=srX(R,d),z=srZ(sd,d),tx=srX(R,d+1)-x,tz=sd,l=Math.hypot(tx,tz),px=-tz/l,pz=tx/l,w=(d>R.len-60?16+Math.min(46,(d-R.len+60)*.8):15)*(1+.12*Math.sin(q*1.3));
+    for(const sgn of [-1,1]){const vx=x+px*w*sgn,vz=z+pz*w*sgn;pos.push(vx,terrH(vx,vz)+.9,vz)}if(q)idx.push(q*2-2,q*2-1,q*2,q*2-1,q*2+1,q*2)}
+   const gg=new T.BufferGeometry();gg.setAttribute("position",new T.Float32BufferAttribute(pos,3));gg.setIndex(idx);gg.computeVertexNormals();
+   if(gg.attributes.normal.array[1]<0){idx.reverse();gg.setIndex(idx);gg.computeVertexNormals()}
+   const rb=new T.Mesh(gg,pm);rb.receiveShadow=true;rb.userData.own=true;rb.renderOrder=-.2;g.add(rb);
+   const jx=srX(R,0)+30,jz=srZ(sd,10);add(CY1,M.wood,jx,0,jz,1.8,36,1.8);add(BX1,sg,jx,27,jz+sd*6,2.6,6.5,24);add(CN1,sg,jx,30.2,jz+sd*20,6,9,4,0,0).rotation.x=sd*PI/2;
+   const ex=srX(R,R.len),ez=srZ(sd,R.len);for(let q=0;q<7;q++){const an=q/7*PI*2+.4,sx=ex+Math.cos(an)*66,sz=ez+Math.sin(an)*66;if(Math.abs(sx-srX(R,R.len-60))<26&&Math.sign(sz-ez)===-sd)continue;const ht=16+hash(i*7+q)*14;add(BX1,q%2?M.stone:M.stone2,sx,-1,sz,7,ht,6,an,(hash(i+q)-.5)*.18);col.push([sx,sz,7])}
+   if(!B.day)for(let d=60;d<R.len;d+=130){const lx=srX(R,d)+22,lz=srZ(sd,d);add(CY1,M.wood,lx,0,lz,1.2,20,1.2);const gl=sprite(G3.tGlow,0xffc070,46,.42);gl.position.set(lx,terrH(lx,lz)+22,lz);g.add(gl)}}}}
  fp.visible=isFP();
  return{g,fp,col};
 }
@@ -7762,6 +7821,8 @@ function drawMinimap(c,h){
  c.save();c.beginPath();c.arc(cx,cy,R,0,PI*2);c.fillStyle=hexA(B.ground[1],.78);c.fill();c.save();c.clip();
  const band=(z0,z1,col)=>{const q=[P(h.x-900,z0),P(h.x+900,z0),P(h.x+900,z1),P(h.x-900,z1)];c.beginPath();q.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fillStyle=col;c.fill()};
  band(zLo(0)*ZS,zHi(0)*ZS,hexA(B.ground[0],.55));band(0,DEPTH*ZS,hexA(shade(B.stone,.15),.85));
+ {const a0=Math.floor((h.x-700)/CHW),a1=Math.floor((h.x+700)/CHW);c.lineCap="round";c.lineJoin="round";c.lineWidth=3.4;c.strokeStyle=hexA(shade(B.stone,.15),.85);
+  for(let ci=a0;ci<=a1;ci++){const R=sRoad(ci);if(!R)continue;for(const sd of R.sd){c.beginPath();for(let d=-20;d<=R.len+15;d+=30){const [x,y]=P(srX(R,d),srZ(sd,d));d<-10?c.moveTo(x,y):c.lineTo(x,y)}c.stroke()}}}
  for(const ch of chests){if(ch.open)continue;const [x,y]=P(ch.x,ch.z*ZS);mmIco(c,"chest",x,y,ch.gold?"#ffd34e":"#c98a3a")}
  for(const sh of shrines){if(sh.used)continue;const [x,y]=P(sh.x,sh.z*ZS);mmIco(c,"shrine",x,y,SHR[sh.k].col)}
  for(const k of loots){if(k.dead)continue;const [x,y]=P(k.x,k.z*ZS),r=k.it.r;mmIco(c,"loot",x,y,r===12?rbCol():r===11?"#8a5cff":RAR[r].col,r>=3)}
@@ -7939,6 +8000,12 @@ function vmRender(){
 const MZ=125/(82*ZS);
 /* ---- open world: the next battle is a ★ somewhere ahead (often off the road), wild monsters roam, chests hide in the fields ---- */
 let goal=null,chests=[];
+/* side roads (open world): R.sd lists the sides (-1 left, 1 right); d = distance from the road edge */
+const SR_ED=[-20,DEPTH*ZS+20],srSeen=new Set();
+function sRoad(i){if(i<1)return null;const k=hash(i*17.31+5.7);if(k<.5)return null;return{i,x:i*CHW+CHW*(.35+hash(i*3.7+1.1)*.3),sd:k<.69?[-1]:k<.88?[1]:[-1,1],len:380+hash(i*9.1+2.2)*240,cv:(hash(i*5.3+.7)-.5)*2}}
+const srX=(R,d)=>R.x+Math.sin(Math.max(0,d)*.0075)*R.cv*46,srZ=(sd,d)=>sd<0?SR_ED[0]-d:SR_ED[1]+d;
+/* trees and rocks keep off the path and the clearing at its end */
+function srBlock(x,z){const R=sRoad(Math.floor(x/CHW));if(!R)return false;for(const sd of R.sd){const d=sd<0?SR_ED[0]-z:z-SR_ED[1];if(d>-40&&d<R.len+80&&Math.abs(x-srX(R,d))<(d>R.len-50?78:40))return true}return false}
 function openWorldNext(){
  if(!isFP())return;
  const gx=hero.x+rnd(650,900),gz=rnd(zLo(25),zHi(25));goal={x:gx,z:gz};
@@ -7949,14 +8016,18 @@ function openWorldNext(){
  /* treasure chests away from the road */
  chests=chests.filter(c=>!c.open&&c.x>hero.x-400);shrines=shrines.filter(sh=>!sh.used&&sh.x>hero.x-400);placeShrine(gx);
  const nc=Math.random()<.6?1:2;for(let i=0;i<nc;i++){const far=Math.random()<.5,x=rnd(hero.x+180,gx+150),z=far?rnd(zLo(14),zLo(70)):rnd(zHi(70),zHi(14));chests.push({x,z,open:0,t:0,gold:Math.random()<.3})}
+ for(let ci=Math.floor(hero.x/CHW);ci<=Math.floor((gx+300)/CHW);ci++){const R=sRoad(ci);if(!R)continue;for(const sd of R.sd){const key=ci+":"+sd;if(gem.srd.includes(key)||chests.some(c=>c.sr===key))continue;
+  const x=srX(R,R.len),z=srZ(sd,R.len)/ZS;chests.push({x,z,open:0,t:0,gold:true,sr:key});
+  if(Math.random()<.5){const k=pickTier(battleNo,foe.lvl),e=makeEnemy(pickOfTier(k,bi),false,x+rnd(-40,40),z+rnd(-14,14),0,{ref});e.wild=true;e.home={x:e.x,z:e.z};e.state="roam";e.st=rnd(0,2);e.entered=true;e.spawned=true;enemies.push(e)}}}
  setTimeout(()=>{if(cleared&&!locked)toast("🌐 "+t("exploreHint"),"#ffd98a")},2600)}
 function chestTick(dt){
+ if(isFP()&&hero.state!=="dead"){const R=sRoad(Math.floor(hero.x/CHW));if(R&&Math.abs(hero.x-R.x)<110&&!srSeen.has(R.i)){srSeen.add(R.i);toast((R.sd.length>1?"↔️ ":R.sd[0]<0?"⬅️ ":"➡️ ")+t("srHint"),"#ffd98a")}}
  for(const c of chests){if(c.open){c.t+=dt;continue}
   if(hero.state!=="dead"&&Math.hypot(hero.x-c.x,(hero.z-c.z)*ZS)<34){c.open=1;c.t=0;
    const g=Math.max(5,Math.round((14+battleNo*5)*(c.gold?2.2:1)*(1+P.goldBonus/100)*goldGrow()));spawnCoins(c.x,c.z,10,g);
    const o={x:c.x,z:c.z,h:8};spawnLoot(o,makeItem(rollRarity(c.gold?2:1)));if(c.gold)setTimeout(()=>spawnLoot(o,makeItem(rollRarity(1))),260);
    for(let i=0;i<26;i++){const a=rnd(0,PI*2),sp=rnd(40,120);parts.push({x:c.x,z:c.z,h:12,vx:Math.cos(a)*sp,vz:Math.sin(a)*sp*.35,vh:rnd(60,160),g:200,life:rnd(.5,.9),max:.9,col:i%3?"#ffd34e":"#fff6c0",size:rnd(1.5,3),t:"spark"})}
-   SFX.unlock();toast("💰 "+t("chestOpen"),"#ffd34e");qHit("chest");save()}}
+   if(c.sr){gem.srd.push(c.sr);if(gem.srd.length>300)gem.srd.splice(0,100)}SFX.unlock();toast("💰 "+t("chestOpen"),"#ffd34e");qHit("chest");save()}}
  chests=chests.filter(c=>!c.open||c.t<20)}
 /* ---- variety: random battle events and roadside shrines with short buffs ---- */
 const EVTS=[
@@ -8900,7 +8971,8 @@ function achHTML(){frLoad();const rows=ACH.map(([k,ic,s,f,T,G],i)=>{const d=gem.
   const v=f(),n=T[d],g=G[d],ok=v>=n;
   return`<div class="qc${ok?" rdy":""}" style="--i:${i}"><div class="qi">${ic}</div><div class="qm"><b>${t(s,{n:nfm(n)})} <small class="achT">${d+1}/${T.length}</small></b><div class="qbar"><i style="width:${Math.min(100,v/n*100).toFixed(1)}%"></i><span>${nfm(Math.min(v,n))} / ${nfm(n)}</span></div></div><div class="qr">${ok?`<button class="btn main sm" type="button" data-ach="${k}">${t("claim")} 💎${g}</button>`:`<span class="qg">💎${g}</span>`}</div></div>`});
  const chips=RAR.map((R,r)=>{const f=gem.rf>>r&1,c=gem.rfc>>r&1;return`<button type="button" class="rfC${f?" f":""}${c?" c":""}" data-rf="${r}" style="--rc:${r===12?"#ff7ad9":r===11?"#8a5cff":R.col}"><b${rCls(R)}>${L(R.n)}</b><small>${c?"✓":f?"💎"+rfGem(r):"🔒"}</small></button>`}).join("");
- return`<p class="sub">${t("achHint")}</p>${rows.join("")}<h3 class="h3">🌈 ${t("a_rar")}</h3><div class="rfG">${chips}</div>`}
+ const stc=[["🏆","stBat",battleNo-1],["⚔️","stKill",killSum(kills)],["⭐","stLvl",P.level],["💥","stCrit",gem.st.crit|0],["💨","stDodge",gem.st.dodge|0],["👣","stWalk",gem.st.walk|0],["📜","stQuest",gem.st.qd|0],["🧰","stChest",gem.st.chest|0],["⛩️","stShrine",gem.st.shrine|0],["🧌","stGob",gem.st.gob|0],["🎡","stSpin",(gem.ws&&gem.ws.n)|0],["🌳","stTal",tal.length],["📅","stStreak",Math.max(gem.st.mstr||0,gem.streak)],["🌟","stLeg",gem.st.legend|0],["👥","stFr",frList.length]];
+ return`<details class="lbox stBox" open><summary><b>📊 ${t("tStats")}</b></summary><div class="stG">${stc.map(([ic,k,v])=>`<span><i>${ic}</i><b>${nfm(v)}</b><small>${t(k)}</small></span>`).join("")}</div></details><p class="sub">${t("achHint")}</p>${rows.join("")}<h3 class="h3">🌈 ${t("a_rar")}</h3><div class="rfG">${chips}</div>`}
 function achPay(g,btn){if(qRoom()<g){toast(t("gemCap"),"#ffb070");SFX.buzz();return false}gemAdd(g);gemPop(btn,g);SFX.gem();SFX.ach();toast("🏅 💎 +"+g,"#7fe8ff");return true}
 $("gAch").addEventListener("click",e=>{const b=e.target.closest("[data-ach],[data-rf]");if(!b||b.disabled)return;
  if(b.dataset.ach){const A=ACH.find(a=>a[0]===b.dataset.ach),d=gem.ach[A[0]]|0;if(d>=A[4].length||A[3]()<A[4][d])return;if(achPay(A[5][d],b))gem.ach[A[0]]=d+1}
@@ -8912,24 +8984,34 @@ const WHEEL=[{k:"gold",m:1,ic:"🪙",w:24,col:"#c8902e"},{k:"gem",n:10,ic:"💎"
 const SPIN_COST=30;let wSpin=false,wRot=0;
 const wGold=m=>Math.round((40+battleNo*20)*m/10)*10;
 const wLabel=p=>p.k==="gold"?p.ic+nfm(wGold(p.m)):p.k==="gem"?"💎"+p.n:p.k==="xp"?"⭐×2":"🎁";
+/* an emoji inside an SVG drawing: our own icon as an <image> when there is one */
+const svgEmo=(ch,x,y,sz)=>{const k=emoKey(ch),I=k&&(k[0]==="f"&&k.length===3?EMO.FL[k.slice(1)]:EMO.I[k]);return I?`<image href="data:image/svg+xml,${encodeURIComponent(I)}" x="${x-sz/2}" y="${y-sz/2}" width="${sz}" height="${sz}"/>`:`<text x="${x}" y="${y+sz*.36}" text-anchor="middle" font-size="${sz}">${ch}</text>`};
+/* the colour a rarity's name is written in (rainbow and shadow ones get a readable stand-in) */
+const rarTxtCol=r=>{const R=RAR[r];return!R?"#ccc":R.rainbow?"#ff7ad9":R.dark?"#a58cff":R.col};
+const wDesc=p=>p.k==="gold"?t("wGoldN",{n:nfm(wGold(p.m))}):p.k==="gem"?t("wGemN",{n:p.n}):p.k==="xp"?t("wXpN"):t("wItemN");
 function wheelSVG(){const n=WHEEL.length,a=360/n,R=100;let g="";
  WHEEL.forEach((p,i)=>{const a0=(i*a-90)*PI/180,a1=((i+1)*a-90)*PI/180,x0=R*Math.cos(a0),y0=R*Math.sin(a0),x1=R*Math.cos(a1),y1=R*Math.sin(a1),am=((i+.5)*a-90)*PI/180;
   g+=`<path d="M0 0 L${x0.toFixed(2)} ${y0.toFixed(2)} A${R} ${R} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)}Z" fill="${p.col}" stroke="#1a0e14" stroke-width="2"/>`;
-  g+=`<g transform="translate(${(Math.cos(am)*66).toFixed(1)} ${(Math.sin(am)*66).toFixed(1)}) rotate(${((i+.5)*a).toFixed(1)})"><text text-anchor="middle" y="-4" font-size="20">${p.ic}</text><text text-anchor="middle" y="14" font-size="11" font-weight="800" fill="#fff" stroke="#000" stroke-width=".6">${wLabel(p).replace(p.ic,"")}</text></g>`});
+  const lb=p.k==="gold"?nfm(wGold(p.m)):p.k==="gem"?String(p.n):p.k==="xp"?"×2 XP":"?";
+  g+=`<g transform="translate(${(Math.cos(am)*64).toFixed(1)} ${(Math.sin(am)*64).toFixed(1)}) rotate(${((i+.5)*a).toFixed(1)})">${svgEmo(p.ic,0,-9,22)}<text text-anchor="middle" y="16" font-size="12.5" font-weight="900" fill="#fff" stroke="#1a0e14" stroke-width="2.6" paint-order="stroke">${lb}</text></g>`});
  return`<svg viewBox="-108 -108 216 216"><circle r="106" fill="#2a1622" stroke="#d6a24a" stroke-width="4"/>${g}<circle r="16" fill="#2a1622" stroke="#ffd24a" stroke-width="3"/><text text-anchor="middle" y="6" font-size="16">🎡</text>${Array.from({length:16},(_,i)=>{const q=i/16*2*PI;return`<circle cx="${(Math.cos(q)*103).toFixed(1)}" cy="${(Math.sin(q)*103).toFixed(1)}" r="2.4" fill="#fff6c0"/>`}).join("")}</svg>`}
+function wPrizeHTML(){const tot=WHEEL.reduce((a,p)=>a+p.w,0);return`<div class="lbox wPz"><b>🎯 ${t("wPrizes")}</b>${WHEEL.map(p=>`<div class="wpR"><i class="wpI" style="--c:${p.col}">${p.ic}</i><span>${wDesc(p)}</span><b>${(p.w/tot*100).toFixed(0)}%</b></div>`).join("")}</div>`}
+function wStatsHTML(){const W=gem.ws||{},bi=Array.isArray(W.bi)&&RAR[W.bi[1]]&&SLOTS[W.bi[0]]?frUnItem(W.bi):null;
+ return`<div class="lbox wSt"><b>📊 ${t("wStats")}</b><div class="wsG"><span><small>${t("wsTot")}</small><b>🎡 ${W.n|0}</b><em>${t("wsFree")} ${W.f|0} · ${t("wsPaid")} ${W.p|0}</em></span><span><small>${t("wsGold")}</small><b>🪙 ${nfm(W.g|0)}</b></span><span><small>${t("wsGems")}</small><b>💎 ${W.gm|0}</b></span><span><small>${t("wsItems")}</small><b>🎁 ${W.it|0}</b></span></div>${bi?`<p class="wsB">🏆 ${t("wsBest")}: <b style="color:${rarTxtCol(bi.r)}">${SLOTS[bi.s].ic} ${frEsc(itemName(bi))}</b></p>`:""}</div>`}
 function renderWheel(){const free=gem.wd!==dayKey(),box=$("gWheel");if(wSpin)return;
  box.innerHTML=`<h3 class="h3 wTitle">🎡 ${t("wheelT")}</h3><div class="whW"><i class="whPin">▼</i><div class="whD" id="whD" style="transform:rotate(${wRot}deg)">${wheelSVG()}</div></div><p class="sub wHint">${t("wheelHint")}</p>
-<div class="frAct wAct">${free?`<button class="btn main" type="button" id="wFree">🎡 ${t("spinFree")}</button>`:`<span class="m" id="wNextT">${t("wheelNext",{t:fmtT(toMid())})}</span>`}<button class="btn" type="button" id="wPay" ${gem.n<SPIN_COST?"disabled":""}>${t("spinGem",{n:SPIN_COST})}</button></div><div class="wRes" id="wRes"></div>`;
+<div class="frAct wAct">${free?`<button class="btn main" type="button" id="wFree">🎡 ${t("spinFree")}</button>`:`<span class="m" id="wNextT">${t("wheelNext",{t:fmtT(toMid())})}</span>`}<button class="btn" type="button" id="wPay" ${gem.n<SPIN_COST?"disabled":""}>${t("spinGem",{n:SPIN_COST})}</button></div><div class="wRes" id="wRes"></div>${wPrizeHTML()}${wStatsHTML()}`;
  const a=$("wFree");if(a)a.onclick=()=>spinWheel(false);$("wPay").onclick=()=>spinWheel(true)}
 function spinWheel(paid){if(wSpin)return;const free=gem.wd!==dayKey();if(!paid&&!free)return;
  if(paid){if(gem.n<SPIN_COST){toast(t("needGems"));SFX.buzz();return}gem.n-=SPIN_COST}else gem.wd=dayKey();
+ const W=gem.ws||(gem.ws={});W.n=(W.n|0)+1;if(paid)W.p=(W.p|0)+1;else W.f=(W.f|0)+1;let won=null;
  const tot=WHEEL.reduce((s2,p)=>s2+p.w,0);let x=Math.random()*tot,i=0;for(;i<WHEEL.length-1;i++){x-=WHEEL[i].w;if(x<=0)break}
  const p=WHEEL[i],seg=360/WHEEL.length,cur=((wRot%360)+360)%360,want=(360-(i*seg+seg/2)+rnd(-seg*.32,seg*.32)+360)%360;wRot+=360*6+((want-cur+360)%360);
  /* the prize is given right away (closing the menu mid-spin loses nothing), it is only shown when the wheel stops */
- let msg="";if(p.k==="gold"){const g=wGold(p.m);P.gold+=g;msg="🪙 "+nfm(g)}else if(p.k==="gem"){const k=gemAdd(p.n);msg="💎 "+k+(k<p.n?" ("+t("gemCap")+")":"")}else if(p.k==="xp"){gem.bst.xp=Math.max(Date.now(),gem.bst.xp||0)+600000;recalc();msg="⭐ "+t("boostXp").replace("15","10")}else{const it=makeItem(rollRarity(2));addItem(it);msg=SLOTS[it.s].ic+" "+itemName(it)}
+ let msg="";if(p.k==="gold"){const g=wGold(p.m);P.gold+=g;W.g=(W.g|0)+g;msg="🪙 "+nfm(g)}else if(p.k==="gem"){const k=gemAdd(p.n);W.gm=(W.gm|0)+k;msg="💎 "+k+(k<p.n?" ("+t("gemCap")+")":"")}else if(p.k==="xp"){gem.bst.xp=Math.max(Date.now(),gem.bst.xp||0)+600000;recalc();msg="⭐ "+t("boostXp").replace("15","10")}else{const it=makeItem(rollRarity(2));addItem(it);won=it;W.it=(W.it|0)+1;if(!Array.isArray(W.bi)||it.r>W.bi[1])W.bi=frItem(it);msg=SLOTS[it.s].ic+" "+itemName(it)}
  save();hud();wSpin=true;SFX.dice();const d=$("whD");if(d){d.style.transition="transform 4.2s cubic-bezier(.12,.82,.18,1)";d.style.transform=`rotate(${wRot}deg)`}
  let tk=0;const tick=()=>{if(!wSpin)return;SFX.tick();tk++;setTimeout(tick,45+tk*tk*1.6)};tick();
- setTimeout(()=>{wSpin=false;SFX.jackpot();SFX.gem();toast("🎡 "+t("wheelWin",{n:msg}),"#ffd98a");renderDaily();const r=$("wRes");if(r){r.textContent=t("wheelWin",{n:msg});r.classList.add("on")}},4300)}
+ setTimeout(()=>{wSpin=false;SFX.jackpot();SFX.gem();toast("🎡 "+t("wheelWin",{n:msg}),"#ffd98a");renderDaily();const r=$("wRes");if(r){r.innerHTML=won?t("wheelWin",{n:`<b style="color:${rarTxtCol(won.r)}">${frEsc(msg)}</b>`})+`<small>🎒 ${t("wBag")}</small>`:frEsc(t("wheelWin",{n:msg}));r.classList.add("on")}},4300)}
 
 /* ---- nature sounds: every map plays its own little sounds now and then ---- */
 const AMB_K={grave:"owl",water:"frog",ice:"howl",cabin:"howl",lava:"bubble",ruins:"drip",vale:"bird",wheat:"bird",lavender:"bird",autumn:"bird",torii:"bell",pagoda:"bell",mesa:"wind",oasis:"wind",jungle:"bird2",temple:"bird2",shrooms:"fairy",candy:"fairy",gothic:"bell",crystal:"chime",coast:"gull",bones:"howl"};
@@ -8973,7 +9055,7 @@ function bossMid(e){if(e.state==="dead")return;say(L(e.cfg.n),dl("bm"+rint(1,6))
 function bossFall(e){say(L(e.cfg.n),dl("bd"+rint(1,6)),"#c9a0b4","💀");say(nickname||t("hero"),dl("hv"+rint(1,4)),"#8fc6ff","🏆")}
 
 /* ---- what's new: newest first; opens by itself once after an update ---- */
-const NEWS=[{v:"2026.10.20-b",ic:"🌍",k:["n8c1","n8b3"]},{v:"2026.10.20",ic:"👹",k:["n8b2"]},{v:"2026.10.19-b",ic:"🗺️",k:["n8b1","n8b4","n8b5","n8b6","n8b7"]},{v:"2026.10.19",ic:"🎓",k:["n8a1","n8a6","n8a7","n8a5","n8a8","n8a2","n8a3","n8a4"]},{v:"2026.10.18",ic:"🛠️",k:["n7a1","n7a2","n7a3","n7a4","n7a5","n7a6","n7a7","n7a8"]},{v:"2026.10.17",ic:"💎",k:["n3a"]},{v:"2026.10.16",ic:"✨",k:["n2b","n2a"]}];
+const NEWS=[{v:"2026.10.20-c",ic:"🎡",k:["n9a1","n9a2","n9a3","n9a4"]},{v:"2026.10.20-b",ic:"🌍",k:["n8c1","n8b3"]},{v:"2026.10.20",ic:"👹",k:["n8b2"]},{v:"2026.10.19-b",ic:"🗺️",k:["n8b1","n8b4","n8b5","n8b6","n8b7"]},{v:"2026.10.19",ic:"🎓",k:["n8a1","n8a6","n8a7","n8a5","n8a8","n8a2","n8a3","n8a4"]},{v:"2026.10.18",ic:"🛠️",k:["n7a1","n7a2","n7a3","n7a4","n7a5","n7a6","n7a7","n7a8"]},{v:"2026.10.17",ic:"💎",k:["n3a"]},{v:"2026.10.16",ic:"✨",k:["n2b","n2a"]}];
 function renderNews(){LS.set("r2_newsV",NEWS[0].v);$("newsList").innerHTML=NEWS.map((n,i)=>`<div class="nwC${i?"":" top"}" style="--i:${i}"><div class="nwH"><i>${n.ic}</i><b>${n.v}</b>${i?"":`<em>NEW</em>`}</div><ul>${n.k.map(k=>`<li>${t(k)}</li>`).join("")}</ul></div>`).join("")}
 $("pNews").onclick=()=>openModal("mNews");
 setTimeout(()=>{try{if(LS.get("r2_newsV","")!==NEWS[0].v&&(battleNo>1||P.level>1)&&!modalOpen)openModal("mNews")}catch(e){}},2600);
@@ -9001,7 +9083,22 @@ function frShort(txt){const m=String(txt||"").replace(/\s+/g,"").match(/MR2\.([A
 /* the code may come inside a longer message, or broken over lines by a messenger */
 function frDecode(txt){const raw=String(txt||"");for(const src of [raw,raw.replace(/\s+/g,"")]){const m=src.match(/MRPG1\.([A-Za-z0-9_-]+)/);if(!m)continue;
   for(let cut=0;cut<=16&&cut<m[1].length;cut++){try{const o=JSON.parse(b64d(m[1].slice(0,m[1].length-cut)));if(o&&typeof o==="object")return o}catch(e){}}}return null}
-function frParse(txt){const o=frShort(txt)||frDecode(txt);if(!o)return null;
+/* 80 bits: id 12, level 8, battle 12, power 9 (log), 7 visible slots × 5 (rarity id + 1), check 4. Crockford base32: no I, L, O or U to mix up */
+const B32="0123456789ABCDEFGHJKMNPQRSTVWXYZ",FR3S=[0,1,2,3,7,8,10];
+const fr12=id=>{let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))>>>0;return h&4095},fr3Id=()=>"m3:"+fr12(frId()).toString(36);
+const rId=r=>RAR[r]&&RAR[r].id!=null?RAR[r].id:r,rById=v=>RAR.findIndex((R,i)=>(R.id!=null?R.id:i)===v);
+const fr3Chk=b=>{let c=0;for(let i=0;i<76;i+=4)c=(c*7+parseInt(b.slice(i,i+4),2))%16;return c};
+function frCode3(o){const id=fr12(o.id),pw=Math.min(511,Math.round(Math.log2((o.p||0)+1)*16));
+ const v=[[id,12],[Math.min(255,o.l|0),8],[Math.min(4095,o.b|0),12],[pw,9],...FR3S.map(si=>{const a=o.e.find(x=>x[0]===si);return[a?rId(a[1])+1:0,5]})];
+ let b="";for(const [x,n] of v)b+=(x>>>0).toString(2).padStart(n,"0").slice(-n);b+=fr3Chk(b).toString(2).padStart(4,"0");
+ let out="";for(let i=0;i<80;i+=5)out+=B32[parseInt(b.slice(i,i+5),2)];return(o.n||"Hero")+"#"+out.match(/.{4}/g).join("-")}
+function frShort3(txt){const m=String(txt||"").match(/([^#\n]{0,30})#\s*([0-9A-Za-z]{4})[\s-]*([0-9A-Za-z]{4})[\s-]*([0-9A-Za-z]{4})[\s-]*([0-9A-Za-z]{4})/);if(!m)return null;
+ const q=(m[2]+m[3]+m[4]+m[5]).toUpperCase().replace(/[IL]/g,"1").replace(/O/g,"0").replace(/U/g,"V");let b="";for(const ch of q){const v=B32.indexOf(ch);if(v<0)return null;b+=v.toString(2).padStart(5,"0")}
+ if(fr3Chk(b)!==parseInt(b.slice(76,80),2))return null;let p=0;const rd=n=>{const v=parseInt(b.slice(p,p+n),2);p+=n;return v};
+ const id=rd(12),l=rd(8),bt=rd(12),pw=rd(9),e=[];FR3S.forEach(si=>{const v=rd(5);if(!v)return;const r=rById(v-1);if(r<0||!SLOTS[si])return;const S=SLOTS[si],ng=S.names[r<=1?0:r<=3?1:2];e.push([si,r,Math.max(1,bt),(si*3+r)%ng.length,(si*7+r*3)%RAR[r].ep.length,0,-1,0])});
+ const n=(m[1].split(/[:：\n]/).pop()||"").trim().slice(-18)||"Hero";
+ return{v:3,id:"m3:"+id.toString(36),n,l:Math.max(1,l),b:Math.max(1,bt),k:0,p:Math.max(0,Math.round(2**(pw/16)-1)),e,t:Date.now()}}
+function frParse(txt){const o=frShort3(txt)||frShort(txt)||frDecode(txt);if(!o)return null;
  try{if(!frOk(o))return null;o.e=o.e.filter(a=>Array.isArray(a)&&a.length>=8&&a.every(x=>isFinite(x))&&SLOTS[a[0]]&&RAR[a[1]]&&(a[6]<0||ARM[a[6]])).slice(0,SLOTS.length);
   o.l=clampN(o.l|0,1,9999);o.b=clampN(o.b|0,1,99999);o.k=Math.max(0,o.k|0);o.p=Math.max(0,o.p|0);o.t=+o.t||0;return o}catch(e){return null}}
 /* other heroes saved on this phone (other accounts, or the guest) */
@@ -9023,16 +9120,16 @@ function renderFriends(){frLoad();const box=$("frBody");
  if(frSel){const [k,i]=[frSel[0],+frSel.slice(1)],o=k==="F"?frList[i]:frLocal()[i];if(!o){frSel=null;return renderFriends()}
   box.innerHTML=`<div class="frV">${frViewHTML(o,k==="F")}</div>`;$("frBack").onclick=()=>{frSel=null;SFX.ui();renderFriends()};
   const d=$("frDel");if(d)d.onclick=()=>{frList.splice(i,1);frSave();frSel=null;SFX.sell();renderFriends()};return}
- const me=frMe(),code=nickname?frCodeOf(me):"";
+ const me=frMe(),code=nickname?frCode3(me):"";
  box.innerHTML=`<div class="frMe"><i class="frAv big">${frEsc(((nickname||"?")[0]).toUpperCase())}</i><div><b>${frEsc(nickname||t("hero"))}</b><div class="phS"><span>${t("lv")} ${P.level}</span><span>⚔ #${battleNo}</span><span>💀 ${me.k}</span><span>💪 ${nfm(me.p)}</span></div></div></div>
-<div class="lbox"><b>🔑 ${t("frCode")}</b><p class="m">${t("frCodeHint")}</p>${code?`<div class="frCode" id="frCodeT">${code}</div><div class="frAct"><button class="btn main sm" id="frCopy" type="button">📋 ${t("frCopy")}</button>${navigator.share?`<button class="btn sm" id="frShare" type="button">📤 ${t("frShare")}</button>`:""}</div>`:`<p class="gWarn">⚠ ${t("frNoNick")}</p><button class="btn sm" id="frNick" type="button">✏️ ${t("settings")}</button>`}</div>
+<div class="lbox"><b>🔑 ${t("frCode")}</b><p class="m">${t("frCodeHint")}</p>${code?`<div class="frCode fr3" id="frCodeT">${frEsc(code)}</div><p class="m frTy">✍️ ${t("frType")}. ${t("frType2")}</p><div class="frAct"><button class="btn main sm" id="frCopy" type="button">📋 ${t("frCopy")}</button>${navigator.share?`<button class="btn sm" id="frShare" type="button">📤 ${t("frShare")}</button>`:""}</div>`:`<p class="gWarn">⚠ ${t("frNoNick")}</p><button class="btn sm" id="frNick" type="button">✏️ ${t("settings")}</button>`}</div>
 <div class="lbox"><b>➕ ${t("frAdd")}</b><textarea id="frIn" class="inp frIn" rows="2" placeholder="${frEsc(t("frPaste"))}"></textarea><div class="frAct"><button class="btn main sm" id="frAddB" type="button">${t("frAddB")}</button></div></div>
 <input id="frQ" class="inp frQ" type="search" placeholder="🔍 ${frEsc(t("frSearch"))}" value="${frEsc(frQ)}"><div id="frLists">${frListsHTML()}</div><p class="m frSoon">🌍 ${t("frSoon")}</p>`;
  const cp=$("frCopy");if(cp)cp.onclick=()=>{const ok=()=>{toast("✓ "+t("frCopied"),"#7fe8ff");SFX.cash()};try{navigator.clipboard.writeText(code).then(ok,()=>{selEl($("frCodeT"));ok()})}catch(e){selEl($("frCodeT"))}};
  const sh=$("frShare");if(sh)sh.onclick=()=>{navigator.share({title:"Mini RPG",text:code}).catch(()=>{})};
  const nk=$("frNick");if(nk)nk.onclick=()=>{openModal("mPause");setTimeout(()=>{const n=$("nickIn");if(n){n.scrollIntoView({block:"center"});n.focus()}},60)};
- $("frAddB").onclick=()=>{const o=frParse($("frIn").value);if(!o){toast(t("frBad"),"#ff8a8a");SFX.buzz();return}if(o.id===frId()||o.id===frId().slice(0,6)){toast(t("frSelf"));return}
-  const j=frList.findIndex(x=>x.id===o.id||x.id.slice(0,6)===o.id.slice(0,6));if(j>=0){frList[j]=o;toast(t("frUpd",{n:o.n}),"#6bf0ae")}else{frList.unshift(o);toast("👥 "+t("frAdded",{n:o.n}),"#6bf0ae");SFX.unlock()}frSave();$("frIn").value="";renderFriends()};
+ $("frAddB").onclick=()=>{const o=frParse($("frIn").value);if(!o){toast(t("frBad"),"#ff8a8a");SFX.buzz();return}if(o.id===frId()||o.id===frId().slice(0,6)||o.id===fr3Id()){toast(t("frSelf"));return}
+  const j=frList.findIndex(x=>x.id===o.id||x.id.slice(0,6)===o.id.slice(0,6)||(o.v===3&&x.n===o.n));if(j>=0){frList[j]=o;toast(t("frUpd",{n:o.n}),"#6bf0ae")}else{frList.unshift(o);toast("👥 "+t("frAdded",{n:o.n}),"#6bf0ae");SFX.unlock()}frSave();$("frIn").value="";renderFriends()};
  $("frQ").oninput=e=>{frQ=e.target.value;$("frLists").innerHTML=frListsHTML()}}
 function selEl(el){try{const r=document.createRange();r.selectNodeContents(el);const sl=getSelection();sl.removeAllRanges();sl.addRange(r)}catch(e){}}
 $("frBody").addEventListener("click",e=>{const b=e.target.closest("[data-fr]");if(!b)return;frSel=b.dataset.fr;SFX.ui();renderFriends();$("frBody").scrollIntoView({block:"start"})});
@@ -9040,18 +9137,23 @@ $("bFriends").onclick=$("pFriends").onclick=()=>openModal("mFriends");
 
 /* ---- tutorial: steps with a spotlight on the part of the screen they talk about ---- */
 const TUT=[{k:"tut1"},{k:"tut2",zone:"move"},{k:"tut3",el:".sk.atk"},{k:"tut4",el:"#pad"},{k:"tut5",el:"#mmBtn"},{k:"tut6",el:"#bInv"},{k:"tut7",el:"#bTree"},{k:"tut8",el:"#bForge"},{k:"tut9",el:"#bDaily"},{k:"tut10",fin:1}];
-let tutI=-1,tutWas=false;
-function tutStart(){if(modalOpen)closeModal(true);tutI=0;tutWas=paused;paused=true;$("tut").classList.add("on");tutShow();SFX.open()}
+let tutI=-1,tutWas=false,tutGot=false;const TUT_STEP=40;
+function tutStart(){if(modalOpen)closeModal(true);tutI=0;tutGot=false;tutWas=paused;paused=true;$("tut").classList.add("on");tutShow();SFX.open()}
 function tutRect(st){const W=innerWidth,H=innerHeight;if(st.zone==="move")return{left:6,top:H*.42,width:W*.46,height:H*.55};
  const el=st.el&&document.querySelector(st.el);if(!el)return null;const r=el.getBoundingClientRect();if(!r.width||r.bottom<0||r.top>H)return null;return{left:r.left-7,top:r.top-7,width:r.width+14,height:r.height+14}}
 function tutShow(){const st=TUT[tutI],r=tutRect(st),ring=$("tutRing"),card=$("tutCard"),H=innerHeight;
  if(r)Object.assign(ring.style,{left:r.left+"px",top:r.top+"px",width:r.width+"px",height:r.height+"px",opacity:1});else Object.assign(ring.style,{left:innerWidth/2+"px",top:H/2+"px",width:"0px",height:"0px",opacity:.98});
  const low=r&&r.top+r.height/2>H*.5;card.style.top=low?"14px":"auto";card.style.bottom=low?"auto":"14px";if(!r){card.style.top="50%";card.style.bottom="auto";card.style.transform="translate(-50%,-50%)"}else card.style.transform="translateX(-50%)";
- $("tutTx").textContent=t(st.k);$("tutN").textContent=(tutI+1)+"/"+TUT.length;$("tutGo").textContent=st.fin?(LS.get(PK("r2_tutR"),0)?t("newsOk"):"🎁 "+t("tutDone")):t("tutNext")+" →";$("tutSkip").style.visibility=st.fin?"hidden":"visible";
+ $("tutTx").innerHTML=frEsc(t(st.k))+(tutI===0&&!LS.get(PK("r2_tutR"),0)?`<span class="tutPv">🎁 ${t("tutPrev")}: <b>💎50 · 🪙500 · ✨${L(RAR[3].n)}+</b></span>`:"");$("tutN").textContent=(tutI+1)+"/"+TUT.length;$("tutGo").textContent=st.fin?(LS.get(PK("r2_tutR"),0)?t("newsOk"):"🎁 "+t("tutDone")):t("tutNext")+" →";$("tutSkip").style.visibility=st.fin?"hidden":"visible";
  card.classList.remove("in");void card.offsetWidth;card.classList.add("in");SFX.talk()}
 function tutEnd(done){$("tut").classList.remove("on");tutI=-1;paused=tutWas&&!!modalOpen;last=performance.now();LS.set("r2_tut",1);
- if(done&&!LS.get(PK("r2_tutR"),0)){LS.set(PK("r2_tutR"),1);P.gold+=300;const k=gemAdd(50);addItem(makeItem(rollRarity(3)));save();hud();SFX.jackpot();SFX.gem();setTimeout(()=>toast("🎁 "+t("tutRew",{n:"💎"+k+" · 🪙300 · ✨"}),"#ffd98a"),500)}}
-$("tutGo").onclick=()=>{if(tutI<0)return;if(TUT[tutI].fin){tutEnd(true);return}tutI++;tutShow()};
+ if(!done&&!LS.get(PK("r2_tutR"),0))setTimeout(()=>toast("🎁 "+t("tutLater"),"#ffd98a"),300)}
+function tutPay(){LS.set(PK("r2_tutR"),1);P.gold+=500;const k=gemAdd(50),it=makeItem(rollRarity(3));addItem(it);save();hud();SFX.jackpot();SFX.gem();
+ return`<span class="tutRw"><b>🎁 ${t("tutGot")}</b><em>💎 ${k}</em><em>🪙 500</em><em style="color:${rarTxtCol(it.r)}">${SLOTS[it.s].ic} ${frEsc(itemName(it))}</em><small>🎒 ${t("wBag")}</small></span>`}
+$("tutGo").onclick=()=>{if(tutI<0)return;const st=TUT[tutI];
+ if(st.fin){if(tutGot||LS.get(PK("r2_tutR"),0)){tutEnd(true);return}tutGot=true;$("tutTx").innerHTML=frEsc(t(st.k))+tutPay();$("tutGo").textContent=t("newsOk");return}
+ const sk=PK("r2_tutS");if(tutI+1>LS.get(sk,0)){LS.set(sk,tutI+1);P.gold+=TUT_STEP;hud();SFX.cash();toast("🪙 +"+TUT_STEP+" "+t("tutStep"),"#ffd98a")}
+ tutI++;tutShow()};
 $("tutSkip").onclick=()=>{SFX.close();tutEnd(false)};
 $("tutB").onclick=()=>{closeModal(true);setTimeout(tutStart,120)};
 window.addEventListener("resize",()=>{if(tutI>=0)setTimeout(tutShow,80)});
@@ -9267,7 +9369,7 @@ const EMO=(()=>{
  return{I,FL,M}})();
 const EMO_RE=new RegExp("(?:[\\u{1F1E6}-\\u{1F1FF}]{2}|"+Object.keys(EMO.M).sort((a,b)=>b.length-a.length).join("|")+")\\uFE0F?","gu");
 function emoKey(s){const c=[...s].filter(x=>x!=="️");if(c.length===2&&c[0].codePointAt(0)>=0x1F1E6&&c[0].codePointAt(0)<=0x1F1FF){const iso=String.fromCharCode(c[0].codePointAt(0)-0x1F1E6+65,c[1].codePointAt(0)-0x1F1E6+65);return EMO.FL[iso]?"f"+iso:null}return EMO.M[c.join("")]||null}
-function emoText(n){const s=n.data,p=n.parentNode;if(!p||!s||p.nodeType!==1||(p.classList&&p.classList.contains("em")))return;const tg=p.nodeName;if(tg==="SCRIPT"||tg==="STYLE"||tg==="TEXTAREA"||tg==="TITLE"||tg==="OPTION")return;
+function emoText(n){const s=n.data,p=n.parentNode;if(!p||!s||p.nodeType!==1||(p.classList&&p.classList.contains("em")))return;if(p.namespaceURI==="http://www.w3.org/2000/svg")return;const tg=p.nodeName;if(tg==="SCRIPT"||tg==="STYLE"||tg==="TEXTAREA"||tg==="TITLE"||tg==="OPTION")return;
  EMO_RE.lastIndex=0;if(!EMO_RE.test(s))return;EMO_RE.lastIndex=0;
  const f=document.createDocumentFragment();let i=0,m;
  while((m=EMO_RE.exec(s))){const k=emoKey(m[0]);if(!k)continue;if(m.index>i)f.appendChild(document.createTextNode(s.slice(i,m.index)));const el=document.createElement("e-m");el.className="em"+(k[0]==="f"&&k.length===3?" fg":"")+" e-"+k;el.textContent=m[0];f.appendChild(el);i=m.index+m[0].length}
