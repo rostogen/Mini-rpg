@@ -37,3 +37,11 @@
 - Side roads: `sRoad(chunk)` makes dirt paths left/right off the main road (`srX`/`srZ`, built in `buildChunk`, drawn on the minimap); a chest waits at the end, opened ones are kept in `gem.srd`.
 - Tutorial pays `TUT_STEP` gold per new step (`r2_tutS`) and the big prize once (`tutPay`, shown in the card).
 - Every enemy kind has its own gait (`C.mvA/mvS/mvL/mvH` from `vHash`) and voice (`enemyVoice(e,"atk"|"hurt"|"die")`).
+- Shadow Lands (P10): own state `SL` (`SL0()`, saved per profile as `r2_sl` by `saveSL`, read and cleaned by `loadSL`; reset in `switchTo`/`doReset`/`resetWorld`).
+  Zones: `ZONES` (home + shade/frost/vulcan/void on biomes 60-63, opened by battle number and the previous zone's boss, `zoneOpen`), travel through 🌀 portals after a win or the zone menu `#mZone` (`renderZone`, `travelZone`). Each zone has its own hazards (`zoneTick`, `zfx`), mobs `z_*` and materials.
+  Shadow bosses: `SBK` (`sl_lord`, `sl_colossus`, `sl_flame`, `sl_soul`, `sl_void`), every 5th zone battle or a challenge (`SL.chal`); specials and phase 2 in `sbTick`/`sbPhase`, lines `sbI*/shI*/sbM*/sbF*/shF*/sbW*` in `DLGsrc`, reward `sbReward` (gold, materials, a named sword once), rematches scale by `SL.bk`.
+  Elements: fire, ice, lightning, nature, shadow (`ELK`, `ELBEAT` = who beats whom, `elMul`), effects in `elemApply` (burn, slow, stun, heal, weaken). Materials `MATS` (`SL.mat`, `matAdd`, `matDrop`).
+  Forge: `UP_MAX`=30 (ore from +10, crystals from +20, `UP_MAT`), sword evolution `EVO` (5 stages, `evolve()`, +10% stats per stage, glow/sparks/aura/halo in first person via `vmEvo`), element `infuse(el)`.
+  Pets: `PETS` (8, own models `pet_*`, follow and bite: `petTick`/`petBite`), one active `SL.pa`. Secrets: `SECR` (12) with hidden items `HIDI` (`sl_h1..12`), found through `secFound`. Index chips: zone, pet, sec, finds.
+  Achievements `ACH2` (30, groups `ACH2G`) with titles `TITLES` (shown by the name, `SL.ttl`). Classes: `CLS` (Warrior/Mage/Hunter, 7 skills each, points `clsPts`, needs via `clsReqOk`, reset for gold with two taps) in the «Класи» tab of the skill menu.
+  Very rare drops show the big `rareShow` banner. New quest kinds: mat, zone, elem, sboss. Test runner and patch for this update lived in the scratchpad (`p10/`).
