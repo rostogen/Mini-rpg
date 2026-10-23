@@ -11955,6 +11955,8 @@ function terrO(x,z){const W=OPEN*ZS,L0=-34-W,L1=DEPTH*ZS+34+W,e=z<-34?-34-z:z>DE
   b=Math.max(0,Math.sin(x*.0093+z*.0061+1.3))*Math.max(0,Math.sin(x*.0057-z*.0089+.4)),r=Math.sin(x*.0019-z*.0013)*.5+.5;
  return mead+(k*(14+n*84+b*b*95)+Math.max(0,d-180)*.2*(.4+r*1.1))*(z>L1?.8:1)}
 /* rolling hills inside the lane itself: the ground goes up and down, everything standing on it follows */
+/* the main road never runs straight: it sways left and right a little (world units, along x) */
+function roadOff(x){return Math.sin(x*.0019+.6)*15+Math.sin(x*.0047+2.3)*8+Math.sin(x*.011+.4)*2.5}
 function lanH(x,z){const a=G3.rel;if(!a)return 0;
  return a*(Math.sin(x*.0062+z*.0049+.8)*9+Math.sin(x*.0143-z*.0071+2.1)*5+Math.sin(x*.031+1.1+Math.sin(z*.02)*1.4)*Math.sin(z*.026+.4)*3.2)}
 function terrH(x,z){return terrO(x,z)+lanH(x,z)}
@@ -11967,12 +11969,12 @@ function groundGeo(){
  for(let j=0;j<nz-1;j++)for(let i=0;i<nx-1;i++){const a=j*nx+i,b=a+1,c=a+nx,d=c+1;idx.push(a,c,b,b,c,d)}
  const g=new T3.BufferGeometry();g.setAttribute("position",new T3.BufferAttribute(pos,3));g.setAttribute("uv",new T3.BufferAttribute(uv,2));g.setAttribute("color",new T3.BufferAttribute(new Float32Array(nx*nz*3).fill(1),3));g.setIndex(idx);return g}
 function shapeTerrain(sx){const g=G3.ground.geometry,p=g.attributes.position,z1=DEPTH*ZS,gc=g.attributes.color,TN=G3.tint;
- for(let i=0;i<p.count;i++){const x=sx+p.getX(i),z=-400+p.getZ(i);let y=terrH(x,z);const d=z<0?-z:z>z1?z-z1:0;if(d<34){const q=1-d/34;y-=.7*q*q*(3-2*q)}p.setY(i,y);
+ for(let i=0;i<p.count;i++){const x=sx+p.getX(i),z=-400+p.getZ(i);let y=terrH(x,z);const zr0=z-roadOff(x),d=zr0<0?-zr0:zr0>z1?zr0-z1:0;if(d<34){const q=1-d/34;y-=.7*q*q*(3-2*q)}p.setY(i,y);
   if(TN){/* big soft patches of dry earth and lush growth, so the meadow is not one flat colour that repeats */
    const k=.7+.55*ss(.2,.8,sn(x,z,1,0))+.12*(sn(x,z,3.4,2)-.5),a=ss(.56,.78,sn(x,z,.55,3.3))*.75+(1-ss(0,70,d))*.35,b=ss(.6,.82,sn(x,z,.8,8.1))*.7*(1-a*.6),w=1-a-b;
    gc.setXYZ(i,k*(w+TN[0].r*a+TN[1].r*b),k*(w+TN[0].g*a+TN[1].g*b),k*(w+TN[0].b*a+TN[1].b*b))}}
  p.needsUpdate=true;gc.needsUpdate=true;g.computeVertexNormals();g.computeBoundingSphere();
- const lg=G3.lane.geometry,lp=lg.attributes.position,lc=lg.attributes.color;for(let i=0;i<lp.count;i++){const x=sx+lp.getX(i),z=z1/2+lp.getZ(i);lp.setY(i,lanH(x,z));
+ const lg=G3.lane.geometry,lp=lg.attributes.position,lc=lg.attributes.color,LZ=lg.userData.z0||(lg.userData.z0=Float32Array.from({length:lp.count},(_,i)=>lp.getZ(i)));for(let i=0;i<lp.count;i++){const x=sx+lp.getX(i),z=z1/2+LZ[i],ro=roadOff(x);lp.setZ(i,LZ[i]+ro);lp.setY(i,lanH(x,z+ro));
   if(TN){/* the road itself: worn lighter dust, dark damp patches, wheel tracks, and the verges creeping in at both edges */
    const e=Math.max(0,Math.min(z,z1-z)),eg=1-ss(0,30,e),dust=ss(.6,.8,sn(x,z,.9,5)),wet=ss(.62,.82,sn(x,z,.7,9)),zr=z/z1,rut=Math.exp(-Math.pow((zr-.35)/.05,2))+Math.exp(-Math.pow((zr-.65)/.05,2)),
     k=(.86+.3*sn(x,z,1.7,1.1)+.22*dust-.3*wet-.1*rut)*(1-.18*eg),b=eg*.55*(.5+.5*sn(x,z,2.2,4)),w=1-b;
@@ -12097,11 +12099,11 @@ function buildChunk(i){
  const mesh=(geo,mat,x,y,z,s,ry)=>{const m=new T.Mesh(geo,mat);m.position.set(x,y+terrH(x,z),z);if(s!=null)typeof s==="number"?m.scale.setScalar(s):m.scale.set(...s);if(ry)m.rotation.y=ry;m.castShadow=G3.hi;m.receiveShadow=true;tg0.add(m);return m};
  const tree=(tg,x,z,sc,ry,j)=>{const t=mesh(tg.wood,j%2?M.bark:M.bark2,x,0,z,sc,ry);t.castShadow=false;if(tg.leaf)t.add(new T.Mesh(tg.leaf,(j>>1)%2?M.leaf2:M.leaf));if(tg.glow)t.add(new T.Mesh(tg.glow,M.glow));return t};
  // torch at the far edge of the lane
- if(!B.day){const tx=x0+120,tz=-8;mesh(geo("tp",()=>new T.CylinderGeometry(1.4,1.9,30,6).translate(0,15,0)),M.wood,tx,0,tz);mesh(geo("tb",()=>new T.CylinderGeometry(5,3,5,7).translate(0,2.5,0)),M.iron,tx,29,tz);
+ if(!B.day){const tx=x0+120,tz=-8+roadOff(x0+120);mesh(geo("tp",()=>new T.CylinderGeometry(1.4,1.9,30,6).translate(0,15,0)),M.wood,tx,0,tz);mesh(geo("tb",()=>new T.CylinderGeometry(5,3,5,7).translate(0,2.5,0)),M.iron,tx,29,tz);
   const fl=sprite(G3.tFlame,0xffffff,1,1);fl.scale.set(11,20,1);fl.position.set(tx,40,tz);g.add(fl);const gl=sprite(G3.tGlow,0xff8a3a,110,.35);gl.position.set(tx,36,tz);g.add(gl);
   G3.torches.push({x:tx,y:40,z:tz,fl,gl,i})}
  // small details on the lane
- for(let j=0;j<4;j++){const x=x0+j*95+h(j)*60,z=8+h(j+10)*(DEPTH*ZS-16),k=h(j+20);
+ for(let j=0;j<4;j++){const x=x0+j*95+h(j)*60,z=8+h(j+10)*(DEPTH*ZS-16)+roadOff(x),k=h(j+20);
   if(k<.3)mesh(G3.rockGeo[j%3],M.stone,x,0,z,[4+h(j+3)*6,3+h(j+4)*3,4+h(j+5)*5],h(j+6)*6);
   else if(k<.55)mesh(G3.tuftGeo,M.grass,x,0,z,.8+h(j+7)*.5,h(j)*6);
   else if(k<.63){const s=mesh(geo("sk",()=>new T.IcosahedronGeometry(3.4,1)),M.bone,x,3,z);s.scale.set(1,.9,.9);mesh(geo("skj",()=>new T.BoxGeometry(3.6,2,4)),M.bone,x+1,.8,z)}}
@@ -12242,12 +12244,12 @@ function buildChunk(i){
   if(h(j+220)<.7)mesh(G3.tuftGeo,M.grass,x,0,z,1.2+h(j+230)*.9,h(j)*6);else mesh(G3.rockGeo[j%3],M.stone2,x,0,z,[6+h(j)*8,4+h(j+1)*5,6+h(j+2)*6],h(j+3)*6)}
  // stone curbs along both edges of the road
  const curb=(z0,par)=>{const n=16,im=new T.InstancedMesh(geo("curb2",()=>{const g=new T.SphereGeometry(.56,10,6);const p=g.attributes.position;for(let i=0;i<p.count;i++){const y=p.getY(i);p.setY(i,y<0?y*.3:y);p.setX(i,p.getX(i)*(1+hash(i*1.3)*.12))}g.computeVertexNormals();return g.translate(0,.2,0)}),M.stone,n),m4=new T.Matrix4(),q=new T.Quaternion(),eu=new T.Euler();let k=0;
-  for(let j=0;j<n;j++){if(h(j+500+z0)<(roadKind(bi)==="dirt"?.62:.2))continue;const cx=x0+j*CHW/n+h(j+510)*6,cz=z0+(h(j+540)-.5)*4,sl=(lanH(cx+4,cz)-lanH(cx-4,cz))/8;eu.set(0,(h(j+520+z0)-.5)*.3,(h(j+530+z0)-.5)*.14+Math.atan(sl));q.setFromEuler(eu);m4.compose(new T.Vector3(cx,-1+lanH(cx,cz),cz),q,new T.Vector3(16+h(j+550)*6,5+h(j+560+z0)*6,9+h(j+570)*3));im.setMatrixAt(k++,m4)}
+  for(let j=0;j<n;j++){if(h(j+500+z0)<(roadKind(bi)==="dirt"?.62:.2))continue;const cx=x0+j*CHW/n+h(j+510)*6,cz=z0+(h(j+540)-.5)*4+roadOff(cx),sl=(lanH(cx+4,cz)-lanH(cx-4,cz))/8;eu.set(0,(h(j+520+z0)-.5)*.3,(h(j+530+z0)-.5)*.14+Math.atan(sl));q.setFromEuler(eu);m4.compose(new T.Vector3(cx,-1+lanH(cx,cz),cz),q,new T.Vector3(16+h(j+550)*6,5+h(j+560+z0)*6,9+h(j+570)*3));im.setMatrixAt(k++,m4)}
   im.count=k;im.castShadow=G3.hi;im.receiveShadow=true;par.add(im)};
  curb(-17,g);curb(DEPTH*ZS+17,fp);
 {const lo=!G3.hi,rk=roadKind(bi),RP=ROAD_P[rk]||ROAD_P.cob,z1=DEPTH*ZS,base=roadColor(bi),moss=new T.Color(B.grass||B.near),dk=new T.Color(shade(B.stone,-.3)),cc=new T.Color(),qn=new T.Quaternion(),nv=new T.Vector3(),UPV=new T.Vector3(0,1,0),m4=new T.Matrix4(),q4=new T.Quaternion(),e=new T.Euler(),v=new T.Vector3(),sc=new T.Vector3();
   /* every piece lies at the road's height and leans with its slope (the road rolls up and down) */
-  const put3=(im,n,x,z,y0,sx,sy,sz,ry,hk,tilt)=>{e.set((hash(hk*77)-.5)*tilt,ry,(hash(hk*53)-.5)*tilt);q4.setFromEuler(e);nv.set(-(lanH(x+3,z)-lanH(x-3,z))/6,1,-(lanH(x,z+3)-lanH(x,z-3))/6).normalize();qn.setFromUnitVectors(UPV,nv);q4.premultiply(qn);v.set(x,lanH(x,z)+y0,z);sc.set(sx,sy,sz);m4.compose(v,q4,sc);im.setMatrixAt(n,m4)};
+  const put3=(im,n,x,z,y0,sx,sy,sz,ry,hk,tilt)=>{z+=roadOff(x);e.set((hash(hk*77)-.5)*tilt,ry,(hash(hk*53)-.5)*tilt);q4.setFromEuler(e);nv.set(-(lanH(x+3,z)-lanH(x-3,z))/6,1,-(lanH(x,z+3)-lanH(x,z-3))/6).normalize();qn.setFromUnitVectors(UPV,nv);q4.premultiply(qn);v.set(x,lanH(x,z)+y0,z);sc.set(sx,sy,sz);m4.compose(v,q4,sc);im.setMatrixAt(n,m4)};
   const rutAt=z=>{const zr=z/z1;return Math.exp(-Math.pow((zr-.35)/.05,2))+Math.exp(-Math.pow((zr-.65)/.05,2))};
   if(rk!=="dirt"){const SG=roadGeo(rk,lo),W0=SG.userData.W0,D0=SG.userData.D0,hx=rk==="hex",R=COB_ROWS(rk),list=[];
    for(let r=0;r<R.length;r++){const [zz,dz]=R[r],cw=RP.cw[0]+(hx?0:hash(r*7.1+.3)*RP.cw[1]),off=hx?(r%2)*cw/2:hash(r*3.3+.7)*cw,k0=Math.ceil((x0-off)/cw-.5),k1=Math.floor((x0+CHW-off)/cw-.5);
@@ -12278,13 +12280,13 @@ function buildChunk(i){
     put3(fm,n,cx+(h(n+2900)-.5)*50,Math.min(z1-3,Math.max(3,cz+(h(n+3000)-.5)*40)),y0+.05,a,1,a*(.45+h(n+3100)*.4),h(n+3200)*6.28,n+5,.02);cc.set(lc[n%lc.length]).multiplyScalar(.85+h(n+3300)*.4);fm.setColorAt(n,cc)}
    fm.castShadow=false;fm.receiveShadow=false;fm.renderOrder=-.25;g.add(fm)}}
  // broken pillars behind the far curb
- for(let j=0;j<2;j++)if(h(j+580)<.45){const x=x0+h(j+590)*CHW,ph=26+h(j+600)*50;mesh(geo("pil",()=>new T.CylinderGeometry(6.5,7.5,1,8).translate(0,.5,0)),M.stone2,x,0,-30-h(j+610)*16,[1,ph,1]);mesh(geo("pcap",()=>new T.BoxGeometry(18,5,18)),M.stone,x,ph+2,-30-h(j+610)*16).rotation.set(h(j)*.3,h(j+1)*2,h(j+2)*.3)}
+ for(let j=0;j<2;j++)if(h(j+580)<.45){const x=x0+h(j+590)*CHW,ph=26+h(j+600)*50;mesh(geo("pil",()=>new T.CylinderGeometry(6.5,7.5,1,8).translate(0,.5,0)),M.stone2,x,0,-30-h(j+610)*16+roadOff(x),[1,ph,1]);mesh(geo("pcap",()=>new T.BoxGeometry(18,5,18)),M.stone,x,ph+2,-30-h(j+610)*16+roadOff(x)).rotation.set(h(j)*.3,h(j+1)*2,h(j+2)*.3)}
  // near side (only seen in first person): torch, trees, rocks, arches over the road
  tg0=fp;
- if(h(620)<.32){const ax=x0+200,zA=-34,zB=DEPTH*ZS+34;col.push([ax,zA,13],[ax,zB,13]);const pg=geo("apl",()=>new T.BoxGeometry(18,124,18).translate(0,62,0));mesh(pg,M.stone2,ax,0,zA);mesh(pg,M.stone2,ax,0,zB);
+ if(h(620)<.32){const ax=x0+200,zA=-34+roadOff(x0+200),zB=DEPTH*ZS+34+roadOff(x0+200);col.push([ax,zA,13],[ax,zB,13]);const pg=geo("apl",()=>new T.BoxGeometry(18,124,18).translate(0,62,0));mesh(pg,M.stone2,ax,0,zA);mesh(pg,M.stone2,ax,0,zB);
   const tp=mesh(geo("atop",()=>new T.BoxGeometry(22,18,1).translate(0,9,0)),M.stone,ax,122,(zA+zB)/2);tp.scale.z=zB-zA+26;mesh(geo("akey",()=>new T.BoxGeometry(12,22,14)),M.stone2,ax,128,(zA+zB)/2);
   const rn=new T.Mesh(geo("arun",()=>new T.BoxGeometry(2,7,7)),M.win);rn.position.set(ax+12,130,(zA+zB)/2);fp.add(rn)}
- if(!B.day){const tx=x0+310,tz=DEPTH*ZS+14;mesh(geo("tp",()=>new T.CylinderGeometry(1.4,1.9,30,6).translate(0,15,0)),M.wood,tx,0,tz);mesh(geo("tb",()=>new T.CylinderGeometry(5,3,5,7).translate(0,2.5,0)),M.iron,tx,29,tz);
+ if(!B.day){const tx=x0+310,tz=DEPTH*ZS+14+roadOff(x0+310);mesh(geo("tp",()=>new T.CylinderGeometry(1.4,1.9,30,6).translate(0,15,0)),M.wood,tx,0,tz);mesh(geo("tb",()=>new T.CylinderGeometry(5,3,5,7).translate(0,2.5,0)),M.iron,tx,29,tz);
   const fl=sprite(G3.tFlame,0xffffff,1,1);fl.scale.set(11,20,1);fl.position.set(tx,40,tz);fp.add(fl);const gl=sprite(G3.tGlow,0xff8a3a,110,.35);gl.position.set(tx,36,tz);fp.add(gl);
   G3.torches.push({x:tx,y:40,z:tz,fl,gl,i,fp:1})}
  for(let j=0;j<(B.day?14:8);j++){const x=x0+h(j+300)*CHW,z=DEPTH*ZS+150+h(j+310)*(OPEN*ZS+120),k=h(j+320),s=.55+h(j+330)*.5;if(srBlock(x,z))continue;
@@ -12297,13 +12299,13 @@ function buildChunk(i){
  {const R=sRoad(i);if(R){const pm=M.path||(M.path=new T.MeshLambertMaterial({color:roadColor(bi).clone().lerp(new T.Color(B.ground[0]),.35)})),sg=M.sign||(M.sign=new T.MeshLambertMaterial({color:"#b07a3a"})),
    add=(gg,mt,x,y,z,sx,sy,sz,ry,rz)=>{const m=new T.Mesh(gg,mt);m.position.set(x,terrH(x,z)+y,z);m.scale.set(sx,sy,sz);m.rotation.set(0,ry||0,rz||0);m.castShadow=G3.hi;m.receiveShadow=true;g.add(m);return m},
    BX1=geo("ubox",()=>new T.BoxGeometry(1,1,1).translate(0,.5,0)),CY1=geo("ucyl",()=>new T.CylinderGeometry(1,1,1,10).translate(0,.5,0)),CN1=geo("ucone",()=>new T.ConeGeometry(1,1,7).translate(0,.5,0));
-  for(const sd of R.sd){const N=Math.ceil((R.len+26)/14),pos=[],idx=[];
-   for(let q=0;q<=N;q++){const d=-26+q*14,x=srX(R,d),z=srZ(sd,d),tx=srX(R,d+1)-x,tz=sd,l=Math.hypot(tx,tz),px=-tz/l,pz=tx/l,w=(d>R.len-60?16+Math.min(46,(d-R.len+60)*.8):15)*(1+.12*Math.sin(q*1.3));
+  for(const sd of R.sd){const ro=roadOff(R.x),d0=-26-Math.max(0,sd<0?ro:-ro),N=Math.ceil((R.len-d0)/14),pos=[],idx=[];
+   for(let q=0;q<=N;q++){const d=d0+q*14,x=srX(R,d),z=srZ(sd,d),tx=srX(R,d+1)-x,tz=sd,l=Math.hypot(tx,tz),px=-tz/l,pz=tx/l,w=(d>R.len-60?16+Math.min(46,(d-R.len+60)*.8):15)*(1+.12*Math.sin(q*1.3));
     for(const sgn of [-1,1]){const vx=x+px*w*sgn,vz=z+pz*w*sgn;pos.push(vx,terrH(vx,vz)+.9,vz)}if(q)idx.push(q*2-2,q*2-1,q*2,q*2-1,q*2+1,q*2)}
    const gg=new T.BufferGeometry();gg.setAttribute("position",new T.Float32BufferAttribute(pos,3));gg.setIndex(idx);gg.computeVertexNormals();
    if(gg.attributes.normal.array[1]<0){idx.reverse();gg.setIndex(idx);gg.computeVertexNormals()}
    const rb=new T.Mesh(gg,pm);rb.receiveShadow=true;rb.userData.own=true;rb.renderOrder=-.2;g.add(rb);
-   const jx=srX(R,0)+30,jz=srZ(sd,10);add(CY1,M.wood,jx,0,jz,1.8,36,1.8);add(BX1,sg,jx,27,jz+sd*6,2.6,6.5,24);add(CN1,sg,jx,30.2,jz+sd*20,6,9,4,0,0).rotation.x=sd*PI/2;
+   const jx=srX(R,0)+30,jz=srZ(sd,10)+roadOff(srX(R,0)+30);add(CY1,M.wood,jx,0,jz,1.8,36,1.8);add(BX1,sg,jx,27,jz+sd*6,2.6,6.5,24);add(CN1,sg,jx,30.2,jz+sd*20,6,9,4,0,0).rotation.x=sd*PI/2;
    const ex=srX(R,R.len),ez=srZ(sd,R.len);for(let q=0;q<7;q++){const an=q/7*PI*2+.4,sx=ex+Math.cos(an)*66,sz=ez+Math.sin(an)*66;if(Math.abs(sx-srX(R,R.len-60))<26&&Math.sign(sz-ez)===-sd)continue;const ht=16+hash(i*7+q)*14;add(BX1,q%2?M.stone:M.stone2,sx,-1,sz,7,ht,6,an,(hash(i+q)-.5)*.18);col.push([sx,sz,7])}
    if(!B.day)for(let d=60;d<R.len;d+=130){const lx=srX(R,d)+22,lz=srZ(sd,d);add(CY1,M.wood,lx,0,lz,1.2,20,1.2);const gl=sprite(G3.tGlow,0xffc070,46,.42);gl.position.set(lx,terrH(lx,lz)+22,lz);g.add(gl)}}}}
  fp.visible=isFP();
@@ -13120,7 +13122,7 @@ function drawMinimap(c,h){
  const B=BIOMES[G3.biome]||BIOMES[0];
  c.save();c.beginPath();c.arc(cx,cy,R,0,PI*2);c.fillStyle=hexA(B.ground[1],.78);c.fill();c.save();c.clip();
  const band=(z0,z1,col)=>{const q=[P(h.x-900,z0),P(h.x+900,z0),P(h.x+900,z1),P(h.x-900,z1)];c.beginPath();q.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fillStyle=col;c.fill()};
- band(zLo(0)*ZS,zHi(0)*ZS,hexA(B.ground[0],.55));band(0,DEPTH*ZS,hexA(shade(B.stone,.15),.85));
+ band(zLo(0)*ZS,zHi(0)*ZS,hexA(B.ground[0],.55));{/* the road on the map sways like the real one */const up=[],dn=[];for(let x=h.x-900;x<=h.x+900;x+=40){const o=roadOff(x);up.push(P(x,o));dn.push(P(x,DEPTH*ZS+o))}c.beginPath();up.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));for(let i=dn.length-1;i>=0;i--)c.lineTo(dn[i][0],dn[i][1]);c.closePath();c.fillStyle=hexA(shade(B.stone,.15),.85);c.fill()}
  {const a0=Math.floor((h.x-700)/CHW),a1=Math.floor((h.x+700)/CHW);c.lineCap="round";c.lineJoin="round";c.lineWidth=3.4;c.strokeStyle=hexA(shade(B.stone,.15),.85);
   for(let ci=a0;ci<=a1;ci++){const R=sRoad(ci);if(!R)continue;for(const sd of R.sd){c.beginPath();for(let d=-20;d<=R.len+15;d+=30){const [x,y]=P(srX(R,d),srZ(sd,d));d<-10?c.moveTo(x,y):c.lineTo(x,y)}c.stroke()}}}
  for(const ch of chests){if(ch.open)continue;const [x,y]=P(ch.x,ch.z*ZS);mmIco(c,"chest",x,y,ch.gold?"#ffd34e":"#c98a3a")}
@@ -13308,8 +13310,8 @@ let goal=null,chests=[];
 /* side roads (open world): R.sd lists the sides (-1 left, 1 right); d = distance from the road edge */
 const SR_ED=[-20,DEPTH*ZS+20],srSeen=new Set();
 function sRoad(i){if(i<1)return null;const k=hash(i*17.31+5.7);if(k<.5)return null;return{i,x:i*CHW+CHW*(.35+hash(i*3.7+1.1)*.3),sd:k<.69?[-1]:k<.88?[1]:[-1,1],len:380+hash(i*9.1+2.2)*240,cv:(hash(i*5.3+.7)-.5)*2,sh:Math.floor(hash(i*11.9+3.1)*5)}}
-/* path shapes: 0 straight, 1 one long bend, 2 gentle S (the old one), 3 straight then a sharp turn, 4 winding; always kept inside its own chunk */
-function srOff(R,d){d=Math.max(0,d);const u=Math.min(1,d/R.len),c=R.cv;switch(R.sh){case 0:return 0;case 1:return c*85*u*u;case 3:{const q=clamp((u-.3)/.4,0,1);return(c<0?-1:1)*(40+Math.abs(c)*45)*q*q*(3-2*q)}case 4:return Math.sin(d*.016)*(.5+Math.abs(c)*.5)*38;default:return Math.sin(d*.0075)*c*46}}
+/* path shapes: 0 a slow drift, 1 one long bend, 2 gentle S (the old one), 3 straight then a sharp turn, 4 winding; always kept inside its own chunk */
+function srOff(R,d){d=Math.max(0,d);const u=Math.min(1,d/R.len),c=R.cv;switch(R.sh){case 0:return c*28*u+Math.sin(d*.02)*4;case 1:return c*85*u*u;case 3:{const q=clamp((u-.3)/.4,0,1);return(c<0?-1:1)*(40+Math.abs(c)*45)*q*q*(3-2*q)}case 4:return Math.sin(d*.016)*(.5+Math.abs(c)*.5)*38;default:return Math.sin(d*.0075)*c*46}}
 const srX=(R,d)=>clamp(R.x+srOff(R,d),R.i*CHW+48,(R.i+1)*CHW-48),srZ=(sd,d)=>sd<0?SR_ED[0]-d:SR_ED[1]+d;
 /* trees and rocks keep off the path and the clearing at its end */
 function srBlock(x,z){const R=sRoad(Math.floor(x/CHW));if(!R)return false;for(const sd of R.sd){const d=sd<0?SR_ED[0]-z:z-SR_ED[1];if(d>-40&&d<R.len+80&&Math.abs(x-srX(R,d))<(d>R.len-50?78:40))return true}return false}
