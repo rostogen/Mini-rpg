@@ -103,8 +103,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .bar i{display:block;height:100%;width:100%;transition:width .18s}
 .bar.hp i{background:linear-gradient(90deg,var(--blood),var(--blood2))}
 .bar.xp{height:15px;margin-top:5px}.nm.nonick{justify-content:flex-start}.nm.nonick #hName{display:none}.bar.xp i{background:linear-gradient(90deg,#5b3fae,#9a7cf0)}
-.bar.xp span{line-height:11px;font-size:10px}
-.bar span{position:absolute;inset:0;font-size:11px;line-height:13px;text-align:center;color:#fff;text-shadow:0 1px 2px #000;font-weight:700}
+.bar.xp span{font-size:10px}
+.bar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:0 7px;font-size:11px;line-height:1;text-align:center;color:#fff;text-shadow:0 1px 2px #000;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums;letter-spacing:.2px}
 .rightHud{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
 .res{display:flex;gap:12px;font-size:13.5px;font-weight:700;white-space:nowrap}
 .res .g{color:var(--gold)}
@@ -561,6 +561,7 @@ body[data-gfx="hi"] .vig{display:block}
  .hud{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;row-gap:5px;align-items:start}
  .rightHud{display:contents}
  .me{width:auto;max-width:none;grid-column:1;grid-row:1;min-width:0}
+ .me .nm{font-size:13.5px;gap:6px}.me .bar span{font-size:10.5px}.me .bar.xp span{font-size:9.5px}
  .plate.res{grid-column:2;grid-row:1;align-self:start}
  .ibs{grid-column:1/-1;grid-row:2;justify-self:end;margin-bottom:12px;gap:4px}
  .ib{width:33px;height:33px;font-size:15px}
@@ -13534,13 +13535,13 @@ function setW(id,p){const v=(Math.round(p*10)/10)+"%";if(_dc[id+"w"]!==v){_dc[id
 function hud(){
  {const lv=String(P.level),gd=String(P.gold);if(_dc.hLv!==undefined&&_dc.hLv!==lv)popCls($("hLv"),"popN");if(_dc.hGold!==undefined&&_dc.hGold!==gd)popCls($("hGold"),"bump")}
  setTx("hName",nickname+(LG&&LG.rb?" ✦"+LG.rb:""));setTx("hTtl",ttlTxt());setTx("hLv",P.level);if(_dc.nn!==!!nickname){_dc.nn=!!nickname;$("hName").parentNode.classList.toggle("nonick",!nickname)}
- {const need=xpNeed(P.level);setW("xpBar",P.xp/need*100);setTx("xpTxt","XP "+nfm(Math.floor(P.xp))+" / "+nfm(need)+" · "+Math.floor(P.xp/need*100)+"%")}
+ {const need=xpNeed(P.level);setW("xpBar",P.xp/need*100);setTx("xpTxt","XP "+nfm(Math.floor(P.xp))+" / "+nfm(need)+" · "+Math.min(100,Math.floor(P.xp/need*100))+"%")}
  setTx("hGold",P.gold);{const gs=nfm(gem.n);if(_dc.hGem!==undefined&&_dc.hGem!==gs)popCls($("hGem"),"bump");setTx("hGem",gs)}
  if(goldAcc>0&&realT-goldT>.45){goldT=realT;const el=document.createElement("span");el.className="gfly";el.textContent="+"+goldAcc+" 🪙";$("gflyW").appendChild(el);setTimeout(()=>el.remove(),1100);goldAcc=0}setTx("hWave","#"+battleNo);setTx("hZic",ZN().ic);
  luckTick();luckLive();gemTick();
  const nn=bag.filter(x=>x.nw).length,ib=$("invBdg");setTx("invBdg",nn>99?"99+":nn);ib.classList.toggle("on",nn>0);
  $("luckBdg").classList.toggle("on",(!luck.until&&luck.lvl<LUCK_MAX&&P.gold>=luckCost(luck.lvl))||(!foe.until&&foe.lvl<FOE_MAX&&P.gold>=foeCost(foe.lvl)));
- const hpr=clamp((P.hp||0)/(P.maxhp||1),0,1);setW("hpBar",hpr*100);setTx("hpTxt",Math.ceil(P.hp)+" / "+P.maxhp);
+ const hpr=clamp((P.hp||0)/(P.maxhp||1),0,1);setW("hpBar",hpr*100);setTx("hpTxt","❤ "+nfm(Math.ceil(P.hp))+" / "+nfm(P.maxhp));
  (hud.sk||(hud.sk=[...document.querySelectorAll(".sk")])).forEach(b=>{const a=b.dataset.a;if(a==="turn")return;
   if(a!=="attack"){const rem=hero.cd[a]||0,cd=Math.round(clamp(rem/(CD[a]*cdMul(a)),0,1)*100)/100;if(b._cd!==cd){if(b._cd>0&&cd===0){popCls(b,"ready");if(CD[a]>=6&&!paused)SFX.ready()}if(!(b._cd>0)&&cd>0)popCls(b,"cast");b._cd=cd;b.style.setProperty("--cd",cd);b.classList.toggle("cd",cd>0)}
    const ct=rem>0?(rem>=1?String(Math.ceil(rem)):rem.toFixed(1)):"";if(b._ct!==ct){b._ct=ct;b.querySelector(".cdn").textContent=ct}}
