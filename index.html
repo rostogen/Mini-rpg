@@ -1064,6 +1064,8 @@ body.dkf .sheet{background:linear-gradient(180deg,rgba(255,240,210,.035),transpa
 body.dkf .sheet h2{color:#d8b878;text-shadow:0 1px 0 #000,0 0 14px rgba(201,162,90,.25);letter-spacing:.04em}
 body.dkf .sheet h2::before,body.dkf .sheet h2::after{content:"✦";font-size:.55em;color:#8a6a3a;vertical-align:.35em;margin:0 .45em}
 body.dkf .plate,body.dkf .ib{background:linear-gradient(180deg,rgba(28,22,24,.92),rgba(12,9,11,.92));border-color:#4a3a32;box-shadow:inset 0 1px 0 rgba(255,230,190,.06)}
+/* the hero plate gets the dark panel too: give it room so the name and bars stay inside */
+body.dkf .plate.me{box-sizing:border-box;padding:6px 9px 8px;border:1px solid #4a3a32;border-radius:12px}body.dkf .plate.me .nm{line-height:1.25}body.dkf .plate.me .bufs:empty{display:none}
 body.dkf .btn{background:linear-gradient(180deg,#2a2224,#1a1416);border-color:#5a4636;box-shadow:inset 0 1px 0 rgba(255,230,190,.07),0 1px 0 #000}
 body.dkf .btn.main{background:linear-gradient(180deg,#6a2a2a,#3a1416);border-color:#a0603a}
 body.dkf .lbox,body.dkf .mgCard{background:linear-gradient(180deg,rgba(255,240,210,.025),transparent 50px),#130f11}
