@@ -11959,14 +11959,14 @@ function terrO(x,z){const W=OPEN*ZS,L0=-34-W,L1=DEPTH*ZS+34+W,e=z<-34?-34-z:z>DE
  return mead+(k*(14+n*84+b*b*95)+Math.max(0,d-180)*.2*(.4+r*1.1))*(z>L1?.8:1)}
 /* rolling hills inside the lane itself: the ground goes up and down, everything standing on it follows */
 /* the main road never runs straight: it sways left and right a little (world units, along x) */
-function roadOff(x){return Math.sin(x*.0019+.6)*15+Math.sin(x*.0047+2.3)*8+Math.sin(x*.011+.4)*2.5}
+function roadOff(x){return Math.sin(x*.0036+.6)*38+Math.sin(x*.0083+2.3)*22+Math.sin(x*.019+.4)*7}
 function lanH(x,z){const a=G3.rel;if(!a)return 0;
  return a*(Math.sin(x*.0062+z*.0049+.8)*9+Math.sin(x*.0143-z*.0071+2.1)*5+Math.sin(x*.031+1.1+Math.sin(z*.02)*1.4)*Math.sin(z*.026+.4)*3.2)}
 function terrH(x,z){return terrO(x,z)+lanH(x,z)}
 /* ground: dense grid around the road, wide steps far away */
 function groundGeo(){
  const xs=[],zs=[];for(let x=-3500;x<-1500;x+=90)xs.push(x);for(let x=-1500;x<=1500;x+=30)xs.push(x);for(let x=1590;x<3500;x+=90)xs.push(x);xs.push(3500);
- for(let z=340;z<=700;z+=12)zs.push(z);{let a=340,st=24;while(a>-3000){a-=st;st*=1.13;zs.unshift(Math.max(a,-3000))}a=700;st=24;while(a<3000){a+=st;st*=1.13;zs.push(Math.min(a,3000))}}
+ for(let z=290;z<=760;z+=12)zs.push(z);{let a=290,st=24;while(a>-3000){a-=st;st*=1.13;zs.unshift(Math.max(a,-3000))}a=758;st=24;while(a<3000){a+=st;st*=1.13;zs.push(Math.min(a,3000))}}
  const nx=xs.length,nz=zs.length,pos=new Float32Array(nx*nz*3),uv=new Float32Array(nx*nz*2),idx=[];
  for(let j=0;j<nz;j++)for(let i=0;i<nx;i++){const k=j*nx+i;pos[k*3]=xs[i];pos[k*3+2]=zs[j];uv[k*2]=(xs[i]+3500)/7000;uv[k*2+1]=1-(zs[j]+3000)/6000}
  for(let j=0;j<nz-1;j++)for(let i=0;i<nx-1;i++){const a=j*nx+i,b=a+1,c=a+nx,d=c+1;idx.push(a,c,b,b,c,d)}
@@ -12229,10 +12229,10 @@ function buildChunk(i){
   for(let q=0;q<n;q++){const nr=q%3===0,x=x0+h(q+800)*CHW,z=nr?DEPTH*ZS+22+Math.pow(h(q+820),1.5)*260:-22-Math.pow(h(q+820),1.5)*280,k=1.3+h(q+840)*1.4;v.set(x,terrH(x,z)+k*.6+2.4,z);sc.set(k,k,k);m4.compose(v,q4,sc);im.setMatrixAt(q,m4);im.setColorAt(q,cc.set(B.flw[Math.floor(h(q+850)*B.flw.length)]))}
   im.castShadow=false;g.add(im)}
  if(B.grass){const n=G3.hi?(G3.ultra?300:160):50,im=new T.InstancedMesh(G3.tuftGeo,M.grassI,n),m4=new T.Matrix4(),q4=new T.Quaternion(),e=new T.Euler(),v=new T.Vector3(),sc=new T.Vector3(),cc=new T.Color(),gc=new T.Color(B.grass);
-  for(let q=0;q<n;q++){const nr=q%5<2,x=x0+h(q+900)*CHW,z=nr?DEPTH*ZS+20+Math.pow(h(q+910),1.7)*320:-20-Math.pow(h(q+910),1.7)*340,k=.8+h(q+920)*.9;e.set(0,h(q+930)*6,0);q4.setFromEuler(e);v.set(x,terrH(x,z)-.5,z);sc.set(k,k*(.75+h(q+940)*.7),k);m4.compose(v,q4,sc);im.setMatrixAt(q,m4);im.setColorAt(q,cc.copy(gc).multiplyScalar(.82+h(q+950)*.36))}
+  for(let q=0;q<n;q++){const nr=q%5<2,x=x0+h(q+900)*CHW,z=(nr?DEPTH*ZS+20+Math.pow(h(q+910),1.7)*320:-20-Math.pow(h(q+910),1.7)*340)+roadOff(x),k=.8+h(q+920)*.9;e.set(0,h(q+930)*6,0);q4.setFromEuler(e);v.set(x,terrH(x,z)-.5,z);sc.set(k,k*(.75+h(q+940)*.7),k);m4.compose(v,q4,sc);im.setMatrixAt(q,m4);im.setColorAt(q,cc.copy(gc).multiplyScalar(.82+h(q+950)*.36))}
   im.castShadow=false;im.receiveShadow=true;g.add(im)}
  if(!B.flw){const n=18,im=new T.InstancedMesh(geo("flw",()=>new T.IcosahedronGeometry(1,0)),bi===3?M.snow:M.glow,n),m4=new T.Matrix4(),q4=new T.Quaternion(),v=new T.Vector3(),sc=new T.Vector3();
-  for(let q=0;q<n;q++){const x=x0+h(q+800)*CHW,z=-28-h(q+820)*160,k=bi===3?2+h(q+840)*3:.9+h(q+840)*.9;v.set(x,terrH(x,z)+k*.6,z);sc.set(k,k*(bi===3?.5:1),k);m4.compose(v,q4,sc);im.setMatrixAt(q,m4)}im.castShadow=false;g.add(im)}
+  for(let q=0;q<n;q++){const x=x0+h(q+800)*CHW,z=-28-h(q+820)*160+roadOff(x),k=bi===3?2+h(q+840)*3:.9+h(q+840)*.9;v.set(x,terrH(x,z)+k*.6,z);sc.set(k,k*(bi===3?.5:1),k);m4.compose(v,q4,sc);im.setMatrixAt(q,m4)}im.castShadow=false;g.add(im)}
  // soft ground mist far behind the road
  for(let q=0;q<2;q++){const mx=x0+h(q+860)*CHW,mz=-160-h(q+870)*260,ms=sprite(G3.tGlow,new T.Color(BIOMES[bi].sky[2]),1,.22,false);ms.scale.set(320,60,1);ms.position.set(mx,terrH(mx,mz)+18,mz);g.add(ms)}
  // far layer: big trees and towers
@@ -12243,7 +12243,7 @@ function buildChunk(i){
    const w=new T.Mesh(geo("tww",()=>new T.BoxGeometry(5,11,2)),M.win);w.position.set(0,72,17);t.add(w);const gl=sprite(G3.tGlow,new T.Color(BIOMES[bi].accent),70,.4);gl.position.set(0,72,20);t.add(gl);G3.torches.push({x,y:72*s+terrH(x,z),z,gl,i,win:1})}
   else tree(G3.treeGeoLo[Math.floor(h(j+140)*6)],x,z,1.5+h(j+150)*1.2,h(j+160)*6,j+1)}
  // foreground (near the camera): grass and rocks
- for(let j=0;j<5;j++){const x=x0+h(j+200)*CHW,z=DEPTH*ZS+26+h(j+210)*110;
+ for(let j=0;j<5;j++){const x=x0+h(j+200)*CHW,z=DEPTH*ZS+26+h(j+210)*110+roadOff(x);
   if(h(j+220)<.7)mesh(G3.tuftGeo,M.grass,x,0,z,1.2+h(j+230)*.9,h(j)*6);else mesh(G3.rockGeo[j%3],M.stone2,x,0,z,[6+h(j)*8,4+h(j+1)*5,6+h(j+2)*6],h(j+3)*6)}
  // stone curbs along both edges of the road
  const curb=(z0,par)=>{const n=16,im=new T.InstancedMesh(geo("curb2",()=>{const g=new T.SphereGeometry(.56,10,6);const p=g.attributes.position;for(let i=0;i<p.count;i++){const y=p.getY(i);p.setY(i,y<0?y*.3:y);p.setX(i,p.getX(i)*(1+hash(i*1.3)*.12))}g.computeVertexNormals();return g.translate(0,.2,0)}),M.stone,n),m4=new T.Matrix4(),q=new T.Quaternion(),eu=new T.Euler();let k=0;
