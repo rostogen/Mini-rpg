@@ -9645,7 +9645,7 @@ const EVO_N=50,EVO_MAX=3;
 const evoOf=C=>Math.min(EVO_MAX,Math.floor((kills[C.k]||0)/EVO_N));
 function afRoll(e){const C=e.cfg;if(C.k.startsWith("dark_refl")||C.pet||e.summoned)return;const ti=Math.max(0,TL.indexOf(C.tier)),ev=evoOf(C);
  let n=0;const r=Math.random(),b=.15*ev+ngAfx();if(e.boss)n=1;else if(ti<2)n=r<.25+b?1:0;else if(ti<5)n=r<.5+b?1:0;else if(ti<10)n=1+(r<.3+b?1:0);else n=2+(r<.4+b?1:0);
- const pool=AFX.map(A=>A.k);e.af=[];while(e.af.length<n&&pool.length)e.af.push(pool.splice(rint(0,pool.length-1),1)[0]);
+ const pool=AFX.filter(A=>!A.ok||A.ok(e)).map(A=>A.k);e.af=[];while(e.af.length<n&&pool.length)e.af.push(pool.splice(rint(0,pool.length-1),1)[0]);
  const has=k=>e.af.includes(k);
  if(has("fury"))e.enr=true;if(has("giant")){e.hp=e.maxhp=Math.round(e.maxhp*1.6);e.s*=1.22}if(has("shield"))e.afSh=Math.round(e.maxhp*.2);
  if(ev){e.evo=ev;e.hp=e.maxhp=Math.round(e.maxhp*(1+.15*ev));e.atk=Math.round(e.atk*(1+.1*ev));e.s*=1+.06*ev}
@@ -9780,7 +9780,7 @@ function ctyVault(){if(!(LG.keys>0))return;LG.keys--;LG.st.vault=(LG.st.vault|0)
 /* ---- per-frame and per-kill parts of this module ---- */
 function p13Tick(dt){afTick(dt);if(LG.aura)auraTick(dt);if(MG&&MG.run&&MG.run.m==="sec")secTick(dt);
  if(petE){const d=Math.hypot(petE.x-hero.x,(petE.z-hero.z)*ZS);if(d>420){const f=hdir();petE.x=hero.x-f.x*40;petE.z=hero.z;petE.md="f";petE.tg=null}else if(!petE.cfg.fly&&petE.cfg.body!=="ghost")eCols(petE)}}
-function p13Kill(e){afDeath(e);troRec(e);if(!(MG&&MG.run))tameTry(e)}
+function p13Kill(e){afDeath(e);p17EDeath(e);p17Kill(e);troRec(e);if(!(MG&&MG.run))tameTry(e)}
 
 const P14Tsrc={
 mg_tab_log:"Журнал|Journal|Journal|Tagebuch|日志|Diario|Diario|Dziennik|Diário|記録|기록|Günlük|Jurnal|लॉग|Nhật ký|บันทึก|Logboek|السجل|লগ|Talaan",
@@ -10757,7 +10757,7 @@ function tryAction(a){
  if(a==="dodge"){if(h.cd.dodge>0||h.state==="dodge")return;if(!(free()||h.state==="attack"||h.state==="hurt"))return;const m=moveVec();let vx=m.x,vz=m.z;if(Math.hypot(vx,vz)<.2){const fd=hdir();vx=fd.x;vz=fd.z*MZ}const d=Math.hypot(vx,vz);h.dvx=vx/d;h.dvz=vz/d;if(Math.abs(vx)>.1&&!isFP())h.face=vx>0?1:-1;setHero("dodge");h.inv=.42;qHit("dodge");pfDodge();p17Dodge();h.cd.dodge=CD.dodge*cdMul("dodge");SFX.dodge();skFx("dodge");skCombo("dodge");return}
  if(!free()||h.cd[a]>0)return;
  if(a==="heal"&&P.hp>=P.maxhp){toast("❤ "+Math.ceil(P.hp)+"/"+P.maxhp);return}
- h.cd[a]=CD[a]*cdMul(a);setHero(a);skFx(a);qHit("cast");skCombo(a);if(a!=="heavy")p17Act(a);
+ h.cd[a]=CD[a]*cdMul(a);setHero(a);skFx(a);qHit("cast");skCombo(a);if(a!=="heavy")p17Act(a);p17Cast(a);
  if(a==="heavy")SFX.swing();
  if(a==="spin"){h.hit1=false;SFX.spin()}
 }
@@ -10881,7 +10881,7 @@ function hurtHero(dmg,dir,att){
  if(att&&att.cfg&&h.state!=="dead"){if(att.cfg.chill){h.slow=Math.max(h.slow,1.3);for(let i=0;i<14;i++)parts.push({x:h.x+rnd(-12,12),z:h.z,h:rnd(5,55),vx:rnd(-30,30),vz:0,vh:rnd(-10,30),g:0,life:.6,max:.6,col:i%2?"#bff8ff":"#ffffff",size:rnd(1.4,2.6),t:"spark"});SFX.frost()}if(att.cfg.poison){h.poison={t:4,tick:.5,dps:Math.max(1,Math.round(dmg*.12))};SFX.poison()}if(att.cfg.elAtk&&att.el&&Math.random()<.4)heroElemHit(att.el,d)}
  if(P.thorns&&att&&att.state!=="dead"){const r=Math.round(dmg*P.thorns/100);if(r>=1)damageEnemy(att,r,false,-dir,0,"thorns")}
  if(h.state==="spin"?!h.hit1:(!h.done&&(h.state==="fire"||h.state==="bolt"||h.state==="heal"||h.state==="heavy"||h.state==="blaze"||h.state==="shield")))h.cd[h.state]=0;h.flash=.14;h.inv=.55;
- afOnHit(att,d);addText(h.x,h.z,66,"-"+d,"#ff5f6e",14);sparks(h.x,h.z,34,"#ff9aa5",5,dir);blood(h.x,h.z,36,dir,5,"#b01020",1,true);addScreenBlood(d);shake+=3;hitStop=.05;SFX.hurt();
+ afOnHit(att,d);p17EHit(att);addText(h.x,h.z,66,"-"+d,"#ff5f6e",14);sparks(h.x,h.z,34,"#ff9aa5",5,dir);blood(h.x,h.z,36,dir,5,"#b01020",1,true);addScreenBlood(d);shake+=3;hitStop=.05;SFX.hurt();
  h.x+=dir*10;
  if(P.hp<=0&&P.revive&&!usedRevive){usedRevive=true;P.hp=Math.round(P.maxhp*.4);h.inv=2;setHero("heal");h.done=true;banner(t("revived"),"❤ "+P.hp);SFX.heal();SFX.revive();parts.push({x:h.x,z:h.z,h:0,life:.9,max:.9,t:"ring",col:"#6bf0ae",size:16});return true}
  if(P.hp<=0&&p17LastChance()){setHero("hurt");return true}
@@ -10890,7 +10890,7 @@ function hurtHero(dmg,dir,att){
 }
 
 /* ============ ENEMIES ============ */
-function makeEnemy(ti,boss,x,z,delay,opt){const e=makeEnemy0(ti,boss,x,z,delay,opt);slMake(e);mgMake(e);lgMake(e);afRoll(e);wtBehave(e);e.t0=tNow;return e}
+function makeEnemy(ti,boss,x,z,delay,opt){const e=makeEnemy0(ti,boss,x,z,delay,opt);slMake(e);mgMake(e);lgMake(e);afRoll(e);wtBehave(e);p17EMake(e);e.t0=tNow;return e}
 function makeEnemy0(ti,boss,x,z,delay,opt){
  opt=opt||{};
  const C=ETYPES[ti],n=battleNo,loop=Math.floor((n-1)/REGT.length);
@@ -10938,7 +10938,7 @@ function waveList(n){
  return list;
 }
 function startWave(){
- locked=true;cleared=false;usedRevive=false;hero.lcUsed=false;hero.lcEnd=0;hero.rhN=0;
+ locked=true;cleared=false;usedRevive=false;hero.lcUsed=false;hero.lcEnd=0;hero.rhN=0;p17WaveStart();
  arenaX=Math.max(0,hero.x-LW*.35);
  const list=waveList(battleNo);goal=null;
  enemies=enemies.filter(e=>e.wild&&e.state!=="dead"&&Math.abs(e.x-hero.x)<1200);/* wild monsters close by stay in the world */
@@ -10994,11 +10994,12 @@ function enemyUpdate(e,dt){
   }break;
   case "hurt":e.dive=Math.max(0,e.dive-dt*2);if(C.style==="hop")e.h=Math.max(0,e.h-dt*80);if(e.st>.32){e.state="chase";e.st=0}break;
   case "chase":{
+   if(e.lost){e.moving=false;e.face=dx>0?1:-1;break}
    e.face=dx>0?1:-1;e.dive=Math.max(0,e.dive-dt*1.5);e.webCd-=dt;
    const busy=enemies.filter(o=>o!==e&&(o.state==="windup"||o.state==="strike")).length;
    const want=busy>=2?C.range+46:C.range*.8;
    let tx=hero.x-e.face*want;if(locked&&!isFP())tx=clamp(tx,arenaX+26,arenaX+LW-26);
-   let mx=tx-e.x,mz=dz;if((C.style==="shoot"||C.style==="cast")&&adx<C.range+20)mz+=Math.sin(tNow*1.1+e.seed*2)*42;
+   let mx=tx-e.x,mz=dz;if(e.flank&&adx>50)mz+=e.flank*30;if((C.style==="shoot"||C.style==="cast")&&adx<C.range+20)mz+=Math.sin(tNow*1.1+e.seed*2)*42;
    for(const o of enemies)if(o!==e&&o.state!=="dead"&&o.delay<=0){const ox=e.x-o.x,oz=e.z-o.z,d=Math.hypot(ox,oz*1.4);if(d<26&&d>.01){mx+=ox/d*34;mz+=oz/d*34}}
    const inRange=adx<=C.range+6&&Math.abs(dz)<(C.fly?26:(C.style==="shoot"||C.style==="cast"?18:13));
    e.cd-=dt;
@@ -11008,7 +11009,7 @@ function enemyUpdate(e,dt){
    }
    let mult=1;
    if(C.style==="hop"){const p0=e.hopT;e.hopT=(e.hopT+dt)%.9;const k=e.hopT/.55;if(k<1){e.h=Math.sin(PI*k)*14;mult=1.7}else{e.h=0;mult=0;if(p0<.55&&Math.random()<.25)SFX.squish()}}
-   const d=Math.hypot(mx,mz),sp=C.spd*(e.boss?1.1:1)*mult*(e.chillT>0?.55:1)*(e.enr?1.35:1)*(e.af&&e.af.includes("swift")?1.3:1);
+   const d=Math.hypot(mx,mz),sp=C.spd*(e.boss?1.1:1)*mult*(e.chillT>0?.55:1)*(e.enr?1.35:1)*(e.af&&e.af.includes("swift")?1.3:1)*p17ESpd(e);
    if(d>4&&hero.state!=="dead"&&sp>0){const k=Math.min(1,d/12);e.x+=mx/d*sp*dt*k;e.z+=mz/d*sp*.7*dt*k;e.anim+=dt*C.spd*.12*k;e.moving=true}else e.moving=false;
   }break;
   case "windup":{
@@ -11032,7 +11033,7 @@ function voice(C,kind){const snd={lunge:C.body==="spider"?"hiss":"growl",swoop:"
  const ks={imp:"cackle",hag:"cackle",banshee:"shriek",hound:"bark",fenrir:"bark",ogre:"bellow",gking:"bellow",skelwar:"rattle",lich:"rattle",myconid:"spore",magma:"sizzle",slimek:"squish",eldrake:"roar",wyvern:"screech",deathknight:"scythe",frostwolf:"frost",gargoyle:"stoneWing",assassin:"shadowStep",scorpion:"hiss",phoenix:"screech",mimic:"chomp",demonlord:"demonRoar",pumpkin:"cackle",jelly:"squish",scarab:"hiss",beetle:"hiss",werewolf:"bark",werelord:"bark",yeti:"bellow",yetiking:"bellow",cyclops:"bellow",frostgiant:"bellow",treeking:"bellow",samurai:"shadowStep",shogun:"shadowStep",valkyrie:"shriek",thunderbird:"screech",icegolem:"frost",lavagolem:"sizzle",pharaoh:"rattle",anubis:"growl"}[C.k];
  if(ks)SFX[ks]();else if(C.k==="troll")SFX.grunt();else if(snd)SFX[snd]();}
 function startEnemyAttack(e,kind){
- const C=e.cfg;e.state="windup";e.st=0;e.face=hero.x>e.x?1:-1;e.atkKind=kind||C.style;enemyVoice(e,"atk");
+ const C=e.cfg;e.state="windup";e.st=0;e.face=hero.x>e.x?1:-1;e.atkKind=kind||C.style;if(!kind)p17EAtk(e);enemyVoice(e,"atk");
  if(C.blink&&Math.random()<.55){const col=C.body==="ghost"?"#7fa3c9":"#5a2a3a";puff(e.x,e.z,col);{const fd=hdir();e.x=hero.x-fd.x*30;e.z=clamp(hero.z-fd.z*30/ZS+rnd(-4,4),zLo(),zHi())}e.face=hero.x>e.x?1:-1;puff(e.x,e.z,col);SFX.blink()}
  voice(C,e.atkKind);p17Cue(e);
  if(e.state==="windup"){parts.push({x:e.x,z:e.z,h:0,life:C.wind,max:C.wind,t:"ring",col:e.boss?"#ffb03a":C.heavy?"#c08aff":"#ff4d62",size:C.rad*e.s*.9});for(let i=0;i<5;i++)parts.push({x:e.x+e.face*C.rad*e.s*1.1,z:e.z,h:C.hgt*e.s*.62,vx:Math.cos(i*1.26)*70,vz:0,vh:Math.sin(i*1.26)*70,g:0,life:.22,max:.22,col:"#ffffff",size:2.2,t:"spark"})}
@@ -11042,7 +11043,7 @@ function startEnemyAttack(e,kind){
  }
 }
 function enemyStrikeStart(e){
- if(e.pfMiss){e.pfMiss=0;e.hitDone=true}p17Clash(e);
+ if(e.pfMiss){e.pfMiss=0;e.hitDone=true}p17Clash(e);p17EStrike(e);
  const C=e.cfg,k=e.atkKind,dmg=dmgRoll(e);
  if(k==="lunge")e.kb=e.face*420;
  else if(k==="slam"){decal("crack",e.x+e.face*30*e.s,e.z,34*e.s,3.5,"#000000");projs.push({k:"wave",x:e.x+e.face*30*e.s,z:e.z,r:4,maxR:120,life:.7,max:.7,dmg,hit:false,owner:e});shake+=5;SFX.heavy();dustRing(e.x+e.face*30*e.s,e.z,22)}
@@ -11054,7 +11055,7 @@ function enemyStrikeStart(e){
  else if(k==="web"){projs.push({k:"web",x:e.x+e.face*16,z:e.z,h:12,vx:e.face*240,vz:clamp((hero.z-e.z)*1.2,-60,60),life:1.4,dmg:Math.max(1,Math.round(dmg*.35)),owner:e});SFX.web()}
  else if(k!=="breath")(C.look&&C.look.weapon==="spear"?SFX.thrust:SFX.swing)();
 }
-const dmgRoll=e=>Math.round(e.atk*rnd(.8,1.15)*(e.weakT>0?.75:1)*(e.enr?1.2:1));
+const dmgRoll=e=>Math.round(e.atk*rnd(.8,1.15)*(e.weakT>0?.75:1)*(e.enr?1.2:1)*p17EDmg(e));
 function enemyStrike(e,dt){
  const C=e.cfg,k=e.atkKind,dz=Math.abs(hero.z-e.z);
  if(k==="breath"){const times=[0,.13,.26];while(e.shots<3&&e.st>=times[e.shots]){e.shots++;const mx=e.x+e.face*26*e.s,mh=e.h+12,tx=hero.x,tz=hero.z;const dx=tx-mx,dzz=tz-e.z,d=Math.max(1,Math.hypot(dx,dzz));projs.push({k:"dfire",x:mx,z:e.z,h:mh,vx:dx/d*190,vz:dzz/d*190,vh:-(mh-26)/(d/190),life:1.6,r:6,dmg:dmgRoll(e),owner:e});SFX.fire()}return}
@@ -13737,7 +13738,7 @@ function update(dt){
  enemies=enemies.filter(e=>!(e.wild&&e.state==="roam"&&e.x<hero.x-1600));
  const target=isFP()?hero.x-LW*.35:locked?arenaX:Math.max(arenaX,hero.x-LW*.35);camX+=(target-camX)*Math.min(1,dt*5);
  chestTick(dt);shrineTick(dt);slTick(dt);
- if(locked&&!enemies.some(e=>e.state!=="dead"&&!e.wild)){locked=false;cleared=true;slWin();mgWin();if(evt)qHit("event");evtEnd();openWorldNext();hero.victT=1.4;SFX.clear();{const sw=$("sweep");sw.classList.remove("go");void sw.offsetWidth;sw.classList.add("go")}projs=projs.filter(q=>q.k==="fire");const reg=Math.round(P.maxhp*.35*mgRegMul());if(P.hp<P.maxhp&&hero.state!=="dead"){P.hp=Math.min(P.maxhp,P.hp+reg)}banner(t("cleared"),t("goRight"));fireworks();qHit("win");if(Math.random()<.45)setTimeout(()=>spSay(Math.random()<.5?"sWin":"sMore"),1600);save()}
+ if(locked&&!enemies.some(e=>e.state!=="dead"&&!e.wild)){locked=false;cleared=true;p17WaveEnd();slWin();mgWin();if(evt)qHit("event");evtEnd();openWorldNext();hero.victT=1.4;SFX.clear();{const sw=$("sweep");sw.classList.remove("go");void sw.offsetWidth;sw.classList.add("go")}projs=projs.filter(q=>q.k==="fire");const reg=Math.round(P.maxhp*.35*mgRegMul());if(P.hp<P.maxhp&&hero.state!=="dead"){P.hp=Math.min(P.maxhp,P.hp+reg)}banner(t("cleared"),t("goRight"));fireworks();qHit("win");if(Math.random()<.45)setTimeout(()=>spSay(Math.random()<.5?"sWin":"sMore"),1600);save()}
  if(cleared&&!locked&&(isFP()?goal&&Math.hypot(hero.x-goal.x,(hero.z-goal.z)*ZS)<60:hero.x>arenaX+LW*.97)){if(!mgAdv())battleNo++;startWave()}
  if(hero.state==="dead"){deadTimer+=dt;if(deadTimer>1.5&&modalOpen!=="mDead"){slDead();openModal("mDead")}}
 }
@@ -15442,7 +15443,7 @@ function p17Sound(dt){
  const mk=(n?1+.14*Math.min(3,n):.85)*hushK;musK+=(mk-musK)*Math.min(1,dt*.8);
  mzT-=dt;if(mzT>0||!S.musicOn||!isFP()||locked)return;mzT=1.5;let o=null;for(const q of mgObjs)if(!q.used&&MZ_SC[q.k]&&Math.hypot(q.x-hero.x,(q.z-hero.z)*ZS)<280){o=q;break}
  if(o){const sc=MZ_SC[o.k];mnote(sc[mzI++%sc.length]+12,1.4,"sine",.018)}}
-function p17Tick(dt){p17CombatTick(dt);fxLoTick();rlTick(dt);p17Sound(dt)}
+function p17Tick(dt){p17CombatTick(dt);p17EnemyTick(dt);fxLoTick();rlTick(dt);p17Sound(dt)}
 
 /* ---- pack 2: combat. Parry, momentum, blade clash, breaking away, worn armour, back to the wall, an overheated blade, directional finishers, the broken rhythm, the last chance ---- */
 Object.assign(P17Tsrc,{
@@ -15475,7 +15476,7 @@ function fpAxes(){let f=0,s=0;if(keys.KeyW||keys.ArrowUp)f++;if(keys.KeyS||keys.
 let finK="";
 function p17MeleePre(kind,o){const h=hero;finK="";p17Act(kind);let m=1+.02*Math.min(10,h.mom|0);
  if(h.dgT>0){m*=1.35;h.dgT=0;o.kb*=1.4}
- if(h.hotT>0)m*=.75;
+ if(h.hotT>0)m*=.75;if(h.disT>0)m*=.5;
  if(kind==="melee"&&h.state==="attack"&&h.combo===2&&isFP()){const A=fpAxes();if(Math.abs(A.s)>.4){finK="sweep";o.zr*=1.8;o.reach*=1.1}else if(A.f>.4){finK="thrust";o.reach*=1.5;o.kb*=1.5}else if(A.f<-.4){finK="back";o.kb*=.8}}
  return m}
 function p17MeleePost(kind,hits,dealt){const h=hero;
@@ -15511,6 +15512,68 @@ function p17LcTick(){const h=hero;if(!h.lcEnd)return;if(h.state==="dodge"){h.lcE
 function p17CombatTick(dt){const h=hero;if(h.dgT>0)h.dgT-=dt;if(h.hotT>0){h.hotT-=dt;if(Math.random()<dt*12&&isFP())parts.push({x:h.x+hdir().x*30,z:h.z,h:rnd(20,40),vx:0,vz:0,vh:rnd(10,30),g:0,life:.4,max:.4,col:"#ff7a3a",size:rnd(1.2,2),t:"spark"})}
  wallChk-=dt;if(wallChk<=0){wallChk=.4;const w=locked&&wallNear();if(w&&!wallOn&&realT-(h.wallTx||0)>8){h.wallTx=realT;addText(h.x,h.z,70,"🧱 "+t("p17_wall"),"#d8c8b0",11,true)}wallOn=w}
  p17LcTick()}
+
+/* ---- pack 3: foes. Eight new traits join the existing ones (AFX), plus the pack that remembers and the foe that remembers you ---- */
+Object.assign(P17Tsrc,{
+p13_af_mimic:"Наслідувач|Mimic|Imitateur|Nachahmer|模仿者|Imitador|Imitatore|Naśladowca|Imitador|模倣者|흉내쟁이|Taklitçi|Peniru|नक़लची|Kẻ bắt chước|นักเลียนแบบ|Na-aper|المقلِّد|নকলবাজ|Manggagaya",
+p13_af_watch:"Сторож без обличчя|Faceless watcher|Guetteur sans visage|Gesichtsloser Wächter|无面守望者|Vigía sin rostro|Guardiano senza volto|Strażnik bez twarzy|Vigia sem rosto|顔なき見張り|얼굴 없는 감시자|Yüzsüz gözcü|Pengawas tanpa wajah|बिना चेहरे का पहरेदार|Kẻ canh không mặt|ผู้เฝ้าไร้หน้า|Gezichtsloze wachter|الحارس بلا وجه|মুখহীন প্রহরী|Bantay na walang mukha",
+p13_af_para:"Паразит|Parasite|Parasite|Parasit|寄生体|Parásito|Parassita|Pasożyt|Parasita|寄生体|기생체|Parazit|Parasit|परजीवी|Ký sinh|ปรสิต|Parasiet|طفيلي|পরজীবী|Parasito",
+p13_af_echo:"Двійник|Double|Double|Doppelgänger|分身|Doble|Doppio|Sobowtór|Duplo|分身|분신|Eş|Kembaran|हमशक्ल|Phân thân|ร่างแฝด|Dubbelganger|القرين|দ্বৈত|Kakambal",
+p13_af_hunt:"Мисливець на слабкість|Weakness hunter|Chasseur de faiblesse|Schwächenjäger|弱点猎手|Cazador de debilidad|Cacciatore di debolezze|Łowca słabości|Caçador de fraqueza|弱点狩り|약점 사냥꾼|Zayıflık avcısı|Pemburu kelemahan|कमज़ोरी का शिकारी|Thợ săn điểm yếu|นักล่าจุดอ่อน|Zwaktejager|صياد الضعف|দুর্বলতার শিকারি|Mangangaso ng kahinaan",
+p13_af_disarm:"Вартовий без зброї|Unarmed warden|Gardien désarmé|Unbewaffneter Wärter|徒手守卫|Guardián desarmado|Guardiano disarmato|Nieuzbrojony strażnik|Guardião desarmado|素手の番人|맨손 파수꾼|Silahsız bekçi|Penjaga tanpa senjata|निहत्था रक्षक|Vệ binh tay không|ผู้พิทักษ์มือเปล่า|Ongewapende bewaker|الحارس الأعزل|নিরস্ত্র রক্ষী|Bantay na walang sandata",
+p13_af_blind:"Сліпий велетень|Blind giant|Géant aveugle|Blinder Riese|盲眼巨人|Gigante ciego|Gigante cieco|Ślepy olbrzym|Gigante cego|盲目の巨人|눈먼 거인|Kör dev|Raksasa buta|अंधा दैत्य|Người khổng lồ mù|ยักษ์ตาบอด|Blinde reus|العملاق الأعمى|অন্ধ দৈত্য|Bulag na higante",
+p13_af_intr:"Переривач|Interrupter|Interrupteur|Unterbrecher|打断者|Interruptor|Interruttore|Przerywacz|Interruptor|妨害者|방해꾼|Kesici|Pemutus|बाधक|Kẻ ngắt quãng|ผู้ขัดจังหวะ|Onderbreker|المقاطِع|বাধাদাতা|Tagapigil",
+p17_disarm:"Тебе обеззброєно!|You are disarmed!|Tu es désarmé !|Du bist entwaffnet!|你被缴械了！|¡Te desarmaron!|Sei disarmato!|Rozbrojono cię!|Você foi desarmado!|武器を奪われた！|무장해제됐다!|Silahsız kaldın!|Kau dilucuti!|तुम निहत्थे हो गए!|Ngươi bị tước vũ khí!|เจ้าถูกปลดอาวุธ!|Je bent ontwapend!|جُرِّدتَ من سلاحك!|তুমি নিরস্ত্র!|Naagaw ang iyong sandata!",
+p17_weak:"Вразливий!|Exposed!|Exposé !|Ungeschützt!|破绽！|¡Expuesto!|Scoperto!|Odsłonięty!|Exposto!|隙あり！|빈틈!|Açık verdi!|Lengah!|असुरक्षित!|Sơ hở!|เปิดช่อง!|Kwetsbaar!|مكشوف!|অরক্ষিত!|Bukas!",
+p17_pack:"Зграя пам'ятає твій прийом і заходить з боків|The pack remembers your move and comes from the sides|La meute se souvient de ta technique et attaque par les flancs|Das Rudel kennt deinen Zug und kommt von den Seiten|兽群记住了你的招式，从两侧包抄|La manada recuerda tu técnica y llega por los flancos|Il branco ricorda la tua mossa e arriva dai fianchi|Stado pamięta twój ruch i zachodzi z boków|A matilha lembra do seu golpe e vem pelos lados|群れは技を覚え、側面から来る|무리가 네 기술을 기억하고 옆에서 온다|Sürü hamleni hatırlıyor ve yanlardan geliyor|Kawanan ingat jurusmu dan datang dari samping|झुंड तुम्हारा दाँव याद रखता है और बगल से आता है|Bầy nhớ chiêu của ngươi và áp sát từ hai bên|ฝูงจำท่าของเจ้าได้และเข้ามาจากด้านข้าง|De roedel onthoudt je zet en komt van opzij|القطيع يتذكر حركتك ويهاجم من الجانبين|দল তোমার চাল মনে রেখে পাশ থেকে আসে|Naaalala ng kawan ang iyong galaw at sumasalakay mula sa gilid",
+p17_mem:"{n} пам'ятає тебе|{n} remembers you|{n} se souvient de toi|{n} erinnert sich an dich|{n}记得你|{n} te recuerda|{n} si ricorda di te|{n} pamięta cię|{n} lembra de você|{n}はお前を覚えている|{n}이(가) 너를 기억한다|{n} seni hatırlıyor|{n} mengingatmu|{n} तुम्हें याद रखता है|{n} nhớ ngươi|{n} จำเจ้าได้|{n} herinnert zich jou|{n} يتذكرك|{n} তোমাকে মনে রেখেছে|Naaalala ka ng {n}",
+n17a3:"👹 Нові риси ворогів: наслідувач копіює твій останній прийом; сторож без обличчя бачить лише рух і губить тебе, коли ти завмираєш; паразит після смерті господаря перестрибує на іншого ворога й дає йому броню; двійник повторює удар примарою із затримкою; мисливець на слабкість лютішає, коли в тебе мало здоров'я або все на перезарядці; вартовий без зброї може вибити меч на 3 с; сліпий велетень чує удари, а не кроки; переривач кидається на тебе, коли ти готуєш сильний прийом, а після промаху відкривається. Зграя, яку ти тричі переміг однаково, заходить з боків, а вид, якого ти переміг багато разів, пам'ятає тебе й починає бій ривком|👹 New foe traits: the mimic copies your last move; the faceless watcher sees only motion and loses you when you stand still; the parasite jumps to another foe when its host dies and armours it; the double repeats a blow as a ghost a moment later; the weakness hunter grows fierce when your health is low or everything is on cooldown; the unarmed warden can knock your sword away for 3 s; the blind giant hears blows, not steps; the interrupter rushes you when you prepare a strong move and is left open after a miss. A pack you beat the same way three times comes from the sides, and a kind you have beaten many times remembers you and opens with a charge|👹 Nouveaux traits ennemis : l'imitateur copie ta dernière technique ; le guetteur sans visage ne voit que le mouvement et te perd quand tu t'immobilises ; le parasite saute sur un autre ennemi à la mort de son hôte et le blinde ; le double répète un coup sous forme de spectre un instant plus tard ; le chasseur de faiblesse devient féroce quand ta santé est basse ou que tout recharge ; le gardien désarmé peut faire tomber ton épée 3 s ; le géant aveugle entend les coups, pas les pas ; l'interrupteur fonce sur toi quand tu prépares une technique puissante et reste exposé après un raté. Une meute vaincue trois fois de la même façon attaque par les flancs, et une espèce souvent vaincue se souvient de toi et ouvre par une charge|👹 Neue Feindmerkmale: Der Nachahmer kopiert deinen letzten Zug; der gesichtslose Wächter sieht nur Bewegung und verliert dich, wenn du stillstehst; der Parasit springt beim Tod seines Wirts auf einen anderen Feind und panzert ihn; der Doppelgänger wiederholt einen Schlag kurz danach als Geist; der Schwächenjäger wird wild, wenn du wenig Leben hast oder alles abklingt; der unbewaffnete Wärter kann dir das Schwert für 3 s aus der Hand schlagen; der blinde Riese hört Schläge, keine Schritte; der Unterbrecher stürzt sich auf dich, wenn du einen starken Zug vorbereitest, und ist nach einem Fehlschlag offen. Ein Rudel, das du dreimal gleich besiegt hast, kommt von den Seiten, und eine Art, die du oft besiegt hast, erinnert sich an dich und eröffnet mit einem Ansturm|👹 新的敌人特性：模仿者会模仿你最后的招式；无面守望者只看得见移动，你一静止它就会跟丢；寄生体在宿主死后跳到另一个敌人身上并为其加甲；分身会在片刻后以幽影重复一次攻击；弱点猎手在你血量低或技能都在冷却时变得凶猛；徒手守卫能把你的剑打飞3秒；盲眼巨人听得见攻击，听不见脚步；打断者会在你准备强力招式时扑来，扑空后露出破绽。被你用同样方式击败三次的兽群会从两侧包抄，被你击败多次的种族会记住你并以冲锋开局|👹 Nuevos rasgos enemigos: el imitador copia tu última técnica; el vigía sin rostro solo ve el movimiento y te pierde si te quedas quieto; el parásito salta a otro enemigo cuando muere su huésped y lo acoraza; el doble repite un golpe como espectro un instante después; el cazador de debilidad se enfurece cuando tienes poca vida o todo está en recarga; el guardián desarmado puede quitarte la espada 3 s; el gigante ciego oye golpes, no pasos; el interruptor se lanza cuando preparas una técnica fuerte y queda expuesto si falla. Una manada que venciste igual tres veces llega por los flancos, y una especie que venciste muchas veces te recuerda y abre con una embestida|👹 Nuovi tratti nemici: l'imitatore copia la tua ultima mossa; il guardiano senza volto vede solo il movimento e ti perde quando resti fermo; il parassita salta su un altro nemico quando muore l'ospite e lo corazza; il doppio ripete un colpo come spettro poco dopo; il cacciatore di debolezze si infuria quando hai poca vita o tutto è in ricarica; il guardiano disarmato può farti cadere la spada per 3 s; il gigante cieco sente i colpi, non i passi; l'interruttore ti assale quando prepari una mossa forte e resta scoperto se manca. Un branco battuto tre volte allo stesso modo arriva dai fianchi, e una specie battuta molte volte si ricorda di te e apre con una carica|👹 Nowe cechy wrogów: naśladowca kopiuje twój ostatni ruch; strażnik bez twarzy widzi tylko ruch i gubi cię, gdy stoisz; pasożyt po śmierci gospodarza przeskakuje na innego wroga i daje mu pancerz; sobowtór powtarza cios jako zjawa chwilę później; łowca słabości wścieka się, gdy masz mało zdrowia lub wszystko się ładuje; nieuzbrojony strażnik może wytrącić ci miecz na 3 s; ślepy olbrzym słyszy ciosy, nie kroki; przerywacz rzuca się na ciebie, gdy szykujesz silny ruch, i odsłania się po chybieniu. Stado pokonane trzy razy tak samo zachodzi z boków, a gatunek pokonany wiele razy pamięta cię i zaczyna szarżą|👹 Novos traços inimigos: o imitador copia seu último golpe; o vigia sem rosto só vê movimento e perde você quando fica parado; o parasita salta para outro inimigo quando o hospedeiro morre e o blinda; o duplo repete um golpe como espectro pouco depois; o caçador de fraqueza fica feroz quando sua vida está baixa ou tudo está em recarga; o guardião desarmado pode derrubar sua espada por 3 s; o gigante cego ouve golpes, não passos; o interruptor avança quando você prepara um golpe forte e fica exposto se errar. Uma matilha vencida três vezes do mesmo jeito vem pelos lados, e uma espécie vencida muitas vezes lembra de você e abre com uma investida|👹 新しい敵の特性：模倣者は最後の技を真似る。顔なき見張りは動きしか見えず、止まると見失う。寄生体は宿主が死ぬと別の敵に移って鎧を与える。分身は少し遅れて幽霊として攻撃を繰り返す。弱点狩りは体力が少ないか全てがクールダウン中だと凶暴になる。素手の番人は剣を3秒叩き落とせる。盲目の巨人は足音ではなく打撃を聞く。妨害者は強い技の準備中に飛びかかり、外すと隙ができる。同じ方法で三度倒した群れは側面から来て、何度も倒した種族はお前を覚えて突進で始める|👹 새로운 적 특성: 흉내쟁이는 너의 마지막 기술을 따라 한다; 얼굴 없는 감시자는 움직임만 보고 멈추면 너를 놓친다; 기생체는 숙주가 죽으면 다른 적에게 옮겨 갑옷을 준다; 분신은 잠시 뒤 유령으로 공격을 반복한다; 약점 사냥꾼은 체력이 낮거나 모든 기술이 재사용 대기 중일 때 사나워진다; 맨손 파수꾼은 검을 3초간 쳐낼 수 있다; 눈먼 거인은 발소리가 아니라 타격을 듣는다; 방해꾼은 강한 기술을 준비할 때 덤벼들고 빗나가면 빈틈이 생긴다. 같은 방식으로 세 번 이긴 무리는 옆에서 오고, 여러 번 이긴 종족은 너를 기억해 돌진으로 시작한다|👹 Yeni düşman özellikleri: taklitçi son hamleni kopyalar; yüzsüz gözcü yalnızca hareketi görür ve durunca seni kaybeder; parazit ev sahibi ölünce başka bir düşmana atlar ve onu zırhlandırır; eş bir darbeyi kısa süre sonra hayalet olarak tekrarlar; zayıflık avcısı canın azken ya da her şey bekleme süresindeyken azar; silahsız bekçi kılıcını 3 sn düşürebilir; kör dev adımları değil darbeleri duyar; kesici güçlü bir hamle hazırlarken üstüne atılır ve ıskalayınca açık verir. Üç kez aynı şekilde yendiğin sürü yanlardan gelir, çok kez yendiğin bir tür seni hatırlar ve hücumla başlar|👹 Sifat musuh baru: peniru meniru jurus terakhirmu; pengawas tanpa wajah hanya melihat gerakan dan kehilanganmu saat kau diam; parasit melompat ke musuh lain saat inangnya mati dan memberinya zirah; kembaran mengulang serangan sebagai hantu sesaat kemudian; pemburu kelemahan mengamuk saat nyawamu rendah atau semua sedang pendinginan; penjaga tanpa senjata bisa menjatuhkan pedangmu 3 detik; raksasa buta mendengar serangan, bukan langkah; pemutus menerjangmu saat kau menyiapkan jurus kuat dan lengah setelah meleset. Kawanan yang kau kalahkan dengan cara sama tiga kali datang dari samping, dan jenis yang sering kau kalahkan mengingatmu dan membuka dengan terjangan|👹 दुश्मनों के नए गुण: नक़लची तुम्हारा आख़िरी दाँव दोहराता है; बिना चेहरे का पहरेदार सिर्फ़ हरकत देखता है और तुम्हारे रुकने पर तुम्हें खो देता है; परजीवी मेज़बान के मरने पर दूसरे दुश्मन पर कूदकर उसे कवच देता है; हमशक्ल थोड़ी देर बाद प्रेत बनकर वार दोहराता है; कमज़ोरी का शिकारी तुम्हारी सेहत कम होने या सब कुछ रिचार्ज पर होने पर उग्र होता है; निहत्था रक्षक 3 सेकंड के लिए तुम्हारी तलवार गिरा सकता है; अंधा दैत्य कदम नहीं, वार सुनता है; बाधक तुम्हारे ताक़तवर दाँव की तैयारी पर झपटता है और चूकने पर खुल जाता है। तीन बार एक ही तरह हराया झुंड बगल से आता है, और कई बार हराई गई जाति तुम्हें याद रखती है और धावे से शुरू करती है|👹 Đặc tính địch mới: kẻ bắt chước sao chép chiêu cuối của ngươi; kẻ canh không mặt chỉ thấy chuyển động và mất dấu khi ngươi đứng yên; ký sinh nhảy sang kẻ địch khác khi vật chủ chết và bọc giáp cho nó; phân thân lặp lại đòn đánh bằng bóng ma ngay sau đó; thợ săn điểm yếu hung hãn khi máu ngươi thấp hoặc mọi chiêu đang hồi; vệ binh tay không có thể đánh rơi kiếm ngươi 3 giây; người khổng lồ mù nghe tiếng đòn chứ không nghe bước chân; kẻ ngắt quãng lao vào khi ngươi chuẩn bị chiêu mạnh và sơ hở nếu trượt. Bầy bị ngươi đánh bại ba lần cùng một cách sẽ áp sát từ hai bên, và loài bị đánh bại nhiều lần sẽ nhớ ngươi và mở đầu bằng cú lao|👹 ลักษณะศัตรูใหม่: นักเลียนแบบลอกท่าล่าสุดของเจ้า ผู้เฝ้าไร้หน้าเห็นแค่การเคลื่อนไหวและหาเจ้าไม่เจอเมื่อเจ้ายืนนิ่ง ปรสิตกระโดดไปหาศัตรูอื่นเมื่อร่างหลักตายและให้เกราะ ร่างแฝดตีซ้ำเป็นวิญญาณหลังจากนั้นครู่หนึ่ง นักล่าจุดอ่อนดุร้ายขึ้นเมื่อเลือดเจ้าน้อยหรือทุกท่ากำลังคูลดาวน์ ผู้พิทักษ์มือเปล่าตีดาบเจ้าหลุดได้ 3 วินาที ยักษ์ตาบอดได้ยินการโจมตีไม่ใช่เสียงเท้า ผู้ขัดจังหวะพุ่งใส่เมื่อเจ้าเตรียมท่าแรงและเปิดช่องเมื่อพลาด ฝูงที่ถูกปราบแบบเดิมสามครั้งจะเข้ามาจากด้านข้าง และเผ่าพันธุ์ที่ถูกปราบหลายครั้งจะจำเจ้าได้และเปิดฉากด้วยการพุ่งชน|👹 Nieuwe vijandkenmerken: de na-aper kopieert je laatste zet; de gezichtsloze wachter ziet alleen beweging en verliest je als je stilstaat; de parasiet springt bij de dood van zijn gastheer naar een andere vijand en pantsert hem; de dubbelganger herhaalt een slag even later als geest; de zwaktejager wordt woest als je weinig leven hebt of alles oplaadt; de ongewapende bewaker kan je zwaard 3 s wegslaan; de blinde reus hoort slagen, geen stappen; de onderbreker stort zich op je als je een sterke zet voorbereidt en ligt open na een misser. Een roedel die je drie keer op dezelfde manier versloeg komt van opzij, en een soort die je vaak versloeg herinnert zich jou en opent met een stormloop|👹 سمات جديدة للأعداء: المقلِّد ينسخ حركتك الأخيرة؛ الحارس بلا وجه يرى الحركة فقط ويفقدك حين تتجمد؛ الطفيلي يقفز إلى عدو آخر عند موت مضيفه ويدرّعه؛ القرين يكرر الضربة كشبح بعد لحظة؛ صياد الضعف يشتد حين تقل صحتك أو تكون كل مهاراتك في التبريد؛ الحارس الأعزل قد يُسقط سيفك 3 ثوانٍ؛ العملاق الأعمى يسمع الضربات لا الخطوات؛ المقاطِع ينقضّ حين تجهز حركة قوية وينكشف إن أخطأ. القطيع الذي هزمته بالطريقة نفسها ثلاث مرات يأتي من الجانبين، والنوع الذي هزمته مرارًا يتذكرك ويبدأ باندفاعة|👹 শত্রুর নতুন গুণ: নকলবাজ তোমার শেষ চাল নকল করে; মুখহীন প্রহরী শুধু নড়াচড়া দেখে, থামলে তোমাকে হারায়; পরজীবী আশ্রয়দাতা মরলে অন্য শত্রুর উপর লাফিয়ে তাকে বর্ম দেয়; দ্বৈত একটু পরে ছায়া হয়ে আঘাত আবার করে; দুর্বলতার শিকারি তোমার স্বাস্থ্য কম বা সব রিচার্জে থাকলে হিংস্র হয়; নিরস্ত্র রক্ষী ৩ সেকেন্ডের জন্য তোমার তলোয়ার ফেলে দিতে পারে; অন্ধ দৈত্য পায়ের শব্দ নয়, আঘাত শোনে; বাধাদাতা তোমার শক্তিশালী চালের প্রস্তুতিতে ঝাঁপায় আর ফসকালে অরক্ষিত হয়। তিনবার একভাবে হারানো দল পাশ থেকে আসে, আর বহুবার হারানো জাতি তোমাকে মনে রাখে ও ধাওয়া দিয়ে শুরু করে|👹 Mga bagong katangian ng kaaway: ginagaya ng manggagaya ang huli mong galaw; ang bantay na walang mukha ay galaw lang ang nakikita at nawawala ka kapag tumigil ka; ang parasito ay lumilipat sa ibang kaaway kapag namatay ang kanyang host at binibigyan ito ng baluti; inuulit ng kakambal ang tama bilang multo makalipas ang ilang saglit; nagiging mabangis ang mangangaso ng kahinaan kapag mababa ang buhay mo o lahat ay nagre-recharge; kayang agawin ng bantay na walang sandata ang iyong espada nang 3 segundo; naririnig ng bulag na higante ang mga tama, hindi ang mga hakbang; sinusugod ka ng tagapigil kapag naghahanda ka ng malakas na galaw at nabubuksan kapag sumablay. Ang kawang tinalo mo nang tatlong beses sa parehong paraan ay sumasalakay mula sa gilid, at ang uring maraming beses mong tinalo ay naaalala ka at nagsisimula sa pagsugod"});
+for(const k in P17Tsrc)T8[k]=S8(P17Tsrc[k]);
+NWC.n17a3="new";NEWS.unshift({v:"2026.11.09",ic:"👹",k:["n17a3"]});
+/* the new traits are rolled by afRoll like the old ones; "ok" limits a trait to the foes it fits */
+AFX.push({k:"mimic",ic:"🎭",col:"#e8c8ff"},{k:"watch",ic:"👁️",col:"#c8d8e8"},{k:"para",ic:"🪱",col:"#9fe04a"},{k:"echo",ic:"👥",col:"#9fb8ff"},{k:"hunt",ic:"🎯",col:"#ff8a5a"},{k:"disarm",ic:"🫳",col:"#d8c8b0"},
+ {k:"blind",ic:"👂",col:"#b8a890",ok:e=>!!(e.cfg.heavy||e.cfg.size>=1.3)},{k:"intr",ic:"⛔",col:"#ff6a6a",ok:e=>!["shoot","cast"].includes(e.cfg.style)});
+AFX.forEach(A=>AFXK[A.k]=A);
+const afHas=(e,k)=>!!(e.af&&e.af.includes(k));
+/* 11: the mimic answers with the kind of your last move: a strong blow becomes a slam, a spell an arrow, a roll a charge */
+function p17EAtk(e){if(!afHas(e,"mimic")||!hero.rhK)return;const k={h:"slam",z:"slam",f:"shoot",b:"shoot",m:"lunge",s:"lunge"}[hero.rhK];if(k&&Math.random()<.6){e.atkKind=k;addText(e.x,e.z,e.h+e.cfg.hgt*e.s+10,"🎭","#e8c8ff",12)}}
+/* 16: the weakness hunter hits harder and moves faster while you are hurt or everything is on cooldown */
+const hunting=e=>afHas(e,"hunt")&&(P.hp<P.maxhp*.4||["heavy","fire","bolt","spin"].filter(a=>P.level>=(SKLV[a]||1)).every(a=>(hero.cd[a]||0)>0));
+const p17EDmg=e=>hunting(e)?1.3:1,p17ESpd=e=>(hunting(e)?1.25:1)*(e.flank?1.1:1);
+/* 12 + 18: the watcher loses you while you stand still; the blind giant only finds you by the noise of blows (or when you touch it) */
+let lastNoise=-9;const heroStill=()=>hero.state==="idle"&&!attackHeld&&(hero.stillT||0)>1.2;
+function p17Senses(e){if(e.state==="dead"||e.boss)return;let lost=false;
+ if(afHas(e,"watch"))lost=heroStill();
+ if(afHas(e,"blind")&&tNow-lastNoise>2.5&&Math.hypot(e.x-hero.x,(e.z-hero.z)*ZS)>60)lost=true;
+ if(lost!==!!e.lost){e.lost=lost;addText(e.x,e.z,e.h+e.cfg.hgt*e.s+10,lost?"?":"!",lost?"#c8d8e8":"#ff4d62",14)}}
+/* 14: the parasite leaves a dead host for the nearest foe and armours it */
+function p17EDeath(e){if(!afHas(e,"para"))return;let b=null,bd=260;for(const o of enemies){if(o===e||o.state==="dead")continue;const d=Math.hypot(o.x-e.x,(o.z-e.z)*ZS);if(d<bd){bd=d;b=o}}if(!b)return;
+ for(let i=0;i<14;i++){const q=i/14;parts.push({x:lerp(e.x,b.x,q),z:lerp(e.z,b.z,q),h:20+Math.sin(q*PI)*40,vx:0,vz:0,vh:0,g:0,life:.6,max:.6,col:"#9fe04a",size:2.4,t:"dot"})}
+ b.af=b.af||[];if(!b.af.includes("armor"))b.af.push("armor");b.afSh=(b.afSh|0)+Math.round(b.maxhp*.15);b.afIc=(b.afIc||"")+"🪱";SFX.squish()}
+/* 15: the double's ghost repeats the blow 0.6 s later where it was aimed */
+function p17EStrike(e){if(!afHas(e,"echo")||e.atkKind==="breath")return;const x=e.x+e.face*(e.cfg.range*.6),z=e.z;sbMark(x,z,26,"#9fb8ff",.6,"spike",Math.round(dmgRoll(e)*.6))}
+/* 17: the unarmed warden can knock your sword away for 3 s (melee does half damage, the sword is gone from your hand); 15 s rest */
+function p17EHit(att){if(!att)return;if(afHas(att,"intr"))att.intrHit=1;if(!afHas(att,"disarm")||hero.disT>0||realT<(hero.disCd||0)||Math.random()>.25)return;
+ hero.disT=3;hero.disCd=realT+15;addBuf({k:"disarm",ic:"🫳",col:"#d8c8b0",fx:[],t:3,max:3});addText(hero.x,hero.z,74,"🫳 "+t("p17_disarm"),"#d8c8b0",13,true);SFX.block()}
+/* 19: the interrupter rushes you when you start a strong move; if it misses, it is left open */
+function p17Cast(a){if(!["heavy","fire","bolt","heal","blaze"].includes(a))return;for(const e of enemies){if(!afHas(e,"intr")||e.state!=="chase"||Math.hypot(e.x-hero.x,(e.z-hero.z)*ZS)>200)continue;startEnemyAttack(e,"charge");e.st=Math.max(e.st,(e.cfg.wind||.5)-.15);e.intrA=1;e.intrHit=0}}
+function p17EIntr(e){if(!e.intrA||e.state!=="recover")return;e.intrA=0;if(!e.intrHit){e.st=-1.5;e.stun=1.5;addText(e.x,e.z,e.h+e.cfg.hgt*e.s+12,"💢 "+t("p17_weak"),"#ffd34e",12,true)}}
+/* 20: a kind you have beaten 25+ times remembers you and opens the fight with a charge */
+function p17EMake(e){if(e.boss||e.summoned||e.wild||e.passive||e.cfg.pet)return;if((kills[e.cfg.k]||0)>=25&&!["shoot","cast"].includes(e.cfg.style)){e.mem=1;e.afIc=(e.afIc||"")+"🧠"}if(packFlank){e.flank=Math.random()<.5?-1:1}}
+let memSaid={};
+function p17EMem(e){if(!e.mem||e.state!=="chase"||e.mem===2)return;const d=Math.hypot(e.x-hero.x,(e.z-hero.z)*ZS);if(d>220||d<40)return;e.mem=2;startEnemyAttack(e,"charge");
+ if(!memSaid[e.cfg.k]){memSaid[e.cfg.k]=1;toast("🧠 "+t("p17_mem",{n:L(e.cfg.n)}),"#c8b4ff")}}
+/* 13: the pack that remembers: three battles won the same way (the same move made most kills) and the next pack comes from both sides, a little faster */
+const pkHist=[];let pkKills={},packFlank=false;
+function p17Kill(e){if(e.summoned||e.wild||!locked)return;const k=hero.rhK||"m";pkKills[k]=(pkKills[k]|0)+1}
+function p17WaveEnd(){const ks=Object.keys(pkKills);if(ks.length){const top=ks.reduce((a,b)=>pkKills[a]>=pkKills[b]?a:b);pkHist.push(top);if(pkHist.length>3)pkHist.shift()}pkKills={};
+ packFlank=pkHist.length===3&&pkHist.every(x=>x===pkHist[0]);if(packFlank)pkHist.length=0}
+function p17WaveStart(){memSaid={};if(packFlank&&isFP())setTimeout(()=>toast("🐺 "+t("p17_pack"),"#c8b4a0"),1200)}
+function p17EnemyTick(dt){const h=hero;
+ if(h.state==="idle"&&!(moveVec().x||moveVec().z))h.stillT=(h.stillT||0)+dt;else h.stillT=0;
+ if(h.state!=="idle"&&h.state!=="walk"&&h.state!=="hurt"&&h.state!=="dead")lastNoise=tNow;
+ if(h.disT>0){h.disT-=dt;if(G3&&G3.vm&&G3.vm.sw)G3.vm.sw.visible=h.disT<=0}
+ for(const e of enemies){if(e.state==="dead"||e.delay>0)continue;p17Senses(e);p17EIntr(e);p17EMem(e)}}
 
 /* ============ START ============ */
 if(!(P.hp>0))P.hp=P.maxhp;
