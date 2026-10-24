@@ -1086,6 +1086,7 @@ body.dkf .banner{text-shadow:0 2px 0 #000,0 0 18px rgba(0,0,0,.9)}
 .pf{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.pst{color:var(--sc);background:color-mix(in srgb,var(--sc) 12%,transparent);border:1px solid color-mix(in srgb,var(--sc) 35%,transparent);border-radius:99px;padding:1px 8px;font-size:12px;line-height:1.5}
 .bcard.petOn{border-color:#6fe39a;box-shadow:0 0 0 1px #6fe39a55,0 0 18px -6px #6fe39a}
 .donL{flex:1 1 220px;min-width:0}.donIc{display:inline-block;filter:drop-shadow(0 0 6px rgba(255,210,120,.5))}.donD{margin:4px 0 6px;font-size:12.5px;line-height:1.45;color:#e9d8c4}.donBank{display:inline-block;font-size:11px;font-weight:800;text-transform:lowercase;color:#1a1108;background:#ffd36a;border-radius:6px;padding:0 6px;margin-right:6px;vertical-align:2px}
+.rlBox{margin:6px 0 8px}.rlList{max-height:180px;overflow:auto;display:grid;gap:2px;padding:4px 2px}.rlR{display:flex;gap:8px;align-items:baseline;font-size:12.5px;line-height:1.35}.rlR small{opacity:.6;font-variant-numeric:tabular-nums;flex:none}
 </style>
 </head>
 <body>
@@ -1269,6 +1270,7 @@ body.dkf .banner{text-shadow:0 2px 0 #000,0 0 18px rgba(0,0,0,.9)}
   <div class="modal" id="mPause"><div class="sheet set">
     <div class="shead"><h2 data-i="pause">Пауза</h2><button class="x" data-close aria-label="Закрити">✕</button></div>
     <div class="pHero" id="pHero"><div class="phD" id="phDoll"></div><div class="phI"><b id="phName"></b><div class="phS" id="phStats"></div><div class="phX"><i id="phXp"></i></div></div></div>
+    <details class="eqMore rlBox"><summary data-i="p17_log">Останні дії</summary><div class="rlList" id="rlList"></div></details>
     <div class="pacts"><button class="btn main" data-close data-i="resume">▶ Продовжити</button><button class="btn" id="pTree"></button><button class="btn" id="pInv"></button><button class="btn" id="pDrops"></button><button class="btn" id="pBest"></button><button class="btn" id="pForge"></button><button class="btn" id="pDaily"></button><button class="btn" id="pFriends"></button><button class="btn" id="pZone"></button><button class="btn" id="pPets"></button><button class="btn" id="pNews"></button></div>
     <h3 class="h3" data-i="settings">Налаштування</h3>
     <div class="row"><div><b data-i="acc">Акаунт</b><div class="m" id="accWho"></div></div><div class="accb" id="accBtns"></div></div>
@@ -1281,6 +1283,7 @@ body.dkf .banner{text-shadow:0 2px 0 #000,0 0 18px rgba(0,0,0,.9)}
     <div class="row colr"><b data-i="gfx">Графіка</b><div class="gfxT" id="gfxT"></div><select id="gfxSel" class="sel" hidden></select></div>
     <div class="row"><div><b data-i="fpsL">Лічильник FPS</b><div class="m" data-i="fpsHint">Показує кадри за секунду вгорі екрана</div></div><button class="btn" id="fpsB">✕</button></div>
     <div class="row"><div><b data-i="stickL">Стік повертає камеру</b><div class="m" data-i="stickHint"></div></div><button class="btn" id="stickB">✕</button></div>
+    <div class="row"><div><b data-i="p17_fxLo">Менше ефектів</b><div class="m" data-i="p17_fxLoH"></div></div><button class="btn" id="fxLoB">✕</button></div>
     <div class="row"><b data-i="tutT"></b><button class="btn" id="tutB" type="button" data-i="tutAgain"></button></div>
     <div class="row"><b data-i="resetL">Прогрес</b><button class="btn warn" id="resetB" data-i="resetP">Скинути прогрес</button></div>
     <p class="ctrlText" data-i="ctrl"></p>
@@ -9311,7 +9314,7 @@ function fBuy(k,i,btn){const F=FACK[k],S=FSHOP[i];if(!F||!S)return;if(facLv(LG.f
  else if(S.i==="gear")mgGiveItem(makeItem(Math.max(5,rollRarity(5))));
  SFX.buy();save();renderMg();hud()}
 /* ---- meteors fall now and then; the fallen star can be picked up ---- */
-function meteorFall(){const d=rnd(170,300),side=Math.random()<.5?-1:1,x=hero.x+rnd(80,200),z=clamp(hero.z+side*rnd(30,90),zLo(20),zHi(20));
+function meteorFall(){p17Hush(2.4);const d=rnd(170,300),side=Math.random()<.5?-1:1,x=hero.x+rnd(80,200),z=clamp(hero.z+side*rnd(30,90),zLo(20),zHi(20));
  sbMark(x,z,40,"#ffb25a",2.2,"meteor",Math.round(P.maxhp*.12));banner("☄️ "+t("lg_metT"),t("lg_metS"));SFX.thunderCrack();
  setTimeout(()=>{if(!LG||(MG&&MG.run))return;mgObjs.push({k:"meteor",x,z});shake+=8;dustRing(x,z,40);SFX.megaBoom()},2400)}
 /* ---- objects of this part in the world (the shared loop calls this when you walk up to one) ---- */
@@ -9906,7 +9909,7 @@ function leashTick(dt){for(const e of enemies){if(!e.wild||!e.home||e.state==="d
  if(e.state==="roam"&&e.hp<e.maxhp)e.hp=Math.min(e.maxhp,e.hp+e.maxhp*.1*dt)}}
 /* ---- the tick of this module ---- */
 let p14Chk=0;
-function p14Tick(dt){dbTick(dt);encTick(dt);atmTick(dt);arenaHz(dt);brkTick();if(isFP())mystTick(dt);shiftTick(dt);leashTick(dt);if(anomT>0){anomT-=dt;if(anomT<=0)anomK=""}
+function p14Tick(dt){p17Tick(dt);dbTick(dt);encTick(dt);atmTick(dt);arenaHz(dt);brkTick();if(isFP())mystTick(dt);shiftTick(dt);leashTick(dt);if(anomT>0){anomT-=dt;if(anomT<=0)anomK=""}
  if(LG.wt>=3)for(const e of enemies)if(e.wtRage&&!e.enr&&e.state!=="dead"&&e.hp<e.maxhp*.5){e.enr=true;sparks(e.x,e.z,e.h+e.cfg.hgt*e.s*.6,"#ff4d4d",10,1)}
  p14Chk-=dt;if(p14Chk<=0){p14Chk=1;LG.mapsV=LG.mapsV||{};const bi=biomeIdx();if(!(MG&&MG.run)&&!SL.zone&&!LG.mapsV[bi]){LG.mapsV[bi]=1;if(Object.keys(LG.mapsV).length>1)logH("🗺️","p14_lgMap",L(BIOME_N[bi]))}ngPrize()}}
 /* ---- more achievements: bosses, maps, collections, fishing, crafting, factions, records ---- */
@@ -9918,7 +9921,7 @@ ACH2.push(["l_fish","🎣","l",()=>LG.st.fish|0,25,{g:3000,m:{fishm:5}}],["l_fis
  ["l_combo","⚡","l",()=>LG.st.combo|0,25,{g:3000}],["l_react","⚗️","l",()=>Object.keys(LG.rx||{}).length,REACT.length,{g:4000,m:{crys:4}}],["l_tame","🪢","l",()=>LG.tame?1:0,1,{g:3000,m:{nat:6}}],["l_city","🏙️","l",()=>LG.st.cty|0,10,{g:4000}]);
 TITLES.push({k:"ngplus",ic:"✨",col:"#ffd98a"},{k:"ch_dawn",ic:"☀️",col:"#ffd34e"},{k:"ch_star",ic:"🌠",col:"#8fd8ff"});
 function p14Load(o){const num=(v,a,b)=>{v=+v;return isFinite(v)?Math.min(b,Math.max(a,v)):a};
- if(Array.isArray(o.hist))LG.hist=o.hist.filter(x=>mgObj(x)&&typeof x.k==="string"&&(/^p14_lg\w+$/.test(x.k)||/^p16_\w+$/.test(x.k))).slice(0,60).map(x=>({d:String(x.d||"").slice(0,12),ic:String(x.ic||"").slice(0,4),k:x.k,a:String(x.a==null?"":x.a).slice(0,60)}));
+ if(Array.isArray(o.hist))LG.hist=o.hist.filter(x=>mgObj(x)&&typeof x.k==="string"&&(/^p14_lg\w+$/.test(x.k)||/^p1[67]_\w+$/.test(x.k))).slice(0,60).map(x=>({d:String(x.d||"").slice(0,12),ic:String(x.ic||"").slice(0,4),k:x.k,a:String(x.a==null?"":x.a).slice(0,60)}));
  LG.ngp=num(o.ngp,0,RB_MAX)|0;LG.bait=num(o.bait,0,999)|0;LG.side=o.side==="dawn"||o.side==="star"?o.side:"";
  if(mgObj(o.mapsV)){LG.mapsV={};for(const k in o.mapsV)if(+k>=0&&+k<300)LG.mapsV[k]=1}}
 
@@ -10258,7 +10261,7 @@ let atmT=null,skyIsle=null,crT=null;
 function atmTick(dt){if(MG&&MG.run||!isFP()||hero.state==="dead"||locked)return;
  crT=(crT==null?rnd(25,45):crT)-dt;if(crT<=0){crT=rnd(35,70);if(mgObjs.filter(o=>o.k==="crate"&&!o.used).length<3){const x=hero.x+rnd(160,240),z=clamp(hero.z+rnd(-25,25),zLo(5),zHi(5));for(let i=0;i<rint(1,3);i++)mgObjs.push({k:"crate",x:x+i*16,z:z+rnd(-5,5)})}}
  for(const o of mgObjs){if(o.k==="tmark"&&!o.used&&(tNow-o.t0>70))o.used=1;if(o.k==="ghostv"&&!o.used&&nightK()<.5)o.used=1}
- if(skyIsle)skyTick(dt);if(atmT==null)atmT=rnd(90,160);atmT-=dt;if(atmT>0)return;atmT=rnd(150,260);
+ if(skyIsle)skyTick(dt);if(atmT==null)atmT=rnd(90,160);atmT-=dt;if(atmT>0)return;atmT=rnd(150,260);p17Hush(2.8);
  const N=nightK(),rain=wxNow&&(wxNow.k==="rain"||wxNow.k==="storm"),x=hero.x+rnd(200,300),side=Math.random()<.5?-1:1,z=clamp(hero.z+side*rnd(20,40),zLo(-30),zHi(-30)),r=Math.random();
  if(Math.random()<.5){mystSpawn(x,z,N);return}
  if(N>.8&&r<.22){mgObjs.push({k:"ghostv",x:x+60,z});banner("🏚️ "+t("p16_ghostV"),"");SFX.cackle()}
@@ -10411,9 +10414,9 @@ const _wl=new WeakMap();
 function whiteLook(L){if(_wl.has(L))return _wl.get(L);const o={};for(const k in L)o[k]=(typeof L[k]==="string"&&L[k][0]==="#")?"#fff1f1":L[k];o.out="#ffd9d9";_wl.set(L,o);return o}
 
 /* ============ AUDIO ============ */
-let AC=null,noiseBuf=null;
+let AC=null,noiseBuf=null;var revWet=null,hushK=1,musK=1;
 let sfxIn=null,SBUF=null;const sLast={};
-function bus(){const a=AC;if(!a)return null;if(!sfxIn){try{const c=a.createDynamicsCompressor();c.threshold.value=-16;c.knee.value=12;c.ratio.value=4;c.attack.value=.003;c.release.value=.18;c.connect(a.destination);const dry=a.createGain();dry.connect(c);const cv=a.createConvolver(),len=a.sampleRate*.6|0,ir=a.createBuffer(2,len,a.sampleRate);for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.4)*(i<a.sampleRate*.012?i/(a.sampleRate*.012):1)}cv.buffer=ir;const wet=a.createGain();wet.gain.value=.14;dry.connect(cv);cv.connect(wet);wet.connect(c);sfxIn=dry}catch(e){sfxIn=a.destination}}return sfxIn}
+function bus(){const a=AC;if(!a)return null;if(!sfxIn){try{const c=a.createDynamicsCompressor();c.threshold.value=-16;c.knee.value=12;c.ratio.value=4;c.attack.value=.003;c.release.value=.18;c.connect(a.destination);const dry=a.createGain();dry.connect(c);const cv=a.createConvolver(),len=a.sampleRate*.6|0,ir=a.createBuffer(2,len,a.sampleRate);for(let ch=0;ch<2;ch++){const d=ir.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.4)*(i<a.sampleRate*.012?i/(a.sampleRate*.012):1)}cv.buffer=ir;const wet=a.createGain();wet.gain.value=.14;revWet=wet;dry.connect(cv);cv.connect(wet);wet.connect(c);sfxIn=dry}catch(e){sfxIn=a.destination}}return sfxIn}
 function sndLoad(){if(SBUF||!AC)return;SBUF={};let raw;try{const el=document.getElementById("sndData");raw=JSON.parse(el.textContent);el.textContent=""}catch(e){return}for(const k in raw){const L=SBUF[k]=[];raw[k].forEach(b64=>{try{const bin=atob(b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);const p=AC.decodeAudioData(u.buffer,b=>{if(L.indexOf(b)<0)L.push(b)},()=>{});if(p&&p.catch)p.catch(()=>{})}catch(e){}})}}
 function smp(n,vol,rate,delay){if(!S.sfx)return true;const a=ac();if(!a)return true;const L=SBUF&&SBUF[n];if(!L||!L.length)return false;const t=a.currentTime+(delay||0);if(Math.abs(t-(sLast[n]||-9))<.025)return true;sLast[n]=t;try{const s=a.createBufferSource(),g=a.createGain();s.buffer=L[Math.random()*L.length|0];s.playbackRate.value=(rate||1)*(.95+Math.random()*.1);g.gain.value=(vol==null?1:vol)*S.sfx/100;s.connect(g);g.connect(bus());s.start(t)}catch(e){return false}return true}
 function whoosh(d,vol,f1,f2,delay){const a=ac();if(!a||!S.sfx)return;const t0=a.currentTime+(delay||0),s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=noiseBuf;s.loop=true;f.type="bandpass";f.Q.value=1.3;f.frequency.setValueAtTime(f1,t0);f.frequency.exponentialRampToValueAtTime(f2,t0+d*.45);f.frequency.exponentialRampToValueAtTime(Math.max(80,f1*.7),t0+d);g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(vol*S.sfx/100,t0+d*.38);g.gain.exponentialRampToValueAtTime(.0001,t0+d);s.connect(f);f.connect(g);g.connect(bus());s.start(t0,Math.random()*.5);s.stop(t0+d+.02)}
@@ -10668,7 +10671,7 @@ Object.assign(SFX,{
  lootLand(r,s){const M=DROP_MOT[s];if(!M){SFX_LL0&&SFX_LL0(r);return}smp(M[0],.22,M[1]*(.9+(r|0)*.02))||SFX_LL0(r)}
 });
 let musTimer=null,musStep=0;
-function mnote(m,d,type,vol){const a=ac();if(!a||!S.music)return;const f=440*Math.pow(2,(m-69)/12),t0=a.currentTime,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(vol*S.music/100,t0+.03);g.gain.exponentialRampToValueAtTime(0.0001,t0+d);o.connect(g);g.connect(a.destination);o.start(t0);o.stop(t0+d+.05)}
+function mnote(m,d,type,vol){const a=ac();if(!a||!S.music)return;const f=440*Math.pow(2,(m-69)/12),t0=a.currentTime,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(Math.max(.0002,vol*S.music/100*musK),t0+.03);g.gain.exponentialRampToValueAtTime(0.0001,t0+d);o.connect(g);g.connect(a.destination);o.start(t0);o.stop(t0+d+.05)}
 function musicStart0(){if(musTimer||!ac())return;const bass=[45,45,48,43,41,41,43,40],mel=[69,72,76,74,72,69,67,64,65,69,72,71];musStep=0;musTimer=setInterval(()=>{if(paused)return;const s=musStep++;if(s%2===0)mnote(bass[(s>>1)%8],.6,"triangle",.07);if(s%8===0)mnote(bass[(s>>1)%8]+12,1.2,"sine",.025);if(s%3!==2&&hash(s*1.3)<.55)mnote(mel[(s*5+(s>>4))%mel.length],.35,"sine",.022)},280)}
 function musicStop(){clearInterval(musTimer);musTimer=null}
 
@@ -10771,7 +10774,7 @@ function heroUpdate(dt){
  const mv=moveVec();
  switch(h.state){
   case "idle":case "walk":
-   if(mv.x||mv.z){h.state="walk";const spm=(1+P.speed/100)*(h.slow>0?.5:1)*(slBz>0?.75:1);const ph0=Math.sin(h.anim);slMove(h,mv.x*125*spm,mv.z*82*spm,dt);if(Math.abs(mv.x)>.15&&!isFP())h.face=mv.x>0?1:-1;h.anim+=dt*11*Math.max(.5,Math.hypot(mv.x,mv.z));if((ph0<0)!==(Math.sin(h.anim)<0)){const snow=BIOMES[biomeIdx()].amb==="snow";(snow?SFX.crunch:SFX.step)();for(let i=0;i<3;i++)parts.push({x:h.x-mv.x*6+rnd(-4,4),z:h.z+rnd(-2,2),h:1,vx:-mv.x*rnd(10,30)+rnd(-10,10),vz:rnd(-5,5),vh:rnd(6,20),g:20,life:.45,max:.45,col:snow?"#eef4ff":BIOMES[biomeIdx()].stone,size:rnd(2,3.5),t:"smoke"})}}else{h.state="idle";slMove(h,0,0,dt)}
+   if(mv.x||mv.z){h.state="walk";const spm=(1+P.speed/100)*(h.slow>0?.5:1)*(slBz>0?.75:1);const ph0=Math.sin(h.anim);slMove(h,mv.x*125*spm,mv.z*82*spm,dt);if(Math.abs(mv.x)>.15&&!isFP())h.face=mv.x>0?1:-1;h.anim+=dt*11*Math.max(.5,Math.hypot(mv.x,mv.z));if((ph0<0)!==(Math.sin(h.anim)<0)){const snow=BIOMES[biomeIdx()].amb==="snow";p17Step();for(let i=0;i<3;i++)parts.push({x:h.x-mv.x*6+rnd(-4,4),z:h.z+rnd(-2,2),h:1,vx:-mv.x*rnd(10,30)+rnd(-10,10),vz:rnd(-5,5),vh:rnd(6,20),g:20,life:.45,max:.45,col:snow?"#eef4ff":BIOMES[biomeIdx()].stone,size:rnd(2,3.5),t:"smoke"})}}else{h.state="idle";slMove(h,0,0,dt)}
    if(attackHeld)tryAction("attack");
    break;
   case "attack":{
@@ -10782,7 +10785,7 @@ function heroUpdate(dt){
    if(h.st>=A.dur){if(h.queued&&h.combo<2){h.combo++;h.queued=false;h.st=0;h.done=false;const mv2=moveVec();if(Math.abs(mv2.x)>.3&&!isFP())h.face=mv2.x>0?1:-1;(h.combo===1?SFX.swing2:SFX.swing3)()}else setHero("idle")}
   }break;
   case "heavy":
-   if(!h.done&&h.st>=.45){h.done=true;heroMelee(64,28,1.9*(1+P.heavyBonus/100),330,"heavy");shake+=4;decal("crack",h.x+hdir().x*34,clamp(h.z+hdir().z*34/ZS,zLo(),zHi()),30,3.5,"#000000");dustRing(h.x+hdir().x*34,clamp(h.z+hdir().z*34/ZS,zLo(),zHi()),26);SFX.heavy()}
+   if(!h.done&&h.st>=.45){h.done=true;heroMelee(64,28,1.9*(1+P.heavyBonus/100),330,"heavy");shake+=4;decal("crack",h.x+hdir().x*34,clamp(h.z+hdir().z*34/ZS,zLo(),zHi()),30,3.5,"#000000");dustRing(h.x+hdir().x*34,clamp(h.z+hdir().z*34/ZS,zLo(),zHi()),26);SFX.heavy();p17Ping()}
    if(h.st>=.78)setHero("idle");break;
   case "fire":
    if(!h.done&&h.st>=.2){h.done=true;const zs=P.fireMulti?[0,-20,20]:[0];const fd=hdir();zs.forEach((dz,i)=>projs.push({k:"fire",x:h.x+fd.x*20,z:clamp(h.z+fd.z*20/ZS+dz*.2,zLo(),zHi()),h:32,vx:fd.x*310-fd.z*dz*1.6*ZS,vz:fd.z*310/ZS+fd.x*dz*1.6,life:1.3,r:7}));SFX.fire()}
@@ -11028,7 +11031,7 @@ function voice(C,kind){const snd={lunge:C.body==="spider"?"hiss":"growl",swoop:"
 function startEnemyAttack(e,kind){
  const C=e.cfg;e.state="windup";e.st=0;e.face=hero.x>e.x?1:-1;e.atkKind=kind||C.style;enemyVoice(e,"atk");
  if(C.blink&&Math.random()<.55){const col=C.body==="ghost"?"#7fa3c9":"#5a2a3a";puff(e.x,e.z,col);{const fd=hdir();e.x=hero.x-fd.x*30;e.z=clamp(hero.z-fd.z*30/ZS+rnd(-4,4),zLo(),zHi())}e.face=hero.x>e.x?1:-1;puff(e.x,e.z,col);SFX.blink()}
- voice(C,e.atkKind);
+ voice(C,e.atkKind);p17Cue(e);
  if(e.state==="windup"){parts.push({x:e.x,z:e.z,h:0,life:C.wind,max:C.wind,t:"ring",col:e.boss?"#ffb03a":C.heavy?"#c08aff":"#ff4d62",size:C.rad*e.s*.9});for(let i=0;i<5;i++)parts.push({x:e.x+e.face*C.rad*e.s*1.1,z:e.z,h:C.hgt*e.s*.62,vx:Math.cos(i*1.26)*70,vz:0,vh:Math.sin(i*1.26)*70,g:0,life:.22,max:.22,col:"#ffffff",size:2.2,t:"spark"})}
  if(C.summon&&e.summons<2&&aliveCount()<7&&Math.random()<.45){
   e.summons++;const sk=makeEnemy(EIDX[C.summonK||"skel"],false,isFP()?e.x-e.face*26:clamp(e.x-e.face*26,arenaX+20,arenaX+LW-20),clamp(e.z+rnd(-22,22),zLo(8),zHi(8)),0,{summoned:true});sk.entered=true;sk.cd=1.2;enemies.push(sk);
@@ -11106,6 +11109,7 @@ function killEnemy(e,dir){
  tryDrop(e);matDrop(e);slKill(e);mgKill(e);lgKill(e);if(C.sb)sbReward(e);
  if(e.treasure){qHit("gob");setTimeout(()=>spawnLoot(e,makeItem(rollRarity(3))),700);for(let i=0;i<30;i++){const an=rnd(0,PI*2);parts.push({x:e.x,z:e.z,h:e.h+10,vx:Math.cos(an)*rnd(40,120),vz:Math.sin(an)*rnd(14,40),vh:rnd(60,160),g:200,life:rnd(.6,1),max:1,col:i%2?"#2ff0c8":"#ffd34e",size:rnd(1.6,3),t:"spark"})}SFX.divine()}
  if(C.explode){projs.push({k:"boom",x:e.x,z:e.z,h:0,life:.8,max:.8,r:82,dmg:Math.round(e.atk*1.4),owner:null});SFX.charge()}
+ if(e.boss||e.rarI||C.tier==="elite"||C.heavy)p17Echo(e);
  if(e.boss)impact(3,e);else if(e.rarI){impact(e.rarI>=9?3:2,e);hitStop=Math.max(hitStop,.14);flashA=.3;flashCol=RAR[e.rarI].col}else if(C.tier==="elite"||C.tier==="epic"||C.heavy)impact(2,e);
  if(e.boss){SFX.bossDie();setTimeout(()=>bossFall(e),500);setTimeout(()=>SFX.jackpot(),450);for(let i=0;i<60;i++)parts.push({x:e.x+rnd(-8,8),z:e.z,h:rnd(10,40),vx:rnd(-90,90),vz:rnd(-20,20),vh:rnd(120,260),g:300,life:rnd(.8,1.4),max:1.4,col:i%3?"#ffd34e":"#fff6d0",size:rnd(1.6,3.2),t:"spark"});
   hitStop=.32;shake+=10;flashA=.5;flashCol="#ffe0a0";setTimeout(()=>banner(t("bossDown"),"+"+gold+" 🪙"),300)}
@@ -13285,7 +13289,8 @@ function overlay3(){
   const hpr=Math.max(0,Math.min(1,(P.hp||0)/(P.maxhp||1))),bw=46,bx=sx-bw/2,by=ny+5;c.fillStyle="rgba(10,4,8,.9)";c.fillRect(bx-1,by-1,bw+2,7);c.fillStyle=hpr<.3?"#ff8b3a":"#e14b5a";c.fillRect(bx,by,bw*hpr,5);c.strokeStyle="rgba(0,0,0,.6)";c.lineWidth=1;c.strokeRect(bx-1,by-1,bw+2,7)}
  // crosshair: where the next strike lands
  if(fp&&h.state!=="dead"){const fd=hdir(),[x,y,z]=pj(h.x+fd.x*44,h.z+fd.z*44/ZS,30);if(z<1){const hit=enemies.some(e=>{if(e.state==="dead"||e.delay>0)return false;const r=relH(e);return r.a>-12&&r.a<46+e.cfg.rad*e.s&&r.l<(20+(e.cfg.fly?8:0))*ZS});
-  c.save();c.strokeStyle=hit?"rgba(255,77,98,.95)":"rgba(255,240,225,.55)";c.lineWidth=hit?2:1.5;const r=hit?7:6;c.beginPath();c.arc(x,y,r,0,7);c.stroke();for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){c.beginPath();c.moveTo(x+dx*(r+3),y+dy*(r+3));c.lineTo(x+dx*(r+8),y+dy*(r+8));c.stroke()}c.restore()}}
+  const ak=hit?0:aimKind();c.save();c.strokeStyle=hit?"rgba(255,77,98,.95)":ak===1?"rgba(255,211,78,.95)":ak===2?"rgba(111,227,154,.95)":"rgba(255,240,225,.55)";c.lineWidth=hit||ak?2:1.5;const r=hit?7:6;c.beginPath();if(ak){c.moveTo(x,y-r-1);c.lineTo(x+r+1,y);c.lineTo(x,y+r+1);c.lineTo(x-r-1,y);c.closePath()}else c.arc(x,y,r,0,7);c.stroke();for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){c.beginPath();c.moveTo(x+dx*(r+3),y+dy*(r+3));c.lineTo(x+dx*(r+8),y+dy*(r+8));c.stroke()}c.restore()}}
+ p17Overlay(c,h);
  // screen effects (same as 2D)
  if(fp)drawScreenBlood(G3.odt||.016);
  if(fp&&h.flash>0){const a=clamp(h.flash/.14,0,1)*.55,gg=c.createRadialGradient(LW/2,LH/2,Math.min(LW,LH)*.25,LW/2,LH/2,Math.max(LW,LH)*.7);gg.addColorStop(0,"rgba(200,20,40,0)");gg.addColorStop(1,`rgba(200,20,40,${a})`);c.fillStyle=gg;c.fillRect(0,0,LW,LH)}
@@ -13742,7 +13747,7 @@ function impact(lv,e){if(!e)return;if(IMP.cool>0&&IMP.t>0&&lv<=IMP.lv)return;
 function impTick(dt){IMP.cool-=dt;IMP.p*=Math.exp(-dt*9);if(IMP.p<.002)IMP.p=0;let f="";
  if(IMP.t>0){IMP.t-=dt;const k=1-Math.max(0,IMP.t)/IMP.max,lv=IMP.lv,NEG="invert(1) grayscale(1) contrast(7)",RED="grayscale(1) contrast(4) sepia(1) saturate(8) hue-rotate(-40deg) brightness(.9)";
   if(lv===1)f=k<.4?NEG:"";else if(lv===2)f=k<.28?NEG:k<.6?RED:"";else f=k<.14?NEG:k<.24?"brightness(2.2) contrast(1.4)":k<.42?NEG:k<.7?RED:""}
- if(f!==IMP.f){IMP.f=f;cv.style.filter=f;if(G3&&G3.rr)G3.rr.domElement.style.filter=f}}
+ if(S.fxLo)f="";if(f!==IMP.f){IMP.f=f;cv.style.filter=f;if(G3&&G3.rr)G3.rr.domElement.style.filter=f}}
 function drawImpact(){if(IMP.t<=0)return;const k=1-Math.max(0,IMP.t)/IMP.max;let sx,sy;
  if(use3D()&&G3){const p=pj(IMP.x,IMP.z,IMP.h);if(p[2]>1||p[0]<-50||p[0]>LW+50){sx=LW/2;sy=LH*.45}else{sx=p[0];sy=p[1]}}else{sx=IMP.x-camX;sy=GT+IMP.z-IMP.h}
  c.setTransform(dpr*SC,0,0,dpr*SC,0,0);c.save();const R=Math.hypot(LW,LH),n=22+IMP.lv*12,a0=IMP.r[0]*7;
@@ -15325,6 +15330,116 @@ LG_R.lore=()=>{const Lr=LG.lore||{};let h=`<p class="sub">${t("p15_loreHint")}</
 function p15Act(a,v){if(a==="dbgo"){dbStart(v);return true}if(a==="al"){alignPick(v);if(alL()>=3)LG.ttl.lightb=1;if(alS()>=3)LG.ttl.shadowb=1;return true}return false}
 $("darkB").onclick=()=>{S.dark=S.dark===false;dkApply();tglSet("darkB",S.dark!==false);save();SFX.ui()};
 dkApply();
+
+/* ============ P17: a hundred small ideas. Pack 1: the crosshair, interaction hints, recent actions, fewer effects, sounds of the world ============ */
+const P17Tsrc={
+p17_ix_puz:"Головоломка|Puzzle|Énigme|Rätsel|谜题|Acertijo|Enigma|Zagadka|Enigma|パズル|퍼즐|Bulmaca|Teka-teki|पहेली|Câu đố|ปริศนา|Puzzel|لغز|ধাঁধা|Palaisipan",
+p17_ix_shop:"Крамниця|Shop|Boutique|Laden|商店|Tienda|Negozio|Sklep|Loja|ショップ|상점|Dükkân|Toko|दुकान|Cửa hàng|ร้านค้า|Winkel|متجر|দোকান|Tindahan",
+p17_ix_look:"Дослідити|Examine|Examiner|Untersuchen|调查|Examinar|Esamina|Zbadaj|Examinar|調べる|조사하기|İncele|Periksa|जाँचो|Xem xét|ตรวจสอบ|Onderzoeken|افحص|পরীক্ষা করো|Suriin",
+p17_ix_break:"Розбий мечем|Break it with your sword|Brise-la à l'épée|Mit dem Schwert zerschlagen|用剑劈开|Rómpela con la espada|Rompila con la spada|Rozbij mieczem|Quebre com a espada|剣で壊す|검으로 부수기|Kılıçla kır|Hancurkan dengan pedang|तलवार से तोड़ो|Chém vỡ bằng kiếm|ฟันให้แตกด้วยดาบ|Sla stuk met je zwaard|حطّمه بالسيف|তলোয়ার দিয়ে ভাঙো|Basagin gamit ang espada",
+p17_ix_fish:"Риболовля|Fishing|Pêche|Angeln|钓鱼|Pesca|Pesca|Wędkowanie|Pesca|釣り|낚시|Balık tutma|Memancing|मछली पकड़ना|Câu cá|ตกปลา|Vissen|صيد السمك|মাছ ধরা|Pangingisda",
+p17_ix_dig:"Копати|Dig|Creuser|Graben|挖掘|Cavar|Scava|Kop|Cavar|掘る|파기|Kaz|Gali|खोदो|Đào|ขุด|Graven|احفر|খোঁড়ো|Maghukay",
+p17_ix_cache:"Схованка|Cache|Cachette|Versteck|藏宝点|Escondite|Nascondiglio|Skrytka|Esconderijo|隠し場所|은닉처|Zula|Simpanan|छिपा खज़ाना|Kho giấu|ที่ซ่อนของ|Schuilplaats|مخبأ|গোপন ভাণ্ডার|Taguan",
+p17_ix_take:"Зібрати|Gather|Récolter|Sammeln|采集|Recoger|Raccogli|Zbierz|Coletar|採集|채집|Topla|Kumpulkan|इकट्ठा करो|Thu thập|เก็บ|Verzamelen|اجمع|সংগ্রহ করো|Tipunin",
+p17_ix_gaze:"Дивись на руну|Look at the rune|Regarde la rune|Sieh die Rune an|注视符文|Mira la runa|Guarda la runa|Patrz na runę|Olhe para a runa|ルーンを見つめる|룬을 바라보기|Runeye bak|Tatap rune itu|रून को देखो|Nhìn vào cổ tự|มองรูน|Kijk naar de rune|انظر إلى الرون|রুনের দিকে তাকাও|Tingnan ang rune",
+p17_ix_chase:"Спіймай скриню|Catch the chest|Attrape le coffre|Fang die Truhe|抓住宝箱|Atrapa el cofre|Prendi lo scrigno|Złap skrzynię|Pegue o baú|宝箱を捕まえろ|상자를 잡아라|Sandığı yakala|Tangkap petinya|संदूक पकड़ो|Bắt lấy rương|จับหีบให้ได้|Vang de kist|أمسك الصندوق|সিন্দুক ধরো|Hulihin ang baul",
+p17_ix_need:"Потрібно: {n}|Needs: {n}|Requis : {n}|Benötigt: {n}|需要：{n}|Requiere: {n}|Serve: {n}|Wymaga: {n}|Requer: {n}|必要：{n}|필요: {n}|Gerekli: {n}|Perlu: {n}|ज़रूरी: {n}|Cần: {n}|ต้องใช้: {n}|Nodig: {n}|يتطلب: {n}|প্রয়োজন: {n}|Kailangan: {n}",
+p17_ix_el:"стихія меча або форма|a sword element or a form|un élément d'épée ou une forme|ein Schwertelement oder eine Gestalt|剑的元素或形态|un elemento de espada o una forma|un elemento della spada o una forma|żywioł miecza lub forma|um elemento da espada ou uma forma|剣の属性か変身|검의 원소나 형태|kılıç elementi ya da bir form|elemen pedang atau wujud|तलवार का तत्व या रूप|nguyên tố kiếm hoặc hình thái|ธาตุของดาบหรือร่างแปลง|een zwaardelement of een gedaante|عنصر السيف أو هيئة|তলোয়ারের মৌল বা রূপ|elemento ng espada o anyo",
+p17_log:"Останні дії|Recent actions|Actions récentes|Letzte Aktionen|最近动作|Acciones recientes|Azioni recenti|Ostatnie działania|Ações recentes|最近の行動|최근 행동|Son eylemler|Aksi terbaru|हाल की गतिविधियाँ|Hành động gần đây|การกระทำล่าสุด|Recente acties|آخر الأفعال|সাম্প্রতিক কাজ|Mga huling ginawa",
+p17_logE:"Поки нічого|Nothing yet|Rien pour l'instant|Noch nichts|暂无|Nada aún|Ancora niente|Na razie nic|Nada ainda|まだ何もない|아직 없음|Henüz yok|Belum ada|अभी कुछ नहीं|Chưa có gì|ยังไม่มี|Nog niets|لا شيء بعد|এখনও কিছু নেই|Wala pa",
+p17_fxLo:"Менше ефектів|Fewer effects|Moins d'effets|Weniger Effekte|减少特效|Menos efectos|Meno effetti|Mniej efektów|Menos efeitos|エフェクト控えめ|효과 줄이기|Daha az efekt|Kurangi efek|कम इफ़ेक्ट|Ít hiệu ứng hơn|ลดเอฟเฟกต์|Minder effecten|مؤثرات أقل|কম ইফেক্ট|Mas kaunting epekto",
+p17_fxLoH:"Слабше тремтіння, спалахи й частинки|Less shaking, flashes and particles|Moins de secousses, de flashs et de particules|Weniger Wackeln, Blitze und Partikel|更少的震动、闪光和粒子|Menos temblor, destellos y partículas|Meno scosse, lampi e particelle|Mniej drgań, błysków i cząsteczek|Menos tremor, clarões e partículas|揺れ・閃光・粒子を抑える|흔들림, 섬광, 입자 감소|Daha az sarsıntı, parlama ve parçacık|Lebih sedikit guncangan, kilatan, dan partikel|कम झटके, चमक और कण|Ít rung, chớp sáng và hạt hơn|ลดการสั่น แสงวาบ และอนุภาค|Minder schudden, flitsen en deeltjes|اهتزاز وومضات وجسيمات أقل|কম কাঁপুনি, ঝলক ও কণা|Mas kaunting yanig, kislap at particle",
+n17a1:"🎯 Приціл підказує ціль: червоний — ворог, жовтий — предмет, зелений — здобич. Біля предметів видно, що станеться і чого бракує. У паузі є журнал останніх дій, у налаштуваннях — «Менше ефектів». Кроки звучать по-різному на камені, траві, піску, снігу й кризі, у підземеллях сильніша луна, перед дивом світ затихає, ворожі удари мають свої звуки-попередження, після сильного ворога лунає відлуння, а музика гучнішає в бою|🎯 The crosshair reads your target: red is a foe, yellow an object, green loot. Near objects you see what will happen and what is missing. The pause menu keeps your recent actions, the settings have «Fewer effects». Steps sound different on stone, grass, sand, snow and ice, dungeons echo more, the world goes quiet before a wonder, enemy blows have warning sounds, a strong foe leaves an echo, and the music swells in battle|🎯 Le viseur lit ta cible : rouge pour un ennemi, jaune pour un objet, vert pour le butin. Près des objets, tu vois ce qui va se passer et ce qui manque. La pause garde tes actions récentes, les réglages proposent « Moins d'effets ». Les pas sonnent différemment sur la pierre, l'herbe, le sable, la neige et la glace, les donjons résonnent davantage, le monde se tait avant un prodige, les coups ennemis ont des sons d'alerte, un ennemi puissant laisse un écho et la musique monte au combat|🎯 Das Fadenkreuz zeigt dein Ziel: Rot ist ein Feind, Gelb ein Objekt, Grün Beute. Bei Objekten siehst du, was passiert und was fehlt. Im Pausenmenü stehen deine letzten Aktionen, in den Einstellungen gibt es „Weniger Effekte“. Schritte klingen auf Stein, Gras, Sand, Schnee und Eis verschieden, Verliese hallen stärker, vor einem Wunder wird die Welt still, feindliche Schläge haben Warnklänge, ein starker Feind hinterlässt ein Echo und die Musik schwillt im Kampf an|🎯 准星会识别目标：红色是敌人，黄色是物体，绿色是战利品。靠近物体时能看到会发生什么以及缺少什么。暂停菜单记录最近的动作，设置里新增“减少特效”。脚步在石头、草地、沙地、雪地和冰面上声音各不相同，地牢回声更强，奇观出现前世界会安静下来，敌人的攻击有预警音，强敌倒下会留下回响，战斗时音乐会变得激昂|🎯 La mira lee tu objetivo: rojo es un enemigo, amarillo un objeto, verde botín. Cerca de los objetos ves qué pasará y qué falta. La pausa guarda tus acciones recientes y los ajustes tienen «Menos efectos». Los pasos suenan distinto en piedra, hierba, arena, nieve y hielo, las mazmorras tienen más eco, el mundo calla antes de un prodigio, los golpes enemigos tienen sonidos de aviso, un enemigo fuerte deja un eco y la música crece en combate|🎯 Il mirino legge il bersaglio: rosso è un nemico, giallo un oggetto, verde il bottino. Vicino agli oggetti vedi cosa succederà e cosa manca. La pausa conserva le azioni recenti, le impostazioni hanno «Meno effetti». I passi suonano diversi su pietra, erba, sabbia, neve e ghiaccio, i dungeon rimbombano di più, il mondo tace prima di un prodigio, i colpi nemici hanno suoni d'avviso, un nemico forte lascia un'eco e la musica cresce in battaglia|🎯 Celownik rozpoznaje cel: czerwony to wróg, żółty przedmiot, zielony łup. Przy przedmiotach widać, co się stanie i czego brakuje. Pauza pokazuje ostatnie działania, w ustawieniach jest „Mniej efektów”. Kroki brzmią inaczej na kamieniu, trawie, piasku, śniegu i lodzie, lochy mają mocniejsze echo, przed cudem świat cichnie, ciosy wrogów mają dźwięki ostrzegawcze, silny wróg zostawia echo, a muzyka rośnie w walce|🎯 A mira lê o alvo: vermelho é inimigo, amarelo um objeto, verde o saque. Perto dos objetos você vê o que vai acontecer e o que falta. A pausa guarda suas ações recentes e as configurações têm «Menos efeitos». Os passos soam diferentes em pedra, grama, areia, neve e gelo, as masmorras ecoam mais, o mundo silencia antes de um prodígio, os golpes inimigos têm sons de alerta, um inimigo forte deixa um eco e a música cresce na batalha|🎯 照準が対象を見分ける：赤は敵、黄は物、緑は戦利品。物の近くでは何が起きるか、何が足りないかが見える。ポーズに最近の行動を記録、設定に「エフェクト控えめ」を追加。足音は石・草・砂・雪・氷で変わり、ダンジョンはよく響き、奇跡の前に世界が静まり、敵の攻撃には警告音があり、強敵は残響を残し、戦闘では音楽が高まる|🎯 조준점이 대상을 알려 준다: 빨강은 적, 노랑은 물체, 초록은 전리품. 물체 근처에서는 무슨 일이 일어날지, 무엇이 부족한지 보인다. 일시정지에 최근 행동 기록, 설정에 「효과 줄이기」 추가. 발소리는 돌, 풀, 모래, 눈, 얼음에서 다르게 들리고, 던전은 더 울리며, 기적 전에는 세상이 조용해지고, 적의 공격에는 경고음이 있고, 강한 적은 메아리를 남기며, 전투에서는 음악이 커진다|🎯 Nişangâh hedefini gösterir: kırmızı düşman, sarı nesne, yeşil ganimet. Nesnelerin yanında ne olacağını ve neyin eksik olduğunu görürsün. Duraklatma menüsü son eylemlerini tutar, ayarlarda «Daha az efekt» var. Adımlar taşta, çimde, kumda, karda ve buzda farklı ses çıkarır, zindanlar daha çok yankılanır, bir mucizeden önce dünya susar, düşman darbelerinin uyarı sesleri var, güçlü bir düşman yankı bırakır ve müzik savaşta yükselir|🎯 Bidikan membaca sasaranmu: merah musuh, kuning benda, hijau jarahan. Di dekat benda terlihat apa yang akan terjadi dan apa yang kurang. Jeda menyimpan aksi terbaru, pengaturan punya «Kurangi efek». Langkah terdengar berbeda di batu, rumput, pasir, salju, dan es, ruang bawah tanah lebih bergema, dunia hening sebelum keajaiban, serangan musuh punya suara peringatan, musuh kuat meninggalkan gema, dan musik membesar saat bertarung|🎯 निशाना लक्ष्य पहचानता है: लाल दुश्मन, पीला वस्तु, हरा लूट। वस्तुओं के पास दिखता है कि क्या होगा और क्या कम है। विराम में हाल की गतिविधियाँ हैं, सेटिंग्स में «कम इफ़ेक्ट»। कदम पत्थर, घास, रेत, बर्फ़ और हिम पर अलग सुनाई देते हैं, तहख़ानों में गूँज ज़्यादा है, चमत्कार से पहले दुनिया शांत हो जाती है, दुश्मन के वार की चेतावनी ध्वनि है, ताक़तवर दुश्मन गूँज छोड़ता है और लड़ाई में संगीत तेज़ होता है|🎯 Tâm ngắm nhận ra mục tiêu: đỏ là kẻ thù, vàng là đồ vật, xanh là chiến lợi phẩm. Gần đồ vật sẽ thấy điều sắp xảy ra và còn thiếu gì. Màn tạm dừng lưu hành động gần đây, cài đặt có «Ít hiệu ứng hơn». Tiếng bước khác nhau trên đá, cỏ, cát, tuyết và băng, hầm ngục vang hơn, thế giới lặng đi trước kỳ quan, đòn đánh của địch có âm cảnh báo, kẻ địch mạnh để lại tiếng vọng và nhạc dâng lên khi chiến đấu|🎯 เป้าเล็งบอกเป้าหมาย: แดงคือศัตรู เหลืองคือสิ่งของ เขียวคือของดรอป ใกล้สิ่งของจะเห็นว่าจะเกิดอะไรและขาดอะไร เมนูหยุดเก็บการกระทำล่าสุด การตั้งค่ามี «ลดเอฟเฟกต์» เสียงเท้าต่างกันบนหิน หญ้า ทราย หิมะ และน้ำแข็ง ดันเจี้ยนก้องมากขึ้น โลกเงียบลงก่อนเกิดปาฏิหาริย์ การโจมตีของศัตรูมีเสียงเตือน ศัตรูแกร่งทิ้งเสียงสะท้อน และดนตรีดังขึ้นในการต่อสู้|🎯 Het vizier herkent je doel: rood is een vijand, geel een voorwerp, groen buit. Bij voorwerpen zie je wat er gebeurt en wat ontbreekt. De pauze bewaart je recente acties, de instellingen hebben «Minder effecten». Stappen klinken anders op steen, gras, zand, sneeuw en ijs, kerkers galmen meer, de wereld wordt stil voor een wonder, vijandelijke slagen hebben waarschuwingsgeluiden, een sterke vijand laat een echo achter en de muziek zwelt aan in gevecht|🎯 يقرأ المؤشر هدفك: الأحمر عدو، والأصفر غرض، والأخضر غنيمة. قرب الأغراض ترى ما سيحدث وما الذي ينقص. قائمة الإيقاف تحفظ آخر أفعالك، وفي الإعدادات «مؤثرات أقل». تختلف أصوات الخطى على الحجر والعشب والرمل والثلج والجليد، وتزداد الأصداء في الزنزانات، ويهدأ العالم قبل الأعجوبة، ولضربات الأعداء أصوات تحذير، ويترك العدو القوي صدى، وتعلو الموسيقى في القتال|🎯 নিশানা লক্ষ্য চেনায়: লাল শত্রু, হলুদ বস্তু, সবুজ লুট। বস্তুর কাছে দেখা যায় কী হবে আর কী কম আছে। বিরতিতে সাম্প্রতিক কাজের তালিকা, সেটিংসে «কম ইফেক্ট»। পাথর, ঘাস, বালি, তুষার ও বরফে পায়ের শব্দ আলাদা, অন্ধকূপে প্রতিধ্বনি বেশি, বিস্ময়ের আগে পৃথিবী নীরব হয়, শত্রুর আঘাতের সতর্ক-শব্দ আছে, শক্তিশালী শত্রু প্রতিধ্বনি রেখে যায়, আর লড়াইয়ে সংগীত জোরালো হয়|🎯 Binabasa ng crosshair ang target: pula ang kaaway, dilaw ang bagay, berde ang loot. Malapit sa mga bagay, makikita kung ano ang mangyayari at ano ang kulang. Nasa pause ang mga huling ginawa, at may «Mas kaunting epekto» sa settings. Iba ang tunog ng hakbang sa bato, damo, buhangin, niyebe at yelo, mas umaalingawngaw sa mga dungeon, tumatahimik ang mundo bago ang himala, may babalang tunog ang mga atake ng kaaway, nag-iiwan ng alingawngaw ang malakas na kaaway, at lumalakas ang musika sa laban"
+};
+for(const k in P17Tsrc)T8[k]=S8(P17Tsrc[k]);
+NWC.n17a1="ui";NEWS.unshift({v:"2026.11.07",ic:"🎯",k:["n17a1"]});
+/* ---- 74 + 78: what an object will do, and what it still needs (shown above it when you face it) ---- */
+const IX_SKIP=new Set(["tmark","fly","lamp"]);
+function ixInfo(o){const k=o.k;
+ if(k==="node")return{ic:matIc(o.m),s:t("p17_ix_take")};
+ if(k==="door"||k==="bells"||k==="floor"||k==="star"||k==="rune")return{ic:"🧩",s:t("p17_ix_puz")};
+ if(k==="cart")return{ic:"🧳",s:t("p17_ix_shop")};
+ if(k==="trader"){const ok=hasMat({iron:5});return{ic:"🧙",s:ok?t("p17_ix_look"):t("p17_ix_need",{n:"5 "+matIc("iron")}),no:!ok}}
+ if(k==="palm"){const ok=(eq.weapon&&(eq.weapon.el|0)>0)||(MG.fm&&MG.fm.a&&MG.fm.t>0);return{ic:"🖐️",s:ok?t("p17_ix_look"):t("p17_ix_need",{n:t("p17_ix_el")}),no:!ok}}
+ if(k==="runc")return{ic:"📦",s:t("p17_ix_chase")};
+ if(k==="crate")return{ic:"🪓",s:t("p17_ix_break")};
+ if(k==="fish")return{ic:"🎣",s:t("p17_ix_fish")};
+ if(k==="dig")return{ic:"⛏️",s:t("p17_ix_dig")};
+ if(k==="cache")return{ic:"📦",s:t("p17_ix_cache")};
+ if(k==="gaze")return{ic:"👁️",s:t("p17_ix_gaze")};
+ if(o.ix)return o.ix(o);
+ return{ic:"✋",s:t("p17_ix_look")}}
+let ixO=null;
+function ixPick(){const h=hero,f=hdir();let best=null,bd=1e9;
+ for(const o of mgObjs){if(o.used||IX_SKIP.has(o.k))continue;const dx=o.x-h.x,dz=(o.z-h.z)*ZS,d=Math.hypot(dx,dz);if(d>150||d<1)continue;if((dx*f.x+dz*f.z)/d<.5)continue;if(d<bd){bd=d;best=o}}
+ ixO=best;return best}
+/* 71: the crosshair also tells an object (yellow) and loot lying near (green) apart from a foe (red) */
+function aimKind(){if(ixO&&Math.hypot(ixO.x-hero.x,(ixO.z-hero.z)*ZS)<110)return 1;const f=hdir();for(const k of loots){if(k.mag||k.dead)continue;const dx=k.x-hero.x,dz=(k.z-hero.z)*ZS,d=Math.hypot(dx,dz);if(d<90&&d>1&&(dx*f.x+dz*f.z)/d>.6)return 2}return 0}
+function p17Overlay(c,h){if(!isFP()||h.state==="dead"||!G3)return;const o=ixPick();if(!o)return;const [x,y,z]=pj(o.x,o.z,o.k==="node"?30:56);if(z>1||x<0||x>LW)return;const I=ixInfo(o);if(!I)return;
+ const s=I.ic+" "+I.s;c.save();c.font="700 11px system-ui,sans-serif";c.textAlign="center";const w=c.measureText(s).width+16,yy=y-8;c.globalAlpha=.92;c.fillStyle=I.no?"rgba(70,10,16,.86)":"rgba(14,8,12,.82)";c.beginPath();c.roundRect(x-w/2,yy-15,w,20,10);c.fill();
+ c.strokeStyle=I.no?"#ff6b7a":"rgba(255,211,78,.7)";c.lineWidth=1;c.stroke();c.fillStyle=I.no?"#ffb3bb":"#ffe9b0";c.fillText(s,x,yy-1);c.restore()}
+/* ---- 73: recent actions (gold, gems, materials and items that came or went), shown in the pause menu ---- */
+const RLOG=[];let rlSnap=null,rlT=0,rlG=0;
+function rlAdd(s){const d=new Date(),tm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");RLOG.unshift({tm,s});if(RLOG.length>24)RLOG.length=24}
+function rlTick(dt){rlT-=dt;if(rlT>0)return;rlT=1.5;const m={};for(const k in SL.mat)m[k]=SL.mat[k]|0;const s={g:P.gold|0,gm:gem.n|0,m};
+ if(rlSnap){const dg=s.g-rlSnap.g;if(dg<0)rlAdd("−"+nfm(-dg)+" 🪙");else{rlG+=dg;if(rlG>=150){rlAdd("+"+nfm(rlG)+" 🪙");rlG=0}}
+  const dm=s.gm-rlSnap.gm;if(dm)rlAdd((dm>0?"+":"−")+Math.abs(dm)+" 💎");
+  const up=[],dn=[];for(const k in m){const d=m[k]-(rlSnap.m[k]|0);if(d>0)up.push(matIc(k)+d);else if(d<0)dn.push(matIc(k)+(-d))}
+  if(up.length)rlAdd("+ "+up.join(" "));if(dn.length)rlAdd("− "+dn.join(" "))}
+ rlSnap=s}
+{const _ai=addItem;addItem=function(it){_ai(it);try{rlAdd(SLOTS[it.s].ic+" "+itemName(it))}catch(e){}}}
+{const _mg=mgGiveItem;mgGiveItem=function(it){_mg(it);try{rlAdd(SLOTS[it.s].ic+" "+itemName(it))}catch(e){}}}
+const escH=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function rlFill(){const el=$("rlList");if(!el)return;el.innerHTML=RLOG.length?RLOG.map(r=>`<div class="rlR"><small>${r.tm}</small><span>${escH(r.s)}</span></div>`).join(""):`<p class="m">${t("p17_logE")}</p>`}
+{const _fp=fillPHero;fillPHero=function(){_fp();rlFill()}}
+/* ---- 79: fewer effects (shake, flashes, impact frames, screen blood, particles) ---- */
+const fxLo=()=>!!S.fxLo;
+{const _fs=fillSettings;fillSettings=function(){_fs();tglSet("fxLoB",fxLo())}}
+$("fxLoB").onclick=()=>{S.fxLo=!S.fxLo;fillSettings();save();SFX.ui()};
+{const _sb=addScreenBlood;addScreenBlood=function(d){if(fxLo())return;_sb(d)}}
+function fxLoTick(){if(!fxLo())return;shake=Math.min(shake,1.5);flashA=Math.min(flashA,.2);if(parts.length>200)parts.splice(0,parts.length-200)}
+/* ---- 80: the game also saves when the page is hidden (the phone screen turns off, another app opens) ---- */
+document.addEventListener("visibilitychange",()=>{if(document.hidden)try{save()}catch(e){}});
+/* ---- 41: footsteps by ground: stone, grass, sand, snow, ice/crystal, wet shore ---- */
+function stepMat(){if(MG&&MG.run)return"stone";const B=BIOMES[biomeIdx()]||{},p=B.props||"";
+ if(B.amb==="snow")return"snow";if(p==="ice"||p==="crystal")return"ice";if(p==="water"||p==="coast"||p==="oasis")return"wet";if(p==="mesa"||p==="lava"||p==="bones")return"sand";
+ if(p==="ruins"||p==="gothic"||p==="temple"||p==="pagoda"||p==="torii"||p==="grave")return"stone";return"grass"}
+function p17Step(){const m=stepMat();
+ if(m==="snow"){SFX.crunch();return}
+ if(m==="stone"){smp("step",.22,1.08)||noise(.05,.06,"lowpass",400);noise(.03,.035,"highpass",2600);return}
+ if(m==="grass"){noise(.09,.05,"bandpass",900,380);smp("step",.07,.82);return}
+ if(m==="sand"){noise(.13,.06,"lowpass",1400,260);return}
+ if(m==="ice"){smp("step",.12,1.32)||noise(.05,.05,"lowpass",500);tone(2300+rnd(-200,200),.06,"sine",.008);return}
+ noise(.11,.06,"bandpass",1700,600);smp("step",.06,.9)}
+/* ---- 44: a short warning sound for each kind of enemy blow (rate-limited, soft) ---- */
+let cueT=0;
+function p17Cue(e){if(realT-cueT<.28||Math.abs(e.x-hero.x)>420)return;cueT=realT;const k=e.atkKind;
+ if(e.boss){tone(110,.4,"sawtooth",.035,165);return}
+ if(k==="charge")tone(70,.35,"sawtooth",.04,140);else if(k==="cast")tone(1250,.22,"sine",.02,1800);else if(k==="slam")tone(90,.28,"triangle",.05,55);
+ else if(k==="shoot"||k==="web")noise(.05,.05,"highpass",3200);else if(k==="swoop")whoosh(.3,.05,500,1500);else if(k==="breath")noise(.3,.04,"bandpass",400,900);else tone(520,.07,"square",.015,380)}
+/* ---- 45: the world goes quiet for a moment before a wonder appears (sound effects and music duck) ---- */
+let hushT=0;
+const p17Hush=s=>{hushT=Math.max(hushT,s||2.6)};
+/* ---- 46: after a strong foe falls its voice echoes away ---- */
+function p17Echo(e){[.35,.75,1.2].forEach((d,i)=>setTimeout(()=>{if(!S.sfx)return;const v=S.sfx;S.sfx=Math.max(1,Math.round(v*[.4,.2,.09][i]));try{enemyVoice(e,"die")}catch(_){}S.sfx=v},d*1000))}
+/* ---- 42: a heavy blow sends an echo toward the nearest hidden thing (left or right ear, sooner when near) ---- */
+const ECHO_K=new Set(["door","bells","floor","star","gaze","hollow","book","mirror","trader","palm","runc","cph","throne","cache","statue","feath","hour","ghostv","dig"]);
+function p17Ping(){const a=ac();if(!a||!S.sfx||!isFP())return;let best=null,bd=1e9;for(const o of mgObjs){if(o.used||!ECHO_K.has(o.k))continue;const d=Math.hypot(o.x-hero.x,(o.z-hero.z)*ZS);if(d<bd&&d<1100){bd=d;best=o}}if(!best)return;
+ const ang=Math.atan2(-(best.z-hero.z)*ZS,best.x-hero.x)-(hero.ang||0),pan=clamp(-Math.sin(ang),-1,1),dl=.12+bd/1100*.6,t0=a.currentTime+dl;
+ try{const o=a.createOscillator(),g=a.createGain(),p=a.createStereoPanner?a.createStereoPanner():null;o.type="sine";o.frequency.setValueAtTime(660,t0);o.frequency.exponentialRampToValueAtTime(520,t0+.35);g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.05*S.sfx/100*(1-bd/1400),t0+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+.45);o.connect(g);if(p){p.pan.value=pan;g.connect(p);p.connect(bus())}else g.connect(bus());o.start(t0);o.stop(t0+.5)}catch(e){}}
+/* ---- 43 + 49 + 50: a quiet melody near wonders, echo that fits the place, music that follows the danger ---- */
+const MZ_SC={statue:[60,63,67,70],hollow:[62,65,69,72],book:[64,67,71,74],mirror:[59,62,66,69],ghostv:[57,60,63,67],throne:[55,59,62,66],door:[61,64,68,71]};
+let mzT=0,mzI=0;
+function p17Sound(dt){
+ if(hushT>0)hushT-=dt;const hk=hushT>0?.22:1;hushK+=(hk-hushK)*Math.min(1,dt*(hk<hushK?2.5:1.2));
+ if(sfxIn&&sfxIn.gain&&AC)sfxIn.gain.setTargetAtTime(hushK,AC.currentTime,.08);
+ const R=MG&&MG.run,dun=R&&(R.m==="dun"||R.m==="sec"||R.m==="dboss"),wet=dun?.42:R?.26:biomeIdx()>=DK0?.24:nightK()>.6?.18:.1;
+ if(revWet&&AC)revWet.gain.setTargetAtTime(wet,AC.currentTime,.5);
+ let n=0;for(const e of enemies)if(e.state!=="dead"&&e.state!=="roam"&&!e.passive&&Math.abs(e.x-hero.x)<360)n++;
+ const mk=(n?1+.14*Math.min(3,n):.85)*hushK;musK+=(mk-musK)*Math.min(1,dt*.8);
+ mzT-=dt;if(mzT>0||!S.musicOn||!isFP()||locked)return;mzT=1.5;let o=null;for(const q of mgObjs)if(!q.used&&MZ_SC[q.k]&&Math.hypot(q.x-hero.x,(q.z-hero.z)*ZS)<280){o=q;break}
+ if(o){const sc=MZ_SC[o.k];mnote(sc[mzI++%sc.length]+12,1.4,"sine",.018)}}
+function p17Tick(dt){fxLoTick();rlTick(dt);p17Sound(dt)}
 
 /* ============ START ============ */
 if(!(P.hp>0))P.hp=P.maxhp;
