@@ -4,6 +4,7 @@
   Never suggest steps that need a PC: terminal, Claude Desktop, `claude remote-control`, adb, USB cable.
   Give phone-friendly ways instead (GitHub links, the browser, the Claude app).
 - Talk in Ukrainian, short and simple (caveman style).
+- The owner's name is Ростик: call him that (not «господар» or «власник»).
 - The game is one file: `index.html` (Three.js, first person only, open world, 20 languages: never add Russian).
 - When work is done: commit, push, open a PR, merge it into `main`, and give the link where the branch can be deleted.
 - Do not publish the game on Netlify: the owner asked to take it down.
