@@ -17505,7 +17505,7 @@ function cineStart(fight){if(CINE.on||!G3||!T3||!isFP())return false;CINE.on=tru
  [196,247,294,392].forEach((f,i)=>tone(f,3.2,"sine",.035,0,i*.12));try{noise(2.4,.06,"lowpass",60,30)}catch(e){}return true}
 function cineEnd(skip){if(!CINE.on)return;CINE.on=false;if(G3&&G3.vm&&G3.vm.root&&!document.body.classList.contains("photoM"))G3.vm.root.visible=true;coWT=rnd(120,180);const c=$("m6c");c.classList.remove("in");document.body.classList.remove("cineOn");setTimeout(()=>{if(!CINE.on)c.className=""},1000);c.querySelectorAll(".tt").forEach(x=>x.classList.remove("on"));
  if(skip&&CINE.fight&&CO&&CO.mode==="far"){coAwake()}if(skip&&!CINE.fight&&CO&&(CO.mode==="far"))coDispose()}
-function p39Tick(dt){if(!LG)return;const h=hero;
+function p39Tick(dt){if(!LG)return;const h=hero;p39Hold(dt);
  /* start once per profile, when nothing else is on screen */
  if(!CINE.on&&!LG.m6i&&isFP()&&G3&&tutI<0&&!modalOpen&&!locked&&!(MG&&MG.run)&&h.state!=="dead"&&!mtFoes()&&!(CO&&CO.mode!=="far")){CINE.wait+=dt;if(CINE.wait>3){LG.m6i=1;save();cineStart(battleNo>=2)}}else if(!CINE.on)CINE.wait=0;
  if(!CINE.on)return;CINE.t+=dt;const T0=CINE.t,c=$("m6c");
@@ -17518,6 +17518,9 @@ function p39Tick(dt){if(!LG)return;const h=hero;
  if(CINE.st===2){let d=CINE.a0-h.ang;d=Math.atan2(Math.sin(d),Math.cos(d));h.ang+=d*Math.min(1,dt*1.6);syncAng()}
  if(T0>(CINE.fight?14.5:12))cineEnd(false)}
 {const _d=drawMinimap;drawMinimap=function(c,h){if(CINE.on){mmHide();return}return _d(c,h)}}
+/* on the first load after the update the opening wave waits for the intro (and its Colossus) */
+{const _s=startWave;startWave=function(){if(LG&&!LG.m6i&&!CINE.done0&&tutI<0&&battleNo>=2&&!(MG&&MG.run)){CINE.hold=1;CINE.holdT=0;return}return _s.apply(this,arguments)}}
+function p39Hold(dt){if(!CINE.hold)return;CINE.holdT+=dt;const busy=CINE.on||(CO&&CO.hp&&CO.mode!=="die"&&CO.mode!=="sinkN");if((!busy&&LG.m6i)||(CINE.holdT>120&&!CINE.on&&!(CO&&CO.hp))||(!G3&&CINE.holdT>20)){CINE.hold=0;CINE.done0=1;startWave()}}
 /* the replay must not start a fight: a far giant that sinks just goes away */
 {const _t=p37Tick;p37Tick=function(dt){if(CO&&CO.noRise&&CO.mode==="sinkfar"&&CO.dT>3.2){coDispose();return}return _t(dt)}}
 /* no attacks while the intro plays */
