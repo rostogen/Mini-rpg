@@ -15556,7 +15556,7 @@ function p17Sound(dt){
  const mk=(n?1+.14*Math.min(3,n):.85)*hushK;musK+=(mk-musK)*Math.min(1,dt*.8);
  mzT-=dt;if(mzT>0||!S.musicOn||!isFP()||locked)return;mzT=1.5;let o=null;for(const q of mgObjs)if(!q.used&&MZ_SC[q.k]&&Math.hypot(q.x-hero.x,(q.z-hero.z)*ZS)<280){o=q;break}
  if(o){const sc=MZ_SC[o.k];mnote(sc[mzI++%sc.length]+12,1.4,"sine",.018)}}
-function p17Tick(dt){p36Tick(dt);p38Tick(dt);p37Tick(dt);p35Tick(dt);p34Tick(dt);p33Tick(dt);p32Tick(dt);p31Tick(dt);p30Tick(dt);p29Tick(dt);p27Tick(dt);p26Tick(dt);p25Tick(dt);p24Tick(dt);p23Tick(dt);p22Tick(dt);p21Tick(dt);p20Tick(dt);p19Tick(dt);p18Tick(dt);p17Tick5(dt);p17WorldTick(dt);p17CombatTick(dt);p17EnemyTick(dt);fxLoTick();rlTick(dt);p17Sound(dt)}
+function p17Tick(dt){p39Tick(dt);p36Tick(dt);p38Tick(dt);p37Tick(dt);p35Tick(dt);p34Tick(dt);p33Tick(dt);p32Tick(dt);p31Tick(dt);p30Tick(dt);p29Tick(dt);p27Tick(dt);p26Tick(dt);p25Tick(dt);p24Tick(dt);p23Tick(dt);p22Tick(dt);p21Tick(dt);p20Tick(dt);p19Tick(dt);p18Tick(dt);p17Tick5(dt);p17WorldTick(dt);p17CombatTick(dt);p17EnemyTick(dt);fxLoTick();rlTick(dt);p17Sound(dt)}
 
 /* ---- pack 2: combat. Parry, momentum, blade clash, breaking away, worn armour, back to the wall, an overheated blade, directional finishers, the broken rhythm, the last chance ---- */
 Object.assign(P17Tsrc,{
@@ -17384,7 +17384,7 @@ function mtBuild(){if(!G3||!T3||!G3.vmScene)return null;const T=T3,K=MTSK.find(x
  g.position.set(0,-3.9,-3.6);g.visible=false;G3.vmScene.add(g);MT.g=g;return g}
 function mtDrop(){if(!MT.g)return;G3&&G3.vmScene&&G3.vmScene.remove(MT.g);MT.g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose()});MT.g=null;MT.sk=""}
 const mtFoes=()=>enemies.some(e=>e.state!=="dead"&&!(e.wild&&e.state==="roam")&&!e.passive&&Math.hypot(e.x-hero.x,(e.z-hero.z)*ZS)<320);
-function mtOn(){if(MT.on)return;if(!isFP()||hero.state==="dead"||(MG&&MG.run)||locked){SFX.buzz();return}if(mtFoes()){toast("🐎 "+t("p38_near"),"#ffb03a");SFX.buzz();return}
+function mtOn(){if(MT.on||CINE.on)return;if(!isFP()||hero.state==="dead"||(MG&&MG.run)||locked){SFX.buzz();return}if(mtFoes()){toast("🐎 "+t("p38_near"),"#ffb03a");SFX.buzz();return}
  if(CO&&CO.hp&&CO.mode!=="die"){toast("🐎 "+t("p38_near"),"#ffb03a");SFX.buzz();return}
  MT.on=true;MT.t=0;recalc();whoosh(.7,.12,300,1500);for(let i=0;i<5;i++)tone(330+i*110,.25,"sine",.03,0,i*.06);puff(hero.x,hero.z,"#bfe8ff");sparks(hero.x,hero.z,20,"#bfe8ff",30,1);cbTxt("🐎 "+t("p38_on"),"#bfe8ff");mtBtn()}
 function mtOff(q){if(!MT.on)return;MT.on=false;recalc();if(!q){puff(hero.x,hero.z,"#bfe8ff");cbTxt("🐎 "+t("p38_off"),"#bfe8ff")}mtBtn()}
@@ -17481,6 +17481,50 @@ function skyBolt(){const T=T3,h=hero;let tx,tz,foe=null;
 function skyBoltTick(dt){if(wxNow.k==="storm"&&wxNow.lt>SKY.lt0+1&&isFP()&&!(MG&&MG.run))skyBolt();SKY.lt0=wxNow.lt;
  const B=SKY.bolt;if(!B)return;B.t+=dt;B.mat.opacity=B.t<.32?(Math.random()<.7?1:.25):Math.max(0,1-(B.t-.32)*5);if(B.t>.55){G3.scene.remove(B.g);B.mat.dispose();B.geo0.dispose();SKY.bolt=null}}
 function p36Tick(dt){if(!G3||!T3||!isFP())return;skyInit();skyAur(dt);skyStars(dt);skyBow(dt);skyBirds(dt);skyBoltTick(dt)}
+
+/* ============ P39: MEGA 6.0 intro ============ */
+const P39Tsrc={
+p39_t2:"Пробудження Колосів|Awakening of the Colossi|L'éveil des Colosses|Erwachen der Kolosse|巨像觉醒|El despertar de los Colosos|Il risveglio dei Colossi|Przebudzenie Kolosów|O Despertar dos Colossos|巨像の目覚め|거상의 각성|Devlerin Uyanışı|Kebangkitan Kolosus|महाकायों का जागरण|Người Khổng Lồ Thức Tỉnh|การตื่นของยักษ์|Het ontwaken der Kolossen|صحوة العمالقة|মহাকায়দের জাগরণ|Paggising ng mga Koloso",
+p39_t3:"🗿 Колоси · 🐎 Дух-скакун · ✨ Живе небо|🗿 Colossi · 🐎 Spirit steed · ✨ Living sky|🗿 Colosses · 🐎 Destrier spirituel · ✨ Ciel vivant|🗿 Kolosse · 🐎 Geisterross · ✨ Lebendiger Himmel|🗿 巨像 · 🐎 灵魂骏马 · ✨ 活的天空|🗿 Colosos · 🐎 Corcel espiritual · ✨ Cielo vivo|🗿 Colossi · 🐎 Destriero spirituale · ✨ Cielo vivo|🗿 Kolosy · 🐎 Duchowy rumak · ✨ Żywe niebo|🗿 Colossos · 🐎 Corcel espiritual · ✨ Céu vivo|🗿 巨像 · 🐎 霊馬 · ✨ 生きた空|🗿 거상 · 🐎 영혼의 준마 · ✨ 살아 있는 하늘|🗿 Devler · 🐎 Ruh atı · ✨ Canlı gökyüzü|🗿 Kolosus · 🐎 Kuda roh · ✨ Langit hidup|🗿 महाकाय · 🐎 आत्मा-अश्व · ✨ जीवंत आकाश|🗿 Người khổng lồ · 🐎 Linh mã · ✨ Bầu trời sống|🗿 ยักษ์ · 🐎 ม้าวิญญาณ · ✨ ท้องฟ้ามีชีวิต|🗿 Kolossen · 🐎 Geestenros · ✨ Levende hemel|🗿 العمالقة · 🐎 الجواد الروحي · ✨ سماء حية|🗿 মহাকায় · 🐎 আত্মা-ঘোড়া · ✨ জীবন্ত আকাশ|🗿 Mga Koloso · 🐎 Espiritung kabayo · ✨ Buhay na langit",
+p39_skip:"Пропустити ⏭|Skip ⏭|Passer ⏭|Überspringen ⏭|跳过 ⏭|Saltar ⏭|Salta ⏭|Pomiń ⏭|Pular ⏭|スキップ ⏭|건너뛰기 ⏭|Geç ⏭|Lewati ⏭|छोड़ें ⏭|Bỏ qua ⏭|ข้าม ⏭|Overslaan ⏭|تخطٍّ ⏭|এড়িয়ে যাও ⏭|Laktawan ⏭",
+p39_replay:"🎬 Заставка MEGA 6.0|🎬 MEGA 6.0 intro|🎬 Intro MEGA 6.0|🎬 MEGA 6.0 Intro|🎬 MEGA 6.0 开场|🎬 Intro de MEGA 6.0|🎬 Intro MEGA 6.0|🎬 Intro MEGA 6.0|🎬 Abertura MEGA 6.0|🎬 MEGA 6.0 オープニング|🎬 MEGA 6.0 인트로|🎬 MEGA 6.0 girişi|🎬 Intro MEGA 6.0|🎬 MEGA 6.0 परिचय|🎬 Mở đầu MEGA 6.0|🎬 อินโทร MEGA 6.0|🎬 MEGA 6.0 intro|🎬 مقدمة MEGA 6.0|🎬 MEGA 6.0 সূচনা|🎬 Intro ng MEGA 6.0"};
+for(const k in P39Tsrc)T8[k]=S8(P39Tsrc[k]);
+/* the MEGA 6.0 intro: letterbox, a Colossus on the horizon, titles, then it bursts from the ground in front of you (once per profile; replay from the Colossi tab without the fight) */
+const CINE={on:false,t:0,fight:false,a0:0,wait:0};
+{const st=document.createElement("style");st.textContent=`#m6c{position:absolute;inset:0;z-index:30;pointer-events:none;display:none}#m6c.on{display:block}
+#m6c .lb{position:absolute;left:0;right:0;height:13%;background:#000;transition:transform 1s ease}#m6c .lb.t{top:0;transform:translateY(-100%)}#m6c .lb.b{bottom:0;transform:translateY(100%)}#m6c.in .lb{transform:none}
+#m6c .tt{position:absolute;left:0;right:0;top:16%;text-align:center;font-family:Cinzel,Georgia,serif;color:#ffd98a;text-shadow:0 0 24px #ff9a2a,0 3px 8px #000;opacity:0;transition:opacity 1.2s,transform 1.6s;transform:scale(.92)}
+#m6c .tt.on{opacity:1;transform:none}#m6c .t1{font-size:min(16vw,84px);font-weight:900;letter-spacing:.06em}#m6c .t2{top:calc(16% + min(16vw,84px) + 8px);font-size:min(6.6vw,30px);color:#fff4d8;letter-spacing:.08em}
+#m6c .t3{top:auto;bottom:16%;font-family:system-ui,sans-serif;font-size:min(4.4vw,19px);color:#e8f0ff;text-shadow:0 2px 6px #000}
+#m6c .m6sk{position:absolute;right:12px;top:calc(13% + 10px);pointer-events:auto;padding:8px 14px;border-radius:20px;border:1px solid #ffffff55;background:#00000088;color:#fff;font:600 14px system-ui,sans-serif}
+body.cineOn #stage>*:not(#m6c):not(canvas):not(#gl3){opacity:0!important;pointer-events:none!important;transition:opacity .5s}`;document.head.appendChild(st)
+ const d=document.createElement("div");d.id="m6c";d.innerHTML=`<div class="lb t"></div><div class="lb b"></div><div class="tt t1">MEGA 6.0</div><div class="tt t2" id="m6cT2"></div><div class="tt t3" id="m6cT3"></div><button type="button" class="m6sk" id="m6cSk"></button>`;try{$("stage").appendChild(d)}catch(e){}
+ $("m6cSk").addEventListener("click",e=>{e.stopPropagation();cineEnd(true)});$("m6cSk").addEventListener("pointerdown",e=>e.stopPropagation())}
+function cineStart(fight){if(CINE.on||!G3||!T3||!isFP())return false;CINE.on=true;if(G3.vm&&G3.vm.root)G3.vm.root.visible=false;CINE.t=0;CINE.fight=!!fight;CINE.a0=hero.ang||0;CINE.st=0;if(MT.on)mtOff(true);
+ setTx("m6cT2",t("p39_t2"));setTx("m6cT3",t("p39_t3"));setTx("m6cSk",t("p39_skip"));const c=$("m6c");c.className="on";void c.offsetWidth;c.classList.add("in");document.body.classList.add("cineOn");
+ [196,247,294,392].forEach((f,i)=>tone(f,3.2,"sine",.035,0,i*.12));try{noise(2.4,.06,"lowpass",60,30)}catch(e){}return true}
+function cineEnd(skip){if(!CINE.on)return;CINE.on=false;if(G3&&G3.vm&&G3.vm.root&&!document.body.classList.contains("photoM"))G3.vm.root.visible=true;coWT=rnd(120,180);const c=$("m6c");c.classList.remove("in");document.body.classList.remove("cineOn");setTimeout(()=>{if(!CINE.on)c.className=""},1000);c.querySelectorAll(".tt").forEach(x=>x.classList.remove("on"));
+ if(skip&&CINE.fight&&CO&&CO.mode==="far"){coAwake()}if(skip&&!CINE.fight&&CO&&(CO.mode==="far"))coDispose()}
+function p39Tick(dt){if(!LG)return;const h=hero;
+ /* start once per profile, when nothing else is on screen */
+ if(!CINE.on&&!LG.m6i&&isFP()&&G3&&tutI<0&&!modalOpen&&!locked&&!(MG&&MG.run)&&h.state!=="dead"&&!mtFoes()&&!(CO&&CO.mode!=="far")){CINE.wait+=dt;if(CINE.wait>3){LG.m6i=1;save();cineStart(battleNo>=2)}}else if(!CINE.on)CINE.wait=0;
+ if(!CINE.on)return;CINE.t+=dt;const T0=CINE.t,c=$("m6c");
+ if(modalOpen||h.state==="dead"||(MG&&MG.run)){cineEnd(true);return}
+ if(CINE.st===0&&T0>.4){CINE.st=1;coWT=999;const K=coPick();coSpawn(K,"far");if(CO){const fd=hdir(),X=h.x+fd.x*1600,Z=h.z*ZS+fd.z*1600;CO.S=6.5;CO.dx=-fd.x;CO.dz=-fd.z;const nx=-CO.dz,nz=CO.dx;CO.ft.forEach(f=>{f.x=X+nx*f.s*9*CO.S;f.z=Z+nz*f.s*9*CO.S});CO.X=X;CO.Z=Z}}
+ /* look toward the giant, then back */
+ if(CO&&CO.mode==="far"){const ta=Math.atan2(-(CO.Z-h.z*ZS),CO.X-h.x);let d=ta-h.ang;d=Math.atan2(Math.sin(d),Math.cos(d));if(T0<9.5){h.ang+=d*Math.min(1,dt*1.1);h.pitch=lerp(h.pitch||0,.22,Math.min(1,dt*1.2))}syncAng()}
+ if(T0>1.4)c.querySelector(".t1").classList.add("on");if(T0>3.6)c.querySelector(".t2").classList.add("on");if(T0>6.2)c.querySelector(".t3").classList.add("on");
+ if(CINE.st===1&&T0>9.6){CINE.st=2;c.querySelectorAll(".tt").forEach(x=>x.classList.remove("on"));if(CINE.fight&&CO&&CO.mode==="far")coAwake();else if(CO&&CO.mode==="far"){CO.mode="sinkfar";CO.dT=0;CO.noRise=1}}
+ if(CINE.st===2){let d=CINE.a0-h.ang;d=Math.atan2(Math.sin(d),Math.cos(d));h.ang+=d*Math.min(1,dt*1.6);syncAng()}
+ if(T0>(CINE.fight?14.5:12))cineEnd(false)}
+{const _d=drawMinimap;drawMinimap=function(c,h){if(CINE.on){mmHide();return}return _d(c,h)}}
+/* the replay must not start a fight: a far giant that sinks just goes away */
+{const _t=p37Tick;p37Tick=function(dt){if(CO&&CO.noRise&&CO.mode==="sinkfar"&&CO.dT>3.2){coDispose();return}return _t(dt)}}
+/* no attacks while the intro plays */
+{const _a=tryAction;tryAction=function(a){if(CINE.on)return;return _a(a)}}
+{const _l=p17Load;p17Load=function(o){_l(o);if(o&&LG)LG.m6i=o.m6i?1:0}}
+{const _c=LG_R.col;LG_R.col=()=>_c()+`<h3 class="h3">🎬</h3><button class="btn" type="button" data-a="cine">${t("p39_replay")}</button>`}
+{const _a=p15Act;p15Act=function(a,v){if(a==="cine"){if(locked||(MG&&MG.run)||(CO&&CO.mode!=="far")){toast("⚔️ "+t("sl_zBusy"));SFX.buzz();return true}closeModal();setTimeout(()=>cineStart(false),300);return true}return _a(a,v)}}
 
 /* ============ START ============ */
 if(!(P.hp>0))P.hp=P.maxhp;
