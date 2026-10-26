@@ -241,7 +241,7 @@ body[data-gfx=lo] .dSp{display:none}body[data-gfx=lo] .dAura{animation:none!impo
 @media (prefers-reduced-motion:reduce){.modal.on .sheet,.modal.on,.bdg.on{animation:none}}
 .dpane{display:none}.dpane.on{display:block}
 .invWrap{display:grid;grid-template-columns:290px 1fr;gap:14px}
-@media(max-width:640px){.invWrap{grid-template-columns:1fr}}
+@media(max-width:640px){.invWrap{grid-template-columns:minmax(0,1fr)}}.invWrap>*{min-width:0}
 .eqGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .slot,.cell{position:relative;aspect-ratio:1;border-radius:12px;border:2px solid var(--rc,#3a2a36);background:radial-gradient(circle at 50% 38%,color-mix(in srgb,var(--rc,#2a1a26) 36%,#150c14),transparent 72%),linear-gradient(165deg,color-mix(in srgb,var(--rc,#2a1a26) 34%,#1c1119),#0b070b);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),inset 0 -10px 14px -8px rgba(0,0,0,.6);display:grid;place-items:center;font-size:26px;cursor:pointer;padding:0;color:inherit}
 .slot.empty{opacity:.45;font-size:22px;filter:grayscale(1);border-style:dashed}
@@ -513,7 +513,7 @@ body[data-gfx=lo] .cell::before,body[data-gfx=lo] .slot::before{animation:none}
 .defeat .acts{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
 .toast{position:absolute;left:50%;top:84px;transform:translate(-50%,-10px);opacity:0;background:var(--gold);color:#1a1108;padding:8px 16px;border-radius:99px;font-weight:700;transition:.22s;z-index:30;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-.toast{width:max-content;max-width:calc(100vw - 24px);white-space:normal;text-align:center}
+.toast{width:max-content;max-width:calc(100vw - 24px);white-space:normal;text-align:center}body:has(.modal.on) .toast{top:auto;bottom:calc(18px + env(safe-area-inset-bottom,0px))}
 @media (max-width:520px){.me{width:168px}.ibs{gap:4px}.ib{width:32px;height:32px;font-size:15px;border-radius:9px}.ibl{font-size:8px}.bossbar{top:124px}.rrow{grid-template-columns:106px 1fr auto;gap:6px;font-size:13px}.rrow b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 @media (prefers-reduced-motion:reduce){.banner.show{animation-duration:2.6s;animation-name:banFade}@keyframes banFade{0%,100%{opacity:0}10%,80%{opacity:1}}}
 /* graphics: soft vignette on High (Ultra does it in the colour grade) */
@@ -570,6 +570,7 @@ body[data-gfx="hi"] .vig{display:block}
  .dlg{top:188px!important}
 }
 @media (max-width:360px) and (orientation:portrait){.ib{width:30px;height:30px;font-size:14px}.ibs{gap:3px}}
+@media (max-width:339px) and (orientation:portrait){.ib{width:27px;height:27px;font-size:13px}.ibs{gap:2px}.ibl{font-size:7px}#hpTxt,#xpTxt{font-size:9.5px;letter-spacing:-.03em}}
 /* ---- reset warning, minimap legend, friends, what's new ---- */
 .rsIn{text-align:center;max-width:380px;border-color:#a33a3a}.rsIc{font-size:44px;line-height:1;animation:rsS 1s ease-in-out infinite alternate}@keyframes rsS{to{transform:scale(1.12) rotate(-6deg)}}
 .rsIn h2{color:#ff8a8a!important;margin:8px 0 6px}.rsW{color:#f3d6d6;font-size:14px;line-height:1.45;margin:0 0 14px}
@@ -714,7 +715,7 @@ body[data-gfx="hi"] .vig{display:block}
 .fgPips i{flex:1;height:6px;border-radius:3px;background:#2a1a26}
 .fgPips i.on{background:linear-gradient(90deg,#ffb03a,#ffe08a);box-shadow:0 0 6px -1px rgba(255,200,90,.7)}
 .fgSt{list-style:none;margin:8px 0;padding:0;display:grid;gap:3px;font-size:13.5px;line-height:1.4}
-#fgU .fgSt li{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+#fgU .fgSt li{display:flex;justify-content:space-between;gap:8px;align-items:baseline}#fgU .fgSt li em{white-space:nowrap;flex:none}#fgU .fgSt li span{min-width:0;overflow-wrap:anywhere}
 #fgS .fgSt{font-size:13px;gap:4px}#fgS .fgSt li{display:block}
 .fgAct{display:flex;gap:8px;margin-top:10px}
 .fgGo{flex:1;padding:13px 10px;font-size:15px}
@@ -8385,7 +8386,7 @@ function giveRw(R,o){/* a reward object: g gold, m materials, pot potions, rec r
  if(R.pot)for(const q in R.pot)MG.alc.p[q]=(MG.alc.p[q]|0)+R.pot[q];if(R.rec&&POTK[R.rec]&&!MG.alc.r[R.rec]){MG.alc.r[R.rec]=1;setTimeout(()=>toast("📜 "+t("mg_recNew",{n:t("mgp_"+R.rec)}),"#c8e07a"),900)}
  if(R.art)artGive(R.art);if(R.set){const si=R.set==="any"?rint(0,GSETS.length-1):GSETS.findIndex(G=>G.k===R.set);mgGiveItem(mgSetRand(Math.max(0,si),Math.max(3,rollRarity(3))))}
  if(R.item!=null)mgGiveItem(makeItem(rollRarity(R.item)))}
-function mgGiveItem(it){if(it.r>=7)logH("🌟","p14_lgItem",itemName(it));/* straight into the bag (never auto-sold: you earned it) */if(bag.length>=BAG_MAX){const g=sellPrice(it);P.gold+=g;toast(t("bagFull",{n:g})+" · "+itemName(it),RAR[it.r].col);return}
+function mgGiveItem(it){if(it.r>=7)logH("🌟","p14_lgItem",itemName(it));/* straight into the bag (never auto-sold: you earned it) */if(bag.length>=BAG_MAX){const g=sellPrice(it);P.gold+=g;toast(t("bagFull",{n:nfm(g)})+" · "+itemName(it),RAR[it.r].col);return}
  bag.push(it);newItems++;SL.rc[it.r]=(SL.rc[it.r]|0)+1;gem.rf|=1<<it.r;toast(SLOTS[it.s].ic+" "+t("found",{n:itemName(it)}),RAR[it.r].col);mgLog(SLOTS[it.s].ic+" "+itemName(it));if(it.r>=6)setTimeout(()=>rareShow(it),300);SFX.pickup(it.r,it)}
 
 /* ============ RUNS: the endless dungeon and the time rifts ============ */
@@ -10547,6 +10548,7 @@ const SFX={
  coin(){tone(1318,.08,"square",.035);tone(1760,.12,"square",.03,0,.05)},
  hurt(){tone(240,.2,"sawtooth",.1,90);noise(.12,.25,"lowpass",700)},
  die(){tone(210,.4,"triangle",.12,50);noise(.25,.2,"lowpass",500,100)},
+ thud(big,v){v=v==null?1:v;big=big||0;tone(70-big*25,.22+big*.15,"sine",.13*v,30);noise(.16+big*.1,.22*v,"lowpass",320,70)},
  level(){[523,659,784,1046,1318].forEach((f,i)=>tone(f,.3,"triangle",.08,0,i*.09))},
  roar(){tone(120,.6,"sawtooth",.12,60);noise(.5,.25,"bandpass",300,120)},
  dodge(){noise(.18,.18,"bandpass",700,2200)},
@@ -11079,6 +11081,7 @@ function enemyUpdate(e,dt){
  if(e.delay>0){e.delay-=dt;return}
  if(!e.spawned){e.spawned=true;const col=e.boss?"#ffb03a":"#9a6bff";decal("portal",e.x,e.z,C.rad*e.s*2.6+10,1.1,col);for(let i=0;i<16;i++){const a=i/16*PI*2;parts.push({x:e.x+Math.cos(a)*22,z:e.z+Math.sin(a)*8,h:rnd(2,30),vx:-Math.cos(a)*40,vz:-Math.sin(a)*14,vh:rnd(10,40),g:0,life:.6,max:.6,col,size:rnd(1.5,2.8),t:"dot"})}if(Math.abs(e.x-hero.x)<LW*.7)SFX.portal()}
  e.st+=dt;e.lastHit+=dt;slETick(e,dt);
+ if(e.moving&&e.state!=="dead"&&!C.fly&&C.body!=="ghost"&&e.h<1&&!S.fxLo&&!S.fxOff){e.stpT=(e.stpT||0)-dt;if(e.stpT<=0){e.stpT=rnd(.2,.32)/Math.max(.6,Math.min(1.6,(C.spd||60)/60));if(Math.abs(e.x-hero.x)<420&&Math.abs(e.z-hero.z)<300)for(let i=0;i<2;i++)parts.push({x:e.x+rnd(-C.rad,C.rad)*e.s*.6,z:e.z+rnd(-2,2),h:1,vx:rnd(-14,14),vz:rnd(-4,4),vh:rnd(8,20),g:20,life:rnd(.35,.6),max:.6,col:i?"#b3a58a":"#8f826a",size:rnd(1.6,2.8)*Math.min(1.6,e.s),t:"dot"})}}
  if(e.boss&&!e.intro&&e.x>arenaX+20&&e.x<arenaX+LW-20){e.intro=true;shake+=7;dustRing(e.x,e.z,34);parts.push({x:e.x,z:e.z,h:0,life:.8,max:.8,t:"ring",col:"#ffb03a",size:26});parts.push({x:e.x,z:e.z,h:0,life:1.1,max:1.1,t:"ring",col:"#ffe0a0",size:40});SFX.bossIntro();decal("rune",e.x,e.z,70,2.6,"#ffb03a");cine();setTimeout(()=>bossTalk(e),700)}
  if(C.aura&&e.state!=="dead"&&Math.random()<dt*(e.boss?22:12))parts.push({x:e.x+rnd(-C.rad,C.rad)*e.s,z:e.z+rnd(-3,3),h:e.h+rnd(2,C.hgt*e.s*.9),vx:rnd(-8,8),vz:0,vh:rnd(18,42),g:0,life:rnd(.5,.9),max:.9,col:C.aura,size:rnd(1.2,2.4),t:"dot"});
  if(e.treasure&&e.state!=="dead"&&Math.random()<dt*18)parts.push({x:e.x+rnd(-e.cfg.rad,e.cfg.rad)*e.s,z:e.z+rnd(-3,3),h:e.h+rnd(0,e.cfg.hgt*e.s),vx:rnd(-12,12),vz:0,vh:rnd(30,70),g:0,life:rnd(.6,1),max:1,col:Math.random()<.5?"#ffd34e":"#2ff0c8",size:rnd(1.6,3),t:"dot"});
@@ -11094,7 +11097,7 @@ function enemyUpdate(e,dt){
  if(e.burn&&e.burn.t>0&&e.state!=="dead"){e.burn.t-=dt;e.burn.tick-=dt;if(e.burn.tick<=0){e.burn.tick=.5;damageEnemy(e,Math.max(1,Math.round(e.burn.dps*.5)),false,0,0,"burn")}}
  if(C.regen&&e.state!=="dead"&&e.lastHit>2&&e.hp<e.maxhp){e.hp=Math.min(e.maxhp,e.hp+e.maxhp*.015*dt);e.regenT+=dt;if(e.regenT>1){e.regenT=0;addText(e.x,e.z,e.h+C.hgt*e.s+4,"+"+Math.max(1,Math.round(e.maxhp*.015)),"#6bf0ae",10)}}
  if(e.state==="dead"){if(e.st>.45&&e.st<1.3&&Math.random()<.7)parts.push({x:e.x+rnd(-C.rad,C.rad)*e.s,z:e.z,h:e.h+rnd(0,C.hgt*e.s*.5),vx:rnd(-10,10),vz:0,vh:rnd(25,60),g:0,life:rnd(.5,.9),max:.9,col:C.look.bones?"#e6dfcc":C.body==="slime"?C.look.goo:Math.random()<.3?"#ff6a3a":"#3a2a30",size:rnd(1.4,2.8),t:"dot"});
-  if(C.fly)e.h=Math.max(0,e.h-dt*120);else if(e.h>0)e.h=Math.max(0,e.h-dt*80);if(e.st>1.4)e.remove=true;return}
+  if(C.fly)e.h=Math.max(0,e.h-dt*120);else if(e.h>0)e.h=Math.max(0,e.h-dt*80);corpseTick(e);if(e.st>(e.cT||1.4))e.remove=true;return}
  if(C.healer){e.healCd=(e.healCd==null?2.5:e.healCd)-dt;if(e.healCd<=0&&e.state==="chase"){const hurt=enemies.filter(o=>o!==e&&o.state!=="dead"&&o.delay<=0&&o.hp<o.maxhp*.85&&Math.hypot(o.x-e.x,o.z-e.z)<240);
   if(hurt.length){e.healCd=5.5;for(const o of hurt){const g=Math.round(o.maxhp*.18);o.hp=Math.min(o.maxhp,o.hp+g);addText(o.x,o.z,o.h+o.cfg.hgt*o.s+6,"+"+g,"#6bf0ae",11);parts.push({x:o.x,z:o.z,h:0,life:.6,max:.6,t:"ring",col:"#8aff6a",size:10});for(let i=0;i<10;i++)parts.push({x:o.x+rnd(-10,10),z:o.z,h:rnd(0,30),vx:0,vz:0,vh:rnd(30,70),g:0,life:.7,max:.7,col:"#8aff6a",size:rnd(1.5,2.6),t:"dot"})}parts.push({x:e.x,z:e.z,h:0,life:.8,max:.8,t:"ring",col:"#8aff6a",size:18});SFX.healPulse()}else e.healCd=1}}
  const dx=hero.x-e.x,dz=hero.z-e.z,adx=Math.abs(dx);
@@ -11204,9 +11207,16 @@ function damageEnemy(e,d,crit,dir,kb,kind){
  elemTry(e,el,d,kind);
  return d;
 }
+/* P43: bodies fall and lie for a while (thud + dust when they hit the ground), then sink away */
+function corpseT(e){const C=e.cfg;if(C.look.bones||C.look.head==="golem"||C.body==="ghost"||e.summoned)return 1.4;let n=0;for(const o of enemies)if(o.state==="dead")n++;if(n>8)return 1.4;return S.fxLo?2:e.boss?3.6:3}
+const CORPSE_HIT={human:.46,wolf:.5,spider:.34,dragon:.36,slime:.3};
+function corpseTick(e){if(e.thd||e.cT<=1.4)return;const C=e.cfg,at=C.body==="bat"?(e.h<=.5&&e.st>.15?e.st:99):CORPSE_HIT[C.body];if(at==null||e.st<at)return;e.thd=1;
+ const big=C.hgt*e.s,n=S.fxLo?5:10,dc=C.body==="slime"?C.look.goo2||"#6a8a4a":"#8a7a62";
+ for(let i=0;i<n;i++){const a=rnd(0,PI*2),v=rnd(30,70);parts.push({x:e.x+Math.cos(a)*C.rad*e.s*.6,z:e.z+Math.sin(a)*C.rad*e.s*.25,h:2,vx:Math.cos(a)*v,vz:Math.sin(a)*v*.35,vh:rnd(10,35),g:60,life:rnd(.45,.8),max:.8,col:dc,size:rnd(2.4,4.2),t:"dot"})}
+ if(isFP()){const d=Math.hypot(e.x-hero.x,(e.z-hero.z)*ZS);if(d<520){SFX.thud(Math.min(1,big/60),clamp(1-d/520,.15,1));if(big>70&&d<260)shake+=2}}}
 function killEnemy(e,dir){
  const C=e.cfg;if(!e.passive&&!e.summoned){hero.chn=(hero.chn|0)+1;if(hero.chn===5||hero.chn===10||hero.chn===20)addText(hero.x,hero.z,74,"🔥 "+t("p16_chain",{n:hero.chn}),"#ffb35a",13,true)}if(e.boss&&!e.passive)for(const k in eq)if(eq[k])itHx(eq[k],["b",C.k,battleNo]);
- e.hp=0;e.state="dead";e.st=0;e.kb=dir*170;e.burn=null;
+ e.hp=0;e.state="dead";e.st=0;e.kb=dir*170;e.burn=null;e.cT=corpseT(e);
  {const bc=bloodCol(C),lq=bloodLiquid(C);blood(e.x,e.z,e.h+C.hgt*e.s*.5,dir,11,bc,1.1,lq);if(lq){stain(e.x+dir*6,e.z,C.rad*e.s*rnd(1,1.35),bc,true);if(Math.random()<.6)stain(e.x+dir*rnd(14,30),e.z+rnd(-6,6),C.rad*e.s*rnd(.45,.7),bc,false,dir)}}
  kills[C.k]=(kills[C.k]||0)+1;enemyVoice(e,"die");
  if(!e.summoned&&!e.small){qHit("kill");if(e.rarI)qHit("rare");if(e.boss)qHit("boss")}
@@ -11282,7 +11292,7 @@ function itHx(it,e){if(!it||!e)return;it.hx=Array.isArray(it.hx)?it.hx:[];it.hx.
 function addItem(it){itHx(it,["f",biomeIdx(),battleNo]);if(it.r>=7)logH("🌟","p14_lgItem",itemName(it));
  SL.rc[it.r]=(SL.rc[it.r]|0)+1;qHit("loot");if(it.r>=3)qHit("epic");if(it.r>=4)qHit("legend");if(it.r>=5)qHit("myth");gem.rf|=1<<it.r;if(it.r>=5)spSay("sLoot");
  if(asOn(it.r)){const g=sellPrice(it);P.gold+=g;asellN++;qHit("sell");asellG+=g;clearTimeout(asellT);asellT=setTimeout(()=>{toast("💰 "+t("asSold",{n:asellN,g:asellG}),"#d6a24a");asellN=0;asellG=0},350);SFX.cash();return}
- if(bag.length>=BAG_MAX){const g=sellPrice(it);P.gold+=g;toast(t("bagFull",{n:g})+" · "+itemName(it),RAR[it.r].col);SFX.sell();return}
+ if(bag.length>=BAG_MAX){const g=sellPrice(it);P.gold+=g;toast(t("bagFull",{n:nfm(g)})+" · "+itemName(it),RAR[it.r].col);SFX.sell();return}
  bag.push(it);newItems++;toast(SLOTS[it.s].ic+" "+t("found",{n:itemName(it)}),RAR[it.r].col);SFX.pickup(it.r,it);save();
 }
 function updateLoot(dt){
@@ -11832,7 +11842,7 @@ function enemyPose(e){
   else if(sty==="slam"){const A=lerp(3.2,.4,eo(Math.min(1,q*2)));p.af=[A,.1];p.ab=[A,.1];p.lean=.4;p.crouch=8}}
  else if(st==="recover"){const k=clamp(e.st/C.rec,0,1);stance(p);p.af=[lerp(.9,.5,k),.4];p.lean=lerp(.25,.05,k);if(sty==="slam"){p.af=[lerp(.4,.4,k),.3];p.ab=[.4,.3];p.crouch=lerp(8,2,k)}rest()}
  else if(st==="hurt"){p.lean=-.35;p.headTilt=-.3;p.af=[1.2,.5];p.ab=[1.6,.4]}
- else if(st==="dead"){const k=Math.min(1,e.st*2.5);p.rot=-k*1.45;p.pivot=0;p.af=[lerp(1.2,2.4,k),.3+.6*k];p.ab=[lerp(1.6,2.7,k),.2+.5*k];p.lean=-.2;p.lf=[.5*k,1.3*k];p.lb=[-.3*k,1*k];p.crouch=5*k;p.headTilt=-.4*k;p.jaw=.9}
+ else if(st==="dead"){const k0=clamp((e.st-.08)*2.6,0,1),k=k0*k0,bo=e.st>.46&&e.st<.76?Math.sin((e.st-.46)/.3*PI)*.1:0;p.rot=-k*1.45+bo;p.roll=(((e.seed||0)*7.3)%1-.5)*.7*k;p.pivot=0;p.af=[lerp(1.2,2.4,k),.3+.6*k];p.ab=[lerp(1.6,2.7,k),.2+.5*k];p.lean=-.2;p.lf=[.5*k,1.3*k];p.lb=[-.3*k,1*k];p.crouch=5*Math.min(1,e.st*8);p.headTilt=-.4*k;p.jaw=.9}
  if(st==="windup")p.jaw=Math.max(p.jaw||0,.7);else if(st==="strike")p.jaw=Math.max(p.jaw||0,1);else if(st==="hurt")p.jaw=.8
  return p;
 }
@@ -11923,7 +11933,7 @@ function drawHeroEnt(){
 }
 function drawEnemy(e){
  const C=e.cfg,ds=depthS(e.z)*e.s,sx=e.x-camX,sy=GT+e.z-e.h;
- const alpha=e.state==="dead"?((C.look.bones||C.look.head==="golem")?(e.st<.06?1:0):clamp(1-(e.st-.7)/.6,0,1)):1;if(alpha<=0)return;
+ const alpha=e.state==="dead"?((C.look.bones||C.look.head==="golem")?(e.st<.06?1:0):clamp(((e.cT||1.4)-e.st)/.6,0,1)):1;if(alpha<=0)return;
  if(e.boss&&e.state!=="dead"){c.save();c.globalCompositeOperation="lighter";const g=c.createRadialGradient(sx,sy-30*ds,0,sx,sy-30*ds,55*ds);g.addColorStop(0,"rgba(214,162,74,.22)");g.addColorStop(1,"rgba(214,162,74,0)");c.fillStyle=g;c.fillRect(sx-60*ds,sy-90*ds,120*ds,120*ds);c.restore()}
  const L=e.flash>0?whiteLook(C.look):C.look;
  const head=drawEnemyBody(e,sx,sy,ds,e.face,L,C.stealth&&e.state==="chase"?alpha*(.22+.1*Math.sin(tNow*6+e.seed)):alpha);
@@ -13124,9 +13134,9 @@ function buildModel(C,L){
  M.cfg=C;M.seed=Math.random()*9;M.root.traverse(o=>{if(o.isMesh&&!o.material.isMeshStandardMaterial)o.castShadow=false});return M;
 }
 function disposeModel(M){M.root.parent&&M.root.parent.remove(M.root);M.mats.concat(M.glows).forEach(m=>m.dispose());M.root.traverse(o=>{if(o.isSprite||o.isLine||o===M.trail)o.material.dispose();if((o===M.trail||o.isLine||o===M.robe)&&o.geometry)o.geometry.dispose()})}
-function setLook3(M,flash,alpha){
+function setLook3(M,flash,alpha,ga){
  const fl=flash?1:0;if(M.fl!==fl){M.fl=fl;for(const m of M.mats){if(m===M.blade)continue;if(fl){m.emissive.set(0xffffff);m.emissiveIntensity=.75}else{m.emissive.copy(m.userData.e0);m.emissiveIntensity=1}}}
- if(M.al!==alpha){M.al=alpha;for(const m of M.mats)m.opacity=m.userData.o0*alpha;for(const m of M.glows)m.opacity=m.userData.o0*alpha;M.root.traverse(o=>{if(o.isSprite||o.isLine)o.material.opacity=(o.userData.o0!=null?o.userData.o0:(o.userData.o0=o.material.opacity))*alpha})}
+ ga=ga==null?1:ga;if(M.al!==alpha||M.ga!==ga){M.al=alpha;M.ga=ga;for(const m of M.mats)m.opacity=m.userData.o0*alpha;for(const m of M.glows)m.opacity=m.userData.o0*alpha*ga;M.root.traverse(o=>{if(o.isSprite||o.isLine)o.material.opacity=(o.userData.o0!=null?o.userData.o0:(o.userData.o0=o.material.opacity))*alpha})}
 }
 function yawTo(M,face,bias,dt,th0){const th=th0!=null?th0:(M.th||CAM.th);turnTo(M,face>0?-th-(bias||0):-PI+th+(bias||0),dt)}
 function turnTo(M,tgt,dt,rate){if(M.yawC==null)M.yawC=tgt;const d=((tgt-M.yawC+PI)%(2*PI)+2*PI)%(2*PI)-PI;M.yawC+=d*Math.min(1,dt*(rate||16));if(M.yawC>PI)M.yawC-=2*PI;else if(M.yawC<-PI)M.yawC+=2*PI;M.yaw.rotation.y=M.yawC}
@@ -13224,10 +13234,10 @@ function animModel3(M,e){
 function syncEnemies3(dt){
  const seen=new Set();
  for(const e of enemies){if(e.delay>0)continue;let M=G3.emap.get(e);if(!M){M=takeModel3(e.cfg);G3.emap.set(e,M)}seen.add(e);
-  const C=e.cfg,alpha=e.state==="dead"?((C.look.bones||C.look.head==="golem")?(e.st<.06?1:0):clamp(1-(e.st-.7)/.6,0,1)):1;M.root.visible=alpha>0;if(!M.root.visible)continue;
+  const C=e.cfg,alpha=e.state==="dead"?((C.look.bones||C.look.head==="golem")?(e.st<.06?1:0):clamp(((e.cT||1.4)-e.st)/.6,0,1)):1;M.root.visible=alpha>0;if(!M.root.visible)continue;
   W3(M.root,e.x,e.z,e.h);M.body.scale.setScalar(e.s*CHS);if(isFP()){const dx=hero.x-e.x;turnTo(M,e.state==="roam"?(e.ra||0):dx*e.face>0&&e.state!=="dead"?Math.atan2(-(hero.z-e.z)*ZS,dx):e.face>0?0:-PI,dt)}else yawTo(M,e.face,0,dt);animModel3(M,e);
-  if(e.jolt){M.jolt=Math.max(M.jolt||0,e.jolt);e.jolt=0}const jo=M.jolt||0;M.body.position.x=-jo*5;M.body.rotation.z=jo*.22;M.jolt=jo>.01?jo*Math.pow(.0004,dt):0;
-  M.spawnT=(M.spawnT||0)+dt;const sk=Math.min(1,M.spawnT/.4);if(sk<1)M.root.position.y-=(1-eo(sk))*14;
+  if(e.jolt){M.jolt=Math.max(M.jolt||0,e.jolt);e.jolt=0}const jo=M.jolt||0;M.body.position.x=-jo*5;M.body.position.y=e.state==="dead"&&C.body==="human"?clamp((e.st-.08)*2.6,0,1)*C.rad*e.s*.3:0;M.body.rotation.z=jo*.22;M.jolt=jo>.01?jo*Math.pow(.0004,dt):0;
+  M.spawnT=(M.spawnT||0)+dt;const sk=Math.min(1,M.spawnT/.4);if(sk<1)M.root.position.y-=(1-eo(sk))*14;if(e.state==="dead"&&e.cT>1.4){const q=clamp((e.st-(e.cT-.9))/.9,0,1);if(q>0)M.root.position.y-=q*q*(C.rad*e.s*.9+4)}
   {/* a little extra life: spawn pop, breathing, anticipation squash before a strike, stretch on strike, squash when hit */
    const live=e.state!=="dead",wk=live&&e.state==="windup"?eo(clamp(e.st/(C.wind||1),0,1)):0,sr=live&&e.state==="strike"?Math.max(0,1-e.st/(C.act||.3)):0,
     br=live?Math.sin(tNow*3.2+e.seed)*.012*(e.state==="chase"&&e.moving?.4:1):0,pop=sk<1?Math.max(.05,easeBk(sk)):1,
@@ -13236,7 +13246,7 @@ function syncEnemies3(dt){
   let a=alpha*sk;if(C.body==="ghost")a*=.75+.15*Math.sin(tNow*4+e.seed);if(C.stealth&&e.state==="chase")a*=.22+.1*Math.sin(tNow*6+e.seed);
   if(isFP()){const r=relH(e);if(r.a<8&&r.a>-CAM.fpBack-44&&r.l<70)a*=.15}
   if(C.fx)a*=fx3(M,e,dt);
-  setLook3(M,e.flash>0,a);
+  setLook3(M,e.flash>0,a,e.state==="dead"?Math.max(0,1-e.st*1.6):1);
   if(e.boss&&e.state!=="dead"){crown3(M).visible=true;const au=pool3("aura",()=>{const s=sprite(G3.tGlow,0xd6a24a,1,.3);G3.fx.add(s);return s});W3(au,e.x,e.z,e.h+C.hgt*e.s*CHS*.45);au.scale.setScalar(C.hgt*e.s*CHS*2.6);au.material.opacity=(BIOMES[G3.biome].day?.07:.22)+.05*Math.sin(tNow*3)}else if(M.crown)M.crown.visible=false;
   if(e.burn&&e.burn.t>0&&e.state!=="dead"){const b=pool3("burn",()=>{const s=sprite(G3.tGlow,0xff6a1a,1,.5);G3.fx.add(s);return s});W3(b,e.x,e.z,e.h+C.hgt*e.s*CHS*.45);b.scale.set(C.rad*e.s*CHS*3.2,C.hgt*e.s*CHS*1.3,1);b.material.opacity=.35+.15*Math.sin(tNow*20)}
   if(!(e.state==="dead"&&e.st>1))blob3(e.x,e.z,e.h,C.rad*e.s*1.3)}
@@ -13899,13 +13909,13 @@ function setW(id,p){const v=(Math.round(p*10)/10)+"%";if(_dc[id+"w"]!==v){_dc[id
 function hud(){
  {const lv=String(P.level),gd=String(P.gold);if(_dc.hLv!==undefined&&_dc.hLv!==lv)popCls($("hLv"),"popN");if(_dc.hGold!==undefined&&_dc.hGold!==gd)popCls($("hGold"),"bump")}
  setTx("hName",nickname+(LG&&LG.rb?" ✦"+LG.rb:""));setTx("hTtl",ttlTxt());setTx("hLv",P.level);if(_dc.nn!==!!nickname){_dc.nn=!!nickname;$("hName").parentNode.classList.toggle("nonick",!nickname)}
- {const need=xpNeed(P.level);setW("xpBar",P.xp/need*100);setTx("xpTxt","XP "+nfm(Math.floor(P.xp))+" / "+nfm(need)+" · "+Math.min(100,Math.floor(P.xp/need*100))+"%")}
- setTx("hGold",P.gold);{const gs=nfm(gem.n);if(_dc.hGem!==undefined&&_dc.hGem!==gs)popCls($("hGem"),"bump");setTx("hGem",gs)}
+ {const need=xpNeed(P.level);setW("xpBar",P.xp/need*100);{const nw=innerWidth<340,nf=nw?nfmS:nfm,pc=Math.min(100,Math.floor(P.xp/need*100))+"%";setTx("xpTxt",nw?"XP "+pc:"XP "+nf(Math.floor(P.xp))+" / "+nf(need)+" · "+pc)}}
+ setTx("hGold",P.gold<1e5?Math.floor(P.gold):nfm(Math.floor(P.gold)));{const gs=nfm(gem.n);if(_dc.hGem!==undefined&&_dc.hGem!==gs)popCls($("hGem"),"bump");setTx("hGem",gs)}
  if(goldAcc>0&&realT-goldT>.45){goldT=realT;const el=document.createElement("span");el.className="gfly";el.textContent="+"+goldAcc+" 🪙";$("gflyW").appendChild(el);setTimeout(()=>el.remove(),1100);goldAcc=0}setTx("hWave","#"+battleNo);setTx("hZic",ZN().ic);
  luckTick();luckLive();gemTick();
  const nn=bag.filter(x=>x.nw).length,ib=$("invBdg");setTx("invBdg",nn>99?"99+":nn);ib.classList.toggle("on",nn>0);
  $("luckBdg").classList.toggle("on",(!luck.until&&luck.lvl<LUCK_MAX&&P.gold>=luckCost(luck.lvl))||(!foe.until&&foe.lvl<FOE_MAX&&P.gold>=foeCost(foe.lvl)));
- const hpr=clamp((P.hp||0)/(P.maxhp||1),0,1);setW("hpBar",hpr*100);setTx("hpTxt","❤ "+nfm(Math.ceil(P.hp))+" / "+nfm(P.maxhp));
+ const hpr=clamp((P.hp||0)/(P.maxhp||1),0,1);setW("hpBar",hpr*100);{const nf=innerWidth<340?nfmS:nfm;setTx("hpTxt","❤ "+nf(Math.ceil(P.hp))+" / "+nf(P.maxhp))}
  (hud.sk||(hud.sk=[...document.querySelectorAll(".sk")])).forEach(b=>{const a=b.dataset.a;if(a==="turn")return;
   if(a!=="attack"){const rem=hero.cd[a]||0,cd=Math.round(clamp(rem/(CD[a]*cdMul(a)),0,1)*100)/100;if(b._cd!==cd){if(b._cd>0&&cd===0){popCls(b,"ready");if(CD[a]>=6&&!paused)SFX.ready()}if(!(b._cd>0)&&cd>0)popCls(b,"cast");b._cd=cd;b.style.setProperty("--cd",cd);b.classList.toggle("cd",cd>0)}
    const ct=rem>0?(rem>=1?String(Math.ceil(rem)):rem.toFixed(1)):"";if(b._ct!==ct){b._ct=ct;b.querySelector(".cdn").textContent=ct}}
@@ -13946,8 +13956,8 @@ $("deadTree").onclick=()=>{retry(true);openModal("mTree")};
 function retry(){P.hp=P.maxhp;setHero("idle");hero.inv=1.2;hero.slow=0;hero.poison=null;enemies=[];projs=[];coins.forEach(k=>P.gold+=k.v);coins=[];const lt=loots;loots=[];lt.forEach(k=>addItem(k.it));hero.x=arenaX+LW*.3;hero.z=DEPTH/2;camX=arenaX;startWave()}
 
 let tSel=null;
-function statChipsHTML(){const I=(k,F)=>icoSvg(k,F,"1.2em");
- return `<span class="g">${I("coin","#ffd24a")} <b>${P.gold}</b></span><span>${I("heart","#ff6b86")} <b>${P.maxhp}</b></span><span>${I("sword","#ff8a8a")} <b>${P.atk}</b></span><span>${I("shield","#9fb3c8")} <b>${P.armor}</b></span><span>${I("crit","#ff9a6a")} <b>${P.crit}%</b></span><span>${I("burst","#ffc24a")} ${t("critDmg")} <b>×${(2+P.critDmg/100).toFixed(2)}</b></span><span>${I("fire","#ff8a3d")} <b>+${P.fireBonus}%</b></span><span>${I("bolt","#7fb8ff")} <b>+${P.lightningBonus}%</b></span><span>${I("heal","#4fd67a")} <b>+${P.healBonus}%</b></span>${P.dmgRed?`<span>${I("wall","#d98a5a")} ${t("dmgRed")} <b>−${P.dmgRed}%</b></span>`:""}${P.regen?`<span>${I("leaf","#6bf0ae")} <b>${P.regen}${t("perSec")}</b></span>`:""}${P.evade?`<span>${I("wind","#9fe0ff")} <b>${P.evade}%</b></span>`:""}<span>${I("clock","#c8b4ff")} <b>−${Math.round(P.cdr*100)}%</b></span>`}
+function statChipsHTML(){const I=(k,F)=>icoSvg(k,F,"1.2em"),sg=v=>v<0?"−"+(-v):"+"+v,sn=v=>v>=1e5?nfm(Math.round(v)):v;
+ return `<span class="g">${I("coin","#ffd24a")} <b>${nfm(Math.floor(P.gold))}</b></span><span>${I("heart","#ff6b86")} <b>${sn(P.maxhp)}</b></span><span>${I("sword","#ff8a8a")} <b>${sn(P.atk)}</b></span><span>${I("shield","#9fb3c8")} <b>${sn(P.armor)}</b></span><span>${I("crit","#ff9a6a")} <b>${P.crit}%</b></span><span>${I("burst","#ffc24a")} ${t("critDmg")} <b>×${(2+P.critDmg/100).toFixed(2)}</b></span><span>${I("fire","#ff8a3d")} <b>${sg(P.fireBonus)}%</b></span><span>${I("bolt","#7fb8ff")} <b>${sg(P.lightningBonus)}%</b></span><span>${I("heal","#4fd67a")} <b>${sg(P.healBonus)}%</b></span>${P.dmgRed?`<span>${I("wall","#d98a5a")} ${t("dmgRed")} <b>−${P.dmgRed}%</b></span>`:""}${P.regen?`<span>${I("leaf","#6bf0ae")} <b>${P.regen}${t("perSec")}</b></span>`:""}${P.evade?`<span>${I("wind","#9fe0ff")} <b>${P.evade}%</b></span>`:""}<span>${I("clock","#c8b4ff")} <b>−${Math.round(P.cdr*100)}%</b></span>`}
 function statChips(){$("statList").innerHTML=statChipsHTML()}
 function renderTree(){statChips();renderTalents();renderTrain();renderCls();if(!renderTree.did){renderTree.did=1;requestAnimationFrame(()=>{const w=$("twrap");w.scrollLeft=(w.scrollWidth-w.clientWidth)/2;w.scrollTop=(w.scrollHeight-w.clientHeight)/2})}}
 const talAvail=id=>!tal.includes(id)&&TALN[id].nb.some(n=>n==="c"||tal.includes(n));
@@ -14046,7 +14056,7 @@ function renderTInfo(){
  if(tSel==="c"){box.style.setProperty("--c","#d6a24a");box.innerHTML=`<div><b>${icoSvg("star","#d6a24a","1.25em")} ${t("center")}</b><div class="m">${t("centerD")}</div></div>`;return}
  const n=TALN[tSel],S=SECT[n.si],ow=tal.includes(n.id),av=talAvail(n.id);
  box.style.setProperty("--c",S.col);
- let act;if(ow)act=`<span class="ok">✓ ${t("owned")}</span>`;else if(!av)act=`<small>🔒 ${t("needLink")}</small>`;else act=`<button class="btn main" id="tBuy" ${P.gold<n.cost?"disabled":""}>${t("unlock",{n:n.cost})}</button>`;
+ let act;if(ow)act=`<span class="ok">✓ ${t("owned")}</span>`;else if(!av)act=`<small>🔒 ${t("needLink")}</small>`;else act=`<button class="btn main" id="tBuy" ${P.gold<n.cost?"disabled":""}>${t("unlock",{n:nfm(n.cost)})}</button>`;
  box.innerHTML=`<div><b>${icoSvg(ikOf(n),S.col,"1.25em")} ${talName(n)}</b><div class="m">${talDesc(n)}</div><small>${L(S.n)}</small></div>${act}`;
  const b=$("tBuy");if(b)b.onclick=()=>buyTalent(n.id);
 }
@@ -14403,7 +14413,7 @@ function renderIDet(){
  if(!it){box.style.setProperty("--rc","#d6a24a");box.innerHTML=`<div class="m">${t(bag.length||Object.keys(eq).length?"pickItem":"noItems")}</div>`;return}
  const R=RAR[it.r],S=SLOTS[it.s],isEq=iSel.from==="eq",cur=eq[S.k];
  box.style.setProperty("--rc",R.col);
- box.innerHTML=`<div class="idh"><div class="cell icard r${it.r}" style="--rc:${R.col}">${iTile(it)}</div><div class="idn"><h4${rCls(R)}>${it.u?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${L(S.n)} · ${t("ilvl",{n:it.l})}${isEq?" · ✓ "+t("equipped"):""}</div></div></div>${!isEq&&cur?`<div class="rr">${t("vsEq")}: ${iIc(cur)}<span style="color:${RAR[cur.r].col}">${itemName(cur)}</span></div>`:""}<ul>${itemStatsHTML(it,isEq?null:cur)}</ul>${S.k==="spirit"?`<div class="m">${t("spShot",{n:spRate(it).toFixed(1)})}</div>`:""}${hxHTML(it)}<div class="acts">${isEq?`<button class="btn" id="iUn">${t("unequip")}</button>`:`<button class="btn main" id="iEq">${t("equip")}</button>`}${isEq&&S.k==="weapon"?`<button class="btn" id="iForge">🔨 ${t("forge")}</button>`:""}${!isEq&&SLOTS[it.s].k!=="weapon"?`<button class="btn" id="iTry">👁️ ${t("p16_try")}</button>`:""}<button class="btn" id="iLock" aria-label="lock">${it.lk?"🔒":"🔓"}</button><button class="btn warn" id="iSell"${it.lk?" disabled":""}>${t("sellFor",{n:sellPrice(it)})}</button></div>`;
+ box.innerHTML=`<div class="idh"><div class="cell icard r${it.r}" style="--rc:${R.col}">${iTile(it)}</div><div class="idn"><h4${rCls(R)}>${it.u?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${L(S.n)} · ${t("ilvl",{n:it.l})}${isEq?" · ✓ "+t("equipped"):""}</div></div></div>${!isEq&&cur?`<div class="rr">${t("vsEq")}: ${iIc(cur)}<span style="color:${RAR[cur.r].col}">${itemName(cur)}</span></div>`:""}<ul>${itemStatsHTML(it,isEq?null:cur)}</ul>${S.k==="spirit"?`<div class="m">${t("spShot",{n:spRate(it).toFixed(1)})}</div>`:""}${hxHTML(it)}<div class="acts">${isEq?`<button class="btn" id="iUn">${t("unequip")}</button>`:`<button class="btn main" id="iEq">${t("equip")}</button>`}${isEq&&S.k==="weapon"?`<button class="btn" id="iForge">🔨 ${t("forge")}</button>`:""}${!isEq&&SLOTS[it.s].k!=="weapon"?`<button class="btn" id="iTry">👁️ ${t("p16_try")}</button>`:""}<button class="btn" id="iLock" aria-label="lock">${it.lk?"🔒":"🔓"}</button><button class="btn warn" id="iSell"${it.lk?" disabled":""}>${t("sellFor",{n:nfm(sellPrice(it))})}</button></div>`;
  if($("iEq"))$("iEq").onclick=()=>equipItem(it.id);
  if($("iUn"))$("iUn").onclick=()=>unequipItem(S.k);
  if($("iForge"))$("iForge").onclick=()=>openModal("mForge");
@@ -14415,7 +14425,7 @@ function applyEq(){const ratio=P.maxhp>0?P.hp/P.maxhp:1;recalc();P.hp=Math.max(1
 function equipItem(id){const i=bag.findIndex(x=>x.id===id);if(i<0)return;const it=bag[i],k=SLOTS[it.s].k;bag.splice(i,1);if(eq[k]){eq[k].nw=false;bag.push(eq[k])}it.nw=false;eq[k]=it;iSel={from:"eq",k};eqFx={k,col:rarTxtCol(it.r),t:Date.now()};SFX.buy();SFX.equip(it);
  for(let j=0;j<16;j++)parts.push({x:hero.x+rnd(-12,12),z:hero.z,h:rnd(0,50),vx:rnd(-20,20),vz:0,vh:rnd(30,90),g:0,life:rnd(.5,.9),max:.9,col:RAR[it.r].col,size:rnd(1.5,3),t:"dot"});applyEq()}
 function unequipItem(k){if(!eq[k])return;bag.push(eq[k]);const id=eq[k].id;delete eq[k];iSel={from:"bag",id};SFX.close();applyEq()}
-function sellItem(it){if(it.lk){toast("🔒 "+t("p14_locked"));SFX.buzz();return}const g=sellPrice(it);qHit("sell");SFX.sell();if(iSel&&iSel.from==="eq"&&eq[iSel.k]===it)delete eq[iSel.k];else{const i=bag.indexOf(it);if(i<0)return;bag.splice(i,1)}P.gold+=g;iSel=null;toast(t("sold",{n:g}));SFX.coin();applyEq()}
+function sellItem(it){if(it.lk){toast("🔒 "+t("p14_locked"));SFX.buzz();return}const g=sellPrice(it);qHit("sell");SFX.sell();if(iSel&&iSel.from==="eq"&&eq[iSel.k]===it)delete eq[iSel.k];else{const i=bag.indexOf(it);if(i<0)return;bag.splice(i,1)}P.gold+=g;iSel=null;toast(t("sold",{n:nfm(g)}));SFX.coin();applyEq()}
 const itemPow=it=>ist(it).reduce((a,[k,v])=>{const d=ISTAT[k],ref=d?Math.max(.1,(d[0]+d[1]*12)*(d[2]?.7:1)):1;return a+v/ref},0);
 function equipBest(){let n=0;for(const S of SLOTS){const si=SLOTI[S.k],cur=eq[S.k];let best=cur,bp=cur?itemPow(cur):-1;for(const it of bag)if(it.s===si){const p=itemPow(it);if(p>bp+1e-6){bp=p;best=it}}
   if(best&&best!==cur){bag.splice(bag.indexOf(best),1);if(cur){cur.nw=false;bag.push(cur)}best.nw=false;eq[S.k]=best;n++}}
@@ -14445,9 +14455,9 @@ const fgNeed=()=>{toast(t("need"));SFX.buzz()};
 /* the swords you own (not the one in your hand): take one, or sell it */
 function fgOwnHTML(){if(!forge.owned.length)return"";const cur=eq.weapon,cp=cur?itemPow(cur):0;
  return`<h3 class="h3">${t("mySwords",{n:forge.owned.length})}</h3><div class="fgShop">`+forge.owned.map((it,i)=>{const R=RAR[it.r],pw=itemPow(it),d=cur?Math.round((pw/Math.max(1,cp)-1)*100):0,tag=cur?(d>0?`<span class="fgTag up">▲ +${d}%</span>`:d<0?`<span class="fgTag dn">▼ ${d}%</span>`:`<span class="fgTag">＝</span>`):"";
-  return`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc sm">${itemArt(it.s,itemKind(it),it.r,{bare:1,lk:itemLook(it)})}${it.up?`<b>+${it.up}</b>`:""}</div><div class="fgNm"><h4${rCls(R)}>${it.u||it.a!=null?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})} ${tag}</div></div></div><div class="fgBtns"><button class="btn main" type="button" data-own="${i}">${t("equip")}</button><button class="btn" type="button" data-osell="${i}">${t("swSell",{n:sellPrice(it)})}</button></div></div>`}).join("")+"</div>"}
+  return`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc sm">${itemArt(it.s,itemKind(it),it.r,{bare:1,lk:itemLook(it)})}${it.up?`<b>+${it.up}</b>`:""}</div><div class="fgNm"><h4${rCls(R)}>${it.u||it.a!=null?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})} ${tag}</div></div></div><div class="fgBtns"><button class="btn main" type="button" data-own="${i}">${t("equip")}</button><button class="btn" type="button" data-osell="${i}">${t("swSell",{n:nfm(sellPrice(it))})}</button></div></div>`}).join("")+"</div>"}
 function fgOwnBind(box){box.querySelectorAll("[data-own]").forEach(b=>b.onclick=()=>{const it=forge.owned.splice(+b.dataset.own,1)[0];if(it){swordEquip(it);renderForge()}});
- box.querySelectorAll("[data-osell]").forEach(b=>b.onclick=()=>{const it=forge.owned.splice(+b.dataset.osell,1)[0];if(!it)return;const g=sellPrice(it);P.gold+=g;toast(t("sold",{n:g}));SFX.sell();SFX.coin();save();renderForge();hud()})}
+ box.querySelectorAll("[data-osell]").forEach(b=>b.onclick=()=>{const it=forge.owned.splice(+b.dataset.osell,1)[0];if(!it)return;const g=sellPrice(it);P.gold+=g;toast(t("sold",{n:nfm(g)}));SFX.sell();SFX.coin();save();renderForge();hud()})}
 function fgBurst(el,col){if(!el||S.fxOff)return;for(let i=0;i<12;i++){const s=document.createElement("i");s.className="spk";const a=Math.random()*6.283,d=32+Math.random()*34;s.style.cssText=`--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d}px;background:${i%3?col:"#fff"}`;el.appendChild(s);setTimeout(()=>s.remove(),750)}}
 /* the shop: random stock + the named armory swords in ONE list, cheapest first */
 let armStock=[],armSeed=-1;
@@ -14463,7 +14473,7 @@ function renderForgeShop(){
  list.forEach(({it,src,i,price})=>{
   const R=RAR[it.r],can=P.gold>=price,nm=it.u||it.a!=null,key=src+i;
   let tag="";if(cur){const pw=itemPow(it),d=Math.round((pw/Math.max(1,cp)-1)*100);tag=d>0?`<span class="fgTag up">▲ +${d}%</span>`:d<0?`<span class="fgTag dn">▼ ${d}%</span>`:`<span class="fgTag">＝</span>`}
-  h+=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc sm">${itemArt(it.s,itemKind(it),it.r,{bare:1,lk:itemLook(it)})}</div><div class="fgNm"><h4${rCls(R)}>${nm?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})} ${tag}</div></div></div><ul class="fgSt">${itemStatsHTML(it,cur,1)}</ul><div class="fgBtns"><button class="btn main fgBuy${can?"":" dis"}" type="button" data-buy="${key}">${t("fgBuy",{n:price})}</button></div></div>`});
+  h+=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc sm">${itemArt(it.s,itemKind(it),it.r,{bare:1,lk:itemLook(it)})}</div><div class="fgNm"><h4${rCls(R)}>${nm?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})} ${tag}</div></div></div><ul class="fgSt">${itemStatsHTML(it,cur,1)}</ul><div class="fgBtns"><button class="btn main fgBuy${can?"":" dis"}" type="button" data-buy="${key}">${t("fgBuy",{n:nfm(price)})}</button></div></div>`});
  if(nextG)h+=`<div class="fgCard"><div class="m">${t("swLocked",{n:nextG})}</div></div>`;
  box.innerHTML=h+"</div>";
  box.querySelectorAll("[data-buy]").forEach(b=>b.onclick=()=>forgeBuyAny(b.dataset.buy,false));
@@ -14479,7 +14489,7 @@ function forgeBuyAny(key,equip){
  save();renderForge();hud();
 }
 function renderForge(){
- $("fgGold").textContent=Math.floor(P.gold);
+ $("fgGold").textContent=nfm(Math.floor(P.gold));
  document.querySelectorAll(".ftab").forEach(b=>b.classList.toggle("on",b.dataset.ft===fgTab));
  document.querySelectorAll(".fpane").forEach(p=>p.classList.toggle("on",p.id===fgTab));
  renderForgeUp();renderForgeShop();
@@ -14502,7 +14512,7 @@ let sellArm=0;
 function fillSellAll(){const b=$("sellAll"),n=bag.length,g=bag.reduce((a,x)=>a+sellPrice(x),0),armed=sellArm>Date.now()&&n>0;b.disabled=!n;b.classList.toggle("armed",armed);b.textContent=armed?t("sellAllSure",{n,g}):t("sellAll")+(n?" ("+n+")":"")}
 /* sells EVERYTHING in the bag; equipped items are not in the bag, so they are never touched. Two taps = safe. */
 $("sellAll").onclick=()=>{const n=bag.length;if(!n)return;if(sellArm<Date.now()){sellArm=Date.now()+3500;fillSellAll();clearTimeout(fillSellAll.t);fillSellAll.t=setTimeout(fillSellAll,3600);SFX.ui();return}
- sellArm=0;let g=0;const sv=bag.filter(x=>!x.lk);for(const x of sv)g+=sellPrice(x);qHit("sell",sv.length);bag=bag.filter(x=>x.lk);P.gold+=g;if(iSel&&iSel.from==="bag")iSel=null;toast(t("sold",{n:g}));SFX.coin();SFX.sell();applyEq()};
+ sellArm=0;let g=0;const sv=bag.filter(x=>!x.lk);for(const x of sv)g+=sellPrice(x);qHit("sell",sv.length);bag=bag.filter(x=>x.lk);P.gold+=g;if(iSel&&iSel.from==="bag")iSel=null;toast(t("sold",{n:nfm(g)}));SFX.coin();SFX.sell();applyEq()};
 document.querySelectorAll("i[data-ico]").forEach(el=>{const [n,c]=el.dataset.ico.split("|");el.innerHTML=icoSvg(n,c||"#fff","1.15em")});
 $("eqGrid").addEventListener("click",e=>{const b=e.target.closest("[data-eq]");if(!b)return;const k=b.dataset.eq;iSel=eq[k]?{from:"eq",k}:null;renderInv();const box=$("idet");if(box)box.scrollIntoView({behavior:"smooth",block:"nearest"})});
 $("bagGrid").addEventListener("click",e=>{const b=e.target.closest("[data-iid]");if(!b)return;const id=+b.dataset.iid;iSel={from:"bag",id};const it=findItem();renderInv();hideTip2();if(it&&e.detail===2)equipItem(id);const box=$("idet");if(box)box.scrollIntoView({behavior:"smooth",block:"nearest"})});
@@ -14529,7 +14539,7 @@ function renderDrops(){
  const l=luck.lvl,run=luck.until>Date.now(),cost=luckCost(l);
  let h=`<p class="sub">${t("luckHint")}</p><div class="lbox"><b>🍀 ${t("luckLvl",{n:l,m:LUCK_MAX})}</b><div class="lprog lkBar"><i style="width:${(l/LUCK_MAX*100).toFixed(1)}%"></i></div>`;
  if(run){const dur=(luck.dur||luckTime(l))*1000,left=luck.until-Date.now();h+=`<div id="lpT">⏳ ${t("luckRun",{t:fmtT(left/1000)})}</div><div class="lprog"><i id="lpI" style="width:${clamp(100-left/dur*100,0,100).toFixed(1)}%"></i></div>`}
- else if(l<LUCK_MAX)h+=`<div class="acts" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px"><button class="btn main" id="luckGo" ${P.gold<cost?"disabled":""}>${t("luckGo",{n:cost})}</button><span class="m">⏳ ${t("luckTime",{t:fmtT(luckTime(l))})}</span></div>${P.gold<cost?`<div class="m" style="color:#ff8a8a">${t("need")}</div>`:""}`;
+ else if(l<LUCK_MAX)h+=`<div class="acts" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px"><button class="btn main" id="luckGo" ${P.gold<cost?"disabled":""}>${t("luckGo",{n:nfm(cost)})}</button><span class="m">⏳ ${t("luckTime",{t:fmtT(luckTime(l))})}</span></div>${P.gold<cost?`<div class="m" style="color:#ff8a8a">${t("need")}</div>`:""}`;
  else h+=`<div class="ok">✓ ${t("maxed")}</div>`;
  h+=`</div>`;
  if(l<LUCK_MAX){const nl=l+1;h+=`<h3 class="h3">${t("luckNext")}</h3><div class="lbox"><div class="m">${t("dropChance")}</div><div><b class="bigstat" style="font-size:22px">${pct(dropChanceAt(l))}</b> <span style="color:#6bf0ae;font-weight:700">→ ${pct(dropChanceAt(nl))}</span></div></div>${rarTable(nl+(P.rarBonus||0))}`}
@@ -14540,7 +14550,7 @@ function renderDrops(){
     return`<div class="rrow r${i}" style="--rc:${R.col}"><b${rCls(R)}>${L(TIERS[k])}</b><div class="rbar"><i style="width:${Math.max(1.4,Math.sqrt(Math.max(v,w||0))*100).toFixed(1)}%"></i></div><span class="pc w">${pct(v)}${w!=null?` <span style="color:${w>=v?"#6bf0ae":"#ff8a8a"}">→ ${pct(w)}</span>`:""}</span></div>`}).join("")};
   let f=`<div class="foeWhat"><i class="fwI">👹</i><div><b>${t("foeWhat")}</b><p>${t("foeWhatD")}</p></div></div><p class="sub">${t("foeHint")}</p><div class="lbox"><b>👹 ${t("foeLvl",{n:fl,m:FOE_MAX})}</b><div class="lpips">${Array.from({length:FOE_MAX},(_,i)=>`<i class="${i<fl?"on":""}"></i>`).join("")}</div>`;
   if(frun){const dur=(foe.dur||foeTime(fl))*1000,left=foe.until-Date.now();f+=`<div id="fpT">⏳ ${t("luckRun",{t:fmtT(left/1000)})}</div><div class="lprog"><i id="fpI" style="width:${clamp(100-left/dur*100,0,100).toFixed(1)}%"></i></div>`}
-  else if(fl<FOE_MAX)f+=`<div class="acts" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px"><button class="btn main" id="foeGo" ${P.gold<fc?"disabled":""}>${t("luckGo",{n:fc})}</button><span class="m">⏳ ${t("luckTime",{t:fmtT(foeTime(fl))})}</span></div>${P.gold<fc?`<div class="m" style="color:#ff8a8a">${t("need")}</div>`:""}`;
+  else if(fl<FOE_MAX)f+=`<div class="acts" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px"><button class="btn main" id="foeGo" ${P.gold<fc?"disabled":""}>${t("luckGo",{n:nfm(fc)})}</button><span class="m">⏳ ${t("luckTime",{t:fmtT(foeTime(fl))})}</span></div>${P.gold<fc?`<div class="m" style="color:#ff8a8a">${t("need")}</div>`:""}`;
   else f+=`<div class="ok">✓ ${t("maxed")}</div>`;
   f+=`</div><div class="lbox"><div class="m">${t("foeChance")}</div><div><b class="bigstat" style="font-size:22px">${pct(foeAny(n,fl))}</b>${fl<FOE_MAX?` <span style="color:#6bf0ae;font-weight:700">→ ${pct(foeAny(n,nfl))}</span>`:""}</div></div><h3 class="h3">${t("foeTiers")}</h3>${rows(fl,fl<FOE_MAX?nfl:null)}`;
   $("dFoe").innerHTML=f;const fb=$("foeGo");if(fb)fb.onclick=foeStart}
@@ -14554,7 +14564,7 @@ function luckLive(){if(modalOpen!=="mDrops")return;if(foe.until){const l=foe.lvl
 
 /* ---- gems: earning, quests, the 🎁 screen, the gem shop ---- */
 let gTab="gDay",gJust=0,gLast=null,gChk=0,nickArm=0;
-const nfm=v=>v>=1e6?(v/1e6).toFixed(1).replace(/\.0$/,"")+"M":v>=1e4?Math.round(v/1e3)+"k":String(v);
+const nfmS=v=>v>=1e3&&v<1e4?(v/1e3).toFixed(1).replace(/\.0$/,"")+"k":nfm(v);const NFU=[[1e18,"Qi"],[1e15,"Qa"],[1e12,"T"],[1e9,"B"],[1e6,"M"]];const nfm=v=>{if(!(v>=1e4))return String(v);if(v>=1e21)return v.toExponential(1).replace("+","");for(const[d,u]of NFU)if(v>=d){const x=v/d;return(x>=100?Math.round(x):x.toFixed(1).replace(/\.0$/,""))+u}return Math.round(v/1e3)+"k"};
 const fmtL=sec=>sec>=86400?t("dShort",{n:Math.floor(sec/86400)})+" "+fmtT(sec%86400):fmtT(sec);
 function gemAdd(n){const k=Math.max(0,Math.min(n|0,gemRoom()));if(!k)return 0;gem.n+=k;gem.earned+=k;
  const el=document.createElement("span");el.className="gfly gm";el.textContent="+"+k+" 💎";$("gflyW").appendChild(el);setTimeout(()=>el.remove(),1100);return k}
@@ -14995,7 +15005,7 @@ function renderForgeUp(){
  const mats=["iron","crys"].concat(el?[ELK[el]]:[],["void"]).map(k=>`<span title="${matN(k)}">${matIc(k)} <b>${nfm(SL.mat[k]||0)}</b></span>`).join("");
  let h=`<div class="fgCard" style="--rc:${R.col}"><div class="fgHead"><div class="fgIc${ev?" ev"+ev:""}" id="fgIc" style="--ec:${el?ELC[el]:R.col}">${itemArt(it.s,itemKind(it),it.r,{bare:1,lk:itemLook(it)})}${up?`<b>+${up}</b>`:""}${el?`<i class="fgEl">${ELIC[el]}</i>`:""}</div><div class="fgNm"><h4${rCls(R)}>${it.u||it.a!=null?"★ ":""}${itemName(it)}</h4><div class="rr">${L(R.n)} · ${t("ilvl",{n:it.l})}${ev?` · ✨ ${EVR[ev]}`:""}</div></div></div>`+
   `<div class="mats">${mats}</div><div class="fgPips">${pips}</div><ul class="fgSt">${rows}</ul>`+
-  `<div class="fgAct"><button class="btn main fgGo${can||max?"":" dis"}" id="fgGo" type="button"${max?" disabled":""}>${max?t("maxed"):t("fgBtn",{n:cost})+(Object.keys(um).length?" "+matTxt(um):"")}</button>${max?"":'<button class="btn fgX5" id="fgX5" type="button">×5</button><button class="btn fgX5" id="fgXM" type="button">MAX</button>'}</div><p class="sub fgHint">${t("fgHint")} ${t("sl_upMatHint")}</p></div>`;
+  `<div class="fgAct"><button class="btn main fgGo${can||max?"":" dis"}" id="fgGo" type="button"${max?" disabled":""}>${max?t("maxed"):t("fgBtn",{n:nfm(cost)})+(Object.keys(um).length?" "+matTxt(um):"")}</button>${max?"":'<button class="btn fgX5" id="fgX5" type="button">×5</button><button class="btn fgX5" id="fgXM" type="button">MAX</button>'}</div><p class="sub fgHint">${t("fgHint")} ${t("sl_upMatHint")}</p></div>`;
  /* evolution */
  const E=EVO[ev];h+=`<div class="fgCard evoC" style="--rc:${el?ELC[el]:R.col}"><h4>✨ ${t("sl_evo")}</h4><div class="evoL">${EVO.map((_,i)=>`<span class="${i<ev?"on":i===ev?"nx":""}"><b>${EVR[i+1]}</b><small>${t("sl_ev"+(i+1))}</small></span>`).join("")}</div>`;
  if(E){const m=evoReq(it),g=evoGold(it),okU=up>=E.u,okE=!E.el||!!el,a=it.st[0],v0=svAt(a[0],a[1],up,ev),v1=svAt(a[0],a[1],up,ev+1);
@@ -17733,6 +17743,7 @@ sl_t_seasonlegend:"Легенда сезону|Legend of the Season|Légende de 
 n42a1:"🎁 «Нагороди готові!» — коли заходиш у гру, вікно саме показує, що чекає: щоденна нагорода, безкоштовна скриня (кожні 4 години), нагороди Шляху Героя й повні молоти кузні. 🏅 Шлях Героя: новий сезон щомісяця, 40 рівнів безкоштовних нагород (золото, молоти, кристали, рідкісні й легендарні речі, сезонні титули) за славу ⭐ від перемог, кування, Колосів і щоденних нагород. Нова вкладка «Шлях» у меню 🎁|🎁 «Rewards ready!» — when you enter the game, a window shows what is waiting: the daily reward, a free chest (every 4 hours), Hero's Path rewards and full forge hammers. 🏅 Hero's Path: a new season every month, 40 levels of free rewards (gold, hammers, crystals, rare and legendary items, season titles) for glory ⭐ from wins, forging, Colossi and daily rewards. New «Path» tab in the 🎁 menu|🎁 « Récompenses prêtes ! » — en entrant dans le jeu, une fenêtre montre ce qui t'attend : récompense quotidienne, coffre gratuit (toutes les 4 heures), récompenses de la Voie du Héros et marteaux pleins. 🏅 Voie du Héros : une nouvelle saison chaque mois, 40 niveaux de récompenses gratuites (or, marteaux, cristaux, objets rares et légendaires, titres de saison) pour la gloire ⭐ des victoires, de la forge, des Colosses et des récompenses quotidiennes. Nouvel onglet « Voie » dans le menu 🎁|🎁 «Belohnungen bereit!» — beim Spielstart zeigt ein Fenster, was wartet: tägliche Belohnung, Gratis-Truhe (alle 4 Stunden), Belohnungen des Heldenpfads und volle Schmiedehämmer. 🏅 Pfad des Helden: jeden Monat eine neue Saison, 40 Stufen gratis Belohnungen (Gold, Hämmer, Kristalle, seltene und legendäre Gegenstände, Saisontitel) für Ruhm ⭐ aus Siegen, Schmieden, Kolossen und täglichen Belohnungen. Neuer Reiter «Pfad» im 🎁-Menü|🎁「奖励已就绪！」——进入游戏时会弹窗显示等待你的内容：每日奖励、免费宝箱（每4小时）、英雄之路奖励和满格的锻造锤。🏅 英雄之路：每月新赛季，40级免费奖励（金币、锤子、水晶、稀有和传奇物品、赛季称号），通过胜利、锻造、巨像和每日奖励获得荣耀⭐。🎁菜单新增“之路”页|🎁 «¡Recompensas listas!»: al entrar en el juego, una ventana muestra lo que te espera: recompensa diaria, cofre gratis (cada 4 horas), recompensas de la Senda del Héroe y martillos llenos. 🏅 Senda del Héroe: una temporada nueva cada mes, 40 niveles de recompensas gratis (oro, martillos, cristales, objetos raros y legendarios, títulos de temporada) por gloria ⭐ de victorias, forja, Colosos y recompensas diarias. Nueva pestaña «Senda» en el menú 🎁|🎁 «Ricompense pronte!»: entrando nel gioco, una finestra mostra cosa ti aspetta: ricompensa giornaliera, forziere gratis (ogni 4 ore), ricompense della Via dell'Eroe e martelli pieni. 🏅 Via dell'Eroe: una nuova stagione ogni mese, 40 livelli di ricompense gratis (oro, martelli, cristalli, oggetti rari e leggendari, titoli stagionali) per la gloria ⭐ da vittorie, forgia, Colossi e ricompense giornaliere. Nuova scheda «Via» nel menu 🎁|🎁 «Nagrody gotowe!» — po wejściu do gry okno pokazuje, co czeka: nagroda dzienna, darmowa skrzynia (co 4 godziny), nagrody Ścieżki Bohatera i pełne młoty kuźni. 🏅 Ścieżka Bohatera: nowy sezon co miesiąc, 40 poziomów darmowych nagród (złoto, młoty, kryształy, rzadkie i legendarne rzeczy, tytuły sezonu) za chwałę ⭐ ze zwycięstw, kucia, Kolosów i nagród dziennych. Nowa karta «Ścieżka» w menu 🎁|🎁 «Recompensas prontas!» — ao entrar no jogo, uma janela mostra o que espera: recompensa diária, baú grátis (a cada 4 horas), recompensas da Trilha do Herói e martelos cheios. 🏅 Trilha do Herói: uma temporada nova todo mês, 40 níveis de recompensas grátis (ouro, martelos, cristais, itens raros e lendários, títulos de temporada) por glória ⭐ de vitórias, forja, Colossos e recompensas diárias. Nova aba «Trilha» no menu 🎁|🎁「報酬の準備完了！」——ゲームに入るとウィンドウが待っている物を表示：デイリー報酬、無料の宝箱（4時間ごと）、英雄の道の報酬、満タンのハンマー。🏅 英雄の道：毎月新シーズン、40段階の無料報酬（ゴールド、ハンマー、結晶、レア・伝説アイテム、シーズン称号）を勝利・鍛造・巨像・デイリー報酬の栄光⭐で。🎁メニューに新タブ「道」|🎁 '보상 준비 완료!' — 게임에 들어오면 창이 기다리는 것을 보여준다: 일일 보상, 무료 상자(4시간마다), 영웅의 길 보상, 가득 찬 망치. 🏅 영웅의 길: 매달 새 시즌, 승리·단조·거상·일일 보상의 영광⭐으로 얻는 40단계 무료 보상(골드, 망치, 수정, 희귀·전설 아이템, 시즌 칭호). 🎁 메뉴에 새 탭 '길'|🎁 «Ödüller hazır!» — oyuna girince bir pencere neyin beklediğini gösterir: günlük ödül, ücretsiz sandık (her 4 saatte), Kahramanın Yolu ödülleri ve dolu çekiçler. 🏅 Kahramanın Yolu: her ay yeni sezon, zaferler, dövme, devler ve günlük ödüllerden gelen şan ⭐ ile 40 seviye ücretsiz ödül (altın, çekiç, kristal, nadir ve efsanevi eşya, sezon unvanları). 🎁 menüsünde yeni «Yol» sekmesi|🎁 «Hadiah siap!» — saat masuk game, jendela menunjukkan yang menunggu: hadiah harian, peti gratis (tiap 4 jam), hadiah Jalan Pahlawan dan palu penuh. 🏅 Jalan Pahlawan: musim baru tiap bulan, 40 level hadiah gratis (emas, palu, kristal, barang langka dan legendaris, gelar musim) dari kejayaan ⭐ kemenangan, tempa, Kolosus dan hadiah harian. Tab baru «Jalan» di menu 🎁|🎁 «इनाम तैयार!» — गेम में आते ही एक खिड़की दिखाती है क्या इंतज़ार में है: दैनिक इनाम, मुफ़्त संदूक (हर 4 घंटे), नायक के पथ के इनाम और भरे हथौड़े। 🏅 नायक का पथ: हर महीने नया सीज़न, जीत, गढ़ाई, महाकाय और दैनिक इनाम के गौरव ⭐ से 40 स्तर मुफ़्त इनाम (सोना, हथौड़े, स्फटिक, दुर्लभ और पौराणिक चीज़ें, सीज़न उपाधियाँ)। 🎁 मेनू में नया «पथ» टैब|🎁 «Phần thưởng sẵn sàng!» — khi vào game, một cửa sổ cho thấy những gì đang chờ: thưởng hằng ngày, rương miễn phí (mỗi 4 giờ), thưởng Con Đường Anh Hùng và búa đầy. 🏅 Con Đường Anh Hùng: mùa mới mỗi tháng, 40 cấp thưởng miễn phí (vàng, búa, pha lê, đồ hiếm và huyền thoại, danh hiệu mùa) nhờ vinh quang ⭐ từ chiến thắng, rèn đồ, người khổng lồ và thưởng hằng ngày. Thẻ mới «Con đường» trong menu 🎁|🎁 «รางวัลพร้อมแล้ว!» — เมื่อเข้าเกม หน้าต่างจะแสดงสิ่งที่รออยู่: รางวัลรายวัน หีบฟรี (ทุก 4 ชั่วโมง) รางวัลเส้นทางวีรบุรุษ และค้อนเต็ม 🏅 เส้นทางวีรบุรุษ: ฤดูกาลใหม่ทุกเดือน รางวัลฟรี 40 ระดับ (ทอง ค้อน คริสตัล ของหายากและในตำนาน ฉายาประจำฤดู) จากเกียรติ ⭐ ของชัยชนะ การตีเหล็ก ยักษ์ และรางวัลรายวัน แท็บใหม่ «เส้นทาง» ในเมนู 🎁|🎁 «Beloningen klaar!» — bij het starten toont een venster wat er wacht: de dagelijkse beloning, een gratis kist (elke 4 uur), beloningen van het Pad van de Held en volle smeedhamers. 🏅 Pad van de Held: elke maand een nieuw seizoen, 40 niveaus gratis beloningen (goud, hamers, kristallen, zeldzame en legendarische spullen, seizoenstitels) voor roem ⭐ uit overwinningen, smeden, kolossen en dagelijkse beloningen. Nieuw tabblad «Pad» in het 🎁-menu|🎁 «المكافآت جاهزة!» — عند دخول اللعبة تُظهر نافذة ما ينتظرك: المكافأة اليومية، صندوق مجاني (كل 4 ساعات)، مكافآت درب البطل والمطارق الممتلئة. 🏅 درب البطل: موسم جديد كل شهر، 40 مستوى من المكافآت المجانية (ذهب، مطارق، بلورات، أغراض نادرة وأسطورية، ألقاب الموسم) مقابل المجد ⭐ من الانتصارات والطرق والعمالقة والمكافآت اليومية. تبويب جديد «الدرب» في قائمة 🎁|🎁 «পুরস্কার তৈরি!» — গেমে ঢুকলেই একটি জানালা দেখায় কী অপেক্ষায়: দৈনিক পুরস্কার, বিনামূল্যের সিন্দুক (প্রতি ৪ ঘণ্টায়), বীরের পথের পুরস্কার আর ভরা হাতুড়ি। 🏅 বীরের পথ: প্রতি মাসে নতুন মরসুম, জয়, গড়া, মহাকায় ও দৈনিক পুরস্কারের গৌরব ⭐ দিয়ে ৪০ স্তরের বিনামূল্যের পুরস্কার (সোনা, হাতুড়ি, স্ফটিক, দুর্লভ ও কিংবদন্তি জিনিস, মরসুমের উপাধি)। 🎁 মেনুতে নতুন «পথ» ট্যাব|🎁 «Handa na ang gantimpala!» — pagpasok sa laro, may bintanang nagpapakita ng naghihintay: araw-araw na gantimpala, libreng baul (bawat 4 na oras), gantimpala ng Landas ng Bayani at punong martilyo. 🏅 Landas ng Bayani: bagong season bawat buwan, 40 antas ng libreng gantimpala (ginto, martilyo, kristal, bihira at maalamat na gamit, titulo ng season) mula sa kaluwalhatian ⭐ ng panalo, pagpapanday, koloso at araw-araw na gantimpala. Bagong tab na «Landas» sa menu na 🎁"};
 for(const k in P42Tsrc)T8[k]=S8(P42Tsrc[k]);
 NWC.n42a1="new";NEWS.unshift({v:"2026.12.06",ic:"🎁",k:["n42a1"]});
+const P43Tsrc={n43a1:"🛠️ Полірування: вороги падають на землю з глухим ударом і пилом, очі гаснуть, тіло лежить і йде в землю; з-під ніг ворогів летить пил. У кузні числа короткі (725k, 98.8T) і не вилазять за край; «Речі» й верхня панель влазять на вузьких телефонах.|🛠️ Polish: foes fall to the ground with a thud and dust, their eyes go dark, the body lies there and sinks away; running foes kick up dust. Forge numbers are short (725k, 98.8T) and stay inside; Items and the top bar fit narrow phones.|🛠️ Finitions : les ennemis tombent au sol avec un bruit sourd et de la poussière, leurs yeux s'éteignent, le corps reste puis s'enfonce ; les ennemis qui courent soulèvent de la poussière. À la forge, les nombres sont courts (725k, 98.8T) et ne débordent plus ; Objets et la barre du haut tiennent sur les petits écrans.|🛠️ Feinschliff: Gegner fallen mit dumpfem Schlag und Staub zu Boden, ihre Augen erlöschen, der Körper bleibt liegen und versinkt; laufende Gegner wirbeln Staub auf. Zahlen in der Schmiede sind kurz (725k, 98.8T) und ragen nicht heraus; Gegenstände und die obere Leiste passen auf schmale Handys.|🛠️ 打磨：敌人倒地时有闷响和尘土，眼睛熄灭，尸体倒下片刻后沉入地面；奔跑的敌人会扬起尘土。锻造坊的数字变短（725k、98.8T），不再超出边框；物品界面和顶部栏适配窄屏手机。|🛠️ Pulido: los enemigos caen al suelo con un golpe sordo y polvo, sus ojos se apagan, el cuerpo queda tendido y se hunde; los enemigos que corren levantan polvo. En la forja los números son cortos (725k, 98.8T) y no se salen; Objetos y la barra superior caben en móviles estrechos.|🛠️ Rifiniture: i nemici cadono a terra con un tonfo e polvere, gli occhi si spengono, il corpo resta a terra e sprofonda; i nemici che corrono alzano polvere. Nella forgia i numeri sono brevi (725k, 98.8T) e non escono dai bordi; Oggetti e la barra in alto stanno nei telefoni stretti.|🛠️ Szlify: wrogowie padają na ziemię z głuchym łoskotem i kurzem, ich oczy gasną, ciało leży i zapada się w ziemię; biegnący wrogowie wzbijają kurz. Liczby w kuźni są krótkie (725k, 98.8T) i nie wychodzą poza ramkę; Przedmioty i górny pasek mieszczą się na wąskich telefonach.|🛠️ Polimento: os inimigos caem no chão com um baque e poeira, os olhos se apagam, o corpo fica caído e afunda; inimigos correndo levantam poeira. Na forja os números são curtos (725k, 98.8T) e não saem da borda; Itens e a barra superior cabem em celulares estreitos.|🛠️ 仕上げ：敵はドサッと土煙を上げて倒れ、目の光が消え、しばらく横たわってから地面に沈む。走る敵は土煙を上げる。鍛冶場の数字は短く（725k、98.8T）はみ出さない。アイテム画面と上部バーは細いスマホにも収まる。|🛠️ 다듬기: 적이 쿵 소리와 먼지를 내며 쓰러지고, 눈빛이 꺼지며, 잠시 누워 있다가 땅속으로 가라앉는다. 달리는 적은 먼지를 일으킨다. 대장간 숫자는 짧게(725k, 98.8T) 표시되어 넘치지 않고, 아이템 창과 상단 바가 좁은 폰에도 맞는다.|🛠️ Cilalama: düşmanlar boğuk bir gümlemeyle ve tozla yere düşer, gözleri söner, beden bir süre yatar ve toprağa gömülür; koşan düşmanlar toz kaldırır. Demirhanede sayılar kısa (725k, 98.8T) ve taşmıyor; Eşyalar ve üst çubuk dar telefonlara sığıyor.|🛠️ Pemolesan: musuh jatuh ke tanah dengan bunyi gedebuk dan debu, matanya padam, tubuhnya tergeletak lalu tenggelam; musuh yang berlari menerbangkan debu. Angka di tempa kini pendek (725k, 98.8T) dan tidak keluar tepi; Barang dan bilah atas muat di ponsel sempit.|🛠️ निखार: दुश्मन धम्म की आवाज़ और धूल के साथ ज़मीन पर गिरते हैं, उनकी आँखें बुझ जाती हैं, शरीर पड़ा रहता है और फिर ज़मीन में धँस जाता है; दौड़ते दुश्मन धूल उड़ाते हैं। भट्ठी में अंक छोटे (725k, 98.8T) हैं और बाहर नहीं निकलते; सामान और ऊपर की पट्टी पतले फ़ोन में समा जाती हैं।|🛠️ Trau chuốt: kẻ địch ngã xuống đất kèm tiếng uỵch và bụi, mắt tắt sáng, xác nằm lại rồi chìm xuống đất; kẻ địch chạy sẽ tung bụi. Số trong lò rèn được rút gọn (725k, 98.8T) và không tràn ra ngoài; Vật phẩm và thanh trên cùng vừa với điện thoại hẹp.|🛠️ ขัดเกลา: ศัตรูล้มลงพื้นพร้อมเสียงตุบและฝุ่น ดวงตาดับลง ร่างนอนอยู่สักพักแล้วจมลงดิน ศัตรูที่วิ่งจะทำให้ฝุ่นฟุ้ง ตัวเลขในโรงตีสั้นลง (725k, 98.8T) ไม่ล้นขอบ หน้าไอเทมและแถบด้านบนพอดีกับมือถือจอแคบ|🛠️ Afwerking: vijanden vallen met een doffe klap en stof op de grond, hun ogen doven, het lichaam blijft liggen en zakt weg; rennende vijanden doen stof opwaaien. Getallen in de smidse zijn kort (725k, 98.8T) en steken niet uit; Spullen en de bovenbalk passen op smalle telefoons.|🛠️ تحسينات: يسقط الأعداء أرضًا بارتطام مكتوم وغبار، وتنطفئ عيونهم، ويبقى الجسد ممددًا ثم يغوص في الأرض؛ والأعداء الراكضون يثيرون الغبار. أرقام الحدادة صارت قصيرة (725k، 98.8T) ولا تخرج عن الإطار؛ وشاشة الأغراض والشريط العلوي يتسعان في الهواتف الضيقة.|🛠️ ঘষামাজা: শত্রুরা ধপ শব্দ আর ধুলো নিয়ে মাটিতে পড়ে, চোখ নিভে যায়, দেহ কিছুক্ষণ পড়ে থেকে মাটিতে ডুবে যায়; দৌড়ানো শত্রুরা ধুলো ওড়ায়। কামারশালার সংখ্যা ছোট (725k, 98.8T) আর কিনারা ছাড়ায় না; জিনিসপত্র ও উপরের বার সরু ফোনেও আঁটে।|🛠️ Pagpapakinis: bumabagsak ang mga kalaban sa lupa nang may kalabog at alikabok, namamatay ang liwanag ng mata, nakahiga ang katawan saka lumulubog; nagpapalipad ng alikabok ang tumatakbong kalaban. Maiikli na ang numero sa pandayan (725k, 98.8T) at hindi lumalampas; kasya na ang Mga Gamit at itaas na bar sa makikitid na telepono."};for(const k in P43Tsrc)T8[k]=S8(P43Tsrc[k]);NWC.n43a1="fix";NEWS.unshift({v:"2026.12.07",ic:"🛠️",k:["n43a1"]});
 TITLES.push({k:"pathfinder",ic:"🏅",col:"#ffd36a"},{k:"seasonlegend",ic:"👑",col:"#ff9a2a"});
 /* ---- Hero's Path: a free season pass, one season per calendar month (LG.hp {s, xp, got}); free chest every 4 h (LG.fc = ready time, ms) ---- */
 const HP_N=40,hpSeason=()=>{const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)};
