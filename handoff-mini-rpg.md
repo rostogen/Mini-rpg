@@ -1,6 +1,6 @@
 # active-memory handoff: Mini RPG 3D «Тіньові землі»
 
-**Handoff #2** · 2026-10-24 · Lineage: #1 (2026-10-23): Mega 4.0 (P11–P14), Dark Fantasy (P15), полірування (PR #56), аудит MEGA FIX і група 1 (PR #57); #2 (2026-10-24): звуки, унікальні вороги й текстури, крива дорога, день/ніч з червоним місяцем, панель героя, 50 ідей ChatGPT у 5 пакетах (PR #59–#72), ключ OpenAI в середовищі
+**Handoff #1** · 2026-10-26 · Lineage: #1 (2026-10-26): аудит і реалізація ідей ChatGPT 1–300 (P29–P35), MEGA 6.0 (Колоси, скакун, небо, заставка), Кузня Майстра, анімації, нагороди й Шлях Героя; далі фікси.
 
 ## 0. Instructions for Claude (read first)
 
@@ -14,106 +14,115 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 6. Your first reply: at most 5 lines covering the goal, the current state, and the next step (section 11). Mention any files from section 13 that were not attached. Ask the questions in section 12 if there are any. End with "Ready to continue with <next step>?" Then wait for the user's go.
 
 ## 1. Mission
-- **Goal:** далі розвивати браузерну гру Mini RPG 3D «Тіньові землі» за побажаннями Ростика: він каже річ, я відповідаю, чи вона вже є; якщо нема, додаю.
-- **Done looks like:** кожна зміна реально працює в грі, перевірена (Playwright, без помилок консолі), злита в `main`; старі збереження цілі; звіт чесний.
-- **Why it matters / context:** гра вже величезна (1318 видів ворогів, 103 біоми, 20 мов); Ростик хоче якість, атмосферу, «щоб нічого не повторювалось».
+- **Goal:** розвивати браузерну гру Mini RPG 3D «Тіньові землі» (репозиторій `rostogen/Mini-rpg`, один файл `index.html`); зараз — виправляти вади після нічних оновлень.
+- **Done looks like:** Ростик пише, що зламано → виправлено, перевірено тестами, злито в `main`, дано посилання на гілки.
+- **Why it matters / context:** Ростик хоче гру, яка «затягує» і робить «вау»; грає й перевіряє з телефона.
 
 ## 2. About the user (as relevant to this work)
-- Звати **Ростик**. Звертатись саме так, не «господарю» і не «власнику».
-- Працює **тільки з телефона** (Android, браузер Chrome або застосунок Claude). Нема ПК.
-- Пише українською, коротко, з помилками й без розділових знаків. «Дороби» означає продовжуй до кінця без пауз.
-- Іноді приносить ідеї від ChatGPT (копіює текст сюди).
+- Ім'я: Ростик. Працює **тільки з телефона** (нема ПК).
+- Не програміст; дає ідеї (часто від ChatGPT списками), оцінює результат у грі.
+- Любить великі автономні «нічні» оновлення: «не питай», «роби все круто», «Дороби те що робив».
 
 ## 3. Style & communication
-- **Language:** відповіді українською.
-- **Tone:** коротко й просто («caveman style»), без води, дружньо.
-- **Reply length:** коротко; звіт по пунктах.
-- **Formatting:** заголовки, списки, ✅/❌/⏸ ок; емодзі помірно.
-- **Working style:** спершу перевір код (аудит), потім працюй пакетами: зміна → тест → коміт → PR → злиття → скинути гілку на `main`. Не питай зайвого: Ростик просив «у мене не питай» і «Дороби». Повідомляй лише реально зроблене й перевірене.
-- **Звіт:** Проблема / Причина / Виправлення / Перевірка / Залишилось (для фіч: що зроблено, що вже було, що відкладено й чому, як повернути).
-- **Avoid:** кроки для ПК (термінал, adb, USB, Claude Desktop); перебільшення («у 1000 разів краще», «все ідеально»); нагадування про старий API-ключ (Ростик просив більше не згадувати); звертання «господар».
+- **Language:** українська у відповідях; гра має 20 мов.
+- **Tone:** коротко, просто («caveman style»), дружньо.
+- **Reply length:** коротко; звіт — списком що зроблено, що змінено, що протестовано.
+- **Formatting:** короткі пункти, емодзі можна.
+- **Working style:** діяти автономно, не питати дрібниць; працювати пакетами; після кожного пакета тести + PR + merge. Коли довго мовчиш — коротко писати, що робиш.
+- **Avoid:** поради для ПК (термінал, Claude Desktop, adb, USB); слова «господар»/«власник»; заяви про тести, яких не запускав.
 
 ## 4. Hard rules (word for word)
-1. "The owner works **only from a phone**. There is no laptop or computer. Never suggest steps that need a PC: terminal, Claude Desktop, `claude remote-control`, adb, USB cable. Give phone-friendly ways instead (GitHub links, the browser, the Claude app)."
+1. "The owner works **only from a phone**. There is no laptop or computer. Never suggest steps that need a PC: terminal, Claude Desktop, `claude remote-control`, adb, USB cable."
 2. "Talk in Ukrainian, short and simple (caveman style)."
-3. "The game is one file: `index.html` (Three.js, first person only, open world, 20 languages: never add Russian)."
-4. "When work is done: commit, push, open a PR, merge it into `main`, and give the link where the branch can be deleted." (посилання: https://github.com/rostogen/Mini-rpg/branches)
-5. "Do not publish the game on Netlify: the owner asked to take it down."
-6. "What's new: add a line to `NEWS` (newest first, strings `n…` in `T8src`) with every update" (для фіч; текст 20 мовами, ключі `n16a*`, категорія в `NWC`).
-7. Gems 💎 "come only from the 🎁 menu": нові системи не дають гемів.
-8. "Every wearable item must have its own custom look … New items get it through `itemLook()`".
-9. "Never test rarities by number: use the flags (`rainbow`, `cosmic`, `dark`, `gsl`, `red`) or helpers `rarTxtCol`, `rLive`, `rbOrCs`."
-10. Не видаляй наявні функції та контент, не скидай збереження, не змінюй баланс і шанси без потреби, не дублюй наявні системи.
-11. "Не стверджуй, що перевірив гру, якщо не запускав її." Якщо щось не перевірено (наприклад на телефоні або на слух), прямо скажи.
-12. Звуки: лише процедурні або наявні семпли гри (`sndData`), без сторонніх аудіофайлів.
-13. Ніколи не писати назви/ID моделі в коміти, PR чи код.
-14. Ключі/паролі ніколи не вставляти в чат і не зберігати в репо.
-15. Повний набір правил проєкту в `CLAUDE.md` у корені репо (читати першим; там же нотатки про всі системи P10–P16).
+3. "The owner's name is Ростик: call him that (not «господар» or «власник»)."
+4. "The game is one file: `index.html` (Three.js, first person only, open world, 20 languages: never add Russian)."
+5. "When work is done: commit, push, open a PR, merge it into `main`, and give the link where the branch can be deleted." (посилання: https://github.com/rostogen/Mini-rpg/branches)
+6. "Do not publish the game on Netlify: the owner asked to take it down."
+7. Алмази 💎 — тільки з меню 🎁 (щоденна нагорода й квести); нові системи алмазів не дають.
+8. "Never test rarities by number: use the flags (`rainbow`, `cosmic`, `dark`, `gsl`, `red`) or helpers `rarTxtCol`, `rLive`, `rbOrCs`."
+9. "What's new: add a line to `NEWS` … with every update" (рядок у 20 мовах).
+10. Без донатів, реклами, серверів, онлайн-мультиплеєра; картку донату в налаштуваннях не чіпати.
+11. "не стверджуй, що тести пройдено, якщо їх фактично не запускав"; на телефоні й на слух не перевірено — так і казати.
+12. "Не переписуй гру з нуля"; "Не видаляй наявний функціонал і не скидай старі збереження"; нагороди — без повторного отримання, витрати — без подвійного списання; без накопичення таймерів, дублювання ворогів/об'єктів і витоків пам'яті.
+13. Ніколи не писати назви/ID моделей у комітах, PR чи коді.
+14. Довідник по всіх системах гри — у `CLAUDE.md` в репозиторії; доповнювати його з кожним пакетом.
 
 ## 5. Corrections log
 | # | Claude did | The user wanted |
 |---|---|---|
-| 1 | Зупинявся посеред роботи / чекав | «Дороби»: продовжувати до кінця без зайвих пауз |
-| 2 | Після злиття не пушив скинуту гілку | Після merge: `git fetch origin main && git checkout -B <гілка> origin/main && git push -u origin <гілка>` |
-| 3 | Перший фікс панелі HP/XP (лише скорочення чисел) | Смуги й літери все одно вилазили: причина в темній рамці `body.dkf .plate` без відступів (виправлено в PR #62) |
-| 4 | Дорога петляла слабо (±25) | «Ще більш крива дорога»: зроблено ±~67 (PR #67) |
-| 5 | Казав «потрібен ключ API», не пояснивши куди | Ростик вставив ключ у чат; треба одразу пояснювати: ключі лише в налаштуваннях середовища |
-| 6 | Нагадував відкликати старий ключ | «Не згадуй плз»: більше не згадувати |
-| 7 | Звертався «господар/власник» | Звати **Ростик** |
+| 1 | — (прямих виправлень від Ростика в цьому чаті не було) | — |
+
+Технічні пастки, знайдені тестами (не повторювати):
+| # | Помилка | Правильно |
+|---|---|---|
+| 1 | Збереження скакуна в `LG.mt` | `LG.mt` — таймер метеоритів; скакун у `LG.std` |
+| 2 | Оверлей заставки з id `cine` | `#cine` — смуги боса; заставка `#m6c` |
+| 3 | Кнопка з класом `sk` | `hud()` читає `.sk` як кнопки умінь; брати інший клас (`m6sk`) |
+| 4 | Блиск заголовка через text-fill transparent | ховає емодзі; блиск через `h2::after` |
+| 5 | `isFP()` на старті | false, поки 3D не готове |
+| 6 | Титули, додані після `loadState()` | губились; в кінці блоку перечитувати `LG.ttl`/`SL.ttl` |
+| 7 | Повні молоти блокували кінець прокачки кузні | перевірка `upE` до раннього виходу в `smRegen` |
 
 ## 6. Decisions
 | Decision | Why |
 |---|---|
-| Працюємо пакетами з окремим PR на кожен | вимога; легко повернути через Revert |
-| 50 ідей ChatGPT зроблено за планом `PLAN50.md` | ChatGPT вимагав аудит і план |
-| Головна дорога тільки візуально петляє (`roadOff`), зона бою не змінена | безпечно для руху/ворогів |
-| Ключ OpenAI зберігається як мережевий секрет середовища | безпечно, Claude не бачить ключ |
+| Блок ідей 274–300 зроблено пакетами E/F/G (P33–P35) | запит «ФІНАЛЬНИЙ БЛОК ІДЕЙ №274–300» |
+| MEGA 6.0 «Пробудження Колосів» = Колоси + Дух-скакун + Живе небо + Заставка | запит на «вау» зранку |
+| Кузня Майстра як Smithing Master (P40) | прохання Ростика |
+| Анімації діалогів і вікон (P41) | «на кожний діалог анімації» |
+| «Нагороди готові!» + скриня кожні 4 год + Шлях Героя (P42) | «your daily rewards ready», «щоб затягувало» |
+| Перша хвиля бою чекає заставку на першому вході | щоб заставка йшла одразу |
 
 ## 7. Changed / rejected
-- Публікація на Netlify → ❌ знято на прохання Ростика.
-- Пряма дорога → завжди крива (PR #63), потім ще кривіша (PR #67).
-- Плагіни codex-review / Codex Dispatch / Better Call GPT → не працюють у цій сесії (потрібні Codex CLI і ключ); замість них прямий запит до OpenAI API через мережевий секрет.
-- ❌ Відкладені ідеї (з причинами в `PLAN50.md`): 1 міст, 7 коріння (нема річок/проваль, ризик рельєфу), 8 озеро-відображення (важко для телефона), 35 колесо дій і 39 перетягування кнопок (ризик сітки HUD), 43 голем (дублює міні-мапу), 44 тінь, що запізнюється (від 1-ї особи не видно).
+- Ідея 297 «подвійна тінь» → кімната двох вогнів (від першої особи тіні героя не видно).
+- ❌ Платний сезонний пропуск / донати (правило: без донатів) → Шлях Героя повністю безкоштовний.
 
 ## 8. Data & facts (exact)
-- Репо `rostogen/Mini-rpg`; гра: https://rostogen.github.io/Mini-rpg/
-- Робоча гілка в цій сесії: `claude/new-session-y54neo` (у новій сесії може бути інша; дивись system prompt).
-- Злиті PR цього чату: #59 звуки речей, #60 унікальні вороги/звуки ударів/дропу/стежки, #61 і #62 панель HP/XP, #63 крива дорога, #64 день/ніч, #65 кажани/текстури, #66 CLAUDE.md, #67 ще кривіша дорога, #68–#72 п'ять пакетів 50 ідей. `main` після #72 = `bfc962d`.
-- 50 ідей: ✔️ 36 зроблено, ✅ 6 уже були (24, 30, 37, 38, 40, 48), ⏸ 7 відкладено (1, 7, 8, 35, 39, 43, 44), 🟡 1 частково (32).
-- Вороги: 1318 видів, 1318 різних форм (`kindDecor`, `kdIx`, 1728 комбінацій на тіло) і 1318 різних текстур (`skinTex`).
-- Звуки дропу: 253 з 253 різні (23 рідкості × 11 слотів, `DROP_MOT`).
-- День/ніч: `CLK` у хвилинах, 1 с = 1 хв гри, доба 24 хв, зберігається `r2_clk`; світанок 5–7, захід 18–20.
-- `roadOff(x)=sin(x*.0036+.6)*38+sin(x*.0083+2.3)*22+sin(x*.019+.4)*7`.
-- OpenAI: мережевий секрет у середовищі «За замовчуванням», хост `api.openai.com`, заголовок `Authorization: Bearer [secret removed: re-enter it]`. Перевірено: `/v1/models` = 200; чат-запит повертає `insufficient_quota` («You have no credits remaining»). Моделі є, наприклад `gpt-5.5`.
-- Тексти: `S8("uk|en|fr|de|zh|es|it|pl|pt|ja|ko|tr|id|hi|vi|th|nl|ar|bn|fil")`: 20 полів, 19 `|`; нові тексти в `P16Tsrc` (ключі `p16_*`). Лапки `"` усередині перекладів ламають рядок: використовувати «».
-- Номер картки підтримки в `#donCard` не змінювати.
+- Репозиторій: `rostogen/Mini-rpg`; робоча гілка `ccr-69cfb0ba-98akjb`; після злиття: `git fetch -q origin main && git checkout -q -B ccr-69cfb0ba-98akjb origin/main && git push -q -u origin ccr-69cfb0ba-98akjb`.
+- Підпис комітів: `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` і `Claude-Session: https://claude.ai/code/session_01ERQmh76h9m8VrAoH75GUSn`; PR закінчується «🤖 Generated with [Claude Code](https://claude.com/claude-code)» + посилання сесії.
+
+| PR | Що |
+|---|---|
+| #95 | P33 інтерфейс (ідеї 274–279) |
+| #96 | P34 живий світ (280–294) |
+| #97 | P35 таємниці (295–300) |
+| #98 | P37 Колоси |
+| #99 | P38 Дух-скакун |
+| #100 | P36 Живе небо |
+| #101, #102 | P39 Заставка + утримання першої хвилі |
+| #103 | P40 Кузня Майстра + P41 анімації |
+| #104 | P42 Нагороди готові, скриня, Шлях Героя |
+
+- Кузня: рівні 1–40, молоти: запас 40 (+5 за рівень складу), відновлення 24 с (−2 с за рівень гарту, мін. 8 с), автокування з рівня 5, завдання дня 10/30/60, 8% вбивств дають молот.
+- Шлях Героя: сезон = календарний місяць, 40 рівнів, потрібно `60+рівень*4` слави; титули на 20 і 40; скриня кожні 4 год.
+- Колоси: 5 видів; Ріг — раз на 15 хв.
+- Скакун: клавіша J, +75 швидкості.
 
 ## 9. People, terms & names
-- **People:** Ростик (rostogen): власник гри, лише телефон.
-- **Terms:** «Дороби» = продовжуй до кінця; «пакет N» = етап з 50 ідей; P10–P16 = великі оновлення (опис у `CLAUDE.md`).
-- **Names in use:** `index.html`, `CLAUDE.md`, `PLAN50.md`, `handoff-mini-rpg.md`, `NEWS`/`NWC`, `T8`, `S8`, `t()`, `L()`, `LG`, `MG`, `SL`, `mgObjs`, `encObj`, `syncMg3`, `atmTick`, `mystSpawn`/`mystObj`/`mystTick`, `pfDodge`, `bagS`/`bagF`, `tryIt`/`dollTry`, `it.hx`, `hero.chn`/`vmChain`, `LG.dye`/`LG.dyeG`, `LG.cph`, `petMood`, `crateBreak`, `arenaHz`, `e.brk`, `dayNight3`/`dnBase`/`nightK`, `kindDecor`/`skinTex`/`wingBones`, `sndOf`/`hitPal`/`SFX.dotTick` (не `SFX.tick`: той для пазлів і колеса).
+- **People:** Ростик — власник гри, гравець, дає ідеї.
+- **Terms & nicknames:** «Колоси» = велетні на обрії; «Кузня Майстра» = кування молотами; «Шлях Героя» = безкоштовний сезон; «скакун» = кінь.
+- **Names in use:** блоки `P29`–`P42` в `index.html`; `CLAUDE.md`, `PLAN300.md`; тексти `PxxTsrc`; тики через `p17Tick`.
 
 ## 10. Work state
 | Item | Status | Version / location | Notes |
 |---|---|---|---|
-| MEGA FIX (звуки, вороги, дорога, день/ніч, HUD) | final, merged | PR #59–#67 | — |
-| 50 ідей ChatGPT | final, merged | PR #68–#72, `PLAN50.md` | відкладені 7 з причинами |
-| Анімація удару ворогів | не зроблено | — | замах однаковий у всіх з одним типом тіла |
-| Ключ OpenAI | налаштовано | мережевий секрет | нема коштів на рахунку API |
-| Тести Playwright | є в scratchpad | `.../scratchpad/` (`fight.js`, `p1.js`–`p5.js`, `kd_t.js`, `studio.js`, `hud.js`) | scratchpad зникає з сесією; писати заново за зразком нижче |
+| Ідеї 1–300 | final | PLAN300.md | 297 замінено |
+| MEGA 6.0 | final | `main` (#98–#102) | на телефоні не перевірено |
+| Кузня, анімації, нагороди | final | `main` (#103–#104) | на телефоні не перевірено |
+| Виправлення після тесту Ростика | not started | — | чекаємо список вад |
 
-Зразок тесту: сервер `cd /home/user/Mini-rpg && (curl -s -o /dev/null localhost:8765/index.html || (nohup python3 -m http.server 8765 >/dev/null 2>&1 &))`; Playwright `NODE_PATH=$(npm root -g)`, Chromium `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`, args `--use-gl=swiftshader --enable-webgl --ignore-gpu-blocklist`; localStorage `r2_tut`=1, `r2_tutV`=2; бій: `paused=false;if(!enemies.length)startWave();` цикл `tNow+=.05;update(.05)` + `tryAction('attack')`. Синтаксис: витягнути найбільший `<script>` у файл і `node --check`.
+Тести: Chromium без екрана (скрипти в scratchpad, регресія ~33–87 боїв), 0 помилок консолі.
 
 ## 11. Next steps
-1. **Next action:** запитати Ростика, що додати чи виправити далі (або взяти ідеї, які він вставить з ChatGPT), і перевірити, чи це вже є в грі.
-2. Якщо Ростик поповнить баланс OpenAI і скаже «попроси в ChatGPT ідеї»: зробити запит до `https://api.openai.com/v1/chat/completions` (модель `gpt-5.5`), дати опис гри з `CLAUDE.md`, отримати ідеї, зробити аудит і пакети.
-3. Можливо: власні анімації замаху для кожного виду ворога (зараз однакові в межах типу тіла).
+1. **Next action:** попросити Ростика надіслати список вад (скріни або опис «що робив → що сталося») і полагодити їх.
+2. Перевірити кожне виправлення в браузері, регресія боїв.
+3. Commit, PR, merge, дати https://github.com/rostogen/Mini-rpg/branches.
 
 ## 12. Open questions ⚠️
-None.
+- Які саме вади знайшов Ростик зранку? (ще не надіслав)
 
 ## 13. Re-attach checklist
-- Nothing to attach. Новий чат працює в тому ж репо `rostogen/Mini-rpg`; `CLAUDE.md` і `PLAN50.md` уже там.
+- Nothing to attach. (Код у репозиторії `rostogen/Mini-rpg`; довідник — `CLAUDE.md`.)
 
 ---
-<sub>Audit: 13/13 sections · 15 rules · 7 corrections · 30 data points · secrets removed: yes · generated by active-memory</sub>
+<sub>Audit: 13/13 sections · 14 rules · 7 corrections · 30 data points · secrets removed: none found · generated by active-memory</sub>
