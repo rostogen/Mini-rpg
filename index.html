@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mini RPG 3D — Тіньові землі</title>
+<meta name="description" content="Темне фентезі від першої особи: відкритий світ, мечі, боси й тисячі речей. ROSTOGEN GAMES.">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#14070d">
+<link rel="icon" href="./favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mini RPG 3D">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script>
 /* EARLY GUARD: plain old JS that runs before the game script. It records errors and, if the start hangs, shows a clear screen with the reason and buttons.
    It still works when the game script fails to parse or crashes. URL switches: ?safe=1 fast graphics, ?safe=2 no 3D, ?safe=0 normal, ?diag=1 show this screen now. */
@@ -54,12 +64,13 @@ W.setInterval(check,1000);
 if(DIAG)W.setTimeout(function(){show("diag")},1500);
 })();
 </script>
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
-<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&display=swap" rel="stylesheet"></noscript>
+<!-- Three.js r160 and the Cinzel font live next to the game (vendor/), so it also starts without the internet; the CDNs stay as a fallback -->
+<script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.min.js"}}</script>
+<link rel="modulepreload" href="./vendor/three/build/three.module.min.js">
+<style>
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:600 900;font-display:swap;src:url(./vendor/fonts/cinzel/cinzel-latin-ext.woff2) format('woff2'),url(https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt7-GT7PkRXM8Xx.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:600 900;font-display:swap;src:url(./vendor/fonts/cinzel/cinzel-latin.woff2) format('woff2'),url(https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7PkRXMw.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+</style>
 <style>
 :root{
   --bg:#07040a;--panel:#150c16;--panel2:#1f131e;--line:#47232f;--text:#f3e9ee;--muted:#a8949f;
@@ -12046,7 +12057,7 @@ const gfxMode=()=>S.gfx==="lo"||S.gfx==="hi"||S.gfx==="ultra"?S.gfx:(window.matc
 const use3D=()=>R3.ok;
 const isFP=()=>use3D();
 function applyView(){stage.classList.toggle("fp",isFP())}
-const THREE_URLS=["https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js","https://unpkg.com/three@0.160.0/build/three.module.min.js"];
+const THREE_URLS=["./vendor/three/build/three.module.min.js","https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js","https://unpkg.com/three@0.160.0/build/three.module.min.js"];
 function load3D(){
  if(R3.ok||R3.loading||R3.failed)return;
  if(BOOT.safe===2){R3.failed=true;BOOT.err.push("3D skipped (safe mode)");return}
@@ -12055,7 +12066,7 @@ function load3D(){
   const u=THREE_URLS[i++],j=i;let fin=false;
   /* a slow or silent server must not block the start: after 7 s try the next address */
   const to=setTimeout(()=>{if(!fin){fin=true;BOOT.err.push("3D slow: "+u.split("/")[2]);next()}},R3.round2?16000:9000);
-  import(u).then(m=>{if(fin)return;fin=true;clearTimeout(to);T3=m;R3.jsd=j===1;R3.cdn=u.split("/")[2];
+  import(u).then(m=>{if(fin)return;fin=true;clearTimeout(to);T3=m;R3.jsd=j===1;R3.cdn=j===1?"local":u.split("/")[2];
    try{init3D();R3.ok=true}catch(err){console.error(err);BOOT.err.push("3D: "+(err&&err.message||err));R3.failed=true;G3=null;const g=document.getElementById("gl3");if(g)g.remove();toast(t("gfxFail"))}
    R3.loading=false;try{applyGfx()}catch(err){console.error(err);BOOT.err.push("gfx: "+(err&&err.message||err))}},
    err=>{if(fin)return;fin=true;clearTimeout(to);BOOT.err.push("3D load: "+(err&&err.message||err));next()})};
@@ -12179,7 +12190,8 @@ window.addEventListener("resize",()=>{if(G3)resize3D()});
 function bloomFit3(){const B=BIOMES[G3.biome];if(!G3.bloom||!B)return;G3.bloom.threshold=B.day?1.4:.8;G3.bloom.strength=B.day?.3:.6}
 /* --- ultra quality: bloom on bright and glowing things (post-processing from the three.js add-ons) --- */
 function initBloom3(){
- if(G3.comp||G3.bloomLoading||!R3.jsd)return;G3.bloomLoading=true;const B="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/postprocessing/";
+ /* bloom only with the local core: its passes import "three" through the import map, which points at the local file */
+ if(G3.comp||G3.bloomLoading||!R3.jsd)return;G3.bloomLoading=true;const B="./vendor/three/examples/jsm/postprocessing/";
  Promise.all(["EffectComposer","RenderPass","UnrealBloomPass","OutputPass","ShaderPass"].map(n=>import(B+n+".js"))).then(([a,b,c,d,e])=>{const T=T3,cp=new a.EffectComposer(G3.rr);cp.addPass(new b.RenderPass(G3.scene,G3.cam));
   const bl=new c.UnrealBloomPass(new T.Vector2(G3.W,G3.H),.7,.5,.8);cp.addPass(bl);cp.addPass(new d.OutputPass());
   cp.addPass(new e.ShaderPass({uniforms:{tDiffuse:{value:null}},vertexShader:"varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}",fragmentShader:"uniform sampler2D tDiffuse;varying vec2 vUv;void main(){vec4 c=texture2D(tDiffuse,vUv);vec3 col=c.rgb;float l=dot(col,vec3(.2126,.7152,.0722));float sat=max(col.r,max(col.g,col.b))-min(col.r,min(col.g,col.b));col=mix(vec3(l),col,1.2+.3*(1.-sat));col=clamp(col,0.,1.);col=mix(col,col*col*(3.-2.*col),.42);col+=vec3(.045,.02,-.03)*smoothstep(.45,1.,l)+vec3(-.015,.0,.04)*(1.-smoothstep(.0,.4,l));vec2 d=vUv-.5;col*=1.-dot(d,d)*.85;gl_FragColor=vec4(clamp(col,0.,1.),c.a);}"}));G3.comp=cp;G3.bloom=bl;bloomFit3();resize3D()}).catch(err=>{console.warn("bloom off",err)}).finally(()=>{G3.bloomLoading=false})}
@@ -18018,6 +18030,12 @@ bootStep("wave",startWave);
 bootStep("emoji",emoInit);
 BOOT.started=1;
 requestAnimationFrame(frame);
+</script>
+<script>
+/* PWA: the service worker keeps the game playable without the internet (see sw.js). It is optional: any failure here is ignored and the game runs as before. */
+(function(){try{var L=location;if(!("serviceWorker" in navigator))return;if(L.protocol!=="https:"&&L.hostname!=="localhost"&&L.hostname!=="127.0.0.1")return;
+ var go=function(){navigator.serviceWorker.register("./sw.js",{scope:"./",updateViaCache:"none"}).catch(function(e){try{(window.__boot&&window.__boot.err||[]).push("sw: "+(e&&e.message||e))}catch(_){}})};
+ if(document.readyState==="complete")go();else window.addEventListener("load",go)}catch(e){}})();
 </script>
 </body>
 </html>
