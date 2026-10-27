@@ -18031,5 +18031,11 @@ bootStep("emoji",emoInit);
 BOOT.started=1;
 requestAnimationFrame(frame);
 </script>
+<script>
+/* PWA: the service worker keeps the game playable without the internet (see sw.js). It is optional: any failure here is ignored and the game runs as before. */
+(function(){try{var L=location;if(!("serviceWorker" in navigator))return;if(L.protocol!=="https:"&&L.hostname!=="localhost"&&L.hostname!=="127.0.0.1")return;
+ var go=function(){navigator.serviceWorker.register("./sw.js",{scope:"./",updateViaCache:"none"}).catch(function(e){try{(window.__boot&&window.__boot.err||[]).push("sw: "+(e&&e.message||e))}catch(_){}})};
+ if(document.readyState==="complete")go();else window.addEventListener("load",go)}catch(e){}})();
+</script>
 </body>
 </html>
