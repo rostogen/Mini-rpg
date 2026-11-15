@@ -26,6 +26,7 @@ No filler was added: every new block has a real job in the game.
 | P50 | Champion packs of 3-5 strong foes with a leader and a shared power (fire, frost, blood, unity, stone). Golden chest, title. |
 | P51 | Fixes: a wave no longer gets stuck when one of its foes is lost far away; the fullscreen button no longer throws an uncaught error. |
 | P53 | Five new lands (Crystal Spires, Fire Caldera, Storm Heights, Jellyfish Abyss, Sky Isles), each with its own lord and attack. They are placed just ahead of where each player is now. |
+| P54 | The great armory: 96 new named swords in the Forge, 4 for every rarity, each with its own name and look. |
 | P52 | Ranked duels: named rivals, 75 s per duel, 6 a day, seven ranks from Bronze to Legend, a reward per rank and a title. Legend tab "Ranked". |
 
 Every new text is in all 20 main languages.
