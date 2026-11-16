@@ -75,4 +75,4 @@ Tests that were really run (headless Chromium on a PC, not a phone):
 5. Autopilot: 115 road battles in about 2 minutes, no script errors.
 6. Old save from the current `main` loads without losing gold, battle, materials, faction reputation, items, titles or forge level.
 
-Not done or not checked: not tested on a real phone; long texts are Ukrainian + English only; the hero is not visible in first person, so hairstyles show on the inventory doll and «poses» were replaced by photo frames; new steed breeds reuse the spirit steed model; the 30-day streak scene is not wired; balance not tuned by real play.
+Not done or not checked: not tested on a real phone; long texts are Ukrainian + English only; the hero is not visible in first person, so hairstyles show on the inventory doll and «poses» were replaced by photo frames; new steed breeds reuse the spirit steed model; balance not tuned by real play.

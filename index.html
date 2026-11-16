@@ -19804,7 +19804,7 @@ function dayHit(k,n){if(!LG)return;const D=lfDay();D.t.forEach((x,i)=>{if(x===k&
 function dayClaim(){const s=lfS(),D=lfDay();if(D.got||!D.t.every((k,i)=>D.p[i]>=D.n[i]))return;D.got=1;const g=Math.round(400+battleNo*15);P.gold+=g;matAdd("crys",2);gdXp(40);lfRep(1);
  const st=s.stk,y=new Date(Date.now()-864e5),yk=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");st.n=st.d===yk?st.n+1:1;st.d=D.d;st.best=Math.max(st.best,st.n);
  for(const [n,rw] of [[3,{g:1500,m:{crys:4}}],[7,{g:4000,m:{star:2},it:RO[5]}],[14,{g:9000,m:{star:4,shard:2},it:RO[6]}],[30,{g:25000,m:{star:8,shard:5},it:RO[8]}]])if(st.n>=n&&st.paid<n){st.paid=n;mailSend("streak",String(n),rw);if(n===30)LG.ttl.steadfast=1}
- if(st.n<st.paid)st.paid=0;banner("📅 "+t("lf_dayAll"),"🪙 +"+nfm(g));SFX.jackpot&&SFX.jackpot();save();renderMg();hud()}
+ if(st.n<st.paid)st.paid=0;if(st.n>=30)scnUnlock(3);banner("📅 "+t("lf_dayAll"),"🪙 +"+nfm(g));SFX.jackpot&&SFX.jackpot();save();renderMg();hud()}
 /* kills count for errands, mastery and stats */
 {const _k=p13Kill;p13Kill=function(e){_k(e);if(!LG||e.cfg.pet)return;dayHit("kill");lfCnt("kill");gdXp(1)}}
 
