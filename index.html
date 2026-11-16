@@ -23,7 +23,7 @@ function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function s(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function del(k){try{localStorage.removeItem(k)}catch(e){}}
 var q=location.search,m=/[?&]safe=([0-2])/.exec(q),DIAG=/[?&]diag=1/.test(q);
-if(m){if(m[1]==="0")del("r2_boot");else s("r2_boot",m[1])}
+if(m){if(m[1]==="0"){del("r2_boot");del("r2_no3d")}else if(m[1]==="2")s("r2_no3d","1");else s("r2_boot",m[1])}
 function add(x){if(B.err.length<30)B.err.push(String(x).slice(0,160))}
 W.addEventListener("error",function(e){var t=e.target;if(t&&t!==W&&(t.src||t.href))add("blocked: "+String(t.src||t.href).replace(/^https?:\/\//,"").slice(0,80));else add((e.message||"error")+(e.lineno?" (line "+e.lineno+")":""))},true);
 W.addEventListener("unhandledrejection",function(e){var r=e.reason;add("promise: "+(r&&r.message||r))});
@@ -52,8 +52,8 @@ function show(why){
  d.style.cssText="font:11px/1.4 monospace;color:#b8a4ae;text-align:left;white-space:pre-wrap;word-break:break-word;max-width:100%";d.textContent=info(why);box.appendChild(d);
  function btn(t,fn){var x=D.createElement("button");x.type="button";x.textContent=t;x.style.cssText="padding:11px 18px;border-radius:12px;border:1px solid #d6a24a;background:#2a1220;color:#f0d9a0;font:600 14px system-ui,sans-serif;min-width:210px";x.onclick=fn;box.appendChild(x)}
  btn(tr("retry"),function(){location.reload()});
- btn(tr("no3d"),function(){s("r2_boot","2");location.reload()});
- btn(tr("reset"),function(){del("r2_set");del("r2_boot");location.reload()});
+ btn(tr("no3d"),function(){s("r2_no3d","1");location.reload()});
+ btn(tr("reset"),function(){del("r2_set");del("r2_boot");del("r2_no3d");location.reload()});
  btn("\u2715",function(){if(box&&box.parentNode)box.parentNode.removeChild(box)});
  (D.body||D.documentElement).appendChild(box)}
 function check(){
@@ -1345,7 +1345,6 @@ body.photoM .hud,body.photoM #pad,body.photoM #goalP,body.photoM #styM,body.phot
     <div class="row"><div><b data-i="fpsL">Лічильник FPS</b><div class="m" data-i="fpsHint">Показує кадри за секунду вгорі екрана</div></div><button class="btn" id="fpsB">✕</button></div>
     <div class="row"><div><b data-i="stickL">Стік повертає камеру</b><div class="m" data-i="stickHint"></div></div><button class="btn" id="stickB">✕</button></div>
     <div class="row"><div><b data-i="p17_fxLo">Менше ефектів</b><div class="m" data-i="p17_fxLoH"></div></div><button class="btn" id="fxLoB">✕</button></div>
-    <div class="row"><div><b data-i="p17_dfc">Складність бою</b><div class="m" data-i="p17_dfcH"></div></div><button class="btn" id="dfcB" type="button"></button></div>
     <div class="row"><b data-i="tutT"></b><button class="btn" id="tutB" type="button" data-i="tutAgain"></button></div>
     <div class="row"><b data-i="resetL">Прогрес</b><button class="btn warn" id="resetB" data-i="resetP">Скинути прогрес</button></div>
     <p class="ctrlText" data-i="ctrl"></p>
@@ -10536,7 +10535,7 @@ setTimeout(()=>{try{if(canDay())spSay("sDay",1)}catch(e){}},4500);
 (function migrate(){const old=LS.get("r2_bought",null);if(!session&&old&&old.length){const OC=[70,110,180,280,420];P.gold+=old.reduce((a,i)=>a+(OC[i%5]||0),0)}LS.set("r2_bought",[])})();
 let S=Object.assign({sfx:70,music:30,musicOn:false},LS.get("r2_set",{}));
 /* if the last start never finished: 2nd try = Fast graphics, 3rd try = 2D without three.js (counter is cleared once the game has really run) */
-{const n=(+LS.get("r2_boot",0)||0)+1;LS.set("r2_boot",n);BOOT.safe=n>=6?2:n>=3?1:0;if(BOOT.safe&&S.gfx!=="lo"){S.gfx="lo";LS.set("r2_set",S)}}
+{const n=(+LS.get("r2_boot",0)||0)+1;LS.set("r2_boot",n);BOOT.safe=localStorage.getItem("r2_no3d")==="1"?2:n>=3?1:0;if(BOOT.safe&&S.gfx!=="lo"){S.gfx="lo";LS.set("r2_set",S)}}
 function save(){saveSL();saveMG();saveLG();LS.set(PK("r2_hero"),{level:P.level,xp:P.xp,gold:P.gold,hp:P.hp});LS.set(PK("r2_tal"),tal);LS.set(PK("r2_train"),train);LS.set(PK("r2_kills"),kills);LS.set(PK("r2_nick"),nickname);LS.set(PK("r2_battle"),battleNo);LS.set(PK("r2_bag"),bag);LS.set(PK("r2_eq"),eq);LS.set(PK("r2_luck"),luck);LS.set(PK("r2_foe"),foe);LS.set(PK("r2_iseq"),itemSeq);LS.set(PK("r2_forge"),forge);LS.set(PK("r2_gems"),gem);LS.set("r2_session",session);LS.set("r2_lang",lang);LS.set("r2_set",S)}
 
 var _sh={}; // colour cache for shade(); must exist before the first recalc() runs at start-up
@@ -16039,11 +16038,8 @@ LG_R.path=()=>{const R=REC(),st=LG.st;let h=`<div class="mgCard"><div class="mgT
 function p17Praise(){const st=LG.st,opts=[];if((st.parry|0)>=10)opts.push(["p17_pr1",st.parry|0]);if(troN()>=3)opts.push(["p17_pr2",troN()]);if((st.lore|0)>=5)opts.push(["p17_pr3",st.lore|0]);if((st.fin|0)>=20)opts.push(["p17_pr4",st.fin|0]);if(REC().cln>=3)opts.push(["p17_pr5",REC().cln]);
  if(!opts.length)return;const o=opts[rint(0,opts.length-1)];say(t("p15_trav"),t(o[0],{n:nfm(o[1])}),"#c8b4a0","🧙")}
 /* ---- 70: combat difficulty without changing the prizes ---- */
-const DFC=[.75,1,1.3];const dfc=()=>DFC[S.dfc==null?1:S.dfc]||1;
-{const _hm=p17HurtMul;p17HurtMul=function(){return _hm()*dfc()}}
-function dfcFill(){const b=$("dfcB");if(b)b.textContent=t(["p17_dE","p17_dN","p17_dH"][S.dfc==null?1:S.dfc])}
-{const _fs=fillSettings;fillSettings=function(){_fs();dfcFill()}}
-$("dfcB").onclick=()=>{S.dfc=((S.dfc==null?1:S.dfc)+1)%3;dfcFill();save();SFX.ui()};
+/* P58: no difficulty choice (it was a cheat): one fair difficulty for everyone; an old easy/hard setting is cleared */
+const dfc=()=>1;if(S.dfc!=null&&S.dfc!==1){S.dfc=1;try{LS.set("r2_set",S)}catch(e){}}
 /* ---- counters for the archive, the atlas and the trials ---- */
 let nightOn=false;
 function p17CountTick(){if(!LG)return;const N=nightK();if(N>.9&&!nightOn){nightOn=true;LG.st.night=(LG.st.night|0)+1}else if(N<.2)nightOn=false}
@@ -19667,6 +19663,15 @@ for(const k in SGTX2)T8[k]=S8(SGTX2[k]);
 TD.forEach((D,i)=>{T8["p15_rel_sgd"+i]=T8.sg_trH.map((s,j)=>s.split("{n}").join(T8["sg_tb_"+D.k][j]||T8["sg_tb_"+D.k][1]))});
 SGLM.forEach((M,i)=>{T8["p15_rel_sgh"+i]=T8.sg_trH.map((s,j)=>s.split("{n}").join(T8["sg_lm_"+i][j]||T8["sg_lm_"+i][1]))});
 T8.n57a1=S8("🌍 Сага тепер усіма 20 мовами: розмови, квести, данжі, боси, місця. Виправлено напис поверху в данжах.|🌍 The Saga now speaks all 20 languages: chat, quests, dungeons, bosses, places. Fixed the floor label in dungeons.|🌍 La Saga parle maintenant les 20 langues : discussion, quêtes, donjons, boss, lieux. Étiquette d’étage corrigée dans les donjons.|🌍 Die Saga spricht jetzt alle 20 Sprachen: Chat, Quests, Dungeons, Bosse, Orte. Etagenanzeige in Dungeons behoben.|🌍 史诗现已支持全部 20 种语言：聊天、任务、地下城、首领、地点。修复了地下城楼层显示。|🌍 La Saga ya habla los 20 idiomas: chat, misiones, mazmorras, jefes, lugares. Corregido el rótulo de piso en las mazmorras.|🌍 La Saga ora parla tutte le 20 lingue: chat, missioni, dungeon, boss, luoghi. Corretta l’etichetta del piano nei dungeon.|🌍 Saga mówi teraz w 20 językach: czat, zadania, lochy, bossowie, miejsca. Poprawiono napis piętra w lochach.|🌍 A Saga agora fala os 20 idiomas: chat, missões, masmorras, chefes, locais. Corrigido o rótulo de andar nas masmorras.|🌍 サーガが全20言語に対応：チャット、クエスト、ダンジョン、ボス、場所。ダンジョンの階表示を修正。|🌍 사가가 이제 20개 언어 모두 지원: 채팅, 퀘스트, 던전, 보스, 장소. 던전 층 표시 수정.|🌍 Destan artık 20 dilin hepsinde: sohbet, görevler, zindanlar, bosslar, yerler. Zindanlarda kat yazısı düzeltildi.|🌍 Saga kini dalam 20 bahasa: obrolan, misi, penjara, bos, tempat. Label lantai di penjara diperbaiki.|🌍 गाथा अब सभी 20 भाषाओं में: चैट, क्वेस्ट, कालकोठरी, बॉस, जगहें। कालकोठरी में मंज़िल का लेबल ठीक किया।|🌍 Sử thi giờ có đủ 20 ngôn ngữ: trò chuyện, nhiệm vụ, hầm ngục, trùm, địa điểm. Sửa nhãn tầng trong hầm ngục.|🌍 ตำนานรองรับครบ 20 ภาษาแล้ว: แชท เควสต์ ดันเจียน บอส สถานที่ แก้ป้ายชั้นในดันเจียน|🌍 De Saga spreekt nu alle 20 talen: chat, queesten, kerkers, bazen, plekken. Verdiepingslabel in kerkers hersteld.|🌍 الملحمة الآن بجميع اللغات العشرين: الدردشة والمهام والزنازين والزعماء والأماكن. أُصلح عنوان الطابق في الزنازين.|🌍 গাথা এখন ২০টি ভাষাতেই: চ্যাট, কোয়েস্ট, ডানজন, বস, জায়গা। ডানজনে তলার লেখা ঠিক করা হয়েছে।|🌍 Ang Saga ay nasa 20 wika na: chat, quest, piitan, boss, lugar. Inayos ang label ng palapag sa mga piitan.");NWC.n57a1="fix";NEWS.unshift({v:"2026.12.21",ic:"🌍",k:["n57a1"]});
+/* ============ P58 fixes: the game must not get stuck in 2D ============ */
+/* On phones the browser can drop the 3D picture (WebGL context lost) when memory runs low or the app goes to the background.
+   If it does not come back by itself within 4 s (or when you return to the app), the game saves and reloads in 3D. */
+let p58T=0;
+setInterval(()=>{try{if(!R3||!R3.lost||document.hidden){p58T=0;return}p58T++;if(p58T>=4){p58T=-99;try{save()}catch(e){}LS.set("r2_ctxR",Date.now());location.reload()}}catch(e){}},1000);
+document.addEventListener("visibilitychange",()=>{if(document.hidden)return;setTimeout(()=>{try{if(R3&&R3.lost&&!document.hidden){try{save()}catch(e){}location.reload()}}catch(e){}},1500)});
+/* when the 3D files could not be loaded (bad network), try once more a bit later instead of staying in 2D */
+let p58R=0;
+setInterval(()=>{try{if(R3&&R3.failed&&!R3.ok&&!R3.loading&&BOOT.safe!==2&&p58R<2&&navigator.onLine!==false&&!T3){p58R++;R3.failed=false;R3.round2=false;load3D()}}catch(e){}},20000);
 const bootStep=(n,f)=>{try{f()}catch(e){console.error(e);BOOT.err.push(n+": "+(e&&e.message||e))}};
 bootStep("lang",applyLang);bootStep("resize",resize);bootStep("gfx",applyGfx);
 if(BOOT.safe)bootStep("toast",()=>toast(t(BOOT.safe>1?"bootSafe2d":"bootSafe")));
