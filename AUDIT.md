@@ -27,6 +27,7 @@ No filler was added: every new block has a real job in the game.
 | P51 | Fixes: a wave no longer gets stuck when one of its foes is lost far away; the fullscreen button no longer throws an uncaught error. |
 | P53 | Five new lands (Crystal Spires, Fire Caldera, Storm Heights, Jellyfish Abyss, Sky Isles), each with its own lord and attack. They are placed just ahead of where each player is now. |
 | P54 | The great armory: 96 new named swords in the Forge, 4 for every rarity, each with its own name and look. |
+| P55 | Raids: 15 epic bosses with 3 phases each, their own arena, trophies and levels for rematches. Legend tab "Raids". |
 | P52 | Ranked duels: named rivals, 75 s per duel, 6 a day, seven ranks from Bronze to Legend, a reward per rank and a title. Legend tab "Ranked". |
 
 Every new text is in all 20 main languages.
