@@ -101,3 +101,14 @@ Tests really run after P60 (headless Chromium, PC):
 6. Autopilot 45-75 s: no script errors.
 
 Not done / not checked: not tested on a real phone; the symbol ꧁ ꧂ needs the Javanese font (Android has it; very old phones may show boxes); balance was not changed in this pass; Google Play app crash (wrong MainActivity) still needs a new build 3 signed with the old key.
+
+# P61: 1000 foes in every tier (2026-11-16)
+
+Every enemy tier (all 24) now has 1000 regular kinds (was 100): 24 065 kinds in total. New names = creature + phrase; 40 new dark place phrases in 20 languages.
+Tests really run (headless Chromium, PC):
+1. Count per tier: 1000 regular in each of the 24 tiers; all keys unique.
+2. Names: no new duplicates inside a tier (one old pair «Пожирач зірок» was already there); every new kind has 20 names and a colour set; copies of a kind keep the name.
+3. Five new kinds spawned next to the hero (common, chaos, eclipse, godslayer, singular): they draw and fight; no script errors.
+4. Bestiary «Eclipse» opens in about 0.12 s with 48 cards and «Показати ще · 48/1000»; the button adds 48 more.
+5. All 22 windows, autopilot 90 s, old save from `main`: same as before, no script errors.
+6. Start: ready after about 3.3 s on the test PC. Memory went from 72 to 116 MB (JS heap): not checked on a weak phone.
