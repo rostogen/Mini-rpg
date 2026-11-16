@@ -18536,6 +18536,1020 @@ LG_R.raid=()=>{const S0=p55S(),left=p55Left();let h=`<p class="sub">${t("p55_tab
  h+=P55B.map((B,i)=>{const op=p55Open(i),w=S0.w[i];return`<div class="mgCard${w?" done":""}"><div class="mgTop"><span class="mgIc">${op?B.ic:"🔒"}</span><div><h4 style="color:${op?B.c:"inherit"}">${op?L(T8["p55_b"+i]):"???"}</h4><small>${op?L(T8["p55_d"+i]):""}</small></div></div><p class="m">${t("p55_lv",{n:w+1})} · ✅ ${w}</p>${op&&!p55.e&&left>0?`<button class="btn sm main" type="button" data-a="p55go" data-v="${i}">⚔️ ${t("p55_go")}</button>`:""}</div>`}).join("");
  if(LG.ttl.raidmaster)h+=`<p class="m">🏷️ ${t("sl_t_raidmaster")} ✓</p>`;return h};
 try{const o=LS.get(PK("r2_lg"),null);if(o&&mgObj(o.ttl)&&LG)for(const k in o.ttl)if(TITLES.some(x=>x.k===k))LG.ttl[k]=1}catch(e){}
+/* ============ P56 MEGA SAGA (part A): state, the Saga hub inside the Adventures window, NPCs and the chat ============ */
+/* texts: short labels in 20 languages, long lines in Ukrainian + English (the other languages show the English line) */
+const SGTA={
+sg_hub:"Сага|Saga|Saga|Saga|史诗|Saga|Saga|Saga|Saga|サーガ|사가|Destan|Saga|गाथा|Sử thi|ตำนาน|Saga|ملحمة|গাথা|Saga",
+sg_t_chat:"Чат|Chat|Discussion|Chat|聊天|Chat|Chat|Czat|Chat|チャット|채팅|Sohbet|Obrolan|चैट|Trò chuyện|แชท|Chat|دردشة|চ্যাট|Chat",
+sg_t_quest:"Квести|Quests|Quêtes|Quests|任务|Misiones|Missioni|Zadania|Missões|クエスト|퀘스트|Görevler|Misi|क्वेस्ट|Nhiệm vụ|เควสต์|Queesten|المهام|কোয়েস্ট|Mga Quest",
+sg_t_dun:"Данжі|Dungeons|Donjons|Dungeons|地下城|Mazmorras|Dungeon|Lochy|Masmorras|ダンジョン|던전|Zindanlar|Penjara|कालकोठरी|Hầm ngục|ดันเจียน|Kerkers|الزنزانات|ডানজন|Piitan",
+sg_t_trial:"Випробування|Trials|Épreuves|Prüfungen|试炼|Pruebas|Prove|Próby|Provas|試練|시련|Sınavlar|Ujian|परीक्षाएँ|Thử thách|บททดสอบ|Beproevingen|التحديات|পরীক্ষা|Pagsubok",
+sg_t_exp:"Мандри|Explore|Explorer|Erkunden|探索|Explorar|Esplora|Odkrywaj|Explorar|探索|탐험|Keşif|Jelajah|खोज|Khám phá|สำรวจ|Verkennen|استكشاف|অন্বেষণ|Galugad",
+sg_t_codex:"Кодекс|Codex|Codex|Kodex|典籍|Códice|Codice|Kodeks|Códice|コーデックス|코덱스|Kodeks|Kodeks|संहिता|Bách khoa|คัมภีร์|Codex|المجلد|কোডেক্স|Codex",
+sg_t_fort:"Фортеця|Fortress|Forteresse|Festung|要塞|Fortaleza|Fortezza|Twierdza|Fortaleza|要塞|요새|Kale|Benteng|किला|Pháo đài|ป้อม|Vesting|الحصن|দুর্গ|Kuta",
+sg_t_pres:"Престиж|Prestige|Prestige|Prestige|声望|Prestigio|Prestigio|Prestiż|Prestígio|名声|명성|Prestij|Prestise|प्रतिष्ठा|Danh vọng|เกียรติยศ|Prestige|الهيبة|প্রতিপত্তি|Prestihiyo",
+sg_t_bx:"За межею|Beyond|Au-delà|Jenseits|彼岸|Más allá|Oltre|Poza|Além|彼方|저 너머|Öte|Melampaui|परे|Bên kia|เหนือขอบเขต|Voorbij|ما وراء|ওপারে|Lampas",
+sg_go:"Почати|Start|Commencer|Starten|开始|Empezar|Inizia|Start|Começar|開始|시작|Başla|Mulai|शुरू|Bắt đầu|เริ่ม|Start|ابدأ|শুরু|Simulan",
+sg_accept:"Прийняти|Accept|Accepter|Annehmen|接受|Aceptar|Accetta|Przyjmij|Aceitar|受ける|수락|Kabul et|Terima|स्वीकार|Nhận|รับ|Accepteren|قبول|গ্রহণ|Tanggapin",
+sg_report:"Здати|Turn in|Rendre|Abgeben|交付|Entregar|Consegna|Oddaj|Entregar|報告|완료 보고|Teslim et|Serahkan|जमा करो|Nộp|ส่ง|Inleveren|تسليم|জমা দাও|Ibigay",
+sg_claimB:"Забрати|Collect|Récupérer|Einsammeln|领取|Recoger|Raccogli|Odbierz|Coletar|受け取る|수령|Topla|Ambil|लो|Thu|เก็บ|Ophalen|اجمع|সংগ্রহ|Kunin",
+sg_locked:"Закрито|Locked|Verrouillé|Gesperrt|未解锁|Bloqueado|Bloccato|Zablokowane|Bloqueado|ロック中|잠김|Kilitli|Terkunci|बंद|Đã khóa|ล็อก|Vergrendeld|مقفل|লক|Naka-lock",
+sg_busy:"Спершу закінчи бій або забіг.|Finish the fight or the run first.",
+sg_hubH:"Сага: розмови з людьми світу, сюжет із 20 квестів, тематичні данжі, вежа босів, таємні випробування, мандри, фортеця і престиж. Усе зберігається.|The Saga: talk to the people of the world, a 20-quest story, themed dungeons, a boss tower, secret trials, exploration, the fortress and prestige. Everything is saved.",
+/* NPC names and roles */
+sg_n_vel:"Велена-Архіваріус|Velena the Archivist",sg_r_vel:"Хранителька літопису Тіньових земель|Keeper of the Shadow Lands' chronicle",
+sg_n_bor:"Коваль Борис|Borys the Smith",sg_r_bor:"Кує зброю для героїв і королів|Forges blades for heroes and kings",
+sg_n_ysa:"Мисливиця Ізольда|Ysolde the Huntress",sg_r_ysa:"Вистежує легендарних звірів|Tracks legendary beasts",
+sg_n_mask:"Мандрівник у масці|The Masked Wanderer",sg_r_mask:"Ніхто не знає, хто він|No one knows who he is",
+sg_n_lum:"Сестра Люмі|Sister Lumi",sg_r_lum:"Остання служниця забутого храму|The last servant of a forgotten temple",
+sg_n_dro:"Капітан Дрого|Captain Drogo",sg_r_dro:"Шукач островів, порталів і скарбів|Seeker of isles, portals and treasure",
+sg_n_zaf:"Торговка Зафіра|Zafira the Merchant",sg_r_zaf:"Знає всі фракції і всі ціни|Knows every faction and every price",
+sg_n_kas:"Відлюдник Кас|Kass the Hermit",sg_r_kas:"Говорить із корінням і грибами|Talks to roots and mushrooms",
+sg_n_her:"Глашатай|The Herald",sg_r_her:"Новини світу: події, боси, бурі|World news: events, bosses, storms",
+sg_n_boss:"Голоси босів|Boss voices",sg_r_boss:"Що кажуть вороги перед боєм|What foes say before a fight",
+/* chat options */
+sg_o_hi:"👋 Як справи?|👋 How are things?",sg_o_job:"📜 Є для мене робота?|📜 Any work for me?",sg_o_me:"📖 Розкажи про себе|📖 Tell me about yourself",
+sg_o_gift:"🎁 Подарунок ({n})|🎁 A gift ({n})",sg_o_joke:"😄 Пожартувати|😄 Tell a joke",sg_o_rude:"😠 Відповісти грубо|😠 Be rude",sg_o_rum:"👂 Чув якісь чутки?|👂 Heard any rumours?",
+sg_o_clear:"🧹 Очистити|🧹 Clear",sg_me:"Ти|You",
+sg_noJob:"Зараз нічого не маю для тебе. Заходь пізніше.|I have nothing for you right now. Come back later.",
+sg_jobBusy:"Спершу закінчи те, що я вже дала.|Finish what I already gave you first.",
+sg_noMore:"Більше я нічого не розповім. Поки що.|I won't tell you more. Not yet.",
+sg_needAff:"Ми ще мало знайомі. (потрібно ❤ {n})|We barely know each other. (needs ❤ {n})",
+sg_giftOk:"О, дякую! Це дуже мило.|Oh, thank you! That's very kind.",sg_giftLove:"Ти справжній друг!|You're a true friend!",sg_giftDay:"Ти вже щось дарував сьогодні. Досить, дякую.|You already gave me something today. That's enough, thanks.",
+sg_joke0:"Ха! Непогано. Майже як мій дід жартував.|Ha! Not bad. Almost like my grandfather's jokes.",sg_joke1:"…Ні. Просто ні.|…No. Just no.",
+sg_rude0:"Ось як? Запам'ятаю.|Is that so? I'll remember that.",sg_rude1:"Я не терпітиму такого тону.|I won't stand for that tone.",
+sg_aff:"Дружба|Friendship",sg_affUp:"❤ {n} тепер ставиться до тебе краще|❤ {n} likes you more now",sg_affDn:"💔 {n} образився|💔 {n} is offended",
+sg_cold:"(холодно)|(coldly)",
+/* greetings: cold / warm per NPC */
+sg_gc_vel:"Знову ти. Не чіпай книжки брудними руками.|You again. Don't touch the books with dirty hands.",sg_gw_vel:"Мій улюблений герой! Я записала твої подвиги в літопис.|My favourite hero! I wrote your deeds into the chronicle.",
+sg_gc_bor:"Що треба? У мене горн холоне.|What do you want? My forge is cooling.",sg_gw_bor:"Ха, друже! Сідай біля горна, погрійся.|Ha, friend! Sit by the forge, warm up.",
+sg_gc_ysa:"Тихо. Ти злякаєш здобич.|Quiet. You'll scare the prey.",sg_gw_ysa:"Мисливець мисливця бачить здалеку. Радий тебе бачити.|A hunter knows a hunter from afar. Glad to see you.",
+sg_gc_mask:"…|…",sg_gw_mask:"Ти довіряєш мені більше, ніж варто. Мені це подобається.|You trust me more than you should. I like that.",
+sg_gc_lum:"Світло з тобою… мабуть.|The light is with you… probably.",sg_gw_lum:"Храм радіє, коли ти приходиш. І я теж.|The temple is glad when you come. So am I.",
+sg_gc_dro:"Карти не продаються. Ні, і не проси.|The maps aren't for sale. No, don't ask.",sg_gw_dro:"Мій найкращий штурман! Куди пливемо сьогодні?|My best navigator! Where do we sail today?",
+sg_gc_zaf:"Купуєш чи просто дивишся?|Buying or just looking?",sg_gw_zaf:"Для тебе — найкращі ціни. Ну, майже.|For you, the best prices. Well, almost.",
+sg_gc_kas:"Гриби кажуть, що ти шумний.|The mushrooms say you are noisy.",sg_gw_kas:"Коріння співає, коли ти поруч.|The roots sing when you are near.",
+/* context lines */
+sg_x_night:"Ніч зараз небезпечна. Вороги стають сміливішими.|The night is dangerous now. Foes grow bolder.",
+sg_x_rain:"Цей дощ гасить вогняну магію. Май на увазі.|This rain dulls fire magic. Keep that in mind.",
+sg_x_storm:"Чуєш грім? Блискавки сьогодні сильніші.|Hear the thunder? Lightning is stronger today.",
+sg_x_snow:"Сніг сповільнює кроки. Не відставай.|Snow slows your steps. Don't fall behind.",
+sg_x_eclipse:"Затемнення… Тіні сильніші, але й скарби рідкісніші.|An eclipse… Shadows are stronger, but the treasure is rarer.",
+sg_x_mstorm:"Магічна буря! Стихії шаленіють, тримайся подалі від спалахів.|A magic storm! The elements rage, keep away from the flashes.",
+sg_x_hurt:"Ти поранений. Випий зілля, перш ніж іти далі.|You're hurt. Drink a potion before you go on.",
+sg_x_early:"Ти ще новачок, але в тобі є вогонь.|You're still new, but there's fire in you.",
+sg_x_late:"Про тебе вже співають пісні по всіх землях.|They already sing songs about you in every land.",
+/* rumours (filled with real data) */
+sg_u_dun:"Кажуть, «{n}» уже відчинене. Там скарби і жахливий бос.|They say «{n}» is open now. Treasure inside, and a terrible boss.",
+sg_u_dunL:"Наступне підземелля, «{n}», відкриється, коли пройдеш попереднє.|The next dungeon, «{n}», opens once you clear the one before it.",
+sg_u_tow:"Вежа босів чекає. Твій рекорд: поверх {n}.|The Boss Tower is waiting. Your record: floor {n}.",
+sg_u_wk:"Тиран тижня вже прокинувся: {n}. Спроб лишилось: {m}.|This week's tyrant is awake: {n}. Tries left: {m}.",
+sg_u_sec:"Кажуть, Безіменний приходить уночі, коли місяць ховається у затемненні… і лише до тих, хто знайшов хоч п'ять таємних кімнат.|They say the Nameless comes at night, when the moon hides in an eclipse… and only to those who found at least five hidden rooms.",
+sg_u_room:"Ще {n} таємних кімнат не знайдено. Шукай тріщини у скелях біля дороги.|{n} hidden rooms are still unfound. Look for cracks in the rocks by the road.",
+sg_u_chest:"Знайдено {n} із 20 таємних скринь. Печери й острови ховають їх найчастіше.|{n} of 20 secret chests found. Caves and isles hide them most often.",
+sg_u_map:"Твоя карта веде до {n} м, {m}. Йди й копай!|Your chart leads to {n} m, {m}. Go and dig!",
+sg_u_fin:"Велена шукає того, хто дійде до кінця Хроніки. Кажуть, за останньою брамою чекає Тіньовий Володар.|Velena seeks someone to reach the end of the Chronicle. They say the Shadow Sovereign waits beyond the last gate.",
+sg_u_none:"Тихо сьогодні. Надто тихо.|It's quiet today. Too quiet.",
+/* stories (unlocked by friendship) */
+sg_s_vel0:"Я переписую літопис уже сорок років. Жодного дня без рядка.|I have been copying the chronicle for forty years. Not a day without a line.",
+sg_s_vel1:"Колись тут було королівство світла. Тепер — лише попіл і мої книги.|Once there was a kingdom of light here. Now only ash and my books.",
+sg_s_vel2:"Останню сторінку літопису хтось вирвав. Я думаю, це зробив Володар Тіней.|Someone tore out the chronicle's last page. I believe the Shadow Sovereign did it.",
+sg_s_vel3:"Якщо ти допишеш Хроніку до кінця, світло може повернутися. Я в це вірю.|If you finish the Chronicle, the light may return. I believe that.",
+sg_s_bor0:"Мій батько кував мечі для королів. Я кую для тих, хто б'ється.|My father forged swords for kings. I forge for those who fight.",
+sg_s_bor1:"Найкраща сталь — із зірок. Вона падає раз на рік.|The best steel comes from the stars. It falls once a year.",
+sg_s_bor2:"Я колись зламав меч, який не мав ламатися. Відтоді шукаю, як скувати незламний.|I once broke a sword that should never break. Since then I've sought how to forge an unbreakable one.",
+sg_s_bor3:"Для тебе я скую Зореклинок. Але спершу доведи, що гідний.|For you I'll forge the Starforged Edge. But first prove you're worthy.",
+sg_s_ysa0:"Мене виростили вовки. Не смійся, це правда.|I was raised by wolves. Don't laugh, it's true.",
+sg_s_ysa1:"Є звірі, яких не бере жодна стріла. Я записую їх у свою книгу.|There are beasts no arrow can kill. I write them in my book.",
+sg_s_ysa2:"Пожирач Зірок забрав мою зграю. Я досі чую їхнє виття уві сні.|The Star-Eater took my pack. I still hear them howl in my sleep.",
+sg_s_ysa3:"З тобою я вперше не боюся полювати на легенди.|With you, for the first time, I'm not afraid to hunt legends.",
+sg_s_mask0:"Маска? Вона захищає не моє обличчя, а ваші очі.|The mask? It protects not my face, but your eyes.",
+sg_s_mask1:"Я ходив цими дорогами, коли вони ще були білими.|I walked these roads when they were still white.",
+sg_s_mask2:"У мене колись був трон. І брат, який його хотів.|I once had a throne. And a brother who wanted it.",
+sg_s_mask3:"Мій брат став Тіньовим Володарем. Я втік і сховав обличчя.|My brother became the Shadow Sovereign. I fled and hid my face.",
+sg_s_mask4:"Тепер ти знаєш мою таємницю. Що ти з нею зробиш?|Now you know my secret. What will you do with it?",
+sg_s_lum0:"Храм збудували ще до першого королівства.|The temple was built before the first kingdom.",
+sg_s_lum1:"Усі сестри пішли. Я лишилась, бо хтось мусить запалювати свічки.|All the sisters left. I stayed, because someone must light the candles.",
+sg_s_lum2:"Якщо відновити храм, його світло стримає тіні на дорогах.|If the temple is restored, its light will hold back the shadows on the roads.",
+sg_s_lum3:"Ти повернув мені віру. Не в богів — у людей.|You gave me back my faith. Not in gods, in people.",
+sg_s_dro0:"Мій корабель затонув біля Безодні Медуз. Я виплив, а він ні.|My ship sank near the Medusa Abyss. I swam out, it didn't.",
+sg_s_dro1:"На кожній карті є місце, яке картограф не наважився намалювати.|Every map has a place the mapmaker didn't dare to draw.",
+sg_s_dro2:"Таємничі острови з'являються і зникають. Я бачив, як один пішов під воду разом зі скарбом.|The mysterious isles come and go. I saw one sink with its treasure.",
+sg_s_dro3:"Колись ми з тобою знайдемо острів, якого немає на жодній карті.|One day you and I will find an isle that's on no map.",
+sg_s_zaf0:"Я торгую з усіма фракціями. Гроші не мають кольору.|I trade with every faction. Money has no colour.",
+sg_s_zaf1:"Залізний Ковенант платить сталлю, Коло Місяця — таємницями.|The Iron Covenant pays in steel, the Moon Circle pays in secrets.",
+sg_s_zaf2:"Колись мене пограбували на цій дорозі. Відтоді я ношу два кинджали.|I was robbed on this road once. Since then I carry two daggers.",
+sg_s_zaf3:"Ти перший, кому я довіряю без розписки.|You're the first I trust without a receipt.",
+sg_s_kas0:"Я живу в лісі сто років. А може, двісті. Гриби не рахують.|I've lived in the forest a hundred years. Or two hundred. Mushrooms don't count.",
+sg_s_kas1:"Коріння пам'ятає все, що сталося на землі.|The roots remember everything that happened on the earth.",
+sg_s_kas2:"Безіменний — це те, що лишилось від першого героя. Він забув, хто він.|The Nameless is what's left of the first hero. He forgot who he was.",
+sg_s_kas3:"Прийди до мене вночі. Коріння хоче тобі щось сказати.|Come to me at night. The roots want to tell you something.",
+/* herald and boss channel */
+sg_h_ev:"📯 Світова подія: {n}!|📯 World event: {n}!",sg_h_met:"📯 З неба падає метеорит! Шукай кратер.|📯 A meteor falls from the sky! Look for the crater.",
+sg_h_raid:"📯 Рейд-бос вийшов на бій: {n}.|📯 A raid boss enters the fight: {n}.",sg_h_wx:"📯 Погода змінилась: {n}.|📯 The weather changed: {n}.",
+sg_h_port:"📯 Відкрились таємничі портали! Закрий їх, поки не пізно.|📯 Mysterious portals have opened! Close them before it's too late.",
+sg_h_sec:"📯 Хтось бачив Безіменного на дорозі…|📯 Someone saw the Nameless on the road…",sg_h_wb:"📯 Світовий бос прокинувся: {n}!|📯 A world boss has awoken: {n}!",
+sg_h_q:"📯 Новий квест: {n}|📯 New quest: {n}",sg_h_rdy:"📯 {n} чекає на звіт.|📯 {n} is waiting for your report.",
+sg_newMsg:"💬 Нове повідомлення: {n}|💬 New message: {n}"};
+for(const k in SGTA)T8[k]=S8(SGTA[k]);
+
+/* ---- the Saga state, saved inside LG (LG.sg) and cleaned on load ---- */
+const SG0=()=>({ch:[],ur:{},aff:{},gd:{},st:{},q:{},qd:[],td:{clr:[0,0,0,0,0,0,0,0,0],best:[0,0,0,0,0,0,0,0,0],fl:[0,0,0,0,0,0,0,0,0],runs:0},tw:{best:0,cp:1,runs:0},
+ wk:{w:"",n:0,win:""},tr:{},ex:{rooms:[],chests:[],relic:[],n:{},map:null,dug:0},rep:{iron:0,moon:0},fq2:{},fac2:"",tmp:0,pr:{rn:0,got:0},fl:{cur:0,best:0,paid:0},sab:{},bx:{best:0,runs:0,paid:0},
+ fort:{t:0},bond:{},bio:{},cnt:{},ttl:{},mi:0});
+const sgN=(v,m)=>{v=+v;return isFinite(v)?Math.min(m==null?1e12:m,Math.max(0,v)):0};
+function sgFlat(o,depth){const r={};if(!o||typeof o!=="object"||Array.isArray(o))return r;let n=0;for(const q in o){if(n++>400)break;const x=o[q];
+ if(typeof x==="number"&&isFinite(x))r[q]=sgN(x);else if(typeof x==="string")r[q]=x.slice(0,48);else if(Array.isArray(x))r[q]=x.slice(0,40).filter(v=>typeof v==="number"&&isFinite(v)).map(v=>sgN(v));else if(x&&typeof x==="object"&&depth>0)r[q]=sgFlat(x,depth-1)}return r}
+function sgClean(d,o){if(Array.isArray(d)){if(!Array.isArray(o))return d.slice();return o.slice(0,Math.max(d.length,60)).filter(x=>typeof x==="number"&&isFinite(x)).map(x=>sgN(x))}
+ const r={};for(const k in d){const dv=d[k],ov=o&&typeof o==="object"&&!Array.isArray(o)?o[k]:undefined;
+  if(typeof dv==="number")r[k]=ov==null?dv:sgN(ov);else if(typeof dv==="string")r[k]=typeof ov==="string"?ov.slice(0,48):dv;
+  else if(Array.isArray(dv))r[k]=sgClean(dv,ov);else if(dv===null)r[k]=ov&&typeof ov==="object"&&!Array.isArray(ov)?sgFlat(ov,1):null;
+  else r[k]=Object.keys(dv).length?sgClean(dv,ov):sgFlat(ov,2)}return r}
+const sgS=()=>{if(!LG)return SG0();if(!LG.sg||typeof LG.sg!=="object")LG.sg=SG0();return LG.sg};
+{const _l=p17Load;p17Load=function(o){_l(o);if(!o||!LG)return;const s=sgClean(SG0(),o.sg);
+ /* chat history: {w npc, k text key | x plain text, v vars, me 1 = said by you} */
+ s.ch=Array.isArray(o.sg&&o.sg.ch)?o.sg.ch.filter(m=>m&&typeof m==="object"&&typeof m.w==="string").slice(-160).map(m=>{const r={w:m.w.slice(0,12)};if(typeof m.k==="string")r.k=m.k.slice(0,40);if(typeof m.x==="string")r.x=m.x.slice(0,240);if(m.me)r.me=1;if(m.v&&typeof m.v==="object")r.v=sgFlat(m.v,0);return r}):[];
+ s.qd=Array.isArray(o.sg&&o.sg.qd)?o.sg.qd.filter(x=>typeof x==="string").slice(-80).map(x=>x.slice(0,24)):[];
+ LG.sg=s}}
+/* a calendar week key like 2026-W47 (Monday start) */
+const sgWeek=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+3-(d.getDay()+6)%7);const w1=new Date(d.getFullYear(),0,4);return d.getFullYear()+"-W"+(1+Math.round(((d-w1)/864e5-3+(w1.getDay()+6)%7)/7))};
+const sgCnt=(k,n)=>{const s=sgS();s.cnt[k]=(s.cnt[k]|0)+(n==null?1:n)};
+const sgNm=k=>t("sg_n_"+k);
+const sgBusy=()=>locked||(MG&&MG.run)||hero.state==="dead"||(typeof p55!=="undefined"&&p55.e)||(typeof p52!=="undefined"&&p52.e)||(typeof sgF!=="undefined"&&sgF.on);
+
+/* ---- NPCs ---- */
+const SGN=[{k:"vel",ic:"📚",c:"#c8b4ff",st:4},{k:"bor",ic:"⚒️",c:"#ffb03a",st:4},{k:"ysa",ic:"🏹",c:"#8fe08a",st:4},{k:"mask",ic:"🎭",c:"#e0e0ff",st:5},{k:"lum",ic:"🕯️",c:"#fff2b0",st:4},
+ {k:"dro",ic:"⚓",c:"#7fd8ff",st:4},{k:"zaf",ic:"🧳",c:"#ffd98a",st:4},{k:"kas",ic:"🍄",c:"#c8e07a",st:4},{k:"her",ic:"📯",c:"#ff8a8a",ro:1},{k:"boss",ic:"👹",c:"#ff6a4a",ro:1}];
+const SGNK={};SGN.forEach(N=>SGNK[N.k]=N);
+const SG_AFF=[0,2,4,7,10],SG_AFFMAX=12;
+const sgAff=k=>sgS().aff[k]|0;
+/* a message into the chat history; NPC messages mark the contact unread when the chat is not looking at them */
+let sgSel="vel";
+function sgPost(w,k,v,o){const s=sgS();const m={w};if(k)m.k=k;if(v)m.v=v;if(o&&o.x)m.x=String(o.x).slice(0,240);if(o&&o.me)m.me=1;s.ch.push(m);if(s.ch.length>160)s.ch.splice(0,s.ch.length-160);
+ const look=modalOpen==="mMg"&&mgTab==="sgchat"&&sgSel===w;if(!m.me&&!look){s.ur[w]=(s.ur[w]|0)+1;if(o&&o.tst!==false&&!SGNK[w].ro)toast(t("sg_newMsg",{n:sgNm(w)}),SGNK[w].c)}
+ if(look)setTimeout(()=>{if(modalOpen==="mMg"&&mgTab==="sgchat")renderMg()},30)}
+function sgAffAdd(k,d){const s=sgS(),a0=s.aff[k]|0,a=Math.max(0,Math.min(SG_AFFMAX,a0+d));if(a===a0)return;s.aff[k]=a;
+ if(d>0)toast(t("sg_affUp",{n:sgNm(k)})+" ("+a+")",SGNK[k].c);else toast(t("sg_affDn",{n:sgNm(k)}),"#ff8a8a");
+ if(d>0&&a>=10&&!s.ttl["f_"+k]){s.ttl["f_"+k]=1;sgRenown(20)}
+ if(Object.keys(s.aff).filter(q=>(s.aff[q]|0)>=10).length>=4&&!LG.ttl.beloved){LG.ttl.beloved=1;setTimeout(()=>banner("🏷️ "+t("sl_t_beloved"),"❤"),1500)}}
+/* the greeting depends on friendship, weather, time, health and progress */
+function sgGreet(k){const a=sgAff(k),out=[a>=SG_AFF[2]?"sg_gw_"+k:"sg_gc_"+k];
+ const w=wxNow&&wxNow.k;if(w==="eclipse"||w==="mstorm")out.push("sg_x_"+w);else if(w==="storm"||w==="rain"||w==="snow")out.push("sg_x_"+w);
+ if(nightK()>.6)out.push("sg_x_night");if(P.hp<P.maxhp*.35)out.push("sg_x_hurt");out.push(battleNo<25?"sg_x_early":battleNo>150?"sg_x_late":"");return out.filter(Boolean)}
+/* rumours point at real things that wait for you */
+function sgRumor(){const s=sgS(),L0=[];
+ const di=TD.findIndex((D,i)=>tdOpen(i)&&!s.td.clr[i]);if(di>=0)L0.push(["sg_u_dun",{n:t("sg_d_"+TD[di].k)}]);else{const ni=TD.findIndex((D,i)=>!tdOpen(i));if(ni>=0)L0.push(["sg_u_dunL",{n:t("sg_d_"+TD[ni].k)}])}
+ L0.push(["sg_u_tow",{n:s.tw.best}]);const W=wkBoss();L0.push(["sg_u_wk",{n:t("sg_tb_"+W.k),m:wkLeft()}]);
+ if(!s.tr.secSeen)L0.push(["sg_u_sec"]);const rl=SGROOM.length-s.ex.rooms.length;if(rl>0)L0.push(["sg_u_room",{n:rl}]);L0.push(["sg_u_chest",{n:s.ex.chests.length}]);
+ if(s.ex.map)L0.push(["sg_u_map",{n:Math.round(s.ex.map.x/10),m:t(s.ex.map.s>0?"sg_south":"sg_north")}]);if(!(s.q.m20&&s.q.m20.d))L0.push(["sg_u_fin"]);
+ return L0.length?L0[rint(0,L0.length-1)]:["sg_u_none"]}
+/* chat actions */
+function sgSay(k,line,v){sgPost(k,line,v,{tst:false})}
+function sgMe(k,line,v){sgPost(k,line,v,{me:1})}
+function sgTalk(k,o){const s=sgS(),N=SGNK[k];if(!N||N.ro)return;s.st.talk=(s.st.talk|0)+1;
+ if(o==="hi"){sgMe(k,"sg_o_hi");const g=sgGreet(k);for(const l of g)sgSay(k,l);qEv("talk",1,k)}
+ else if(o==="rum"){sgMe(k,"sg_o_rum");const [l,v]=sgRumor();sgSay(k,l,v)}
+ else if(o==="me"){sgMe(k,"sg_o_me");const told=s.gd["t_"+k]|0;if(told>=N.st){sgSay(k,"sg_noMore");return}const need=SG_AFF[Math.min(SG_AFF.length-1,told)];
+  if(sgAff(k)<need){sgSay(k,"sg_needAff",{n:need});return}s.gd["t_"+k]=told+1;sgSay(k,"sg_s_"+k+told);if(told+1>=N.st)sgRenown(15);
+  if(k==="mask"&&told+1>=5)qUnlock("w5")}
+ else if(o==="gift"){const day=dayKey(),c=sgGiftCost();sgMe(k,"sg_o_gift",{n:"🪙"+nfm(c)});if(s.gd["g_"+k]===day){sgSay(k,"sg_giftDay");return}if(P.gold<c){toast("🪙 "+t("sm_gold"),"#ff8a5a");SFX.buzz();return}
+  P.gold-=c;s.gd["g_"+k]=day;const big=sgAff(k)>=SG_AFF[3];sgSay(k,big?"sg_giftLove":"sg_giftOk");sgAffAdd(k,1);SFX.coin&&SFX.coin()}
+ else if(o==="joke"){sgMe(k,"sg_o_joke");const ok=Math.random()<.55+sgAff(k)*.03;sgSay(k,ok?"sg_joke0":"sg_joke1");if(ok&&s.gd["j_"+k]!==dayKey()){s.gd["j_"+k]=dayKey();sgAffAdd(k,1)}}
+ else if(o==="rude"){sgMe(k,"sg_o_rude");sgSay(k,sgAff(k)>=SG_AFF[3]?"sg_rude0":"sg_rude1");sgAffAdd(k,-1)}
+ else if(o==="job")qTalk(k);
+ else if(o&&o.startsWith("q:"))qAct(k,o.slice(2));
+ else if(o&&o.startsWith("x:"))sgSecret(k,o.slice(2));
+ save()}
+const sgGiftCost=()=>Math.round(150+battleNo*12+P.level*8);
+/* the option buttons under a conversation */
+function sgOpts(k){const N=SGNK[k];if(!N)return"";if(N.ro)return`<button class="btn sm" type="button" data-a="sgclr" data-v="${k}">${t("sg_o_clear")}</button>`;
+ const b=(o,txt,cls)=>`<button class="btn sm${cls?" "+cls:""}" type="button" data-a="sgo" data-v="${k}|${o}">${txt}</button>`;
+ let h=b("hi",t("sg_o_hi"))+b("job",t("sg_o_job"),qHas(k)?"main":"")+b("me",t("sg_o_me"))+b("rum",t("sg_o_rum"))+b("gift",t("sg_o_gift",{n:"🪙"+nfm(sgGiftCost())}))+b("joke",t("sg_o_joke"))+b("rude",t("sg_o_rude"));
+ for(const x of sgSecretOpts(k))h+=b("x:"+x.k,x.txt,"warn");return h}
+function sgMsgHTML(m){const N=SGNK[m.w]||SGN[0];const txt=m.k?t(m.k,m.v):escH(m.x||"");const nm=m.me?escH(nickname||t("sg_me")):sgNm(m.w);
+ return`<div class="sgM${m.me?" me":""}" style="--nc:${m.me?"#8fc6ff":N.c}"><b>${m.me?"🗡️":N.ic} ${nm}</b><p>${txt}</p></div>`}
+function sgRChat(){const s=sgS();if(!SGNK[sgSel])sgSel="vel";s.ur[sgSel]=0;const N=SGNK[sgSel];
+ let h=`<p class="sub">${t("sg_hubH")}</p><div class="sgCts">`+SGN.map(C=>{const u=s.ur[C.k]|0;return`<button type="button" class="sgCt${C.k===sgSel?" on":""}" data-a="sgsel" data-v="${C.k}" style="--nc:${C.c}">${C.ic}<small>${sgNm(C.k).split(" ").slice(-1)[0]}</small>${u?`<i>${u>9?"9+":u}</i>`:""}</button>`}).join("")+`</div>`;
+ const a=sgAff(sgSel);h+=`<div class="sgHd" style="--nc:${N.c}"><span>${N.ic}</span><div><b>${sgNm(sgSel)}</b><small>${t("sg_r_"+sgSel)}</small>${N.ro?"":`<small>❤ ${t("sg_aff")}: ${a}/${SG_AFFMAX}</small>`}</div></div>`;
+ const L0=s.ch.filter(m=>m.w===sgSel).slice(-40);h+=`<div class="sgLog" id="sgLog">${L0.length?L0.map(sgMsgHTML).join(""):`<p class="m">…</p>`}</div><div class="sgOpt">${sgOpts(sgSel)}</div>`;
+ setTimeout(()=>{const el=$("sgLog");if(el)el.scrollTop=el.scrollHeight},20);return h}
+const sgUnread=()=>{if(!LG)return 0;const s=sgS();let n=0;for(const k in s.ur)n+=s.ur[k]|0;return n};
+
+/* ---- the third group in the Adventures window ---- */
+const SG_TABS=[["sgchat","💬"],["sgquest","📜"],["sgdun","🏰"],["sgtrial","⚔️"],["sgexp","🧭"],["sgfort","🏯"],["sgcodex","📖"],["sgpres","🌟"]];
+const sgTabs=()=>SG_TABS.concat(LG&&sgS().bx.unl?[["sgbx","🌀"]]:[]);
+const sgTab=k=>sgTabs().some(x=>x[0]===k)||k==="sgbx";
+const sgTabDot=k=>k==="sgchat"?sgUnread()>0:k==="sgquest"?qReady():k==="sgfort"?fortReady():false;
+{const _g=mgGrpHTML;mgGrpHTML=function(){const g=sgTab(mgTab)?2:lgTab(mgTab)?1:0;let h=_g();if(g===2)h=h.replace(' class="on" data-grp="0"',' class="" data-grp="0"');
+ const dot=sgUnread()>0||qReady()||fortReady();return h.replace(/<\/div>$/,`<button type="button" class="${g===2?"on":""}" data-grp="2">📜 ${t("sg_hub")}${dot?'<i class="tdot on"></i>':""}</button></div>`)}}
+{const _r=renderMg;renderMg=function(){_r();if(!LG||!sgTab(mgTab))return;LS.set("r2_sgTab",mgTab);
+ $("mgTabs").innerHTML=sgTabs().map(([k,ic])=>`<button type="button" class="tab mgtab${mgTab===k?" on":""}" data-mt="${k}">${ic} <span>${t("sg_t_"+k.slice(2))}</span>${sgTabDot(k)?'<i class="tdot on"></i>':""}</button>`).join("");
+ const on=$("mgTabs").querySelector(".on");if(on)on.scrollIntoView({block:"nearest",inline:"center"})}}
+/* the group buttons: the third one is ours, the first two keep their old behaviour */
+$("mMg").addEventListener("click",e=>{const g=e.target.closest("[data-grp]");if(!g||!LG)return;const want=+g.dataset.grp,cur=sgTab(mgTab)?2:lgTab(mgTab)?1:0;
+ if(want!==2&&cur!==2)return;e.stopPropagation();if(want===cur)return;
+ if(want===2){mgTab=LS.get("r2_sgTab","sgchat");if(!sgTab(mgTab))mgTab="sgchat"}else if(want===1){mgTab=LS.get("r2_lgTab","br");if(!lgTab(mgTab))mgTab="br"}else{mgTab=LS.get("r2_mgTab0","dun");if(!MG_TABS.some(x=>x[0]===mgTab))mgTab="dun"}
+ LS.set("r2_mgTab",mgTab);SFX.tab();renderMg()},true);
+/* the red dot on the 🗺️ button also lights for unread messages, quests to report and full stores */
+{const _h=mgHud;mgHud=function(){_h();const R=MG&&MG.run;if(R&&sgMode(R.m)){const pl=$("mgRun"),s=sgPill(R);if(pl&&pl.textContent!==s){pl.textContent=s;pl.style.display="block";pl.classList.remove("low")}}
+ const bd=$("mgBdg");if(bd&&LG&&!bd._on){const on=sgUnread()>0||qReady();if(on!==!!bd._sg){bd._sg=on;bd.classList.toggle("on",on)}}}}
+/* chat CSS */
+{const st=document.createElement("style");st.textContent=`
+.sgCts{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}.sgCts::-webkit-scrollbar{display:none}
+.sgCt{position:relative;flex:0 0 auto;min-width:54px;padding:6px 4px 4px;border-radius:12px;border:1px solid color-mix(in srgb,var(--nc) 45%,transparent);background:rgba(20,12,20,.7);font-size:20px;display:grid;place-items:center;color:#f4e8d8}
+.sgCt small{font-size:10px;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sgCt.on{background:color-mix(in srgb,var(--nc) 30%,rgba(20,12,20,.9));box-shadow:0 0 12px -2px var(--nc)}
+.sgCt i{position:absolute;right:-2px;top:-4px;min-width:18px;height:18px;border-radius:9px;background:#e0304a;color:#fff;font:800 10px/18px system-ui;font-style:normal;text-align:center;padding:0 3px}
+.sgHd{display:flex;gap:10px;align-items:center;padding:8px;border-radius:12px;background:color-mix(in srgb,var(--nc) 14%,rgba(14,8,14,.9));border:1px solid color-mix(in srgb,var(--nc) 40%,transparent)}
+.sgHd>span{font-size:30px}.sgHd small{display:block;opacity:.8;font-size:11px}
+.sgLog{max-height:min(46vh,340px);overflow-y:auto;padding:8px 2px;display:flex;flex-direction:column;gap:6px}
+.sgM{max-width:88%;align-self:flex-start;padding:7px 10px;border-radius:4px 14px 14px 14px;background:color-mix(in srgb,var(--nc) 16%,rgba(24,14,24,.95));border:1px solid color-mix(in srgb,var(--nc) 35%,transparent);animation:sgIn .25s ease-out}
+.sgM.me{align-self:flex-end;border-radius:14px 4px 14px 14px}.sgM b{font-size:11px;color:var(--nc)}.sgM p{margin:2px 0 0;font-size:13px;line-height:1.35}
+@keyframes sgIn{from{opacity:0;transform:translateY(6px)}}
+.sgOpt{display:flex;flex-wrap:wrap;gap:6px;padding-top:6px;border-top:1px solid var(--line)}.sgOpt .btn{flex:1 1 calc(50% - 6px);min-width:0;font-size:12px}
+.sgBar{height:8px;border-radius:5px;background:#ffffff14;overflow:hidden;margin:4px 0}.sgBar i{display:block;height:100%;background:linear-gradient(90deg,#ffd34e,#ff8a3a)}
+.sgQ{border-left:3px solid var(--nc,#ffd34e)}.sgQ .sgObj{font-size:12px;opacity:.9}.sgPick{outline:2px solid #ffd34e}
+`;document.head.appendChild(st)}
+/* ============ P56 part B: the quest book (story of 20 quests, chains, hunts, temple, blade, secret quest, faction choice) ============ */
+const SGTB={
+sg_qa:"Активні|Active",sg_qv:"Доступні|Available",sg_qdn:"Виконано: {n}|Completed: {n}",sg_qrdy:"✅ Готово! Поговори з: {n}|✅ Done! Talk to: {n}",sg_qgo:"💬 До розмови|💬 To the chat",
+sg_qdw:"Щоденні та щотижневі завдання — у меню 🎁 «Нагороди».|Daily and weekly tasks are in the 🎁 Rewards menu.",sg_qdwB:"🎁 Відкрити|🎁 Open",
+sg_qacc:"✅ Беру: {n}|✅ I'll take it: {n}",sg_qnext:"Добре. Тепер наступне.|Good. Now the next step.",sg_qnone:"Немає активних квестів. Поговори з людьми в чаті.|No active quests. Talk to people in the chat.",
+sg_qch:"Ланцюжки|Chains",sg_c_m:"Хроніка Тіньових земель|Chronicle of the Shadow Lands",sg_c_w:"Таємниця Мандрівника|The Wanderer's Secret",sg_c_h:"Полювання на легенди|Legend Hunts",sg_c_r:"Стародавні реліквії|Ancient Relics",
+sg_c_t:"Відновлення храму|Temple Restoration",sg_c_b:"Зореклинок|The Starforged Edge",sg_c_k:"Шепіт коріння|Whisper of the Roots",sg_c_f:"Вибір сторони|Choosing a Side",
+sg_rwd:"Нагорода|Reward",sg_qwk:"↻ щотижня|↻ weekly",
+/* objectives */
+sg_ob_kill:"Перемогти ворогів: {p}/{n}|Defeat foes: {p}/{n}",sg_ob_boss:"Перемогти босів: {p}/{n}|Defeat bosses: {p}/{n}",sg_ob_night:"Перемогти ворогів уночі: {p}/{n}|Defeat foes at night: {p}/{n}",
+sg_ob_tdun:"Пройти данж «{a}»|Clear the dungeon «{a}»",sg_ob_tdunA:"Пройти будь-які тематичні данжі: {p}/{n}|Clear any themed dungeons: {p}/{n}",sg_ob_trial:"Перемогти у випробуванні «{a}»|Win the trial «{a}»",
+sg_ob_raid:"Перемогти рейд-босів: {p}/{n}|Defeat raid bosses: {p}/{n}",sg_ob_far:"Пройти: {p}/{n} м|Walk: {p}/{n} m",sg_ob_site:"Дослідити місця: {p}/{n}|Explore places: {p}/{n}",sg_ob_siteA:"Знайти: {a} ({p}/{n})|Find: {a} ({p}/{n})",
+sg_ob_forge:"Викувати речей у Кузні Майстра: {p}/{n}|Forge items in the Master Forge: {p}/{n}",sg_ob_talk:"Поговорити з: {a}|Talk to: {a}",sg_ob_hunt:"Вполювати легенду «{a}»|Slay the legend «{a}»",
+sg_ob_wev:"Виграти світові події: {p}/{n}|Win world events: {p}/{n}",sg_ob_portal:"Закрити бурю порталів: {p}/{n}|Close a portal storm: {p}/{n}",sg_ob_battle:"Дійти до бою №{n} ({p})|Reach battle #{n} ({p})",
+sg_ob_lvl:"Досягти рівня {n} ({p})|Reach level {n} ({p})",sg_ob_tower:"Вежа босів: поверх {n} (рекорд {p})|Boss Tower: floor {n} (best {p})",sg_ob_floor:"Нескінченний данж: поверх {n} (рекорд {p})|Endless dungeon: floor {n} (best {p})",
+sg_ob_relic:"Знайти реліквії: {p}/{n}|Find relics: {p}/{n}",sg_ob_mat:"Принести: {a}|Bring: {a}",sg_ob_gold:"Заплатити 🪙 {n}|Pay 🪙 {n}",sg_ob_rank:"Репутація в будь-якій старій фракції: {p}/{n}|Reputation with any old faction: {p}/{n}",
+sg_ob_choice:"Зробити вибір у розмові|Make your choice in the conversation",sg_ob_fac:"Завдання фракції: {p}/{n}|Faction task: {p}/{n}",sg_ob_room:"Знайти таємні кімнати: {p}/{n}|Find hidden rooms: {p}/{n}",
+/* main story: names, start lines, end lines */
+sg_qn_m1:"Літопис горить|The Burning Chronicle",sg_qi_m1:"Тіні палять мої архіви! Прожени їх: 15 ворогів, не менше.|Shadows are burning my archives! Drive them off: 15 foes, no less.",sg_qe_m1:"Вогонь згас. Ти вже вписаний у літопис, герою.|The fire is out. You're already written into the chronicle, hero.",
+sg_qn_m2:"Лист до коваля|A Letter to the Smith",sg_qi_m2:"Віднеси цю звістку Борисові. Він має знати, що тіні повернулись.|Take this news to Borys. He must know the shadows are back.",sg_qe_m2:"Велена пише? Значить, справи погані.|Velena writes? Then things are bad.",
+sg_qn_m3:"Метал для оборони|Metal for the Defence",sg_qi_m3:"Мені потрібне залізо і кристали, щоб кувати зброю для села.|I need iron and crystals to forge weapons for the village.",sg_qe_m3:"Чудово. Тепер у села буде чим битися.|Great. Now the village has something to fight with.",
+sg_qn_m4:"Сліди великих|Tracks of the Great",sg_qi_m4:"Біля дороги ходять боси. Двоє. Знищ їх, поки вони не прийшли до табору.|Bosses roam near the road. Two of them. Destroy them before they reach the camp.",sg_qe_m4:"Добрий удар. Вовки б тобою пишалися.|A fine strike. The wolves would be proud of you.",
+sg_qn_m5:"Стара дорога|The Old Road",sg_qi_m5:"Пройди 300 метрів на схід і скажи, що бачив. Карти брешуть, ноги — ні.|Walk 300 metres east and tell me what you saw. Maps lie, feet don't.",sg_qe_m5:"Ага, отже дорога ще жива. Записую.|Aha, so the road is still alive. Noting it down.",
+sg_qn_m6:"Забуті місця|Forgotten Places",sg_qi_m6:"Біля дороги є руїни, печери, храми. Дослідь два будь-які.|There are ruins, caves and temples by the road. Explore any two.",sg_qe_m6:"Ти знайшов те, чого немає на моїх картах!|You found what isn't on my maps!",
+sg_qn_m7:"Склеп короля|The King's Crypt",sg_qi_m7:"Під руїнами спить Склеп Стародавнього Короля. Його світло згасло. Пройди склеп до кінця.|Beneath the ruins sleeps the Ancient King's Crypt. Its light went out. Clear the crypt to the end.",sg_qe_m7:"Король спочив. Храм відчуває полегшення.|The king is at rest. The temple feels relief.",
+sg_qn_m8:"Хвиля тіней|The Shadow Tide",sg_qi_m8:"Тіні йдуть хвилями. Дійди до бою №25 і перемоги 40 ворогів.|The shadows come in waves. Reach battle #25 and defeat 40 foes.",sg_qe_m8:"Хвиля спала. Але море тіней велике.|The tide has fallen. But the sea of shadows is wide.",
+sg_qn_m9:"Зілля для пам'яті|A Potion for Memory",sg_qi_m9:"Коріння забуває. Принеси траву і гриби, я зварю зілля пам'яті.|The roots are forgetting. Bring herbs and mushrooms, I'll brew a memory potion.",sg_qe_m9:"Коріння згадало ім'я: Тіньовий Володар.|The roots remembered a name: the Shadow Sovereign.",
+sg_qn_m10:"Звір із легенди|The Beast of Legend",sg_qi_m10:"Щоб іти далі, треба силу легенди. Вполюй Залізного Вепра, що бродить біля дороги.|To go on you need the strength of a legend. Hunt the Iron Boar that roams the road.",sg_qe_m10:"Ти пройшов перше випробування. Тепер я знаю, що ти справжній.|You passed the first trial. Now I know you're real.",
+sg_qn_m11:"Пекельні глибини|The Infernal Depths",sg_qi_m11:"Вогонь під землею кличе тіні. Пройди Пекельні глибини.|The fire beneath the earth calls the shadows. Clear the Infernal Depths.",sg_qe_m11:"Полум'я стихло. Моя тятива більше не тремтить.|The flames are quiet. My bowstring no longer trembles.",
+sg_qn_m12:"Ціна брами|The Price of the Gate",sg_qi_m12:"Вартовий Брами Тіней бере золото. 5000 — і він відчинить шлях.|The Shadow Gate's keeper takes gold. 5000, and he'll open the way.",sg_qe_m12:"Брама відчинена. Не питай, куди пішли гроші.|The gate is open. Don't ask where the money went.",
+sg_qn_m13:"Перша реліквія|The First Relic",sg_qi_m13:"Реліквії старого королівства розкидані по руїнах і храмах. Знайди хоч одну.|The old kingdom's relics are scattered in ruins and temples. Find at least one.",sg_qe_m13:"Вона ще тепла! Королівство не зовсім мертве.|It's still warm! The kingdom isn't quite dead.",
+sg_qn_m14:"Перша свічка|The First Candle",sg_qi_m14:"Допоможи відновити храм. Хоч перший крок: принеси те, що я попрошу.|Help restore the temple. Just the first step: bring what I ask.",sg_qe_m14:"Свічки знову горять. Дорога стала світлішою.|The candles burn again. The road is brighter.",
+sg_qn_m15:"Вежа босів|The Tower of Bosses",sg_qi_m15:"У Вежі босів записані імена всіх, хто дійшов далеко. Дійди до 5-го поверху.|The Boss Tower keeps the names of all who went far. Reach the 5th floor.",sg_qe_m15:"Твоє ім'я вже на стіні вежі. Я бачила.|Your name is on the tower wall already. I saw it.",
+sg_qn_m16:"Робота для горна|Work for the Forge",sg_qi_m16:"Кузня Майстра простоює. Викуй 5 речей, щоб горн не охолов.|The Master Forge is idle. Forge 5 items so the fire doesn't cool.",sg_qe_m16:"От бачиш, ковальство — це просто. Майже.|See, smithing is easy. Almost.",
+sg_qn_m17:"Луна в дзеркалі|The Echo in the Mirror",sg_qi_m17:"Володар Відлуння повторює кожен твій рух. Перемоги його — і зрозумієш себе.|The Echo Lord repeats your every move. Defeat him and you'll understand yourself.",sg_qe_m17:"Ти переміг власну тінь. Мало хто на це здатен.|You beat your own shadow. Few can do that.",
+sg_qn_m18:"Нічна зграя|The Night Pack",sg_qi_m18:"Уночі тіні полюють. Полюй на них: 30 ворогів у темряві.|At night the shadows hunt. Hunt them back: 30 foes in the dark.",sg_qe_m18:"Ніч тепер боїться тебе. Як і має бути.|The night fears you now. As it should.",
+sg_qn_m19:"Тіньовий лабіринт|The Shadow Labyrinth",sg_qi_m19:"Шлях до Володаря лежить через Тіньовий лабіринт. Пройди його.|The path to the Sovereign runs through the Shadow Labyrinth. Clear it.",sg_qe_m19:"Ти вийшов з лабіринту. Тепер лишилась Рада.|You came out of the labyrinth. Only the Council is left.",
+sg_qn_m20:"Рада Трьох|The Council of Three",sg_qi_m20:"Троє слуг Володаря охороняють останню браму. Переможи Раду Трьох.|Three servants of the Sovereign guard the last gate. Defeat the Council of Three.",sg_qe_m20:"Хроніку дописано… майже. За брамою чекає сам Володар. Тепер ти можеш піти до нього.|The Chronicle is written… almost. Beyond the gate waits the Sovereign himself. Now you may go to him.",
+/* the Wanderer */
+sg_qn_w1:"Нічна зустріч|A Night Meeting",sg_qi_w1:"Мене цікавить, як ти б'єшся в темряві. Покажи: 20 ворогів уночі.|I'm curious how you fight in the dark. Show me: 20 foes at night.",sg_qe_w1:"Непогано. Ти не боїшся темряви. Я теж колись не боявся.|Not bad. You don't fear the dark. Neither did I, once.",
+sg_qn_w2:"Тіньовий пил|Shadow Dust",sg_qi_w2:"Принеси мені тіні та порожнечі. Не питай навіщо.|Bring me shadow and void. Don't ask why.",sg_qe_w2:"Дякую. Маска потребує… підживлення.|Thank you. The mask needs… feeding.",
+sg_qn_w3:"Загублений портал|The Lost Portal",sg_qi_w3:"Знайди загублений портал. Через такий я колись утік із дому.|Find a lost portal. I once fled my home through one like it.",sg_qe_w3:"Так, саме такий. Від нього пахне моїм дитинством.|Yes, just like that. It smells of my childhood.",
+sg_qn_w4:"Порожнеча кличе|The Void Calls",sg_qi_w4:"У Порожнечі є щось моє. Пройди Розлом Порожнечі.|There's something of mine in the Void. Clear the Void Hollow.",sg_qe_w4:"Ти приніс мені спогад. Тепер я можу все розповісти… якщо ти захочеш слухати.|You brought me back a memory. Now I can tell you everything… if you want to listen.",
+sg_qn_w5:"Обличчя під маскою|The Face Under the Mask",sg_qi_w5:"Ти знаєш, хто я: брат Тіньового Володаря. Що ти зробиш із цією правдою?|You know who I am: the Shadow Sovereign's brother. What will you do with this truth?",
+sg_w5a:"📚 Розповісти Велені правду|📚 Tell Velena the truth",sg_w5b:"🤐 Зберегти таємницю|🤐 Keep the secret",sg_w5c:"🎭 Взяти маску собі|🎭 Take the mask yourself",
+sg_qe_w5a:"Правду записано в літопис. Мандрівник пішов, не попрощавшись… але Велена тепер довіряє тобі як нікому.|The truth is in the chronicle. The Wanderer left without a goodbye… but Velena now trusts you like no one else.",
+sg_qe_w5b:"Ти зберіг мою таємницю. Візьми мою стару корону — вона мені більше не потрібна.|You kept my secret. Take my old crown, I no longer need it.",
+sg_qe_w5c:"Тепер ти — Мандрівник. Маска сховає тебе від очей тіней. Я нарешті вільний.|Now you are the Wanderer. The mask will hide you from the shadows' eyes. I'm finally free.",
+/* legend hunts */
+sg_qn_h:"Полювання: {n}|Hunt: {n}",sg_qi_h:"Слід свіжий. {n} десь біля дороги. Будь обережний: у нього свої хитрощі.|The trail is fresh. {n} is somewhere near the road. Careful: it has tricks of its own.",sg_qe_h:"Ще одна легенда в моїй книзі. Дякую, мисливцю.|Another legend in my book. Thank you, hunter.",
+sg_lm_0:"Залізний Вепр|The Iron Boar",sg_lm_1:"Королева Попелу|The Ash Queen",sg_lm_2:"Морозний Пастир|The Frost Shepherd",sg_lm_3:"Шепітна Гідра|The Whispering Hydra",sg_lm_4:"Пожирач Зірок|The Star-Eater",
+sg_lmB:"🏹 Легенда поруч: {n}!|🏹 A legend is near: {n}!",sg_lmW:"🏹 Легенду вполювано: {n}!|🏹 Legend slain: {n}!",sg_trH:"Трофей: {n}|Trophy: {n}",
+/* relics */
+sg_qn_r1:"Уламки королівства|Shards of the Kingdom",sg_qi_r1:"Знайди три реліквії в руїнах, храмах і печерах.|Find three relics in ruins, temples and caves.",sg_qe_r1:"Три з шести! Ми вже бачимо обриси старого світу.|Three of six! We can already see the outline of the old world.",
+sg_qn_r2:"Повний скарб|The Complete Hoard",sg_qi_r2:"Ще три реліквії — і я складу Корону Світла.|Three more relics and I'll assemble the Crown of Light.",sg_qe_r2:"Корона Світла складена. Тримай, вона твоя по праву.|The Crown of Light is whole. Here, it's yours by right.",
+/* temple */
+sg_qn_t:"Храм: крок {n}|Temple: step {n}",sg_qi_t:"Для наступного кроку відновлення потрібні матеріали. Принесеш?|The next step of the restoration needs materials. Will you bring them?",sg_qe_t:"Храм став світлішим. Благословення з тобою.|The temple is brighter. The blessing is with you.",
+/* blade */
+sg_qn_b1:"Зоряний метал|Star Metal",sg_qi_b1:"Для Зореклинка треба зоряний метал і залізо. Багато заліза.|The Starforged Edge needs star metal and iron. A lot of iron.",sg_qe_b1:"Метал є. Тепер — вогонь драконів.|We have the metal. Now, dragon fire.",
+sg_qn_b2:"Драконячий вогонь|Dragon Fire",sg_qi_b2:"Тільки полум'я з Лігва драконів загартує цей метал. Пройди лігво.|Only flame from the Dragon Lair will temper this metal. Clear the lair.",sg_qe_b2:"Метал світиться! Тепер — серце легенди.|The metal glows! Now, the heart of a legend.",
+sg_qn_b3:"Серце легенди|Heart of a Legend",sg_qi_b3:"Пожирач Зірок проковтнув уламок неба. Він потрібен для руків'я.|The Star-Eater swallowed a shard of the sky. I need it for the hilt.",sg_qe_b3:"Уламок неба! Ізольда плакала, коли я розповів.|A shard of the sky! Ysolde wept when I told her.",
+sg_qn_b4:"Випробування вежі|The Tower's Test",sg_qi_b4:"Меч прийме лише того, хто дійшов до 10-го поверху Вежі босів.|The blade will accept only one who reached floor 10 of the Boss Tower.",sg_qe_b4:"Гідний. Я так і знав.|Worthy. I knew it.",
+sg_qn_b5:"Останній удар молота|The Last Hammer Blow",sg_qi_b5:"Лишилось заплатити за вугілля й осколки. Вибач, ковальство — не благодійність.|All that's left is to pay for the coal and shards. Sorry, smithing isn't charity.",sg_qe_b5:"Ось він — Зореклинок. Нехай світить тобі в найтемнішу ніч.|Here it is, the Starforged Edge. May it shine for you in the darkest night.",
+sg_blade:"Зореклинок|The Starforged Edge",
+/* Kass, secret */
+sg_x_kas:"🌱 Коріння пам'ятає…|🌱 The roots remember…",sg_kasQ:"Відгадай: що гучніше за грім, але не має звуку?|Riddle me this: what is louder than thunder but makes no sound?",
+sg_kasA0:"🤫 Тиша|🤫 Silence",sg_kasA1:"📣 Відлуння|📣 An echo",sg_kasA2:"🍄 Мій живіт|🍄 My stomach",sg_kasOk:"Так… тиша. Коріння відкриє тобі свою стежку.|Yes… silence. The roots will open their path to you.",sg_kasNo:"Ні. Приходь іншої ночі.|No. Come another night.",
+sg_qn_k1:"Їжа для коріння|Food for the Roots",sg_qi_k1:"Коріння голодне. Принеси квіти і насіння.|The roots are hungry. Bring blossoms and seeds.",sg_qe_k1:"Коріння наїлось і показало мені печеру.|The roots are fed and showed me a cave.",
+sg_qn_k2:"Печера коріння|The Root Cave",sg_qi_k2:"Знайди приховану печеру біля дороги. Там коріння найглибше.|Find a hidden cave by the road. The roots are deepest there.",sg_qe_k2:"Ти чув? Коріння шепоче ім'я. Безіменний близько.|Did you hear? The roots whisper a name. The Nameless is near.",
+sg_qn_k3:"Безіменний|The Nameless",sg_qi_k3:"Знайди Безіменного і звільни його. Він приходить у затемнення вночі.|Find the Nameless and free him. He comes during an eclipse at night.",sg_qe_k3:"Безіменний згадав своє ім'я і пішов у спокій. Коріння дарує тобі свій шепіт.|The Nameless remembered his name and went to rest. The roots grant you their whisper.",
+/* factions */
+sg_qn_f1:"Друг усіх фракцій|Friend of All Factions",sg_qi_f1:"Фракції помічають тих, хто їм допомагає. Набери 300 репутації в будь-якій старій фракції.|Factions notice those who help them. Earn 300 reputation with any old faction.",sg_qe_f1:"Тебе знають. Тепер тебе кличуть і нові сили.|They know you now. New powers are calling you too.",
+sg_qn_f2:"Сталь чи Місяць|Steel or Moon",sg_qi_f2:"Залізний Ковенант і Коло Місяця хочуть тебе. Обирай раз і назавжди.|The Iron Covenant and the Moon Circle both want you. Choose once and for all.",
+sg_f2a:"⚙️ Залізний Ковенант|⚙️ The Iron Covenant",sg_f2b:"🌙 Коло Місяця|🌙 The Moon Circle",sg_qe_f2:"Вибір зроблено. Тепер ти — один із них.|The choice is made. Now you're one of them.",
+sg_qn_f3:"Перше доручення|The First Errand",sg_qi_f3:"Доведи вірність: виконай доручення своєї фракції.|Prove your loyalty: carry out your faction's errand.",sg_qe_f3:"Фракція пишається тобою. Її крамниця тепер відкрита для тебе.|The faction is proud of you. Its shop is now open to you."};
+for(const k in SGTB)T8[k]=S8(SGTB[k]);
+
+/* legendary monsters for the hunts: icon, colour, fx, scale, hp, two signature attacks (P55 raid attacks) */
+const SGLM=[{ic:"🐗",c:"#c8ccd6",fx:"dust,shards",s:1.5,hp:5,at:["nova","ring"]},{ic:"🔥",c:"#ff6a2a",fx:"embers,rays",s:1.4,hp:6,at:["rain","line"]},{ic:"❄️",c:"#9fe8ff",fx:"prism,shards",s:1.45,hp:7,at:["ring","cross"]},
+ {ic:"🐍",c:"#7affb0",fx:"smoke,orbs",s:1.6,hp:8,at:["whirl","summon"]},{ic:"🌠",c:"#ffe08a",fx:"halo,void",s:1.7,hp:10,at:["sky","blink"]}];
+/* quests: g giver, c chain, o objectives (one per stage) [kind,n,arg], rw reward, u unlock, rep weekly repeat, ch choices of the last stage */
+const QD=[];
+const qAdd=(id,g,c,o,rw,u,x)=>QD.push(Object.assign({id,g,c,o,rw,u},x||{}));
+const qDone=id=>!!(LG&&sgS().q[id]&&sgS().q[id].d);
+/* the main story, one after another */
+[["vel",[["kill",15]],{g:400,rn:30}],["vel",[["talk",1,"bor"]],{g:300,m:{iron:4},rn:20}],["bor",[["mat",1,{iron:6,crys:2}]],{g:700,it:3,rn:30}],["ysa",[["boss",2]],{g:900,m:{crys:3},rn:40}],
+ ["dro",[["far",3000]],{g:800,m:{sand:3},rn:30}],["dro",[["site",2]],{g:1000,it:3,rn:40}],["lum",[["tdun",1,0]],{g:1500,m:{crys:4,star:1},rn:60}],["vel",[["battle",25],["kill",40]],{g:1600,it:4,rn:50}],
+ ["kas",[["mat",1,{herb:5,shroom:3}]],{g:1200,pot:{heal:3},rn:40}],["mask",[["hunt",1,0]],{g:2000,m:{star:2},rn:70}],["ysa",[["tdun",1,1]],{g:2500,it:5,rn:80}],["zaf",[["gold",5000]],{g:0,m:{crys:10,star:3},it:5,rn:60}],
+ ["dro",[["relic",1]],{g:2500,m:{shard:2},rn:70}],["lum",[["tmp",1]],{g:2500,rn:70}],["vel",[["tower",5]],{g:3500,it:6,rn:90}],["bor",[["forge",5]],{g:3000,m:{iron:20,ore:6},rn:70}],
+ ["mask",[["trial",1,"echo"]],{g:5000,it:7,rn:120}],["ysa",[["night",30]],{g:4500,m:{shd:8,star:3},rn:90}],["vel",[["tdun",1,4]],{g:6000,it:8,rn:140}],["vel",[["trial",1,"council"]],{g:10000,it:9,rn:250,ttl:"chronicler2"}]]
+ .forEach(([g,o,rw],i)=>qAdd("m"+(i+1),g,"m",o,rw,i?()=>qDone("m"+i):null));
+/* the Wanderer (needs the 6th story quest), the last one ends three ways */
+qAdd("w1","mask","w",[["night",20]],{g:1500,m:{shd:4},rn:40},()=>qDone("m6"));qAdd("w2","mask","w",[["mat",1,{shd:3,void:1}]],{g:2000,it:5,rn:40},()=>qDone("w1"));
+qAdd("w3","mask","w",[["site",1,"portal"]],{g:2500,m:{sky:2},rn:50},()=>qDone("w2"));qAdd("w4","mask","w",[["tdun",1,5]],{g:5000,it:7,rn:90},()=>qDone("w3"));
+qAdd("w5","mask","w",[["choice",1]],{g:6000,rn:150},()=>qDone("w4")&&(sgS().gd.t_mask|0)>=5,{ch:["a","b","c"]});
+/* legend hunts with Ysolde, every week again */
+SGLM.forEach((M,i)=>qAdd("h"+i,"ysa","h",[["hunt",1,i]],{g:2500+i*1500,m:{star:1+i},it:Math.min(9,5+i),rn:60+i*25},()=>qDone("m4")&&(i===0||qDone("h"+(i-1))||!!sgS().q["h"+(i-1)]&&sgS().q["h"+(i-1)].n>0),{rep:1}));
+/* relics, temple, blade */
+qAdd("r1","vel","r",[["relic",3]],{g:4000,it:6,rn:80},()=>qDone("m13"));qAdd("r2","vel","r",[["relic",6]],{g:9000,it:9,rn:160,col:1},()=>qDone("r1"));
+const SG_TMP=[{herb:6,iron:6},{crys:6,bloom:4},{amber:4,star:2,crys:6},{sky:4,shard:3,star:3},{void:4,shard:6,star:6}];
+SG_TMP.forEach((m,i)=>qAdd("t"+(i+1),"lum","t",[["mat",1,m]],{g:1500+i*1500,rn:50+i*20,tmp:1},()=>i===0?qDone("m13"):qDone("t"+i)));
+qAdd("b1","bor","b",[["mat",1,{star:3,iron:15}]],{g:1000,rn:40},()=>qDone("m16"));qAdd("b2","bor","b",[["tdun",1,8]],{g:3000,rn:80},()=>qDone("b1"));
+qAdd("b3","bor","b",[["hunt",1,4]],{g:3000,rn:80},()=>qDone("b2"));qAdd("b4","bor","b",[["tower",10]],{g:3000,rn:80},()=>qDone("b3"));qAdd("b5","bor","b",[["gold",20000],["mat",1,{shard:5}]],{g:0,rn:200,blade:1},()=>qDone("b4"));
+/* Kass: opens only through the night riddle */
+qAdd("k1","kas","k",[["mat",1,{bloom:5,seed:2}]],{g:1500,rn:50},()=>!!sgS().gd.kasOk);qAdd("k2","kas","k",[["site",1,"cave"]],{g:2500,it:6,rn:60},()=>qDone("k1"));
+qAdd("k3","kas","k",[["trial",1,"secret"]],{g:8000,it:9,rn:200,sab:"root",ttl:"rootsage"},()=>qDone("k2"));
+/* factions: two new sides, choose one forever */
+qAdd("f1","zaf","f",[["rank",300]],{g:1500,rn:40},()=>qDone("m3"));qAdd("f2","zaf","f",[["choice",1]],{g:2000,rn:60},()=>qDone("f1"),{ch:["a","b"]});qAdd("f3","zaf","f",[["fac",4]],{g:4000,it:7,rn:90},()=>qDone("f2"));
+const QDK={};QD.forEach(q=>QDK[q.id]=q);
+const SG_CH=["m","w","h","r","t","b","k","f"];
+const qName=Q=>Q.c==="h"?t("sg_qn_h",{n:t("sg_lm_"+Q.o[0][2])}):Q.c==="t"?t("sg_qn_t",{n:Q.id.slice(1)}):t("sg_qn_"+Q.id);
+const qIntro=Q=>Q.c==="h"?t("sg_qi_h",{n:t("sg_lm_"+Q.o[0][2])}):Q.c==="t"?t("sg_qi_t"):t("sg_qi_"+Q.id);
+const qEnd=(Q,c)=>Q.c==="h"?t("sg_qe_h"):Q.c==="t"?t("sg_qe_t"):t("sg_qe_"+Q.id+(c||""));
+const qSt=id=>sgS().q[id]||null;
+/* a weekly hunt that was done in an earlier week opens again */
+function qWeek(Q){const s=sgS(),q=s.q[Q.id];if(Q.rep&&q&&q.d&&q.w!==sgWeek()){s.q[Q.id]={n:q.n|0}}}
+const qActive=()=>QD.filter(Q=>{const q=qSt(Q.id);return q&&q.a&&!q.d});
+const qAvail=k=>QD.filter(Q=>{qWeek(Q);if(k&&Q.g!==k)return false;const q=qSt(Q.id);if(q&&(q.a||q.d))return false;return !Q.u||Q.u()||(q&&q.u)});
+const qHas=k=>qActive().some(Q=>Q.g===k&&qStageOk(Q))||qAvail(k).length>0;
+const qReady=()=>!!LG&&qActive().some(Q=>qStageOk(Q));
+function qUnlock(id){const s=sgS();if(!s.q[id])s.q[id]={u:1}}
+/* the value a stage needs and what you have now */
+function qProg(Q){const q=qSt(Q.id);const [k,n,a]=Q.o[q.s|0]||[];const s=sgS();
+ switch(k){case "battle":return[battleNo,n];case "lvl":return[P.level,n];case "tower":return[s.tw.best,n];case "floor":return[MG.dun.best,n];case "relic":return[s.ex.relic.length,n];
+  case "tmp":return[s.tmp,n];case "rank":return[Math.max(0,...FAC.map(F=>LG.fac[F.k]|0)),n];case "mat":return[hasMat(a)?1:0,1];case "gold":return[Math.min(P.gold,n),n];case "choice":return[0,1];
+  default:return[Math.min(q.p|0,n),n]}}
+const qStageOk=Q=>{const q=qSt(Q.id);if(!q||!q.a||q.d)return false;const [p,n]=qProg(Q);return p>=n};
+function qObjTxt(Q){const q=qSt(Q.id);const [k,n,a]=Q.o[q?q.s|0:0]||[];const [p]=q&&q.a?qProg(Q):[0];const v={p:nfm(k==="far"?Math.floor(p/10):p),n:nfm(k==="far"?n/10:n)};
+ if(k==="tdun")return a<0?t("sg_ob_tdunA",v):t("sg_ob_tdun",{a:t("sg_d_"+TD[a].k)});if(k==="trial")return t("sg_ob_trial",{a:t("sg_tb_"+a)});if(k==="talk")return t("sg_ob_talk",{a:sgNm(a)});
+ if(k==="hunt")return t("sg_ob_hunt",{a:t("sg_lm_"+a)});if(k==="mat")return t("sg_ob_mat",{a:matTxt(a)});if(k==="site"&&a)return t("sg_ob_siteA",Object.assign(v,{a:t("sg_s_"+a)}));
+ return t("sg_ob_"+k,v)}
+const qRwTxt=R=>[R.g?"🪙 "+nfm(qGold(R.g)):"",R.m?matTxt(R.m):"",R.it!=null?"🎁 "+L(RAR[RO[Math.min(12,R.it)]].n)+"+":"",R.pot?"🧪":"",R.rn?"🌟 "+R.rn:"",R.ttl?"🏷️ "+t("sl_t_"+R.ttl):"",R.blade?"🗡️ "+t("sg_blade"):""].filter(Boolean).join(" · ");
+const qGold=g=>Math.round(g*(1+battleNo/80));
+/* events from the world move the quests on */
+function qEv(kind,n,arg){if(!LG)return;const s=sgS();for(const Q of qActive()){const q=s.q[Q.id],o=Q.o[q.s|0];if(!o)continue;let hit=o[0]===kind;
+  if(o[0]==="fac")hit=(s.fac2==="iron"&&kind==="boss")||(s.fac2==="moon"&&kind==="tdun");
+  if(!hit)continue;if(o[2]!=null&&o[0]!=="fac"&&o[0]!=="mat"&&!(o[0]==="tdun"&&o[2]<0)&&o[2]!==arg)continue;const was=qStageOk(Q);q.p=(q.p|0)+(n||1);
+  if(!was&&qStageOk(Q)){const N=SGNK[Q.g];sgPost(Q.g,"sg_qrdy",{n:sgNm(Q.g)});toast("📜 "+qName(Q)+" ✓","#ffd34e");SFX.unlock&&SFX.unlock()}}}
+/* talking about work: report a finished stage, or offer the next quest */
+function qTalk(k){sgMe(k,"sg_o_job");const s=sgS();
+ const A=qActive().filter(Q=>Q.g===k);const done=A.find(Q=>qStageOk(Q));if(done){qReport(done);return}
+ const av=qAvail(k);if(!av.length){if(A.length){sgSay(k,"sg_jobBusy");sgPost(k,null,null,{x:qName(A[0])+": "+qObjTxt(A[0]),tst:false})}else sgSay(k,"sg_noJob");return}const Q=av[0];s.gd.of=Q.id;sgPost(k,null,null,{x:qIntro(Q),tst:false});sgPost(k,null,null,{x:"📜 "+qName(Q)+" — "+qObjTxt(Q)+" · "+t("sg_rwd")+": "+qRwTxt(Q.rw),tst:false})}
+function qAccept(id){const Q=QDK[id],s=sgS();if(!Q||!qAvail(Q.g).some(x=>x.id===id))return;const old=s.q[id]||{};s.q[id]={a:1,s:0,p:0,n:old.n|0,w:sgWeek()};s.gd.of="";
+ sgPost(Q.g,null,null,{x:"✅ "+qName(Q),me:1});SFX.ui&&SFX.ui();if(Q.o[0][0]==="hunt")hntEnsure(Q);save()}
+function qReport(Q){const s=sgS(),q=s.q[Q.id],o=Q.o[q.s|0];if(!qStageOk(Q))return;if(o[0]==="choice")return;
+ if(o[0]==="mat"){if(!hasMat(o[2]))return;payMat(o[2])}if(o[0]==="gold"){if(P.gold<o[1])return;P.gold-=o[1]}
+ if(q.s+1<Q.o.length){q.s++;q.p=0;sgSay(Q.g,"sg_qnext");sgPost(Q.g,null,null,{x:"📜 "+qObjTxt(Q),tst:false});save();return}
+ qFinish(Q)}
+function qFinish(Q,c){const s=sgS(),q=s.q[Q.id];q.d=1;q.a=0;q.c=c||"";q.w=sgWeek();q.n=(q.n|0)+1;s.qd.push(Q.id);if(s.qd.length>80)s.qd.shift();
+ sgPost(Q.g,null,null,{x:qEnd(Q,c),tst:false});qPay(Q.rw,Q);logH("📜","sg_qlog",qName(Q));
+ const nx=qAvail(Q.g)[0];if(nx)setTimeout(()=>sgPost(Q.g,"sg_h_q",{n:qName(nx)}),1600);
+ for(const N of SGN)if(!N.ro&&N.k!==Q.g){const nn=qAvail(N.k).find(x=>!s.gd["an_"+x.id]);if(nn){s.gd["an_"+nn.id]=1;setTimeout(()=>sgPost("her","sg_h_q",{n:qName(nn)+" · "+sgNm(N.k)}),2400)}}
+ sgAffAdd(Q.g,1);save()}
+function qPay(R,Q){if(!R)return;if(R.g){const g=qGold(R.g);P.gold+=g;toast("🪙 +"+nfm(g),"#ffd34e")}if(R.m)for(const k in R.m)matAdd(k,R.m[k]);
+ if(R.pot)for(const k in R.pot)MG.alc.p[k]=(MG.alc.p[k]|0)+R.pot[k];
+ if(R.it!=null){const r0=RO[Math.min(12,R.it)];mgGiveItem(makeItem(Math.max(r0,rollRarity(r0))))}
+ if(R.rn)sgRenown(R.rn);if(R.tmp){const s=sgS();s.tmp=Math.min(SG_TMP.length,s.tmp+1);recalc();banner("🕯️ "+t("sg_tmpL",{n:s.tmp}),t("sg_tmpB"))}
+ if(R.ttl&&!LG.ttl[R.ttl]){LG.ttl[R.ttl]=1;setTimeout(()=>banner("🏷️ "+t("sl_t_"+R.ttl),"📜"),1800)}
+ if(R.sab)sabGive(R.sab);if(R.blade)bladeGive();if(R.col)relicCrown();
+ SFX.jackpot&&SFX.jackpot();banner("📜 "+qName(Q),t("sg_qdone"));hud&&hud()}
+/* choices inside a quest: the Wanderer's three endings, the faction pick */
+function qChoose(id,c){const Q=QDK[id],s=sgS(),q=s.q[id];if(!Q||!q||!q.a||q.d||!Q.ch||!Q.ch.includes(c))return;
+ if(id==="w5"){sgMe("mask","sg_w5"+c);if(c==="a"){sgAffAdd("vel",3);s.aff.mask=0;LG.ttl.truthbearer=1;sgPost("vel",null,null,{x:t("sg_vel_truth"),tst:false})}
+  if(c==="b"){sgAffAdd("mask",3);LG.ttl.secretkeeper=1;const it=makeItem(Math.max(RO[8],rollRarity(RO[8])),SLOTI.helmet);it.dr="sg_crown";mgGiveItem(it)}
+  if(c==="c"){LG.ttl.maskbearer=1;sabGive("veil")}qFinish(Q,c);return}
+ if(id==="f2"){sgMe("zaf","sg_f2"+c);s.fac2=c==="a"?"iron":"moon";s.rep[s.fac2]=(s.rep[s.fac2]|0)+200;qFinish(Q);banner(FAC2K[s.fac2].ic+" "+t("sg_fa_"+s.fac2),t("sg_qe_f2"));return}}
+/* the chat button handler for quest options */
+function qAct(k,v){const [a,id,c]=v.split(":");if(a==="acc")qAccept(id);else if(a==="rep"){const Q=QDK[id];if(Q)qReport(Q)}else if(a==="ch")qChoose(id,c)}
+/* quest buttons under the conversation (offer, report, choices) */
+{const _o=sgOpts;sgOpts=function(k){let h="";if(LG&&SGNK[k]&&!SGNK[k].ro){const s=sgS();
+  for(const Q of qActive().filter(Q=>Q.g===k)){const o=Q.o[s.q[Q.id].s|0];if(o[0]==="choice")for(const c of Q.ch)h+=`<button class="btn sm main" type="button" data-a="sgo" data-v="${k}|q:ch:${Q.id}:${c}">${t("sg_"+Q.id+c)}</button>`;
+   else if(qStageOk(Q))h+=`<button class="btn sm main" type="button" data-a="sgo" data-v="${k}|q:rep:${Q.id}">✅ ${t("sg_report")}: ${qName(Q)}</button>`}
+  const of=s.gd.of&&QDK[s.gd.of];if(of&&of.g===k&&qAvail(k).some(x=>x.id===of.id))h+=`<button class="btn sm main" type="button" data-a="sgo" data-v="${k}|q:acc:${of.id}">${t("sg_qacc",{n:qName(of)})}</button>`}
+ return h+_o(k)}}
+/* hooks: kills, bosses, night, distance */
+{const _k=p13Kill;p13Kill=function(e){_k(e);if(!LG||e.cfg.pet||e.small||e.summoned)return;qEv("kill");if(nightK()>.6)qEv("night");if(e.boss||e.p55||e.sgB)qEv("boss");if(e.p55)qEv("raid");
+ if(e.sgH!=null){const i=e.sgH;qEv("hunt",1,i);hntWin(e,i)}}}
+let qFarX=null;
+function qTick(dt){if(!LG)return;const h=hero;if(!(MG&&MG.run)&&isFP()){const dx=qFarX==null?0:h.x-qFarX;if(dx>0&&dx<60)qEv("far",dx)}qFarX=h.x;
+ if(Math.random()<dt*.05)for(const Q of qActive()){const o=Q.o[sgS().q[Q.id].s|0];if(o&&o[0]==="hunt"&&!qStageOk(Q))hntEnsure(Q)}}
+/* forging in the Master Forge counts */
+{const _f=smForge;smForge=function(){const s0=typeof SMP!=="undefined"?SMP:null;_f();if(LG&&typeof SMP!=="undefined"&&SMP&&SMP!==s0)qEv("forge")}}
+/* legend hunts: a named beast with its own attacks roams near the road while the hunt is open */
+function hntEnsure(Q){const o=Q.o[sgS().q[Q.id]?sgS().q[Q.id].s|0:0];if(!o||o[0]!=="hunt")return;const i=o[2];if(sgBusy()||!isFP()||battleNo<2)return;if(enemies.some(e=>e.sgH===i&&e.state!=="dead"))return;
+ try{const M=SGLM[i],bi=biomeIdx(),ti=zPick(pickTier(battleNo+6+i*2,foe.lvl),bi),x=hero.x+rnd(380,560),z=clamp(hero.z+rnd(-40,40),zLo(15),zHi(15));p49.no=1;const e=makeEnemy(ti,false,x,z,1);p49.no=0;
+  e.sgH=i;e.hp=e.maxhp=Math.round(e.maxhp*(M.hp+battleNo/30));e.atk=Math.round(e.atk*(1.4+i*.1));e.s*=M.s;e.afIc=M.ic+(e.afIc||"");e.wild=true;e.home={x,z};e.state="roam";e.entered=e.spawned=true;e.sgAt=4;
+  e.cfg=Object.assign({},e.cfg,{n:T8["sg_lm_"+i],fx:M.fx,fxc:M.c,aura:M.c,look:Object.assign({},e.cfg.look,{glowCol:M.c,eye:M.c,trim:M.c})});enemies.push(e);
+  setTimeout(()=>{banner(M.ic+" "+t("sg_lmB",{n:t("sg_lm_"+i)}),"🏹");sgPost("ysa",null,null,{x:t("sg_lmB",{n:t("sg_lm_"+i)})})},600)}catch(er){p49.no=0}}
+function hntTick(dt){for(const e of enemies){if(e.sgH==null||e.state==="dead")continue;const d=Math.hypot(e.x-hero.x,(e.z-hero.z)*ZS);if(d>320||e.state==="roam")continue;
+ e.sgAt-=dt;if(e.sgAt<=0){const M=SGLM[e.sgH],k=M.at[rint(0,M.at.length-1)],dm=Math.round(Math.max(e.atk,P.maxhp*.09));try{P55A[k](e,dm,M.c)}catch(er){}e.sgAt=rnd(4.5,6.5)}}}
+function hntWin(e,i){const s=sgS();s.cnt["lm"+i]=(s.cnt["lm"+i]|0)+1;sgCnt("lm");banner(SGLM[i].ic+" "+t("sg_lmW",{n:t("sg_lm_"+i)}),"🏹");SFX.jackpot&&SFX.jackpot();logH("🏹","sg_lmW",t("sg_lm_"+i));
+ if(!s.ttl["lm"+i]){s.ttl["lm"+i]=1;setTimeout(()=>{try{const it=makeItem(Math.max(RO[Math.min(12,5+i)],rollRarity(RO[Math.min(12,5+i)])));it.dr="sgh"+i;spawnLoot(e,it)}catch(er){}},600)}
+ if(SGLM.every((M,j)=>s.ttl["lm"+j])&&!LG.ttl.legendhunter){LG.ttl.legendhunter=1;setTimeout(()=>banner("🏷️ "+t("sl_t_legendhunter"),"🏹"),2600)}}
+SGLM.forEach((M,i)=>{T8["p15_rel_sgh"+i]=T8.sg_trH.map((s,j)=>s.split("{n}").join(T8["sg_lm_"+i][j]||T8["sg_lm_"+i][1]))});
+/* the blade: a sword in the forge, equipped at once */
+function bladeGive(){try{const cur=eq.weapon?eq.weapon.r:0,r=Math.min(22,Math.max(RO[7],cur+1));const it=swordify(makeItem(r,SLOTI.weapon,Math.max(1,battleNo)));it.dr="sg_blade";it.sgb=1;swordEquip(it);
+ banner("🗡️ "+t("sg_blade"),L(RAR[r].n));flashA=.6;flashCol="#ffe08a";SFX.divine&&SFX.divine();logH("🗡️","sg_bladeL",t("sg_blade"));LG.ttl.starsmith=1}catch(er){console.error(er)}}
+T8.p15_rel_sg_blade=T8.sg_blade;
+/* the Starforged Edge bites bosses harder */
+{const _de=damageEnemy;damageEnemy=function(e,d,crit,dir,kb,kind){if(e&&(e.boss||e.p55||e.sgB)&&eq.weapon&&eq.weapon.sgb&&kind!=="dot")d*=1.15;return _de(e,d,crit,dir,kb,kind)}}
+/* the Kass riddle (a secret line that only shows at night when he likes you) and the Wanderer's question */
+function sgSecretOpts(k){const s=sgS(),o=[];if(k==="kas"&&!s.gd.kasOk){if(s.gd.kasQ===dayKey())for(const a of [0,1,2])o.push({k:"ka"+a,txt:t("sg_kasA"+a)});
+  else if(nightK()>.6&&sgAff("kas")>=2&&s.gd.kasN!==dayKey())o.push({k:"kas",txt:t("sg_x_kas")})}
+ if(k==="vel"&&qDone("m20")&&!sgS().tr.finW)o.push({k:"fin",txt:t("sg_x_fin")});return o}
+function sgSecret(k,x){const s=sgS();if(x==="kas"){sgMe(k,"sg_x_kas");s.gd.kasQ=dayKey();sgSay(k,"sg_kasQ");return}
+ if(x.startsWith("ka")){const a=+x.slice(2);sgMe(k,"sg_kasA"+a);s.gd.kasQ="";if(a===0){s.gd.kasOk=1;sgSay(k,"sg_kasOk");sgCnt("secret");sgRenown(30);SFX.divine&&SFX.divine()}else{s.gd.kasN=dayKey();sgSay(k,"sg_kasNo")}return}
+ if(x==="fin"){sgMe(k,"sg_x_fin");sgSay(k,"sg_finL");s.tr.finU=1;toast("⚔️ "+t("sg_tb_final"),"#ff4a6a")}}
+Object.assign(T8,{sg_x_fin:S8("🚪 Відведи мене до останньої брами|🚪 Lead me to the last gate"),sg_finL:S8("Брама відчинена. Шукай Тіньового Володаря у вкладці «Випробування». Хай світло буде з тобою.|The gate is open. Find the Shadow Sovereign in the Trials tab. May the light be with you."),
+ sg_vel_truth:S8("Брат Володаря… Я впишу це в літопис. Дякую за правду, герою.|The Sovereign's brother… I'll write it into the chronicle. Thank you for the truth, hero."),sg_qlog:S8("Квест виконано: {n}|Quest done: {n}"),sg_qdone:S8("Квест виконано!|Quest complete!"),
+ sg_tmpL:S8("Храм відновлено: {n}/5|Temple restored: {n}/5"),sg_tmpB:S8("Благословення храму посилилось|The temple's blessing grew stronger"),sg_bladeL:S8("Отримано: {n}|Received: {n}"),
+ p15_rel_sg_crown:S8("Корона брата-вигнанця|Crown of the Exiled Brother"),sg_crownL:S8("Корона Світла|The Crown of Light")});
+function relicCrown(){try{const it=makeItem(Math.max(RO[10],rollRarity(RO[10])),SLOTI.helmet);it.dr="sg_lcrown";mgGiveItem(it);LG.ttl.relickeeper=1}catch(er){}}
+T8.p15_rel_sg_lcrown=T8.sg_crownL;
+/* the quest tab */
+function sgRQuest(){const s=sgS();let h=`<div class="mgStats"><span>📜 <b>${qActive().length}</b> ${t("sg_qa")}</span><span>✅ ${t("sg_qdn",{n:s.qd.length})}</span><span>📖 ${QD.filter(Q=>qDone(Q.id)).length}/${QD.length}</span></div>`;
+ const A=qActive();h+=`<h3 class="h3">📜 ${t("sg_qa")}</h3>`;if(!A.length)h+=`<p class="m">${t("sg_qnone")}</p>`;
+ for(const Q of A){const N=SGNK[Q.g],q=s.q[Q.id],[p,n]=qProg(Q),ok=qStageOk(Q);h+=`<div class="mgCard sgQ" style="--nc:${N.c}"><div class="mgTop"><span class="mgIc">${N.ic}</span><div><h4>${qName(Q)}</h4><small>${t("sg_c_"+Q.c)} · ${sgNm(Q.g)}${Q.o.length>1?" · "+(q.s+1)+"/"+Q.o.length:""}</small></div></div>`+
+  `<p class="sgObj">${ok?t("sg_qrdy",{n:sgNm(Q.g)}):qObjTxt(Q)}</p><div class="sgBar"><i style="width:${Math.min(100,n?p/n*100:0).toFixed(1)}%"></i></div><small class="m">🎁 ${qRwTxt(Q.rw)}</small>`+
+  `<button class="btn sm${ok?" main":""}" type="button" data-a="sggo" data-v="${Q.g}">${t("sg_qgo")}</button></div>`}
+ const V=qAvail();if(V.length){h+=`<h3 class="h3">✨ ${t("sg_qv")}</h3><div class="mgList">`+V.slice(0,12).map(Q=>`<div class="mgRow"><b>${SGNK[Q.g].ic} ${qName(Q)}${Q.rep?" "+t("sg_qwk"):""}</b><span>${sgNm(Q.g)}</span><i><button class="btn sm" type="button" data-a="sggo" data-v="${Q.g}">💬</button></i></div>`).join("")+`</div>`}
+ h+=`<h3 class="h3">🔗 ${t("sg_qch")}</h3><div class="mgList">`+SG_CH.map(c=>{const L0=QD.filter(Q=>Q.c===c),d=L0.filter(Q=>qDone(Q.id)).length;return`<div class="mgRow${d===L0.length?" ok":""}"><b>${t("sg_c_"+c)}</b><span>${d}/${L0.length}</span><i>${d===L0.length?"✓":""}</i></div>`}).join("")+`</div>`;
+ h+=`<div class="mgCard"><p class="m">${t("sg_qdw")}</p><button class="btn sm" type="button" data-a="sgdaily">${t("sg_qdwB")}</button></div>`;return h}
+/* ============ P56 part C: nine themed dungeons, the Boss Tower and the hidden mode «Beyond» (runs through the shared run code) ============ */
+const SGTC={
+sg_d_king:"Склеп Стародавнього Короля|The Ancient King's Crypt",sg_d_hell:"Пекельні глибини|The Infernal Depths",sg_d_frost:"Крижане підземелля|The Frozen Vault",sg_d_crys:"Кришталеві печери|The Crystal Caverns",
+sg_d_shade:"Тіньовий лабіринт|The Shadow Labyrinth",sg_d_void:"Розлом Порожнечі|The Void Hollow",sg_d_flood:"Затоплені зали|The Sunken Halls",sg_d_sky:"Небесна вежа випробувань|The Sky Tower of Trials",sg_d_drag:"Лігво драконів|The Dragon Lair",
+sg_dd_king:"Мерці королівської варти й шипи з підлоги. Король не любить гостей.|Dead royal guards and spikes from the floor. The king dislikes guests.",
+sg_dd_hell:"Вогонь б'є з-під каменю. Тут гаряче навіть тіням.|Fire bursts from under the stone. Even shadows feel the heat here.",
+sg_dd_frost:"Холод сповільнює кроки, лід падає зі стелі.|The cold slows your steps, ice falls from the ceiling.",
+sg_dd_crys:"Кристали ростуть кільцями й ріжуть усе навколо.|Crystals grow in rings and cut everything around.",
+sg_dd_shade:"Темрява і засідки: вороги виходять просто за спиною.|Darkness and ambushes: foes step out right behind you.",
+sg_dd_void:"Порожнеча тягне до себе. Не стій на місці.|The void pulls you in. Don't stand still.",
+sg_dd_flood:"Вода по коліна і вири. Рухайся обережно.|Knee-deep water and whirlpools. Move with care.",
+sg_dd_sky:"12 поверхів вітру. Пориви зносять убік.|12 floors of wind. Gusts push you aside.",
+sg_dd_drag:"Драконячий подих палає лініями. Наприкінці — сам Дракон.|Dragon breath burns in lines. At the end, the Dragon himself.",
+sg_tb_king:"Король-у-Попелі|The King-in-Ashes",sg_tb_hell:"Пекельний Князь Азгар|Azghar, Prince of Hell",sg_tb_frost:"Крижана Матір|The Frost Mother",sg_tb_crys:"Кришталевий Колос|The Crystal Colossus",
+sg_tb_shade:"Мінотавр Тіней|The Shadow Minotaur",sg_tb_void:"Око Порожнечі|The Void Eye",sg_tb_flood:"Потонулий Адмірал|The Drowned Admiral",sg_tb_sky:"Вартовий Небес|The Sky Warden",sg_tb_drag:"Старійшина Драконів|The Elder Dragon",
+sg_fl:"Поверх {n}/{m}|Floor {n}/{m}",sg_fls:"Поверхів: {n}|Floors: {n}",sg_flB:"Найкращий час: {n}|Best time: {n}",sg_clr:"Пройдено: {n}|Cleared: {n}",sg_flw:"Без поразок|Flawless",sg_enter:"🚪 Увійти|🚪 Enter",
+sg_dLock:"Відкриється, коли пройдеш «{n}».|Opens once you clear «{n}».",sg_dLock0:"Відкриється з бою №4.|Opens from battle #4.",
+sg_rm_fight:"⚔️ Бій|⚔️ Fight",sg_rm_trap:"🪤 Пастка|🪤 Trap",sg_rm_treasure:"💰 Скарбниця|💰 Treasury",sg_rm_secret:"🚪 Таємний прохід|🚪 Secret passage",sg_rm_ambush:"👥 Засідка|👥 Ambush",sg_rm_mini:"⭐ Мінібос|⭐ Mini-boss",sg_rm_boss:"👑 Фінальний бос|👑 Final boss",
+sg_dWin:"Данж пройдено!|Dungeon cleared!",sg_dFirst:"Перше проходження: трофей і слава!|First clear: a trophy and glory!",sg_dFlaw:"Без поразок (HP не нижче 30%): бонусна скриня!|Flawless (HP never below 30%): a bonus chest!",
+sg_dLost:"Данж «{n}»: ти впав на поверсі {f}.|Dungeon «{n}»: you fell on floor {f}.",sg_door:"🚪 Таємний прохід! Торкнись, щоб відкрити схованку.|🚪 A secret passage! Touch it to open the hidden vault.",sg_doorIn:"🚪 Схованка за стіною: скрині й старі речі!|🚪 A vault behind the wall: chests and old things!",
+sg_nextF:"⬇️ Наступний поверх за {n} с|⬇️ Next floor in {n} s",sg_hzWind:"🌬️ Порив вітру!|🌬️ A gust of wind!",sg_hzIce:"❄️ Холод сковує рухи|❄️ The cold binds your moves",sg_hzAmb:"👥 Засідка!|👥 Ambush!",
+sg_tw:"Вежа босів|The Boss Tower",sg_twH:"На кожному поверсі — бос. Що вище, то сильніші. Кожні 5 поверхів — контрольна точка і велика нагорода. Рекорди назавжди.|A boss on every floor. The higher, the stronger. Every 5 floors: a checkpoint and a big prize. Records forever.",
+sg_twF:"🗼 Поверх {n}|🗼 Floor {n}",sg_twGo1:"🗼 З 1-го поверху|🗼 From floor 1",sg_twGoC:"🏁 З поверху {n}|🏁 From floor {n}",sg_twMs:"🗼 Поверх {n}: велика нагорода!|🗼 Floor {n}: a big prize!",sg_twLost:"Вежа: ти дійшов до поверху {n}. Рекорд: {b}.|Tower: you reached floor {n}. Best: {b}.",
+sg_endless:"Нескінченний данж|The Endless Dungeon",sg_endlessH:"Випадкові поверхи без кінця — у групі «Пригоди».|Random floors without end, in the Adventures group.",sg_jump:"➡️ Перейти|➡️ Go there",
+sg_bxH:"Прихований режим. Тут закони світу перевернуті: кожна стадія додає новий закон. Нагороди — аж до Сингулярності.|A hidden mode. The laws of the world are turned over here: every stage adds a new law. Rewards up to the Singularity.",
+sg_bxS:"🌀 Стадія {n}|🌀 Stage {n}",sg_bxLost:"За межею: стадія {n}. Рекорд: {b}.|Beyond: stage {n}. Best: {b}.",sg_bxNew:"🌀 Відкрито прихований режим «За межею»!|🌀 The hidden mode «Beyond» is open!",
+sg_bl_glass:"💔 Скло: ти б'єш на 40% сильніше, але й ворог теж|💔 Glass: you hit 40% harder, but so does the foe",sg_bl_noheal:"🩸 Без лікування: зцілення слабне на 80%|🩸 No healing: healing is 80% weaker",
+sg_bl_giant:"🗿 Велетні: у ворогів удвічі більше здоров'я|🗿 Giants: foes have double health",sg_bl_swift:"💨 Шал: вороги б'ють на 30% сильніше|💨 Fury: foes hit 30% harder",sg_bl_swarm:"👥 Рій: більше ворогів|👥 Swarm: more foes",sg_bl_drain:"🕳️ Висмоктування: ти втрачаєш 1% HP щосекунди|🕳️ Drain: you lose 1% HP every second"};
+for(const k in SGTC)T8[k]=S8(SGTC[k]);
+/* the dungeons: theme biome, floors, hazard, the boss's attacks (P55 raid attacks) */
+const TD=[{k:"king",ic:"👑",c:"#ffd34e",bi:89,fl:6,hz:"spike",at:["summon","shield","ring"]},{k:"hell",ic:"🔥",c:"#ff5a1a",bi:104,fl:7,hz:"fire",at:["rain","nova","line"]},
+ {k:"frost",ic:"❄️",c:"#9fe8ff",bi:61,fl:7,hz:"ice",at:["ring","cross","sky"]},{k:"crys",ic:"💎",c:"#7af0ff",bi:31,fl:8,hz:"shard",at:["ring","nova","shield"]},
+ {k:"shade",ic:"🌑",c:"#9a5aff",bi:92,fl:8,hz:"dark",at:["blink","summon","cross"]},{k:"void",ic:"🌌",c:"#ff4ad8",bi:63,fl:9,hz:"pull",at:["whirl","blink","sky"]},
+ {k:"flood",ic:"🌊",c:"#4ac8ff",bi:93,fl:9,hz:"water",at:["whirl","line","summon"]},{k:"sky",ic:"🌤️",c:"#fff2b0",bi:107,fl:12,hz:"wind",at:["sky","line","heal"]},
+ {k:"drag",ic:"🐉",c:"#ff6a2a",bi:51,fl:10,hz:"breath",at:["line","rain","nova"]}];
+const tdOpen=i=>i===0?battleNo>=4:!!sgS().td.clr[i-1];
+const sgMode=m=>m==="td"||m==="tw"||m==="bx";
+/* the run biome comes from the run itself (biomeAt reads MG_BI by mode) */
+for(const [m,d] of [["td",64],["tw",65],["bx",99]])Object.defineProperty(MG_BI,m,{get(){const R=MG&&MG.run;return R&&R.m===m&&R.bi!=null?R.bi:d},configurable:true,enumerable:true});
+function sgRunBase(o){return Object.assign({k:0,g:0,t:0,id:Date.now(),seed:rint(1,1e9),log:[],adv:0,tier:1,w:0,tl:999,mods:[],low:1},o)}
+function tdStart(i){if(!LG||!TD[i]||!tdOpen(i))return;if(sgBusy()&&!(MG&&MG.run)){toast("⚔️ "+t("sg_busy"),"#d8c8b0");SFX.buzz();return}if(!mgCanStart())return;
+ const D=TD[i];MG.run=sgRunBase({m:"td",d:i,f:1,fl:D.fl,bi:D.bi,room:"fight",hz:3});sgS().td.runs++;SFX.portal();mgEnter();setTimeout(()=>sgPost("her",null,null,{x:D.ic+" "+t("sg_d_"+D.k),tst:false}),500)}
+function twStart(from){if(!LG)return;if(!mgCanStart())return;const s=sgS(),f=Math.max(1,Math.min(from|0,s.tw.cp|0||1));MG.run=sgRunBase({m:"tw",f,bi:65});s.tw.runs++;SFX.portal();mgEnter()}
+function bxStart(){if(!LG||!sgS().bx.unl)return;if(!mgCanStart())return;MG.run=sgRunBase({m:"bx",s:1,bi:99,laws:[bxLaw(1)]});sgS().bx.runs++;SFX.portal();SFX.divine&&SFX.divine();mgEnter()}
+const BXL=["glass","noheal","giant","swift","swarm","drain"];
+const bxLaw=s=>BXL[(s-1)%BXL.length];
+/* waves */
+function tdRoom(R){const D=TD[R.d],f=R.f;if(f>=D.fl)return"boss";if(f===Math.ceil(D.fl/2))return"mini";if(f===1)return"fight";const r=qRng("td"+R.seed+":"+f);
+ return wpick(r,[["fight",36],["trap",20],["treasure",14],["secret",14],["ambush",16]])}
+{const _w=lgWave;lgWave=function(R,n,bi,main){if(!sgMode(R.m))return _w(R,n,bi,main);const list=[],top=TL.length-1;
+ if(R.m==="td"){const D=TD[R.d],rm=tdRoom(R);R.room=rm;const lv=battleNo+R.d*6+R.f*2,cnt=Math.min(9,3+Math.floor(R.f/2)+Math.floor(R.d/3)+(rm==="ambush"?3:0));
+  if(rm==="boss"){list.push({t:BOSST[(R.d*3+R.seed)%BOSST.length],boss:true});for(let i=0;i<2;i++)list.push({t:pickOfTier(Math.min(top,pickTier(lv,foe.lvl)+1),bi,list),ref:main})}
+  else if(rm==="mini"){list.push({t:BOSST[(R.d*5+7+R.seed)%BOSST.length],boss:true});for(let i=0;i<cnt-2;i++)list.push({t:pickOfTier(pickTier(lv,foe.lvl),bi,list),ref:main})}
+  else for(let i=0;i<cnt;i++){const k=pickTier(lv,foe.lvl);list.push({t:pickOfTier(k,bi,list),rar:k>=5,ref:main})}
+  setTimeout(()=>{if(MG.run===R)banner(D.ic+" "+t("sg_fl",{n:R.f,m:D.fl}),t("sg_rm_"+rm))},350);return list}
+ if(R.m==="tw"){const f=R.f;list.push({t:BOSST[(f*7+R.seed)%BOSST.length],boss:true});for(let i=0;i<Math.min(5,Math.floor(f/4));i++)list.push({t:pickOfTier(Math.min(top,1+Math.floor(f/6)),bi,list),ref:main});
+  setTimeout(()=>{if(MG.run===R)banner(t("sg_twF",{n:f}),t("lg_best")+": "+sgS().tw.best)},350);return list}
+ /* Beyond */
+ const s=R.s,k0=Math.min(top,6+Math.floor(s/2)),cnt=Math.min(11,4+Math.floor(s/3)+(R.laws.includes("swarm")?3:0));
+ if(s%5===0){list.push({t:BOSST[(s+R.seed)%BOSST.length],boss:true});for(let i=0;i<3;i++)list.push({t:pickOfTier(Math.max(5,k0-1),bi,list),rar:true,ref:main})}
+ else for(let i=0;i<cnt;i++)list.push({t:pickOfTier(Math.max(5,Math.min(top,k0-rint(0,2))),bi,list),rar:true,ref:main});
+ setTimeout(()=>{if(MG.run===R)banner(t("sg_bxS",{n:s}),R.laws.map(l=>t("sg_bl_"+l).split(":")[0]).join(" · "))},350);return list}}
+{const _m=lgRunMake;lgRunMake=function(e,R){if(!sgMode(R.m))return _m(e,R);
+ if(R.m==="td"){const D=TD[R.d];let hm=(1+.1*(R.f-1))*(1+.22*R.d),am=(1+.05*(R.f-1))*(1+.1*R.d);
+  if(e.boss&&R.room==="boss"){hm*=4.5+R.d*.5;am*=1.3;e.sgTD=R.d;e.sgAt=4;e.s*=1.25;e.cfg=Object.assign({},e.cfg,{n:T8["sg_tb_"+D.k],fx:"halo,"+(D.hz==="fire"||D.hz==="breath"?"embers":D.hz==="ice"?"shards":"void"),fxc:D.c,aura:D.c,look:Object.assign({},e.cfg.look,{glowCol:D.c,eye:D.c,trim:D.c})});e.afIc=D.ic+(e.afIc||"")}
+  else if(e.boss){hm*=2.2;e.afIc="⭐"+(e.afIc||"")}e.hp=e.maxhp=Math.round(e.maxhp*hm);e.atk=Math.round(e.atk*am);return true}
+ if(R.m==="tw"){const f=R.f;e.hp=e.maxhp=Math.round(e.maxhp*(1+.18*f)*(e.boss?3+f*.12:1));e.atk=Math.round(e.atk*(1+.07*f));if(e.boss){e.sgTW=1;e.sgAt=5}return true}
+ const s=R.s;e.hp=e.maxhp=Math.round(e.maxhp*(1.4+.3*s)*(R.laws.includes("giant")?2:1)*(e.boss?3:1));e.atk=Math.round(e.atk*(1.2+.12*s)*(R.laws.includes("swift")?1.3:1)*(R.laws.includes("glass")?1.4:1));return true}}
+{const _v=lgRunWin;lgRunWin=function(R){if(!sgMode(R.m))return _v(R);const s=sgS();
+ if(R.m==="td"){const D=TD[R.d],rm=R.room,g=mgGold(60+R.f*25+R.d*30);P.gold+=g;R.g+=g;matAdd("iron",1+Math.floor(R.f/3));sgRenown(4+R.d);qEv("floor_td");
+  const near=(dx)=>({x:hero.x+dx+rnd(-20,20),z:clamp(hero.z+rnd(-30,30),zLo(14),zHi(14)),open:0,t:0,gold:true});
+  if(rm==="treasure"){chests.push(near(70),near(110));if(Math.random()<.4)matAdd("crys",2)}
+  if(rm==="mini"){chests.push(near(80));mgGiveItem(makeItem(rollRarity(Math.min(12,RO[3]+R.d))))}
+  if(rm==="secret"){mgObjs.push({k:"sgdoor",x:hero.x+rnd(70,110),z:clamp(hero.z+rnd(-25,25),zLo(14),zHi(14))});toast(t("sg_door"),"#ffd98a")}
+  if(rm==="boss"){tdWin(R);return true}
+  R.f++;R.adv=rm==="treasure"||rm==="secret"||rm==="mini"?9:2.4;if(R.adv>3)toast(t("sg_nextF",{n:Math.round(R.adv)}),"#ffb060");save();return true}
+ if(R.m==="tw"){const f=R.f,g=mgGold(120+f*40);P.gold+=g;R.g+=g;matAdd("crys",1+Math.floor(f/6));if(f>s.tw.best){s.tw.best=f;R.rec=1;sgRenown(10)}
+  if(f%5===0&&f>=s.tw.cp){s.tw.cp=f+1;mgGiveItem(makeItem(Math.max(RO[Math.min(12,2+Math.floor(f/5))],rollRarity(RO[Math.min(12,2+Math.floor(f/5))]))));matAdd("star",1+Math.floor(f/10));setTimeout(()=>banner(t("sg_twMs",{n:f}),"🎁"),1200)}
+  if(f>=50&&!LG.ttl.towerlord){LG.ttl.towerlord=1;setTimeout(()=>banner("🏷️ "+t("sl_t_towerlord"),"🗼"),2200)}R.f++;R.adv=2.6;save();return true}
+ const st=R.s;matAdd("shard",2+Math.floor(st/3));const g=mgGold(150+st*60);P.gold+=g;R.g+=g;if(st>s.bx.best){s.bx.best=st;R.rec=1;sgRenown(15)}
+ if(st%5===0&&st/5>s.bx.paid){s.bx.paid=st/5;const r=st>=25?23:Math.min(22,RO[Math.min(12,4+st/5)]);mgGiveItem(makeItem(Math.max(r,rollRarity(r))));setTimeout(()=>banner(t("sg_bxS",{n:st}),"🎁"),1200)}
+ if(st>=20&&!LG.ttl.beyondall){LG.ttl.beyondall=1;setTimeout(()=>banner("🏷️ "+t("sl_t_beyondall"),"🌀"),2200)}
+ R.s++;const nl=bxLaw(R.s);if(!R.laws.includes(nl))R.laws.push(nl);R.adv=2.6;recalc();save();return true}}
+function tdWin(R){const s=sgS(),i=R.d,D=TD[i],first=!s.td.clr[i],tm=Math.round(R.t);s.td.clr[i]=(s.td.clr[i]|0)+1;if(!s.td.best[i]||tm<s.td.best[i]){s.td.best[i]=tm;R.rec=1}
+ const g=mgGold(800+i*600)*(first?2:1);P.gold+=g;R.g+=g;matAdd("crys",2+i);matAdd(["iron","fire","ice","crys","shd","void","sky","sky","fire"][i],3+i);sgRenown(first?60+i*15:15+i*3);qEv("tdun",1,i);
+ const r0=RO[Math.min(12,3+i+(LG.rb>0?1:0))];mgGiveItem(makeItem(Math.max(r0,rollRarity(r0))));
+ if(first){const it=makeItem(Math.max(RO[Math.min(12,5+Math.floor(i/2))],rollRarity(RO[Math.min(12,5+Math.floor(i/2))])));it.dr="sgd"+i;mgGiveItem(it);setTimeout(()=>banner(D.ic+" "+t("sg_dFirst"),t("sg_d_"+D.k)),1300)}
+ if(R.low>=.3){s.td.fl[i]=1;sgCnt("flawD");chests.push({x:hero.x+80,z:hero.z,open:0,t:0,gold:true});setTimeout(()=>toast("✨ "+t("sg_dFlaw"),"#ffe08a"),2200)}
+ if(TD.every((x,j)=>s.td.clr[j])&&!LG.ttl.dungeonlord){LG.ttl.dungeonlord=1;setTimeout(()=>banner("🏷️ "+t("sl_t_dungeonlord"),"🏰"),3000)}
+ R.first=first;logH(D.ic,"sg_dWin",t("sg_d_"+D.k));banner(D.ic+" "+t("sg_dWin"),"🪙 +"+nfm(g));SFX.jackpot&&SFX.jackpot();mgEndRun("win")}
+TD.forEach((D,i)=>{T8["p15_rel_sgd"+i]=T8.sg_trH.map((s,j)=>s.split("{n}").join(T8["sg_tb_"+D.k][j]||T8["sg_tb_"+D.k][1]))});
+/* names, pills, results, death text */
+const sgPill=R=>R.m==="td"?TD[R.d].ic+" "+t("sg_fl",{n:R.f,m:TD[R.d].fl})+" · ⚔ "+R.k:R.m==="tw"?t("sg_twF",{n:R.f})+" · ⚔ "+R.k:t("sg_bxS",{n:R.s})+" · ⚔ "+R.k;
+{const _n=lgRunName;lgRunName=function(R){return sgMode(R.m)?(R.m==="td"?TD[R.d].ic+" "+t("sg_d_"+TD[R.d].k):R.m==="tw"?"🗼 "+t("sg_tw"):"🌀 "+t("sg_t_bx")):_n(R)}}
+{const _d=lgDeadTxt;lgDeadTxt=function(R){if(!sgMode(R.m))return _d(R);const s=sgS();return R.m==="td"?t("sg_dLost",{n:t("sg_d_"+TD[R.d].k),f:R.f}):R.m==="tw"?t("sg_twLost",{n:R.f,b:s.tw.best}):t("sg_bxLost",{n:R.s,b:s.bx.best})}}
+{const _o=lgRunRows;lgRunRows=function(R){if(!sgMode(R.m))return _o(R);const s=sgS();
+ if(R.m==="td")return[[TD[R.d].ic,t("sg_d_"+TD[R.d].k),R.why==="win"?"✓"+(R.first?" ✨":""):t("sg_fl",{n:R.f,m:TD[R.d].fl})],["⏱️",t("sg_flB",{n:tmTx(s.td.best[R.d]||0)}),R.rec?"✨ "+t("mg_rRec"):""],["⚔",t("kills"),R.k]];
+ if(R.m==="tw")return[["🗼",t("sg_tw"),R.f-1],["🏆",t("lg_best"),s.tw.best+(R.rec?" ✨":"")]];return[["🌀",t("sg_t_bx"),Math.max(0,R.s-1)],["🏆",t("lg_best"),s.bx.best+(R.rec?" ✨":"")]]}}
+/* the Beyond laws change your stats while the run lasts */
+{const _s=lgStats;lgStats=function(s){_s(s);if(!LG)return;const R=MG&&MG.run;if(R&&R.m==="bx"&&R.laws){if(R.laws.includes("glass")){s.dmgMul+=40;s.dmgRed-=25}if(R.laws.includes("noheal")){s.healBonus-=80;s.regen*=.2;s.lifesteal*=.2}}}}
+/* hazards, boss attacks and the lowest health of a run */
+let tdT=0;
+function sgRunTick(dt){const R=MG&&MG.run;if(!R||!sgMode(R.m)||hero.state==="dead")return;R.low=Math.min(R.low,P.hp/Math.max(1,P.maxhp));
+ if(R.m==="bx"&&R.laws.includes("drain")&&locked){P.hp=Math.max(1,P.hp-P.maxhp*.01*dt)}
+ for(const e of enemies){if(e.state==="dead"||!(e.sgTD!=null||e.sgTW))continue;e.sgAt-=dt;if(e.sgAt<=0){const at=e.sgTD!=null?TD[e.sgTD].at:["ring","line","rain","nova","cross"],k=at[rint(0,at.length-1)],d=Math.round(Math.max(e.atk*.9,P.maxhp*.08));try{P55A[k](e,d,e.sgTD!=null?TD[e.sgTD].c:"#ff8a4a")}catch(er){}e.sgAt=e.sgTD!=null?rnd(4.5,6.5):rnd(5,7)}}
+ if(R.m!=="td"||!locked)return;const D=TD[R.d],h=hero,trap=R.room==="trap";R.hz-=dt*(trap?1.7:1);if(R.hz>0)return;R.hz=rnd(5,7.5);const dm=Math.round(P.maxhp*(.05+.005*R.d));
+ const zc=z=>clamp(z,zLo(4),zHi(4));
+ switch(D.hz){case "spike":for(let i=0;i<3;i++)sbMark(h.x+rnd(-70,70),zc(h.z+rnd(-24,24)),24,D.c,1.1,"spike",dm);break;
+  case "fire":for(let i=0;i<4;i++)sbMark(h.x+rnd(-90,90),zc(h.z+rnd(-30,30)),26,D.c,1.2+i*.15,"erupt",dm,{el:1});break;
+  case "ice":for(let i=0;i<3;i++)sbMark(h.x+rnd(-60,60),zc(h.z+rnd(-20,20)),22,D.c,1.1,"meteor",dm,{el:2});addBuf({k:"sgchill",ic:"❄️",col:D.c,fx:[["speed",-25]],t:3,max:3});cbTxt(t("sg_hzIce"),D.c);break;
+  case "shard":{const n=8;for(let k=0;k<n;k++){const a=k/n*PI*2;sbMark(h.x+Math.cos(a)*70,zc(h.z+Math.sin(a)*70/ZS),20,D.c,1.3,"spike",dm)}break}
+  case "dark":{const src=enemies.find(e=>e.state!=="dead"&&!e.wild);if(src){const a=(h.ang||0)+PI;p49Spawn(src,h.x+Math.cos(a)*70,h.z-Math.sin(a)*70/ZS,.5,1,.8,D.c);cbTxt(t("sg_hzAmb"),D.c)}break}
+  case "pull":zfx.push({k:"rift",x:h.x+rnd(-60,60),z:zc(h.z+rnd(-20,20)),r:140,t:0,dl:0,life:4,col:D.c,dmg:Math.round(dm*.3)});break;
+  case "water":for(let i=0;i<3;i++)sbMark(h.x+rnd(-80,80),zc(h.z+rnd(-26,26)),30,D.c,1.3,"spike",Math.round(dm*.8));addBuf({k:"sgwet",ic:"🌊",col:D.c,fx:[["speed",-15],["fireBonus",-20]],t:4,max:4});break;
+  case "wind":R.gust={t:1.4,d:Math.random()<.5?-1:1};cbTxt(t("sg_hzWind"),D.c);break;
+  case "breath":{const src=enemies.find(e=>e.state!=="dead"&&!e.wild);if(src)P55A.line(src,dm,D.c);break}}}
+/* the wind gust pushes you aside */
+function sgGust(dt){const R=MG&&MG.run;if(!R||!R.gust)return;R.gust.t-=dt;if(R.gust.t<=0){R.gust=null;return}hero.z=clamp(hero.z+R.gust.d*55*dt,zLo(6),zHi(6))}
+/* the secret passage in a dungeon (and on the road, see part E) */
+P17MK.sgdoor=(T,g,add,glow,stone)=>{add(geo("sgDrL",()=>new T.BoxGeometry(6,46,8).translate(0,23,0)),stone,0,0,-14);add(geo("sgDrL",()=>new T.BoxGeometry(6,46,8).translate(0,23,0)),stone,0,0,14);
+ add(geo("sgDrT",()=>new T.BoxGeometry(8,8,36)),stone,0,48,0);const cr=add(geo("sgDrC",()=>new T.PlaneGeometry(22,40).rotateY(PI/2)),new T.MeshBasicMaterial({color:0xffd98a,transparent:true,opacity:.55,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide}),0,22,0);return cr};
+{const _o=p17Obj;p17Obj=function(o){if(o.k!=="sgdoor")return _o(o);o.used=1;const s=sgS();sgCnt("pass");qEv("site",1,"pass");
+ for(let i=0;i<3;i++)chests.push({x:o.x+20+i*24,z:clamp(o.z+rnd(-20,20),zLo(14),zHi(14)),open:0,t:0,gold:true});if(!relicTry(.25))matAdd("crys",2,o.x,o.z,30);if(Math.random()<.3)chestTry(o.x,o.z,1);
+ flashA=.4;flashCol="#ffd98a";SFX.unlock&&SFX.unlock();toast(t("sg_doorIn"),"#ffd98a");sgRenown(8);save();return true}}
+{const _x=ixInfo;ixInfo=function(o){if(o.k==="sgdoor")return{ic:"🚪",s:t("sg_rm_secret")};return _x(o)}}
+/* the dungeon tab */
+function sgRDun(){const s=sgS(),R=MG.run;let h=`<p class="sub">${t("sg_hubH").split(":")[0]}</p>`+(R?runBusy():"");
+ h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">🏰</span><div><h4>${t("sg_endless")}</h4><small>${t("mg_best")}: ${MG.dun.best}</small></div></div><p class="m">${t("sg_endlessH")}</p><button class="btn sm" type="button" data-a="sgjump" data-v="dun">${t("sg_jump")}</button></div>`;
+ h+=TD.map((D,i)=>{const op=tdOpen(i),c=s.td.clr[i]|0;return`<div class="mgCard${c?" done":""}" style="--zc:${D.c}"><div class="mgTop"><span class="mgIc">${op?D.ic:"🔒"}</span><div><h4 style="color:${op?D.c:"inherit"}">${t("sg_d_"+D.k)}</h4><small>${t("sg_fls",{n:D.fl})} ·${t("sg_clr",{n:c})}${s.td.fl[i]?" · ✨ "+t("sg_flw"):""}</small></div></div>`+
+  `<p class="m">${op?t("sg_dd_"+D.k):i?t("sg_dLock",{n:t("sg_d_"+TD[i-1].k)}):t("sg_dLock0")}</p>${c?`<p class="m">⏱️ ${t("sg_flB",{n:tmTx(s.td.best[i])})} · 👑 ${t("sg_tb_"+D.k)}</p>`:""}${op&&!R?`<button class="btn sm main" type="button" data-a="sgtd" data-v="${i}">${t("sg_enter")}</button>`:""}</div>`}).join("");
+ h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">🗼</span><div><h4>${t("sg_tw")}</h4><small>🏆 ${t("lg_best")}: ${s.tw.best} · 🚪 ${s.tw.runs}</small></div></div><p class="m">${t("sg_twH")}</p>${R?"":`<div class="smBtns"><button class="btn sm main" type="button" data-a="sgtw" data-v="1">${t("sg_twGo1")}</button>${s.tw.cp>1?`<button class="btn sm" type="button" data-a="sgtw" data-v="${s.tw.cp}">${t("sg_twGoC",{n:s.tw.cp})}</button>`:""}</div>`}</div>`;
+ h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">⏳</span><div><h4>${t("mg_tab_rift")}</h4></div></div><button class="btn sm" type="button" data-a="sgjump" data-v="rift">${t("sg_jump")}</button></div>`;return h}
+function sgRBx(){const s=sgS(),R=MG.run;let h=`<p class="sub">${t("sg_bxH")}</p><div class="mgStats"><span>🏆 ${t("lg_best")}: <b>${s.bx.best}</b></span><span>🚪 <b>${s.bx.runs}</b></span></div>`+(R?runBusy():`<button class="btn main wide mgGo" type="button" data-a="sgbx">🌀 ${t("sg_go")}</button>`);
+ h+=`<h3 class="h3">⚖️</h3><div class="mgList">`+BXL.map((l,i)=>`<div class="mgRow"><b>${t("sg_bxS",{n:i+1})}</b><span>${t("sg_bl_"+l)}</span></div>`).join("")+`</div>`;return h}
+/* ============ P56 part D: trials in the open world (copy boss, five phases, a team of three, weekly tyrant, the secret Nameless, the secret final battle) ============ */
+const SGTD={
+sg_tb_echo:"Володар Відлуння|The Echo Lord",sg_tb_penta:"Пентарх П'яти Стихій|The Pentarch of Five Elements",sg_tb_council:"Рада Трьох|The Council of Three",sg_tb_secret:"Безіменний|The Nameless",sg_tb_final:"Тіньовий Володар|The Shadow Sovereign",sg_tb_weekly:"Тиран тижня|Tyrant of the Week",
+sg_td_echo:"Повторює кожне твоє вміння проти тебе. Б'єш вогнем — отримаєш вогонь.|Repeats every skill you use against you. Strike with fire, get fire back.",
+sg_td_penta:"П'ять фаз: вогонь, лід, блискавка, природа, тінь. Кожна фаза — нові атаки й щит.|Five phases: fire, ice, lightning, nature, shadow. Every phase brings new attacks and a shield.",
+sg_td_council:"Троє босів разом. Коли один падає, інші лютішають і лікуються.|Three bosses at once. When one falls, the others rage and heal.",
+sg_td_secret:"Приходить сам, коли збігаються таємні умови. Ніхто не знає, які саме…|Comes on his own when the secret conditions align. No one knows which…",
+sg_td_final:"Останній бій Хроніки. П'ять фаз, слуги і копія твоїх ударів.|The Chronicle's last battle. Five phases, servants and a copy of your blows.",
+sg_td_weekly:"Новий тиран щотижня. 3 спроби на тиждень, перша перемога тижня — велика нагорода.|A new tyrant every week. 3 tries a week, the week's first win pays big.",
+sg_tb_wk0:"Тиран Кісткового Трону|Tyrant of the Bone Throne",sg_tb_wk1:"Вогняна Імператриця|The Flame Empress",sg_tb_wk2:"Повелитель Хуртовин|Lord of Blizzards",sg_tb_wk3:"Громовий Деспот|The Thunder Despot",
+sg_tb_wk4:"Король Гнилого Лісу|King of the Rotten Wood",sg_tb_wk5:"Безликий Кат|The Faceless Executioner",sg_tb_wk6:"Сингулярний Тиран|The Singular Tyrant",sg_tb_wk7:"Пожирач Нових Ігор|Devourer of New Games",
+sg_bt_echo:"Твої рухи — мої рухи. Твоя сила — моя сила.|Your moves are my moves. Your power is my power.",sg_bt_penta:"П'ять стихій, п'ять смертей. Обирай першу.|Five elements, five deaths. Pick the first.",
+sg_bt_council:"Ми троє — одне. Ти один — ніщо.|We three are one. You alone are nothing.",sg_bt_secret:"Я… пам'ятаю тебе? Ні. Я нікого не пам'ятаю.|Do I… remember you? No. I remember no one.",
+sg_bt_final:"Літопис закінчиться моїм іменем, а не твоїм.|The chronicle will end with my name, not yours.",sg_bt_weekly:"Цей тиждень — мій. Як і твоє життя.|This week is mine. As is your life.",
+sg_pf:"⚔️ До бою|⚔️ Fight",sg_pt:"😤 Насміхатися (+30% HP боса, +50% нагороди)|😤 Taunt (+30% boss HP, +50% reward)",sg_pp:"🤝 Домовитись (−20% HP боса, −30% нагороди)|🤝 Parley (−20% boss HP, −30% reward)",
+sg_pfR:"Тоді починаймо.|Then let us begin.",sg_ptR:"Ти пошкодуєш про ці слова!|You'll regret those words!",sg_ppR:"Гм… Розумно. Я буду м'якшим.|Hm… Wise. I'll go easier.",
+sg_trT:"⏱️ {n} с|⏱️ {n} s",sg_trWin:"Випробування пройдено!|Trial won!",sg_trFail:"Випробування провалено…|Trial failed…",sg_trOut:"Повертайся на арену!|Get back into the arena!",
+sg_trW:"Перемог: {n} · Найкращий час: {b}|Wins: {n} · Best time: {b}",sg_trLock:"🔒 Умова: {n}|🔒 Needs: {n}",sg_trTry:"Спроб цього тижня: {n}/3|Tries this week: {n}/3",
+sg_tu_echo:"квест «Робота для горна» або бій №40|the quest «Work for the Forge» or battle #40",sg_tu_penta:"5-й поверх Вежі босів або бій №50|Boss Tower floor 5 or battle #50",
+sg_tu_council:"пройти «Тіньовий лабіринт»|clear «The Shadow Labyrinth»",sg_tu_final:"???",sg_tu_weekly:"бій №10|battle #10",
+sg_ph:"Фаза {n}/{m}!|Phase {n}/{m}!",sg_link:"⚖️ Рада лютішає: решта зцілюється!|⚖️ The Council rages: the rest heal!",sg_echo:"🪞 Відлуння!|🪞 Echo!",
+sg_wb:"Світовий бос|World Boss",sg_wbH:"Світовий бос приходить раз на день (з бою №8) і під час світових подій. Шукай його на дорозі.|The world boss comes once a day (from battle #8) and during world events. Look for it on the road.",
+sg_wbD:"Сьогодні вже переможений ✓|Already defeated today ✓",sg_surv:"Випробування на виживання|Survival Trial",sg_arena:"Арена нескінченних хвиль|Arena of Endless Waves",
+sg_secA:"🌘 Безіменний з'явився!|🌘 The Nameless has appeared!",sg_secH:"Таємний бос. Умова появи прихована.|A secret boss. Its condition is hidden.",
+sg_finU:"⚔️ Секретна фінальна битва відкрита!|⚔️ The secret final battle is open!",sg_finW:"Тіньовий Володар упав. Хроніку дописано.|The Shadow Sovereign has fallen. The Chronicle is complete."};
+for(const k in SGTD)T8[k]=S8(SGTD[k]);
+/* the elements of the Pentarch's phases (colours and attack lists) */
+const PENTA=[{c:"#ff6a2a",at:["rain","nova"]},{c:"#9fe8ff",at:["ring","cross"]},{c:"#ffe14e",at:["line","cross","sky"]},{c:"#6bf07a",at:["whirl","heal","summon"]},{c:"#9a5aff",at:["blink","sky","nova","summon"]}];
+const WKB=[{ic:"💀",c:"#e8dcc0",fx:"dust,shards",at:["summon","ring","shield"]},{ic:"🔥",c:"#ff5a1a",fx:"embers,rays",at:["rain","nova","line"]},{ic:"🌨️",c:"#bfe8ff",fx:"prism,shards",at:["ring","cross","sky"]},
+ {ic:"⚡",c:"#ffe14e",fx:"rays,flicker",at:["line","cross","blink"]},{ic:"🍂",c:"#a8c060",fx:"smoke,orbs",at:["whirl","summon","heal"]},{ic:"🪓",c:"#c8c8d8",fx:"flicker,void",at:["blink","line","nova"]},
+ {ic:"⚫",c:"#ff4ad8",fx:"void,halo",at:["whirl","sky","nova","blink"]},{ic:"♻️",c:"#7affea",fx:"void,prism",at:["sky","rain","cross","summon"]}];
+const wkBossI=()=>{const n=LG&&LG.rb>0?WKB.length:6;let h=0;for(const c of sgWeek())h=(h*31+c.charCodeAt(0))>>>0;return h%n};
+const wkBoss=()=>({k:"wk"+wkBossI(),i:wkBossI()});
+const wkLeft=()=>{const s=sgS();return s.wk.w===sgWeek()?Math.max(0,3-s.wk.n):3};
+/* the trials */
+const TR={echo:{ic:"🪞",c:"#e0e0ff",fx:"flicker,orbs",hp:9,ph:3,at:[["line","blink"],["line","cross"],["blink","cross","summon"]],copy:1,g:5000,it:7,rn:120,ttl:"echobreaker",sab:"echo",u:()=>qDone("m16")||battleNo>=40},
+ penta:{ic:"⭐",c:"#ffb03a",fx:"halo,prism",hp:12,ph:5,penta:1,g:8000,it:8,rn:180,ttl:"pentaslayer",u:()=>sgS().tw.best>=5||battleNo>=50},
+ council:{ic:"⚖️",c:"#ff8a8a",fx:"rays,smoke",hp:6,n:3,ph:2,at:[["ring","line"],["nova","line","summon"]],g:10000,it:9,rn:220,ttl:"councilbane",u:()=>!!sgS().td.clr[4]},
+ weekly:{ic:"📅",c:"#ffd34e",hp:10,ph:3,wk:1,g:6000,it:8,rn:100,ttl:"tyrantslayer",u:()=>battleNo>=10},
+ secret:{ic:"🌘",c:"#b0b0d0",fx:"void,smoke",hp:14,ph:3,at:[["sky","blink"],["whirl","cross"],["sky","whirl","blink","summon"]],g:12000,it:10,rn:250,ttl:"nameless",hide:1,u:()=>!!sgS().tr.secSeen},
+ final:{ic:"👑",c:"#ff2a5a",fx:"void,halo",hp:20,ph:5,copy:1,adds:1,at:[["summon","ring"],["line","rain","blink"],["whirl","cross","summon"],["sky","nova","blink"],["sky","whirl","rain","cross","summon"]],g:30000,it:12,rn:500,ttl:"sovereign",sab:"sov",hide:1,u:()=>!!sgS().tr.finU}};
+const TRK=Object.keys(TR);
+const sgF={on:false,k:"",es:[],t:0,T:0,ax:0,az:0,ph:1,mul:1,rw:1,out:0,last:0,q:[],qt:0,ring:0};
+const trName=k=>k==="weekly"?t("sg_tb_"+wkBoss().k):t("sg_tb_"+k);
+function trDef(k){const D=TR[k];if(k!=="weekly")return D;const W=WKB[wkBossI()];return Object.assign({},D,{ic:W.ic,c:W.c,fx:W.fx,at:[W.at.slice(0,2),W.at.slice(1),W.at]})}
+/* start a trial: the bosses walk out 200 ahead, the arena is drawn around the middle */
+function trStart(k,mode){const D=trDef(k),s=sgS();if(!D||sgF.on)return;if(!D.u()){SFX.buzz();return}if(sgBusy()||!isFP()){toast("⚔️ "+t("sg_busy"),"#d8c8b0");SFX.buzz();return}
+ if(D.wk){if(wkLeft()<=0){SFX.buzz();return}if(s.wk.w!==sgWeek()){s.wk.w=sgWeek();s.wk.n=0}}
+ const a=hero.ang||0,cnt=D.n||1,es=[],hpM=mode==="t"?1.3:mode==="p"?.8:1,lv=(s.tr["w_"+k]|0);
+ for(let i=0;i<cnt;i++){const off=(i-(cnt-1)/2)*70,x=hero.x+Math.cos(a)*200-Math.sin(a)*off,z=clamp(hero.z-Math.sin(a)*200/ZS-Math.cos(a)*off/ZS,zLo(15),zHi(15));let ti;
+  try{ti=k==="weekly"||k==="final"||k==="secret"?BOSST[(i*5+wkBossI()+TRK.indexOf(k)*3)%BOSST.length]:zPick(pickTier(battleNo+8+i*2,foe.lvl),biomeIdx())}catch(er){return}
+  p49.no=1;let e=null;try{e=makeEnemy(ti,true,x,z,1.2)}catch(er){}p49.no=0;if(!e)continue;
+  e.sgB=k;e.wild=true;e.home={x,z};e.state="chase";e.entered=e.spawned=true;e.hp=e.maxhp=Math.round(e.maxhp*D.hp*hpM*(1+.25*lv)*(1+battleNo/200));e.atk=Math.round(e.atk*(1.4+.08*lv)*(mode==="t"?1.1:1));e.s*=cnt>1?1.25:1.5;e.sgAt=3+i*1.3;
+  const nm=cnt>1?T8["sg_tb_"+k].map(v=>v+" "+["I","II","III"][i]):k==="weekly"?T8["sg_tb_"+wkBoss().k]:T8["sg_tb_"+k];
+  e.cfg=Object.assign({},e.cfg,{n:nm,fx:D.fx||"halo,void",fxc:D.c,aura:D.c,look:Object.assign({},e.cfg.look,{glowCol:D.c,eye:D.c,trim:D.c})});e.afIc=D.ic+(e.afIc||"");enemies.push(e);es.push(e)}
+ if(!es.length)return;if(D.wk)s.wk.n++;Object.assign(sgF,{on:true,k,es,T:k==="final"?300:200,t:k==="final"?300:200,ax:hero.x+Math.cos(a)*100,az:clamp(hero.z-Math.sin(a)*100/ZS,zLo(15),zHi(15)),ph:1,rw:mode==="t"?1.5:mode==="p"?.7:1,out:0,last:0,q:[],qt:0,ring:0,t0:Date.now()});
+ flashA=.45;flashCol=D.c;shake+=6;banner(D.ic+" "+trName(k),t("sg_td_"+k).split(".")[0]);SFX.bossIntro&&SFX.bossIntro();
+ setTimeout(()=>say(trName(k),t("sg_bt_"+k),D.c,D.ic),800);sgPost("boss",null,null,{x:D.ic+" "+trName(k)+": "+t("sg_bt_"+k),tst:false});save()}
+function trEnd(win){if(!sgF.on)return;const k=sgF.k,D=trDef(k),s=sgS();sgF.on=false;
+ if(win){const first=!(s.tr["w_"+k]|0),tm=Math.round((Date.now()-sgF.t0)/1000);s.tr["w_"+k]=(s.tr["w_"+k]|0)+1;if(!s.tr["b_"+k]||tm<s.tr["b_"+k])s.tr["b_"+k]=tm;
+  let g=Math.round(D.g*(1+battleNo/80)*sgF.rw);if(D.wk){if(s.wk.win===sgWeek())g=Math.round(g*.25);else s.wk.win=sgWeek()}P.gold+=g;matAdd("crys",4);matAdd("star",2+Math.floor(D.it/4));matAdd("shard",1+Math.floor(D.it/5));
+  const e0=sgF.es[0],r0=RO[Math.min(12,D.it)];setTimeout(()=>{try{spawnLoot(e0,makeItem(Math.max(r0,rollRarity(r0))))}catch(er){}},700);sgRenown(Math.round(D.rn*(first?1:.3)));qEv("trial",1,k);
+  if(first&&D.ttl&&!LG.ttl[D.ttl]){LG.ttl[D.ttl]=1;setTimeout(()=>banner("🏷️ "+t("sl_t_"+D.ttl),D.ic),2400)}if(first&&D.sab)sabGive(D.sab);
+  if(k==="final"){s.tr.finW=1;if(!s.bx.unl){s.bx.unl=1;setTimeout(()=>{banner(t("sg_bxNew"),"🌀");sgPost("vel",null,null,{x:t("sg_finW")})},3600)}}
+  if(k==="secret")sgPost("kas",null,null,{x:t("sg_qe_k3")});
+  flashA=.5;flashCol=D.c;banner(D.ic+" "+t("sg_trWin"),"+"+nfm(g)+" 🪙");SFX.jackpot&&SFX.jackpot();logH(D.ic,"sg_trWin",trName(k))}
+ else{toast("💢 "+t("sg_trFail"),"#ff8a8a");for(const e of sgF.es)if(e.state!=="dead"){e.state="dead";e.hp=0}enemies=enemies.filter(e=>!sgF.es.includes(e)||e.state==="dead");for(const o of enemies)if(sgF.es.includes(o.p49mom)&&o.state!=="dead"){o.state="dead";o.hp=0}}
+ sgF.es=[];save()}
+/* a trial boss down: the Council links, the whole trial ends when all are down */
+{const _k=p13Kill;p13Kill=function(e){_k(e);if(!LG||!sgF.on||!sgF.es.includes(e))return;const live=sgF.es.filter(x=>x!==e&&x.state!=="dead");
+ if(!live.length){trEnd(true);return}if(sgF.k==="council"){for(const o of live){o.hp=Math.min(o.maxhp,o.hp+o.maxhp*.25);o.atk=Math.round(o.atk*1.2);addText(o.x,o.z,o.h+o.cfg.hgt*o.s+14,"+25%","#6aff8a",14)}banner("⚖️",t("sg_link"));shake+=4}}}
+/* phase shields block all damage for a moment */
+{const _de=damageEnemy;damageEnemy=function(e,d,crit,dir,kb,kind){if(e&&e.sgSh>0&&e.state!=="dead"){if(Math.random()<.4)addText(e.x,e.z,e.h+e.cfg.hgt*e.s+8,"🛡️","#ffe08a",12);return 0}return _de(e,d,crit,dir,kb,kind)}}
+/* the copy boss repeats your skills back at you */
+const ECHO_A={attack:"line",heavy:"line",spin:"nova",fire:"rain",blaze:"rain",bolt:"cross",heal:"heal",dodge:"blink"};
+{const _a=tryAction;tryAction=function(a){const cd=hero.cd&&hero.cd[a],st=hero.state;_a(a);if(!sgF.on||!LG)return;const D=trDef(sgF.k);if(!D.copy)return;
+ const used=(hero.cd&&hero.cd[a]>0&&!(cd>0))||(a==="attack"&&st!=="attack"&&hero.state==="attack");if(used&&sgF.q.length<3&&ECHO_A[a])sgF.q.push({a,t:1.1})}}
+function trTick(dt){if(!sgF.on||!LG)return;const D=trDef(sgF.k),h=hero;if(hero.state==="dead"||(MG&&MG.run)){trEnd(false);return}
+ const live=sgF.es.filter(e=>e.state!=="dead"&&enemies.includes(e));if(!live.length){trEnd(false);return}sgF.t-=dt;
+ const sc=Math.ceil(sgF.t);if(sc!==sgF.last&&(sc%30===0||sc<=10)&&sc>0){sgF.last=sc;cbTxt(D.ic+" "+t("sg_trT",{n:sc}),D.c)}if(sgF.t<=0){trEnd(false);return}
+ sgF.ring-=dt;if(sgF.ring<=0){sgF.ring=1;for(let k=0;k<16;k++){const a=k/16*PI*2;decal("rune",sgF.ax+Math.cos(a)*330,clamp(sgF.az+Math.sin(a)*330/ZS,zLo(2),zHi(2)),22,1.3,D.c)}}
+ const dd=Math.hypot(h.x-sgF.ax,(h.z-sgF.az)*ZS);if(dd>370){sgF.out+=dt;if(Math.floor(sgF.out*2)!==Math.floor((sgF.out-dt)*2))cbTxt("⚠️ "+t("sg_trOut"),"#ff8a8a");if(sgF.out>5){trEnd(false);return}}else sgF.out=0;
+ for(const e of live){if(Math.hypot(e.x-sgF.ax,(e.z-sgF.az)*ZS)>390){e.x=sgF.ax+rnd(-60,60);e.z=clamp(sgF.az+rnd(-20,20),zLo(6),zHi(6))}if(e.sgSh>0)e.sgSh-=dt}
+ /* phases by the health of the whole group */
+ const q=live.reduce((a,e)=>a+e.hp,0)/sgF.es.reduce((a,e)=>a+e.maxhp,0),N=D.ph,ph=Math.min(N,1+Math.floor((1-q)*N+1e-6));
+ if(ph>sgF.ph){sgF.ph=ph;for(const e of live){e.sgSh=1.6;e.atk=Math.round(e.atk*1.1);if(D.penta){const P0=PENTA[ph-1];e.cfg=Object.assign({},e.cfg,{fxc:P0.c,aura:P0.c})}}
+  flashA=.35;flashCol=D.penta?PENTA[ph-1].c:D.c;shake+=5;banner(D.ic+" "+t("sg_ph",{n:ph,m:N}),trName(sgF.k));if(D.adds&&live[0])for(let i=0;i<2+ph;i++)p49Spawn(live[0],live[0].x+rnd(-60,60),live[0].z+rnd(-20,20),.08,.5,.35,D.c)}
+ for(const e of live){e.sgAt-=dt;if(e.sgAt>0)continue;const L0=D.penta?PENTA[sgF.ph-1].at:D.at[Math.min(D.at.length,sgF.ph)-1],k=L0[rint(0,L0.length-1)],d=Math.round(Math.max(e.atk*1.05,P.maxhp*(.07+.015*sgF.ph)));
+  try{P55A[k](e,d,D.penta?PENTA[sgF.ph-1].c:D.c)}catch(er){}e.sgAt=Math.max(2.4,6.4-sgF.ph*.7)*(live.length>1?1.4:1)}
+ /* echoes */
+ if(sgF.q.length){sgF.qt-=dt;const E=sgF.q[0];E.t-=dt;if(E.t<=0&&sgF.qt<=0){sgF.q.shift();sgF.qt=1.2;const e=live[0],k=ECHO_A[E.a],d=Math.round(Math.max(e.atk*.8,P.maxhp*.07));cbTxt(t("sg_echo"),"#e0e0ff");try{P55A[k](e,d,"#e0e0ff")}catch(er){}}}}
+/* the Nameless comes on his own when the hidden condition is met: night + (an eclipse, or fog in a dark land) + five hidden rooms found */
+let secT=0;
+function secTry(dt){secT-=dt;if(secT>0)return;secT=1;const s=sgS();if(sgF.on||sgBusy()||!isFP()||battleNo<10||s.tr.secD===dayKey())return;
+ const bi=biomeIdx(),w=wxNow&&wxNow.k,cond=nightK()>.6&&(w==="eclipse"||(bi>=91&&bi<=102&&w==="fog"))&&s.ex.rooms.length>=5;if(!cond||Math.random()>.04)return;
+ s.tr.secD=dayKey();const first=!s.tr.secSeen;s.tr.secSeen=1;sgPost("her","sg_h_sec");banner("🌘 "+t("sg_secA"),t("sg_td_secret").split("…")[0]);setTimeout(()=>trStart("secret","f"),1200);if(first)sgCnt("secret")}
+{const _t=p17Tick;p17Tick=function(dt){_t(dt);if(!LG)return;try{trTick(dt);secTry(dt);sgRunTick(dt);sgGust(dt);hntTick(dt);qTick(dt)}catch(e){console.error(e)}}}
+/* the trials tab, with a word from the boss before the fight */
+let sgPre="";
+function sgRTrial(){const s=sgS();let h="";
+ if(sgPre&&TR[sgPre]){const D=trDef(sgPre);h+=`<div class="mgCard here" style="--zc:${D.c}"><div class="mgTop"><span class="mgIc">${D.ic}</span><div><h4 style="color:${D.c}">${trName(sgPre)}</h4></div></div><div class="sgLog" style="max-height:none"><div class="sgM" style="--nc:${D.c}"><b>${D.ic} ${trName(sgPre)}</b><p>${t("sg_bt_"+sgPre)}</p></div></div>`+
+  `<div class="sgOpt"><button class="btn sm main" type="button" data-a="sgtr" data-v="${sgPre}|f">${t("sg_pf")}</button><button class="btn sm warn" type="button" data-a="sgtr" data-v="${sgPre}|t">${t("sg_pt")}</button><button class="btn sm" type="button" data-a="sgtr" data-v="${sgPre}|p">${t("sg_pp")}</button><button class="btn sm" type="button" data-a="sgpre" data-v="">✕</button></div></div>`}
+ for(const k of TRK){const D=trDef(k),op=D.u();if(D.hide&&!op&&k!=="final")continue;const w=s.tr["w_"+k]|0;
+  h+=`<div class="mgCard${w?" done":""}" style="--zc:${D.c}"><div class="mgTop"><span class="mgIc">${op?D.ic:"🔒"}</span><div><h4 style="color:${op?D.c:"inherit"}">${op||k!=="final"?trName(k):"???"}</h4><small>${t("sg_trW",{n:w,b:w?tmTx(s.tr["b_"+k]):"—"})}</small></div></div>`+
+   `<p class="m">${op||k!=="final"?t("sg_td_"+k):t("sg_hubH").split(":")[0]+"…"}</p>${D.wk?`<p class="m">${t("sg_trTry",{n:3-wkLeft()})}</p>`:""}${op?(sgF.on||k==="secret"&&nightK()<.6?"":`<button class="btn sm main" type="button" data-a="sgpre" data-v="${k}">⚔️ ${t("sg_go")}</button>`):`<p class="m">${t("sg_trLock",{n:t("sg_tu_"+k)})}</p>`}</div>`}
+ if(!s.tr.secSeen)h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">❔</span><div><h4>???</h4></div></div><p class="m">${t("sg_secH")}</p></div>`;
+ const wbD=LG.wb&&LG.wb.d===dayKey();h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">🐲</span><div><h4>${t("sg_wb")}</h4></div></div><p class="m">${wbD?t("sg_wbD"):t("sg_wbH")}</p></div>`;
+ h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">⏱️</span><div><h4>${t("sg_surv")}</h4></div></div><button class="btn sm" type="button" data-a="sgjump" data-v="surv">${t("sg_jump")}</button></div>`;
+ h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">🏟️</span><div><h4>${t("sg_arena")}</h4></div></div><button class="btn sm" type="button" data-a="sgjump" data-v="arena">${t("sg_jump")}</button></div>`;return h}
+/* ============ P56 part E: exploration (ruins, temples, caves, lost portals, isles, cracks), hidden rooms, secret chests, relics, treasure charts, portal storms, new weather ============ */
+const SGTE={
+sg_s_ruin:"Стародавні руїни|Ancient ruins",sg_s_temple:"Забутий храм|Forgotten temple",sg_s_cave:"Прихована печера|Hidden cave",sg_s_portal:"Загублений портал|Lost portal",sg_s_isle:"Таємничий острів|Mysterious isle",sg_s_crack:"Тріщина у скелі|Crack in the rock",sg_s_pass:"Таємний прохід|Secret passage",
+sg_sd_ruin:"Пошукай серед каміння: золото, сторінки літопису, реліквії.|Search among the stones: gold, chronicle pages, relics.",sg_sd_temple:"Помолися: благословення на 2 хвилини і шанс на реліквію.|Pray: a blessing for 2 minutes and a chance at a relic.",
+sg_sd_cave:"Вартові печери нападуть. Переможи — і знайдеш схованку.|The cave's guardians attack. Win and you'll find the cache.",sg_sd_portal:"Переносить далеко вперед. По той бік чекає вартовий.|Carries you far ahead. A guardian waits on the other side.",
+sg_sd_isle:"Острів з'являється ненадовго. Скрині, вартовий і, може, карта.|The isle shows up only for a while. Chests, a guardian and maybe a chart.",sg_sd_crack:"За тріщиною буває прихована кімната.|Behind a crack there's sometimes a hidden room.",
+sg_siteN:"🧭 Поруч: {n}|🧭 Nearby: {n}",sg_caveIn:"🕳️ Вартові печери прокинулись!|🕳️ The cave's guardians woke up!",sg_caveW:"🕳️ Печеру очищено: схованка твоя!|🕳️ The cave is clear: the cache is yours!",
+sg_blessT:"⛩️ Благословення храму|⛩️ Temple blessing",sg_portIn:"🌀 Портал переніс тебе далеко вперед!|🌀 The portal carried you far ahead!",sg_isleIn:"🏝️ Острів відкрив свої скарби!|🏝️ The isle revealed its treasure!",
+sg_roomF:"🗝️ Прихована кімната {n}/10: {m}|🗝️ Hidden room {n}/10: {m}",sg_roomNG:"Ця кімната відкривається лише після переродження.|This room opens only after a rebirth.",
+sg_chestF:"🎁 Таємна скриня {n}/20!|🎁 Secret chest {n}/20!",sg_relF:"🏺 Реліквія {n}/6: {m}|🏺 Relic {n}/6: {m}",
+sg_room0:"Зала дзеркал|Hall of Mirrors",sg_room1:"Кімната годинників|Clockwork Chamber",sg_room2:"Бібліотека пилу|Library of Dust",sg_room3:"Скарбниця гномів|Dwarven Treasury",sg_room4:"Сад під землею|Underground Garden",
+sg_room5:"Каплиця тиші|Chapel of Silence",sg_room6:"Кузня першого героя|Forge of the First Hero",sg_room7:"Зоряна обсерваторія|Star Observatory",sg_room8:"Трон забутого бога|Throne of a Forgotten God",sg_room9:"Серце світу|Heart of the World",
+sg_rel0:"Скіпетр світанку|Sceptre of Dawn",sg_rel1:"Печатка сімох|Seal of the Seven",sg_rel2:"Кришталеве серце|Crystal Heart",sg_rel3:"Сурма королів|Horn of Kings",sg_rel4:"Перо фенікса|Phoenix Feather",sg_rel5:"Око літописця|Chronicler's Eye",
+sg_map:"Карта скарбів|Treasure chart",sg_mapH:"Карта показує координати: відстань від початку дороги в метрах і бік дороги. Йди туди й шукай хрестик.|The chart shows coordinates: the distance from the road's start in metres and the side of the road. Go there and find the X.",
+sg_mapT:"🎯 Ціль: {n} м, {m}|🎯 Target: {n} m, {m}",sg_mapY:"📍 Ти: {n} м|📍 You: {n} m",sg_north:"північний бік|north side",sg_south:"південний бік|south side",sg_mapNo:"У тебе немає карти. Карти бувають на островах і в печерах, або купи в Дрого.|You have no chart. Charts turn up on isles and in caves, or buy one from Drogo.",
+sg_mapBuy:"🗺️ Купити карту (🪙 {n})|🗺️ Buy a chart (🪙 {n})",sg_mapDay:"Дрого продає одну карту на день.|Drogo sells one chart a day.",sg_mapNew:"🗺️ Нова карта скарбів! Дивись координати в «Мандрах».|🗺️ A new treasure chart! See the coordinates in Explore.",
+sg_mapHot:"🧭 Гаряче! {n} м|🧭 Hot! {n} m",sg_mapWarm:"🧭 Тепліше… {n} м|🧭 Warmer… {n} m",sg_mapX:"❌ Хрестик тут! Копай!|❌ The X is here! Dig!",sg_mapDug:"💰 Скарб за картою!|💰 Treasure from the chart!",sg_mapRun:"У забігу карта не працює.|Charts don't work during a run.",
+sg_port:"Буря порталів|Portal Storm",sg_portH:"📯 Портали відкрились попереду! Торкнись порталу, переможи вартових — і він закриється.|📯 Portals opened ahead! Touch a portal, beat its guardians and it closes.",
+sg_portC:"🌀 Портал закрито ({n}/3)|🌀 Portal closed ({n}/3)",sg_portW:"🌀 Усі портали закрито! Велика нагорода!|🌀 All portals closed! A big prize!",sg_portEnd:"🌀 Портали зникли…|🌀 The portals faded…",
+lg_wx_eclipse:"Затемнення|Eclipse",lg_wx_mstorm:"Магічна буря|Magic storm",sg_ecl:"🌘 Затемнення: вороги сильніші, але скарби частіші.|🌘 Eclipse: foes are stronger, but treasure is more common.",sg_ms:"🌀 Магічна буря: стихії б'ють навмання!|🌀 Magic storm: the elements strike at random!",
+sg_exH:"Біля дороги з'являються дивні місця. Досліджуй їх: прихованих кімнат 10, таємних скринь 20, реліквій 6.|Strange places appear by the road. Explore them: 10 hidden rooms, 20 secret chests, 6 relics.",
+sg_city:"Підземне місто|Underground City",sg_cityH:"Підземне місто з крамницею і доставками — у вкладці «Легенда → Місто».|The underground city with its shop and deliveries is in Legend → City."};
+for(const k in SGTE)T8[k]=S8(SGTE[k]);
+const SITES=[{k:"ruin",ic:"🏛️",c:"#e8d8b0"},{k:"temple",ic:"⛩️",c:"#fff2b0"},{k:"cave",ic:"🕳️",c:"#c8a878"},{k:"portal",ic:"🌀",c:"#b08aff"},{k:"isle",ic:"🏝️",c:"#7fd8ff"},{k:"crack",ic:"🪨",c:"#ffd98a"}];
+const SITEK={};SITES.forEach(S=>SITEK[S.k]=S);
+const SGROOM=[{ic:"🪞",g:2500,m:{crys:4},it:4},{ic:"⏰",g:3000,m:{sand:5},it:4},{ic:"📚",g:2500,lore:1,it:5},{ic:"⚒️",g:6000,m:{iron:20,ore:6},it:5},{ic:"🌷",g:3000,m:{bloom:6,seed:3},it:5},
+ {ic:"🕯️",g:4000,m:{crys:6,star:1},it:6},{ic:"🔥",g:6000,m:{fire:8,ore:6},it:7},{ic:"🔭",g:8000,m:{sky:5,star:3},it:8,ng:1},{ic:"👑",g:10000,m:{void:5,shard:5},it:9,ng:1},{ic:"💗",g:15000,m:{star:6,shard:8},it:10,ng:1}];
+const SGREL=["🔱","📜","💎","📯","🪶","👁️"];
+/* reward helpers */
+function relicTry(ch){const s=sgS();if(s.ex.relic.length>=SGREL.length||Math.random()>=ch)return false;const i=s.ex.relic.length;s.ex.relic.push(i);
+ banner(SGREL[i]+" "+t("sg_relF",{n:i+1,m:t("sg_rel"+i)}),"🏺");SFX.divine&&SFX.divine();sgRenown(25);logH(SGREL[i],"sg_relL",t("sg_rel"+i));sgPost("vel",null,null,{x:t("sg_relF",{n:i+1,m:t("sg_rel"+i)})});recalc();return true}
+function chestTry(x,z,ch){const s=sgS();if(s.ex.chests.length>=20||Math.random()>=ch)return false;const n=s.ex.chests.length;s.ex.chests.push(n);
+ const g=Math.round((600+n*450)*(1+battleNo/100));P.gold+=g;matAdd(["crys","star","iron","shard"][n%4],2+Math.floor(n/4),x,z,30);const r0=RO[Math.min(12,2+Math.floor(n/2))];mgGiveItem(makeItem(Math.max(r0,rollRarity(r0))));
+ if(n===9||n===19){matAdd("star",5);if(n===19&&!LG.ttl.chestking){LG.ttl.chestking=1;setTimeout(()=>banner("🏷️ "+t("sl_t_chestking"),"🎁"),2000)}}
+ banner(t("sg_chestF",{n:n+1}),"🪙 +"+nfm(g));SFX.jackpot&&SFX.jackpot();sgRenown(15);recalc();return true}
+function roomFind(o){const s=sgS(),n=s.ex.rooms.length;if(n>=SGROOM.length)return false;const R0=SGROOM[n];if(R0.ng&&!(LG.rb>0)){toast("🗝️ "+t("sg_roomNG"),"#c8b4ff");return false}
+ s.ex.rooms.push(n);const g=Math.round(R0.g*(1+battleNo/100));P.gold+=g;if(R0.m)for(const k in R0.m)matAdd(k,R0.m[k],o.x,o.z,30);if(R0.lore)loreGive();const r0=RO[Math.min(12,R0.it)];mgGiveItem(makeItem(Math.max(r0,rollRarity(r0))));
+ flashA=.5;flashCol="#ffd98a";banner(R0.ic+" "+t("sg_roomF",{n:n+1,m:t("sg_room"+n)}),"🪙 +"+nfm(g));SFX.divine&&SFX.divine();sgRenown(30);logH("🗝️","sg_roomL",t("sg_room"+n));
+ if(s.ex.rooms.length>=SGROOM.length&&!LG.ttl.roomseeker){LG.ttl.roomseeker=1;setTimeout(()=>banner("🏷️ "+t("sl_t_roomseeker"),"🗝️"),2200)}recalc();return true}
+Object.assign(T8,{sg_rooms:S8("Приховані кімнати|Hidden rooms"),sg_relL:S8("Реліквія: {n}|Relic: {n}"),sg_roomL:S8("Прихована кімната: {n}|Hidden room: {n}")});
+/* placing a site ahead on the road, the kind follows the land */
+let siteT=60;
+function sitePick(){const B=BIOMES[biomeIdx()]||{},p=B.props||"",w=[["ruin",["ruins","grave","gothic","bones"].includes(p)?40:14],["temple",["temple","torii","pagoda","jungle"].includes(p)?40:12],
+ ["cave",["ice","mesa","crystal","cabin","lava"].includes(p)?40:14],["portal",nightK()>.6?26:8],["isle",["water","coast"].includes(p)?45:6],["crack",18]];return wpick(Math.random,w)}
+function siteTick(dt){if(!LG||!isFP()||(MG&&MG.run)||hero.state==="dead"||battleNo<3)return;siteT-=dt;if(siteT>0)return;siteT=rnd(55,100);if(locked)return;
+ if(mgObjs.some(o=>!o.used&&o.k==="sgsite"&&o.x>hero.x-200))return;const k=sitePick(),x=hero.x+rnd(300,520),z=clamp(hero.z+rnd(-70,70),zLo(20),zHi(20));mgObjs.push({k:"sgsite",s:k,x,z,t0:tNow});
+ toast(SITEK[k].ic+" "+t("sg_siteN",{n:t("sg_s_"+k)}),SITEK[k].c)}
+/* touching a site */
+function siteGo(o){const s=sgS(),k=o.s,S=SITEK[k];if(!S)return;s.ex.n[k]=(s.ex.n[k]|0)+1;qEv("site",1,k);sgRenown(6);const g=Math.round((200+battleNo*10)*(k==="isle"?1.6:1));
+ if(k==="ruin"){o.used=1;P.gold+=g;loreGive();if(!relicTry(.35))matAdd(Math.random()<.5?"ore":"amber",rint(1,3),o.x,o.z,40);chestTry(o.x,o.z,.2);toast(S.ic+" "+t("sg_s_ruin")+" · 🪙+"+nfm(g),S.c)}
+ if(k==="temple"){o.used=1;addBuf({k:"sgbless",ic:"⛩️",col:S.c,fx:[["regen",3+sgS().tmp],["healBonus",25],["dmgRed",4]],t:120,max:120});toast(t("sg_blessT"),S.c);relicTry(.35);chestTry(o.x,o.z,.15);SFX.heal&&SFX.heal()}
+ if(k==="cave"){if(o.g)return;o.g=Date.now();const n=3+Math.floor(battleNo/60);for(let i=0;i<n;i++){const e=caveFoe(o);if(e)e.sgCv=o.g}cbTxt(t("sg_caveIn"),S.c);SFX.bossIntro&&SFX.bossIntro()}
+ if(k==="portal"){o.used=1;flashA=.5;flashCol=S.c;whoosh(.7,.12,300,1600);hero.x+=520;hero.z=clamp(hero.z,zLo(),zHi());camX=hero.x-LW*.35;P.gold+=g;matAdd("sky",1,hero.x,hero.z,30);chestTry(hero.x,hero.z,.3);const e=caveFoe({x:hero.x+120,z:hero.z});if(e){e.hp=e.maxhp=Math.round(e.maxhp*2.5);e.afIc="🌀"+(e.afIc||"")}toast(t("sg_portIn"),S.c)}
+ if(k==="isle"){o.used=1;flashA=.4;flashCol=S.c;for(let i=0;i<3;i++)chests.push({x:o.x+30+i*26,z:clamp(o.z+rnd(-24,24),zLo(14),zHi(14)),open:0,t:0,gold:true});P.gold+=g;chestTry(o.x,o.z,.4);
+  if(Math.random()<.3)mapNew();const e=caveFoe({x:o.x+100,z:o.z});if(e){e.hp=e.maxhp=Math.round(e.maxhp*3);e.afIc="🏝️"+(e.afIc||"")}toast(t("sg_isleIn"),S.c)}
+ if(k==="crack"){o.used=1;if(!roomFind(o)){for(let i=0;i<2;i++)chests.push({x:o.x+30+i*26,z:o.z,open:0,t:0,gold:true});chestTry(o.x,o.z,.3)}sgCnt("pass")}
+ save()}
+function caveFoe(o){try{const ti=zPick(pickTier(battleNo+4,foe.lvl),biomeIdx()),x=o.x+rnd(40,110),z=clamp(o.z+rnd(-40,40),zLo(15),zHi(15));p49.no=1;const e=makeEnemy(ti,false,x,z,.6);p49.no=0;
+ e.hp=e.maxhp=Math.round(e.maxhp*1.8);e.wild=true;e.home={x,z};e.state="chase";e.entered=e.spawned=true;enemies.push(e);return e}catch(er){p49.no=0;return null}}
+function caveTick(){for(const o of mgObjs){if(o.k!=="sgsite"||o.s!=="cave"||!o.g||o.used)continue;if(enemies.some(e=>e.sgCv===o.g&&e.state!=="dead"))continue;
+ o.used=1;for(let i=0;i<2;i++)chests.push({x:o.x+20+i*26,z:o.z,open:0,t:0,gold:true});chestTry(o.x,o.z,.4);relicTry(.25);if(Math.random()<.2)mapNew();if(Math.random()<.25)roomFind(o);cbTxt(t("sg_caveW"),"#c8a878");SFX.unlock&&SFX.unlock();save()}}
+P17MK.sgsite=(T,g,add,glow,stone,wood,o)=>{const k=o.s;
+ if(k==="ruin"){for(const [x,h] of [[-14,34],[12,22],[2,14]])add(geo("sgCol"+h,()=>new T.CylinderGeometry(4,4.6,h,8).translate(0,h/2,0)),stone,x,0,(x%3)*3);add(geo("sgBlk",()=>new T.BoxGeometry(22,5,8)),stone,-2,36,0).rotation.z=.25;add(geo("sgFl",()=>new T.BoxGeometry(14,4,6)),stone,18,2,8).rotation.y=.6;return null}
+ if(k==="temple"){add(geo("sgTpB",()=>new T.BoxGeometry(30,4,24).translate(0,2,0)),stone,0,0,0);for(const x of [-11,11])for(const z of [-8,8])add(geo("sgTpC",()=>new T.CylinderGeometry(1.8,2,22,6).translate(0,11,0)),stone,x,4,z);add(geo("sgTpR",()=>new T.ConeGeometry(22,10,4).rotateY(PI/4).translate(0,5,0)),wood,0,26,0);return add(geo("sgTpO",()=>new T.OctahedronGeometry(2.4,0)),glow,0,14,0)}
+ if(k==="cave"){add(geo("sgCvR",()=>new T.DodecahedronGeometry(22,0)),stone,0,10,0,1.3,.9,1);add(geo("sgCvM",()=>new T.CircleGeometry(9,10).rotateY(PI/2)),new T.MeshBasicMaterial({color:0x050304}),23,9,0);return null}
+ if(k==="portal"){add(geo("sgPtB",()=>new T.CylinderGeometry(10,12,3,10)),stone,0,1.5,0);const r=add(geo("sgPtR",()=>new T.TorusGeometry(14,1.8,8,26)),glow,0,20,0);r.rotation.y=PI/2;add(geo("sgPtF",()=>new T.CircleGeometry(13,22).rotateY(PI/2)),new T.MeshBasicMaterial({color:0x9a6aff,transparent:true,opacity:.45,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide}),0,20,0);return null}
+ if(k==="isle"){const gr=new T.Group();gr.position.y=20;g.add(gr);const a=new T.Mesh(geo("sgIsR",()=>new T.ConeGeometry(18,22,7).rotateX(PI)),stone);a.position.y=-8;gr.add(a);const b=new T.Mesh(geo("sgIsT",()=>new T.CylinderGeometry(18,18,3,7)),p17Mat(0x5aa04a));b.position.y=4;gr.add(b);
+  const tr=new T.Mesh(geo("sgIsP",()=>new T.ConeGeometry(6,16,6).translate(0,8,0)),p17Mat(0x2a7a3a));tr.position.set(5,5,2);gr.add(tr);g.userData.isle=gr;return null}
+ add(geo("sgCrS",()=>new T.BoxGeometry(10,44,30).translate(0,22,0)),stone,0,0,0);return add(geo("sgCrG",()=>new T.PlaneGeometry(3,30).rotateY(PI/2)),new T.MeshBasicMaterial({color:0xffd98a,transparent:true,opacity:.8,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide}),5.2,22,0)};
+P17UP.sgsite=(g,o)=>{if(g.userData.isle)g.userData.isle.position.y=20+Math.sin(tNow*1.2+o.x)*3};
+/* treasure charts: coordinates in metres along the road and the side of the road */
+function mapNew(){const s=sgS(),x=hero.x+rnd(2500,7000),sd=Math.random()<.5?-1:1;s.ex.map={x:Math.round(x),z:Math.round(clamp(hero.z+sd*rnd(60,120),zLo(25),zHi(25))),s:sd};toast(t("sg_mapNew"),"#ffd34e");sgPost("dro",null,null,{x:t("sg_mapNew")+" "+t("sg_mapT",{n:Math.round(x/10),m:t(sd>0?"sg_south":"sg_north")})})}
+let mapHint=0;
+function mapTick(dt){const s=sgS(),M=s.ex.map;if(!M||!isFP()||(MG&&MG.run))return;const d=Math.hypot(M.x-hero.x,(M.z-hero.z)*ZS);mapHint-=dt;
+ if(d<70&&!mgObjs.some(o=>o.k==="sgx"&&!o.used)){mgObjs.push({k:"sgx",x:M.x,z:M.z});cbTxt(t("sg_mapX"),"#ffd34e");SFX.unlock&&SFX.unlock()}
+ else if(d<600&&mapHint<=0){mapHint=5;cbTxt(t(d<250?"sg_mapHot":"sg_mapWarm",{n:Math.round(d/10)}),"#ffd34e")}}
+P17MK.sgx=(T,g,add)=>{const xm=p17Mat(0xffc83a,{emissive:0x6a3a00});add(geo("sgX",()=>new T.BoxGeometry(30,1.6,5)),xm,0,1,0).rotation.y=.785;add(geo("sgX",()=>new T.BoxGeometry(30,1.6,5)),xm,0,1.1,0).rotation.y=-.785;return null};
+{const _o=p17Obj;p17Obj=function(o){if(o.k==="sgsite"){siteGo(o);return true}if(o.k==="sgx"){const s=sgS();o.used=1;if(!s.ex.map)return true;s.ex.map=null;s.ex.dug++;const g=Math.round((1500+battleNo*40)*(1+s.ex.dug*.05));P.gold+=g;
+  chests.push({x:o.x+20,z:o.z,open:0,t:0,gold:true});const r0=RO[Math.min(12,4+Math.floor(s.ex.dug/3))];mgGiveItem(makeItem(Math.max(r0,rollRarity(r0))));chestTry(o.x,o.z,.5);sgRenown(20);banner(t("sg_mapDug"),"🪙 +"+nfm(g));SFX.jackpot&&SFX.jackpot();save();return true}
+ if(o.k==="sgport"){portTouch(o);return true}return _o(o)}}
+{const _x=ixInfo;ixInfo=function(o){if(o.k==="sgsite"){const S=SITEK[o.s];return{ic:S.ic,s:t("sg_s_"+o.s)+" · "+t("sg_sd_"+o.s).split(".")[0]}}if(o.k==="sgx")return{ic:"❌",s:t("sg_mapX")};if(o.k==="sgport")return{ic:"🌀",s:t("sg_port")};return _x(o)}}
+const mapCost=()=>Math.round(800+battleNo*25);
+function mapBuy(){const s=sgS();if(s.ex.map||s.gd.mapD===dayKey())return;const c=mapCost();if(P.gold<c){toast("🪙 "+t("sm_gold"),"#ff8a5a");SFX.buzz();return}P.gold-=c;s.gd.mapD=dayKey();mapNew();SFX.coin&&SFX.coin();save()}
+/* the portal storm: three portals ahead, each closes when its guardians fall */
+const PS={on:0,t:0,n:0,id:0};let psT=400;
+function portTick(dt){if(!LG)return;if(PS.on){PS.t-=dt;for(const o of mgObjs){if(o.k!=="sgport"||o.used||!o.g)continue;if(enemies.some(e=>e.sgPt===o.g&&e.state!=="dead"))continue;o.used=1;PS.n++;P.gold+=300+battleNo*8;matAdd("sky",1,o.x,o.z,30);toast(t("sg_portC",{n:PS.n}),"#b08aff");SFX.unlock&&SFX.unlock()
+  if(PS.n>=3){PS.on=0;chests.push({x:o.x+40,z:o.z,open:0,t:0,gold:true},{x:o.x+70,z:o.z,open:0,t:0,gold:true});mgGiveItem(makeItem(Math.max(RO[4],rollRarity(RO[4]))));sgRenown(40);qEv("portal");banner("🌀 "+t("sg_portW"),"🎁");SFX.jackpot&&SFX.jackpot();save()}}
+  if(PS.on&&PS.t<=0){PS.on=0;for(const o of mgObjs)if(o.k==="sgport")o.used=1;toast(t("sg_portEnd"),"#b08aff")}return}
+ if(!isFP()||(MG&&MG.run)||locked||battleNo<6||hero.state==="dead")return;psT-=dt;if(psT>0)return;psT=rnd(540,840);
+ PS.on=1;PS.t=200;PS.n=0;PS.id++;for(let i=0;i<3;i++)mgObjs.push({k:"sgport",x:hero.x+300+i*220,z:clamp(hero.z+(i-1)*60,zLo(20),zHi(20)),ps:PS.id});sgPost("her","sg_h_port");banner("🌀 "+t("sg_port"),t("sg_portH").split("!")[0]);SFX.portal&&SFX.portal()}
+function portTouch(o){if(o.g||o.used||!PS.on)return;o.g=Date.now();for(let i=0;i<3;i++){const e=caveFoe(o);if(e){e.sgPt=o.g;e.afIc="🌀"+(e.afIc||"")}}SFX.bossIntro&&SFX.bossIntro()}
+P17MK.sgport=(T,g,add,glow)=>{const r=add(geo("sgPtR2",()=>new T.TorusGeometry(16,2,8,28)),glow,0,24,0);r.rotation.y=PI/2;add(geo("sgPtF2",()=>new T.CircleGeometry(15,24).rotateY(PI/2)),new T.MeshBasicMaterial({color:0xb04aff,transparent:true,opacity:.5,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide}),0,24,0);return r};
+/* new weather: the eclipse and the magic storm (they come on their own now and then) */
+WX.eclipse={ic:"🌘",st:[["critDmg",15],["rarBonus",2],["dropBonus",15]],fog:.4};WX.mstorm={ic:"🌀",st:[["fireBonus",20],["lightningBonus",20],["dmgRed",-3]],fog:.6};
+let swT=300,msT=0;
+function wxTick(dt){if(!LG)return;const R=MG&&MG.run;swT-=dt;if(swT<=0){swT=rnd(420,660);if(!R&&isFP()&&battleNo>=5&&Math.random()<.4&&wxNow.k!=="eclipse"&&wxNow.k!=="mstorm"){const k=Math.random()<.5?"eclipse":"mstorm";
+  wxNow={k,t:rnd(130,210),bi:biomeIdx(),lt:rnd(4,8)};recalc();sgPost("her","sg_h_wx",{n:t("lg_wx_"+k)});toast(t(k==="eclipse"?"sg_ecl":"sg_ms"),k==="eclipse"?"#b0b0d0":"#c84aff")}}
+ if(wxNow.k==="mstorm"&&isFP()&&!R){msT-=dt;if(msT<=0){msT=rnd(4,6.5);const foes=enemies.filter(e=>e.state!=="dead"&&Math.abs(e.x-hero.x)<450);
+  if(foes.length){const e=foes[rint(0,foes.length-1)],el=rint(1,5),col=["#ff6a2a","#9fe8ff","#ffe14e","#6bf07a","#9a5aff"][el-1];try{damageEnemy(e,Math.round(e.maxhp*.06),false,1,0,"magic")}catch(er){}sparks(e.x,e.z,30,col,18,1)}
+  sbMark(hero.x+rnd(-80,80),clamp(hero.z+rnd(-26,26),zLo(4),zHi(4)),26,"#c84aff",1.2,"erupt",Math.round(P.maxhp*.05))}}}
+{const _mk=makeEnemy;makeEnemy=function(ti,boss,x,z,delay,opt){const e=_mk(ti,boss,x,z,delay,opt);if(e&&wxNow&&wxNow.k==="eclipse"&&!(MG&&MG.run)&&!e.cfg.pet){e.hp=e.maxhp=Math.round(e.maxhp*1.15);e.atk=Math.round(e.atk*1.15);e.sgEc=1}return e}}
+{const _k=p13Kill;p13Kill=function(e){_k(e);if(!LG)return;if(e.sgEc&&Math.random()<.06)chests.push({x:e.x,z:e.z,open:0,t:0,gold:true})}}
+/* the herald announces world events, meteors, raid bosses and world bosses */
+{const _e=evStart;evStart=function(k){_e(k);try{if(LG&&MG.ev.k)sgPost("her","sg_h_ev",{n:t("mge_"+MG.ev.k)})}catch(er){}}}
+{const _m=meteorFall;meteorFall=function(){_m();try{if(LG)sgPost("her","sg_h_met")}catch(er){}}}
+{const _r=p55Start;p55Start=function(i){const had=p55.e;_r(i);try{if(LG&&p55.e&&p55.e!==had)sgPost("her","sg_h_raid",{n:L(T8["p55_b"+i])})}catch(er){}}}
+function wbWatch(){for(const e of enemies)if(e.wboss&&!e.sgHd&&e.state!=="dead"){e.sgHd=1;sgPost("her","sg_h_wb",{n:L(e.cfg.n)})}}
+/* lands seen */
+function bioTick(){const s=sgS(),bi=biomeIdx();if(!s.bio[bi]&&!(MG&&MG.run)){s.bio[bi]=1}}
+let exT=0;
+{const _t=p17Tick;p17Tick=function(dt){_t(dt);if(!LG)return;try{siteTick(dt);mapTick(dt);portTick(dt);wxTick(dt);exT-=dt;if(exT<=0){exT=1;caveTick();wbWatch();bioTick()}}catch(e){console.error(e)}}}
+/* the Explore tab */
+function sgRExp(){const s=sgS(),M=s.ex.map;let h=`<p class="sub">${t("sg_exH")}</p><div class="mgStats"><span>🗝️ <b>${s.ex.rooms.length}/10</b></span><span>🎁 <b>${s.ex.chests.length}/20</b></span><span>🏺 <b>${s.ex.relic.length}/6</b></span><span>💰 <b>${s.ex.dug}</b></span></div>`;
+ h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">🗺️</span><div><h4>${t("sg_map")}</h4><small>${t("sg_mapY",{n:Math.round(hero.x/10)})}</small></div></div>`+(M?`<p class="m"><b>${t("sg_mapT",{n:Math.round(M.x/10),m:t(M.s>0?"sg_south":"sg_north")})}</b></p>`:`<p class="m">${t("sg_mapNo")}</p>`)+`<p class="m">${t("sg_mapH")}</p>`+
+  (!M?(s.gd.mapD===dayKey()?`<p class="m">${t("sg_mapDay")}</p>`:`<button class="btn sm main" type="button" data-a="sgmap">${t("sg_mapBuy",{n:nfm(mapCost())})}</button>`):"")+`</div>`;
+ h+=`<h3 class="h3">🧭</h3><div class="mgList">`+SITES.map(S=>`<div class="mgRow"><b>${S.ic} ${t("sg_s_"+S.k)}</b><span>${t("sg_sd_"+S.k)}</span><i>${s.ex.n[S.k]|0}</i></div>`).join("")+`</div>`;
+ h+=`<h3 class="h3">🗝️ ${t("sg_rooms")}</h3><div class="mgList">`+SGROOM.map((R0,i)=>{const f=s.ex.rooms.includes(i);return`<div class="mgRow${f?" ok":""}"><b>${f?R0.ic+" "+t("sg_room"+i):"???"}</b><span>${R0.ng&&!f?"♻️ NG+":""}</span><i>${f?"✓":"🔒"}</i></div>`}).join("")+`</div>`;
+ h+=`<h3 class="h3">🏺</h3><div class="mgChips">${SGREL.map((ic,i)=>`<span>${s.ex.relic.includes(i)?ic+" "+t("sg_rel"+i):"❔"}</span>`).join("")}</div>`;
+ h+=`<h3 class="h3">🎁</h3><div class="mgChips">${Array.from({length:20},(_,i)=>`<span>${s.ex.chests.includes(i)?"🎁":"▫️"}</span>`).join("")}</div>`;
+ h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">🏙️</span><div><h4>${t("sg_city")}</h4></div></div><p class="m">${t("sg_cityH")}</p><button class="btn sm" type="button" data-a="sgjump" data-v="city">${t("sg_jump")}</button></div>`;return h}
+/* ============ P56 part F: new factions, the dragon form and form powers, the fortress, artifact fusion, runewords, collections, prestige, flawless streaks, secret abilities, companion bonds, achievements, the codex ============ */
+const SGTF={
+sg_fa_iron:"Залізний Ковенант|The Iron Covenant",sg_fa_moon:"Коло Місяця|The Moon Circle",
+sg_fad_iron:"Ковалі та воїни. Цінують перемоги над босами.|Smiths and warriors. They value victories over bosses.",sg_fad_moon:"Мудреці й шукачі. Цінують пройдені данжі.|Sages and seekers. They value cleared dungeons.",
+sg_faq_iron:"Перемогти босів: {p}/{n}|Defeat bosses: {p}/{n}",sg_faq_moon:"Пройти поверхів тематичних данжів: {p}/{n}|Clear themed dungeon floors: {p}/{n}",sg_faSide:"Твоя сторона|Your side",sg_faOther:"Інша сторона: ×0.5 репутації|Other side: ×0.5 reputation",sg_faNone:"Сторону обирають у квесті Зафіри «Сталь чи Місяць».|The side is chosen in Zafira's quest «Steel or Moon».",
+sg_fs_pot:"🧪 Зілля (2 лікування + сила)|🧪 Potions (2 healing + strength)",sg_fs_mat:"📦 Набір матеріалів|📦 Material pack",sg_fs_rune:"🔮 Руна для майстерні|🔮 A rune for the workshop",sg_fs_gear:"🎁 Річ рідкості «Небесна»+|🎁 A Celestial+ item",sg_fs_ttl:"🏷️ Титул фракції|🏷️ Faction title",sg_fs_excl:"👑 Реліквія фракції (лише для своєї сторони)|👑 Faction relic (your side only)",
+p15_rel_sgx_iron:"Залізна корона Ковенанту|Iron Crown of the Covenant",p15_rel_sgx_moon:"Місячний кулон Кола|Moon Pendant of the Circle",sg_arm:"⚠️ Ще раз — купити|⚠️ Tap again to buy",
+mgf_drake:"Драконяча форма|Dragon Form",mgfd_drake:"Ти стаєш драконом: кожні 2,5 с видихаєш вогонь у найближчого ворога.|You become a dragon: every 2.5 s you breathe fire at the nearest foe.",mgfu_drake:"Пройди «Лігво драконів» або підніми драконів до 15 рівнів разом.|Clear «The Dragon Lair» or raise your dragons to 15 levels in total.",
+sg_fp_shadow:"🌑 Тіньовий ривок у ворога|🌑 Shadow dash into a foe",sg_fp_celest:"☀️ Хвиля світла: лікує і б'є поруч|☀️ Light wave: heals you and hits nearby",sg_fp_void:"🌌 Притягує ворогів і б'є|🌌 Pulls foes in and strikes",sg_fp_drake:"🔥 Вогняний подих|🔥 Fire breath",sg_fpH:"Здібності форм|Form powers",
+sg_fortH:"Твоя фортеця працює, поки тебе нема: золото й матеріали накопичуються (до 8 годин). Рівні кімнат — у «Пригоди → База».|Your fortress works while you're away: gold and materials pile up (up to 8 hours). Room levels are in Adventures → Base.",
+sg_fortS:"Накопичено за {n}|Gathered over {n}",sg_fortTr:"🏆 Стіна трофеїв|🏆 Trophy wall",sg_fortB:"🏯 Кімнати бази|🏯 Base rooms",
+sg_tro_raid:"Рейд-боси|Raid bosses",sg_tro_dun:"Боси данжів|Dungeon bosses",sg_tro_hunt:"Легенди|Legends",sg_tro_col:"Колоси|Colossi",sg_tro_trial:"Випробування|Trials",
+sg_fu:"Вівтар злиття артефактів|Altar of Artifact Fusion",sg_fuH:"Обери 3 реліквії або трофеї з сумки. Вони зіллються в один артефакт на 1 рідкість вищий, який б'є сильніше всіх їхніх босів.|Pick 3 relics or trophies from your bag. They fuse into one artifact one rarity higher that hits all their bosses harder.",
+sg_fuNone:"У сумці немає реліквій чи трофеїв (заблоковані 🔒 не беруться).|No relics or trophies in the bag (locked 🔒 ones are skipped).",sg_fuGo:"✨ Злити (3)|✨ Fuse (3)",sg_fuDone:"✨ Артефакт злито!|✨ Artifact fused!",p15_rel_sgfu:"Сплавлений артефакт|Fused Artifact",
+sg_rw:"Руни-комбінації|Runewords",sg_rwH:"Дві-три руни на одній речі утворюють руну-комбінацію з додатковим бонусом. Руни вставляють у «Легенда → Майстерня».|Two or three runes on one item form a runeword with an extra bonus. Runes are set in Legend → Workshop.",
+sg_rw_thunder:"Громове полум'я|Thunderflame",sg_rw_frost:"Морозна тінь|Frostshade",sg_rw_wild:"Дикий вогонь|Wildfire",sg_rw_storm:"Буряна завіса|Stormveil",sg_rw_bloom:"Зимовий цвіт|Winterbloom",sg_rw_titan:"Титан|Titan",sg_rw_trinity:"Стихійна трійця|Elemental Trinity",
+sg_col:"Колекції Саги|Saga Collections",sg_col_relic:"Реліквії|Relics",sg_col_room:"Приховані кімнати|Hidden rooms",sg_col_chest:"Таємні скрині|Secret chests",sg_col_dtro:"Трофеї данжів|Dungeon trophies",sg_col_hunt:"Трофеї легенд|Legend trophies",sg_col_raid:"Трофеї рейдів|Raid trophies",
+sg_colB:"Бонус за повну колекцію|Full collection bonus",
+sg_pr:"Престиж|Prestige",sg_prH:"Слава 🌟 приходить за квести, данжі, вежу, випробування і знахідки. Кожен рівень престижу дає +1% шкоди, +1% золота і +0,5% здоров'я назавжди.|Renown 🌟 comes from quests, dungeons, the tower, trials and finds. Every prestige level gives +1% damage, +1% gold and +0.5% health forever.",
+sg_prL:"Рівень престижу {n}|Prestige level {n}",sg_prUp:"🌟 Престиж піднявся: {n}!|🌟 Prestige rose: {n}!",sg_prN:"До наступного: {n} 🌟|To the next: {n} 🌟",
+sg_fl:"Серія без поразок|Flawless streak",sg_flH:"Кожна виграна битва на дорозі без смерті додає +1. Смерть скидає серію. Кожні 5 у серії: +1% золота (до 20%). Нагороди за 10, 25, 50, 75, 100…|Every road battle won without dying adds +1. A death resets it. Every 5 in a row: +1% gold (up to 20%). Prizes at 10, 25, 50, 75, 100…",
+sg_flN:"Серія: {n} · Рекорд: {b}|Streak: {n} · Best: {b}",sg_flW:"🛡️ Серія без поразок: {n}! Нагорода!|🛡️ Flawless streak: {n}! A prize!",sg_flLost:"💔 Серію без поразок перервано ({n})|💔 Flawless streak broken ({n})",
+sg_sab:"Секретні здібності|Secret abilities",sg_sabNew:"🔓 Секретна здібність: {n}|🔓 Secret ability: {n}",
+sg_ab_echo:"Відлуння клинка|Echo Blade",sg_abd_echo:"8% ударів повторюються з половиною сили.|8% of blows repeat at half strength.",sg_abu_echo:"Переможи того, хто повторює.|Defeat the one who repeats.",
+sg_ab_root:"Шепіт коріння|Root Whisper",sg_abd_root:"+25% до збирання, +2 відновлення.|+25% gathering, +2 regeneration.",sg_abu_root:"Відгадай загадку відлюдника.|Solve the hermit's riddle.",
+sg_ab_sov:"Воля Володаря|Sovereign's Will",sg_abd_sov:"Раз за бій встаєш після смертельного удару.|Once per fight you rise after a lethal blow.",sg_abu_sov:"Закінчи Хроніку.|Finish the Chronicle.",
+sg_ab_veil:"Завіса мандрівника|Wanderer's Veil",sg_abd_veil:"+6% ухилення.|+6% evasion.",sg_abu_veil:"Одягни чужу маску.|Wear someone else's mask.",
+sg_ab_moon:"Місячне ікло|Moonfang",sg_abd_moon:"+12% критичної шкоди і +1% вампіризму.|+12% critical damage and +1% lifesteal.",sg_abu_moon:"Перемагай у темряві. Багато.|Win in the dark. A lot.",
+sg_ab_flaw:"Незламний|Unbroken",sg_abd_flaw:"+4% зменшення шкоди.|+4% damage reduction.",sg_abu_flaw:"Не падай дуже довго.|Don't fall for a very long time.",
+sg_ab_ghost:"Привидний крок|Ghost Step",sg_abd_ghost:"+8% швидкості і +3% ухилення.|+8% speed and +3% evasion.",sg_abu_ghost:"Відкрий кожну таємну скриню.|Open every secret chest.",
+sg_bond:"Компаньйони: зв'язок і еволюція|Companions: bond and evolution",sg_bondH:"Активний улюбленець росте з кожною перемогою. Рівні підсилюють його бонуси, а на 10, 20 і 30 він еволюціонує й дає тобі спільний бонус.|Your active pet grows with every victory. Levels boost its bonuses, and at 10, 20 and 30 it evolves and gives you a shared bonus.",
+sg_bondL:"Зв'язок {n}/30|Bond {n}/30",sg_ev0:"Звичайний|Common",sg_ev1:"Пробуджений|Awakened",sg_ev2:"Піднесений|Ascended",sg_ev3:"Міфічний|Mythic",sg_evUp:"🐾 {n} еволюціонує: {m}!|🐾 {n} evolves: {m}!",sg_bondNone:"Обери улюбленця в «Індекс → Улюбленці».|Pick a pet in Index → Pets.",
+sg_cx_q:"Історія квестів|Quest history",sg_cx_npc:"Знайомі люди|People you know",sg_cx_boss:"Переможені боси|Bosses defeated",sg_cx_loc:"Відкриті землі|Lands discovered",sg_cx_sec:"Знайдені таємниці|Secrets found",sg_cx_st:"Статистика|Statistics",sg_cx_log:"📓 Повний журнал (Легенда)|📓 Full journal (Legend)",
+sg_cx_kill:"Перемог|Victories",sg_cx_talk:"Розмов|Conversations",sg_cx_pass:"Таємних проходів|Secret passages",sg_cx_rid:"Загадку відгадано|Riddle solved",sg_tmp:"Храм відновлено: {n}/5|Temple restored: {n}/5",
+sl_ag_sg:"Сага|Saga",
+n56a1:"📜 MEGA САГА: нова група «📜 Сага» у вікні 🗺️ «Пригоди». Чат із 8 персонажами (історії, дружба, подарунки, чутки, секретні розмови) і Глашатай світових подій. Сюжет із 20 квестів, мандрівник у масці з трьома фіналами, полювання на 5 легенд, реліквії, відновлення храму, легендарний меч, таємний квест через загадку і вибір між двома новими фракціями.|📜 MEGA SAGA: a new «📜 Saga» group in the 🗺️ Adventures window. Chat with 8 characters (stories, friendship, gifts, rumours, secret talks) and the Herald of world events. A 20-quest story, the masked wanderer with three endings, 5 legend hunts, relics, temple restoration, a legendary sword, a secret riddle quest and a choice between two new factions.",
+n56a2:"🏰 9 тематичних данжів (склеп короля, пекло, лід, кристали, тіньовий лабіринт, порожнеча, затоплені зали, небесна вежа, лігво драконів) з пастками, мінібосами, таємними проходами і босами. Вежа босів (контрольні точки кожні 5 поверхів) і прихований режим «За межею».|🏰 9 themed dungeons (king's crypt, hell, ice, crystals, shadow labyrinth, void, sunken halls, sky tower, dragon lair) with traps, mini-bosses, secret passages and bosses. The Boss Tower (checkpoints every 5 floors) and the hidden mode «Beyond».",
+n56a3:"⚔️ Випробування: бос, що копіює твої вміння, п'ятифазний Пентарх, Рада Трьох, Тиран тижня, таємний Безіменний і секретна фінальна битва. Діалог із босом перед боєм: насміхайся або домовляйся.|⚔️ Trials: a boss that copies your skills, the five-phase Pentarch, the Council of Three, the Tyrant of the Week, the secret Nameless and a secret final battle. Talk to the boss before the fight: taunt or parley.",
+n56a4:"🧭 Мандри: руїни, храми, печери, портали, острови і тріщини біля дороги; 10 прихованих кімнат, 20 таємних скринь, 6 реліквій, карти скарбів із координатами, буря порталів, затемнення і магічна буря. Плюс драконяча форма, сили форм, фортеця з виробництвом, злиття артефактів, руни-комбінації, колекції, престиж, серії без поразок, секретні здібності і еволюція улюбленців.|🧭 Explore: ruins, temples, caves, portals, isles and cracks by the road; 10 hidden rooms, 20 secret chests, 6 relics, treasure charts with coordinates, portal storms, eclipses and magic storms. Plus a dragon form, form powers, a producing fortress, artifact fusion, runewords, collections, prestige, flawless streaks, secret abilities and pet evolution."};
+for(const k in SGTF)T8[k]=S8(SGTF[k]);
+/* titles of this update (names only in Ukrainian and English) */
+const SGTT={beloved:["❤","#ff8aa8","Улюбленець людей|Beloved of the People"],chronicler2:["📜","#ffe9a0","Той, хто дописав Хроніку|Finisher of the Chronicle"],truthbearer:["📚","#c8b4ff","Носій правди|Truthbearer"],secretkeeper:["🤐","#e0e0ff","Хранитель таємниці|Secret Keeper"],
+ maskbearer:["🎭","#e0e0ff","Новий Мандрівник|The New Wanderer"],legendhunter:["🏹","#8fe08a","Мисливець на легенди|Legend Hunter"],starsmith:["🗡️","#ffe08a","Володар Зореклинка|Bearer of the Starforged Edge"],relickeeper:["🏺","#ffd34e","Хранитель реліквій|Relic Keeper"],
+ rootsage:["🌱","#c8e07a","Мудрець коріння|Sage of the Roots"],dungeonlord:["🏰","#ff9a4a","Володар підземель|Dungeon Lord"],towerlord:["🗼","#ffb03a","Володар вежі|Lord of the Tower"],beyondall:["🌀","#c84aff","Той, хто за межею|One Beyond All"],
+ echobreaker:["🪞","#e0e0ff","Той, що зламав відлуння|Echo Breaker"],pentaslayer:["⭐","#ffb03a","Убивця Пентарха|Pentarch Slayer"],councilbane:["⚖️","#ff8a8a","Погибель Ради|Bane of the Council"],tyrantslayer:["📅","#ffd34e","Скидач тиранів|Tyrant Slayer"],
+ nameless:["🌘","#b0b0d0","Той, хто дав ім'я|The One Who Gave a Name"],sovereign:["👑","#ff2a5a","Переможець Володаря|Sovereign's Bane"],chestking:["🎁","#ffd34e","Король скринь|King of Chests"],roomseeker:["🗝️","#ffd98a","Шукач кімнат|Room Seeker"],
+ renowned:["🌟","#ffd34e","Відомий|Renowned"],paragon:["💫","#ffe9a0","Взірець|Paragon"],unbroken:["🛡️","#9fd8ff","Непереможний|Unbroken"],f2_iron:["⚙️","#c8ccd6","Брат Ковенанту|Covenant Brother"],f2_moon:["🌙","#c8b4ff","Дитя Місяця|Child of the Moon"]};
+for(const k in SGTT){TITLES.push({k,ic:SGTT[k][0],col:SGTT[k][1]});T8["sl_t_"+k]=S8(SGTT[k][2])}
+/* renown and prestige levels */
+const prNeed=l=>Math.round(120*Math.pow(l,1.5));
+function prLv(rn){let l=0,a=0;while(l<60&&rn>=a+prNeed(l+1)){a+=prNeed(l+1);l++}return{l,a}}
+function sgRenown(n){if(!LG||!n)return;const s=sgS(),b=prLv(s.pr.rn).l;s.pr.rn+=Math.round(n);const a=prLv(s.pr.rn).l;
+ if(a>b){s.pr.got=a;const g=Math.round(500*a*(1+battleNo/100));P.gold+=g;setTimeout(()=>{banner(t("sg_prUp",{n:a}),"🪙 +"+nfm(g));SFX.level&&SFX.level()},900);recalc();
+  if(a>=10)LG.ttl.renowned=1;if(a>=25)LG.ttl.paragon=1}}
+/* the two new factions: their own daily task, ranks (FREP), and a shop */
+const FAC2=[{k:"iron",ic:"⚙️",col:"#c8ccd6",n:3},{k:"moon",ic:"🌙",col:"#c8b4ff",n:4}];const FAC2K={};FAC2.forEach(F=>FAC2K[F.k]=F);
+const F2SHOP=[{i:"pot",lv:1,g:500},{i:"mat",lv:1,g:800},{i:"rune",lv:2,g:2500},{i:"gear",lv:3,g:9000},{i:"ttl",lv:4,g:12000},{i:"excl",lv:5,g:25000}];
+function f2Q(k){const s=sgS();let q=s.fq2[k];if(!q||q.d!==dayKey())q=s.fq2[k]={d:dayKey(),p:0,done:0};return q}
+const f2Mul=k=>{const s=sgS();return !s.fac2?1:s.fac2===k?1.5:.5};
+function f2Rep(k,n){const s=sgS();s.rep[k]=(s.rep[k]|0)+Math.round(n*f2Mul(k))}
+function f2Claim(k){const F=FAC2K[k],q=f2Q(k);if(!F||q.done||q.p<F.n)return;q.done=1;f2Rep(k,90);P.gold+=Math.round(600+battleNo*15);matAdd(k==="iron"?"iron":"crys",4);SFX.jackpot&&SFX.jackpot();toast(F.ic+" +"+Math.round(90*f2Mul(k)),F.col);save()}
+let sgArm="";
+function f2Buy(k,i){const F=FAC2K[k],S0=F2SHOP[i],s=sgS();if(!F||!S0||facLv(s.rep[k]|0)<S0.lv)return;if(S0.i==="excl"&&s.fac2!==k)return;if(S0.i==="ttl"&&LG.ttl["f2_"+k])return;
+ const c=S0.g;if(P.gold<c){toast("🪙 "+t("sm_gold"),"#ff8a5a");SFX.buzz();return}if(c>=5000&&sgArm!==k+i){sgArm=k+i;toast(t("sg_arm"),"#ffd34e");setTimeout(()=>{if(sgArm===k+i)sgArm=""},4000);renderMg();return}sgArm="";P.gold-=c;
+ if(S0.i==="pot"){MG.alc.p.heal=(MG.alc.p.heal|0)+2;MG.alc.p.str=(MG.alc.p.str|0)+1}
+ if(S0.i==="mat"){if(k==="iron"){matAdd("iron",10);matAdd("ore",4)}else{matAdd("crys",6);matAdd("sky",2)}}
+ if(S0.i==="rune"){const R=RUNE[rint(0,RUNE.length-1)];LG.ri=LG.ri||{};LG.ri[R.k]=(LG.ri[R.k]|0)+1;toast(R.ic+" +1","#c8b4ff")}
+ if(S0.i==="gear")mgGiveItem(makeItem(Math.max(RO[6],rollRarity(RO[6]))));if(S0.i==="ttl"){LG.ttl["f2_"+k]=1;banner("🏷️ "+t("sl_t_f2_"+k),F.ic)}
+ if(S0.i==="excl"){const it=makeItem(Math.max(RO[9],rollRarity(RO[9])),SLOTI[k==="iron"?"helmet":"amulet"]);it.dr="sgx_"+k;mgGiveItem(it)}SFX.buy&&SFX.buy();save();renderMg();hud()}
+{const _k=p13Kill;p13Kill=function(e){_k(e);if(!LG||e.cfg.pet)return;if(e.boss||e.p55||e.sgB){const q=f2Q("iron");q.p++;f2Rep("iron",3)}}}
+{const _v=lgRunWin;lgRunWin=function(R){const r=_v(R);if(LG&&R&&R.m==="td"){const q=f2Q("moon");q.p++;f2Rep("moon",4)}return r}}
+function sgRFac(){const s=sgS();let h=`<p class="sub">${s.fac2?t("sg_faSide")+": "+FAC2K[s.fac2].ic+" "+t("sg_fa_"+s.fac2):t("sg_faNone")}</p>`;
+ for(const F of FAC2){const v=s.rep[F.k]|0,l=facLv(v),nx=FREP[l+1],q=f2Q(F.k);h+=`<div class="mgCard facC" style="--zc:${F.col}"><div class="mgTop"><span class="mgIc">${F.ic}</span><div><h4>${t("sg_fa_"+F.k)}${s.fac2===F.k?" ✓":""}</h4><small>${t("lg_fr"+l)} · ${nfm(v)}${nx?" / "+nfm(nx):""}${s.fac2&&s.fac2!==F.k?" · "+t("sg_faOther"):""}</small></div></div>`+
+  `<div class="lprog"><i style="width:${nx?Math.min(100,(v-FREP[l])/(nx-FREP[l])*100).toFixed(1):100}%;background:${F.col}"></i></div><p class="m">${t("sg_fad_"+F.k)}</p>`+
+  `<div class="mgRow${q.done?" ok":""}"><b>📜 ${t("sg_faq_"+F.k,{p:Math.min(q.p,F.n),n:F.n})}</b><span></span><i>${q.done?"✓":q.p>=F.n?`<button class="btn sm main" type="button" data-a="sgf2q" data-v="${F.k}">${t("claim")}</button>`:"⏳"}</i></div>`+
+  `<details class="fShop"><summary>🛒 ${t("lg_fShop")}</summary>${F2SHOP.map((S0,i)=>{const ok=l>=S0.lv&&(S0.i!=="excl"||s.fac2===F.k),own=S0.i==="ttl"&&LG.ttl["f2_"+F.k];return`<div class="mgRow${ok?"":" lk"}"><b>${t("sg_fs_"+S0.i)}</b><span>${own?"✓":ok?"🪙 "+nfm(S0.g):"🔒 "+t("lg_fr"+S0.lv)}</span><i>${ok&&!own?`<button class="btn sm" type="button" data-a="sgf2b" data-v="${F.k}:${i}">${sgArm===F.k+i?"⚠️":"🛒"}</button>`:""}</i></div>`}).join("")}</details></div>`}
+ h+=`<button class="btn sm" type="button" data-a="sgjump" data-v="fac">🏳️ ${t("mg_tab_fac")||"☀️🌿🌠"}</button>`;return h}
+/* the dragon form and a power for every form */
+FORMS.push({k:"drake",ic:"🐲",col:"#ff6a2a",dur:18,cd:110,st:[["dmgMul",35],["fireBonus",60],["armorPct",20],["maxhpPct",10]]});FORMK.drake=FORMS[FORMS.length-1];
+formUn.drake=()=>!!(LG&&sgS().td.clr[8])||(LG&&DRG.reduce((a,D)=>a+((LG.dr.lv||{})[D.k]|0),0)>=15);
+let fpT=0;
+function formPow(dt){const k=MG&&MG.fm&&MG.fm.a;if(!k||hero.state==="dead"){fpT=0;return}fpT-=dt;if(fpT>0)return;const h=hero,F=FORMK[k],base=Math.max(10,P.atk||10);
+ const near=(r)=>enemies.filter(e=>e.state!=="dead"&&!e.cfg.pet&&Math.hypot(e.x-h.x,(e.z-h.z)*ZS)<r).sort((a,b)=>Math.hypot(a.x-h.x,a.z-h.z)-Math.hypot(b.x-h.x,b.z-h.z));
+ const hit=(e,m)=>{try{damageEnemy(e,Math.round(base*m),Math.random()<.2,Math.sign(e.x-h.x)||1,10,"form")}catch(er){}sparks(e.x,e.z,20,F.col,14,1)};
+ if(k==="shadow"){fpT=4;const e=near(260)[0];if(e){h.x=e.x-30*(Math.sign(e.x-h.x)||1);h.z=clamp(e.z,zLo(6),zHi(6));hit(e,1.5);SFX.shadowStep&&SFX.shadowStep()}}
+ else if(k==="celest"){fpT=3;P.hp=Math.min(P.maxhp,P.hp+P.maxhp*.03);for(const e of near(130))hit(e,.6);parts.push({x:h.x,z:h.z,h:0,life:.6,max:.6,t:"ring",col:F.col,size:30})}
+ else if(k==="void"){fpT=5;for(const e of near(230)){if(e.boss||e.p55||e.sgB)continue;e.x+=(h.x-e.x)*.6;e.z+=(h.z-e.z)*.6;hit(e,.8)}parts.push({x:h.x,z:h.z,h:0,life:.8,max:.8,t:"ring",col:F.col,size:44})}
+ else if(k==="drake"){fpT=2.5;const e=near(320)[0];if(e){const dx=e.x-h.x,dz=e.z-h.z,L0=Math.hypot(dx,dz)||1;for(const o of near(340)){const t0=((o.x-h.x)*dx+(o.z-h.z)*dz)/(L0*L0);if(t0<0||t0>1.2)continue;const px=h.x+dx*t0,pz=h.z+dz*t0;if(Math.hypot(o.x-px,(o.z-pz)*ZS)<45)hit(o,1.2)}
+  for(let i=1;i<=5;i++)decal("rune",h.x+dx*i/5,clamp(h.z+dz*i/5,zLo(2),zHi(2)),18,.8,F.col);SFX.fire&&SFX.fire()}}}
+/* the fortress: production while you are away, the trophy wall, the fusion altar */
+const FORT_CAP=8*3600e3;
+function fortRates(){const kL=baseL("keep"),vL=baseL("vault");return{g:(100+battleNo*6)*(1+kL*.3+vL*.4),iron:baseL("forge")*2,herb:baseL("lab")*2,crys:baseL("trophy")*.6,seed:baseL("garden")*.3}}
+function fortAcc(){const s=sgS(),now=Date.now();if(!s.fort.t){s.fort.t=now;return{ms:0}}const ms=Math.min(FORT_CAP,Math.max(0,now-s.fort.t)),h=ms/3600e3,R=fortRates(),o={ms};for(const k in R)o[k]=Math.floor(R[k]*h);return o}
+const fortReady=()=>!!LG&&fortAcc().ms>=3600e3;
+function fortCollect(){const s=sgS(),A=fortAcc();if(A.ms<60e3)return;let txt=[];for(const k in A){if(k==="ms"||!A[k])continue;if(k==="g"){P.gold+=A.g;txt.push("🪙"+nfm(A.g))}else{matAdd(k,A[k]);txt.push(matIc(k)+A[k])}}
+ s.fort.t=Date.now();toast("🏯 "+txt.join(" "),"#ffd34e");SFX.coin&&SFX.coin();save();renderMg();hud()}
+let sgFu=[];
+const fuOk=it=>it&&it.dr&&!it.lk&&bag.includes(it);
+function fuse(){const sel=sgFu.map(id=>bag.find(x=>x.id===id)).filter(fuOk);if(sel.length!==3||new Set(sel).size!==3)return;if(sgArm!=="fuse"){sgArm="fuse";toast(t("sg_arm"),"#ffd34e");renderMg();return}sgArm="";
+ const r=Math.min(22,Math.max(...sel.map(x=>x.r))+1),fu=[...new Set(sel.flatMap(x=>x.fu||[x.dr]))].slice(0,9);const it=makeItem(r,sel[0].s,Math.max(1,battleNo));it.dr="sgfu";it.fu=fu;
+ bag=bag.filter(x=>!sel.includes(x));sgFu=[];bag.push(it);sgCnt("fuse");SFX.divine&&SFX.divine();banner(t("sg_fuDone"),itemName(it));flashA=.4;flashCol="#ffe08a";if(it.r>=6)setTimeout(()=>rareShow(it),400);save();renderMg();hud()}
+/* relMul is a constant, so the fused bonus goes through damageEnemy */
+{const _de=damageEnemy;damageEnemy=function(e,d,crit,dir,kb,kind){if(e&&e.cfg&&LG){let m=1;for(const k in eq){const it=eq[k];if(it&&it.fu&&it.fu.some(x=>x===e.cfg.k||x==="r55"+((e.p55|0)-1)||x==="sgd"+e.sgTD||x==="sgh"+e.sgH))m*=1.25}if(m>1)d*=m}return _de(e,d,crit,dir,kb,kind)}}
+function sgRFort(){const s=sgS(),A=fortAcc(),R=fortRates();let h=`<p class="sub">${t("sg_fortH")}</p>`;
+ h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">🏯</span><div><h4>${t("sg_t_fort")}</h4><small>${t("sg_fortS",{n:tmTx(A.ms/1000)})} / 8:00:00</small></div></div><div class="mgChips">`+
+  Object.keys(R).filter(k=>R[k]>0).map(k=>`<span>${k==="g"?"🪙":matIc(k)} ${nfm(A[k]|0)} <small>(+${nfm(Math.round(R[k]))}/h)</small></span>`).join("")+`</div><button class="btn sm main" type="button" data-a="sgfc"${A.ms<60e3?" disabled":""}>${t("sg_claimB")}</button> <button class="btn sm" type="button" data-a="sgjump" data-v="base">${t("sg_fortB")}</button></div>`;
+ const raidW=LG.p55&&LG.p55.w?LG.p55.w.filter(v=>v>0).length:0,trW=TRK.filter(k=>s.tr["w_"+k]).length;
+ h+=`<h3 class="h3">${t("sg_fortTr")}</h3><div class="mgList">${[["🐉","sg_tro_raid",raidW+"/15"],["🏰","sg_tro_dun",s.td.clr.filter(v=>v>0).length+"/9"],["🏹","sg_tro_hunt",SGLM.filter((M,i)=>s.ttl["lm"+i]).length+"/5"],["⚔️","sg_tro_trial",trW+"/"+TRK.length],["🗿","sg_tro_col",(LG.co&&LG.co.kills)|0]].map(([ic,k,v])=>`<div class="mgRow"><b>${ic} ${t(k)}</b><span>${v}</span></div>`).join("")}</div>`;
+ h+=`<h3 class="h3">✨ ${t("sg_fu")}</h3><p class="m">${t("sg_fuH")}</p>`;const can=bag.filter(it=>it.dr&&!it.lk);sgFu=sgFu.filter(id=>can.some(x=>x.id===id));
+ h+=can.length?`<div class="mgList">${can.slice(0,24).map(it=>`<div class="mgRow${sgFu.includes(it.id)?" ok":""}"><b style="color:${rarTxtCol(it.r)}">${SLOTS[it.s].ic} ${itemName(it)}</b><span>${L(RAR[it.r].n)}</span><i><button class="btn sm" type="button" data-a="sgfu" data-v="${it.id}">${sgFu.includes(it.id)?"✓":"+"}</button></i></div>`).join("")}</div><button class="btn main wide" type="button" data-a="sgfuse"${sgFu.length===3?"":" disabled"}>${sgArm==="fuse"?t("sg_arm"):t("sg_fuGo")}</button>`:`<p class="m">${t("sg_fuNone")}</p>`;
+ h+=`<h3 class="h3">🐾 ${t("sg_bond")}</h3><p class="m">${t("sg_bondH")}</p>`;const pa=SL.pa;
+ if(pa){const P0=PETS.find(p=>p.k===pa),lv=bondLv(pa),st=bondSt(lv);h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">${P0?P0.ic:"🐾"}</span><div><h4>${t("sg_ev"+st)}</h4><small>${t("sg_bondL",{n:lv})}</small></div></div><div class="sgBar"><i style="width:${lv>=30?100:Math.min(100,((s.bond[pa]|0)-bondXp(lv))/(bondXp(lv+1)-bondXp(lv))*100).toFixed(1)}%"></i></div><p class="m">+${(lv*3)}% ${stTx(P0?P0.fx:[])}</p></div>`}else h+=`<p class="m">${t("sg_bondNone")}</p>`;
+ h+=`<h3 class="h3">🔮 ${t("sg_rw")}</h3><p class="m">${t("sg_rwH")}</p><div class="mgList">${RWD.map(W=>`<div class="mgRow${rwOn(W)?" ok":""}"><b>${W.r.map(r=>RUNEK[r]?RUNEK[r].ic:"?").join("")} ${t("sg_rw_"+W.k)}</b><span>${stTx(W.st)}</span><i>${rwOn(W)?"✓":""}</i></div>`).join("")}</div>`;
+ h+=`<h3 class="h3">🏳️</h3>`+sgRFac();return h}
+/* runewords: runes together on one item */
+const RWD=[{k:"thunder",r:["rf","rb"],st:[["dmgMul",6],["lightningBonus",10]]},{k:"frost",r:["ri","rs"],st:[["critDmg",15],["dmgRed",3]]},{k:"wild",r:["rn","rf"],st:[["regen",2],["fireBonus",15]]},
+ {k:"storm",r:["rb","rs"],st:[["atkSpd",5],["crit",3]]},{k:"bloom",r:["ri","rn"],st:[["maxhpPct",6],["healBonus",15]]},{k:"titan",r:["rm","rs"],st:[["critDmg",12],["maxhpPct",4]]},{k:"trinity",r:["rf","ri","rb"],st:[["dmgMul",10],["cdr",5]]}];
+const rwOf=it=>it&&Array.isArray(it.rs)?RWD.filter(W=>W.r.every(r=>it.rs.includes(r))):[];
+const rwOn=W=>Object.values(eq).some(it=>rwOf(it).includes(W));
+{const _x=lgItemExtra;lgItemExtra=function(it){let h=_x(it);for(const W of rwOf(it))h+=`<li class="lgX">🔮 ${t("sg_rw_"+W.k)}: ${stTx(W.st)}</li>`;if(it&&it.fu)h+=`<li class="lgX">✨ ×${it.fu.length}</li>`;return h}}
+/* collections and the stat bonuses of everything above */
+const SGCOL=[{k:"relic",n:6,f:s=>s.ex.relic.length,st:[["dmgMul",5],["goldBonus",5]]},{k:"room",n:10,f:s=>s.ex.rooms.length,st:[["goldBonus",10],["xpBonus",5]]},{k:"chest",n:20,f:s=>s.ex.chests.length,st:[["rarBonus",3]]},
+ {k:"dtro",n:9,f:s=>s.td.clr.filter(v=>v>0).length,st:[["bossDmg",6]]},{k:"hunt",n:5,f:s=>SGLM.filter((M,i)=>s.ttl["lm"+i]).length,st:[["critDmg",15]]},{k:"raid",n:15,f:()=>LG.p55&&LG.p55.w?LG.p55.w.filter(v=>v>0).length:0,st:[["dmgRed",4],["maxhpPct",5]]}];
+const SAB={echo:{ic:"🪞"},root:{ic:"🌱",st:[["gath",25],["regen",2]]},sov:{ic:"👑",st:[["revive",1]]},veil:{ic:"🎭",st:[["evade",6]]},moon:{ic:"🌙",st:[["critDmg",12],["lifesteal",1]]},flaw:{ic:"🛡️",st:[["dmgRed",4]]},ghost:{ic:"👻",st:[["speed",8],["evade",3]]}};
+function sabGive(k){const s=sgS();if(!SAB[k]||s.sab[k])return;s.sab[k]=1;recalc();setTimeout(()=>{banner(SAB[k].ic+" "+t("sg_sabNew",{n:t("sg_ab_"+k)}),t("sg_abd_"+k));SFX.unlock&&SFX.unlock();flashA=.4;flashCol="#ffe08a"},1200);sgRenown(40);logH(SAB[k].ic,"sg_sabNew",t("sg_ab_"+k))}
+{const _s=lgStats;lgStats=function(s){_s(s);if(!LG)return;const g=sgS(),add=(a,m)=>{if(a)for(const [k,v] of a)s[k]=(s[k]||0)+v*(m==null?1:m)};
+ for(const C of SGCOL)if(C.f(g)>=C.n)add(C.st);for(const k in g.sab)if(g.sab[k]&&SAB[k])add(SAB[k].st);
+ for(const it of Object.values(eq))for(const W of rwOf(it))add(W.st);
+ const pl=prLv(g.pr.rn).l;add([["dmgMul",1],["goldBonus",1],["maxhpPct",.5]],pl);add([["regen",1],["healBonus",8],["dmgRed",1]],g.tmp);
+ add([["goldBonus",1]],Math.min(20,Math.floor(g.fl.cur/5)));
+ if(SL.pa){const P0=PETS.find(p=>p.k===SL.pa),lv=bondLv(SL.pa),st=bondSt(lv);if(P0)add(P0.fx,.03*lv);if(st>=1)add([["dmgMul",3]]);if(st>=2)add([["maxhpPct",5]]);if(st>=3)add([["rarBonus",2]])}}}
+/* the Echo Blade: a blow sometimes strikes twice */
+let echoIn=false;
+{const _de=damageEnemy;damageEnemy=function(e,d,crit,dir,kb,kind){const r=_de(e,d,crit,dir,kb,kind);if(!echoIn&&LG&&sgS().sab.echo&&e&&e.state!=="dead"&&(kind==="melee"||kind==="heavy"||kind==="spin"||!kind)&&Math.random()<.08){echoIn=true;try{_de(e,d*.5,false,dir,0,kind);addText(e.x,e.z,e.h+e.cfg.hgt*e.s+18,"🪞","#e0e0ff",12)}catch(er){}echoIn=false}return r}}
+/* companion bonds */
+const bondXp=l=>12*l*l,bondLv=k=>Math.min(30,Math.floor(Math.sqrt((sgS().bond[k]|0)/12))),bondSt=l=>l>=30?3:l>=20?2:l>=10?1:0;
+{const _k=p13Kill;p13Kill=function(e){_k(e);if(!LG||e.cfg.pet||!SL.pa)return;const s=sgS(),k=SL.pa,l0=bondLv(k);s.bond[k]=(s.bond[k]|0)+(e.boss?6:1);if(nightK()>.6)sgCnt("nightk");const l1=bondLv(k);
+ if(l1>l0){recalc();const P0=PETS.find(p=>p.k===k);if(bondSt(l1)>bondSt(l0)){banner(t("sg_evUp",{n:P0?P0.ic:"🐾",m:t("sg_ev"+bondSt(l1))}),"🐾");SFX.unlock&&SFX.unlock();if(petE)petE.sgS=0}else toast("🐾 "+t("sg_bondL",{n:l1}),"#c8e07a")}}}
+function bondLook(){if(!petE||!SL.pa||petE.sgS===SL.pa+bondSt(bondLv(SL.pa)))return;const st=bondSt(bondLv(SL.pa)),C=petE.cfg;petE.s=C.size*(C.pet?1:.55)*(1+.1*st);petE.sgS=SL.pa+st}
+/* flawless streaks: road battles won without dying */
+{const _w=p17WaveEnd;p17WaveEnd=function(){_w();if(!LG||(MG&&MG.run))return;const s=sgS();s.fl.cur++;if(s.fl.cur>s.fl.best)s.fl.best=s.fl.cur;const c=s.fl.cur;
+ const ms=c<=50?(c%10===0||c===25):c%25===0;if(ms&&c>s.fl.paid){s.fl.paid=c;const g=Math.round(150*c*(1+battleNo/100));P.gold+=g;if(c>=25)mgGiveItem(makeItem(Math.max(RO[Math.min(12,3+Math.floor(c/25))],rollRarity(RO[Math.min(12,3+Math.floor(c/25))]))));
+  setTimeout(()=>banner(t("sg_flW",{n:c}),"🪙 +"+nfm(g)),900);sgRenown(10)}
+ if(c>=50&&!LG.ttl.unbroken){LG.ttl.unbroken=1}if(c%5===0)recalc()}}
+{const _h=setHero;setHero=function(st){const was=hero.state;_h(st);if(st==="dead"&&was!=="dead"&&LG){const s=sgS();if(s.fl.cur>=5)setTimeout(()=>toast(t("sg_flLost",{n:s.fl.cur}),"#ff8a8a"),1500);s.fl.cur=0;s.fl.paid=0;recalc()}}}
+/* secret abilities that open by themselves */
+function sabTick(){const s=sgS();if(!s.sab.moon&&(s.cnt.nightk|0)>=300)sabGive("moon");if(!s.sab.flaw&&s.fl.best>=50)sabGive("flaw");if(!s.sab.ghost&&s.ex.chests.length>=20)sabGive("ghost");
+ if(MG&&MG.fm&&!MG.fm.u.drake&&formUn.drake())formCheck()}
+let sgTk=0;
+{const _t=p17Tick;p17Tick=function(dt){_t(dt);if(!LG)return;try{formPow(dt);bondLook();sgTk-=dt;if(sgTk<=0){sgTk=2;sabTick()}}catch(e){console.error(e)}}}
+/* achievements (the 🎁 menu): combat, exploration and three secret ones */
+ACH2.push(["sgq10","📜","sg",()=>sgS().qd.length,10,{g:3000,m:{crys:5}}],["sgm20","📖","sg",()=>QD.filter(Q=>Q.c==="m"&&qDone(Q.id)).length,20,{g:15000,gm:30}],["sgtd9","🏰","sg",()=>sgS().td.clr.filter(v=>v>0).length,9,{g:12000,gm:25}],
+ ["sgtw25","🗼","sg",()=>sgS().tw.best,25,{g:10000,m:{star:5}}],["sgtr","⚔️","sg",()=>TRK.filter(k=>sgS().tr["w_"+k]).length,4,{g:8000,gm:20}],["sgex","🧭","sg",()=>Object.values(sgS().ex.n).reduce((a,b)=>a+b,0),50,{g:5000,m:{sky:4}}],
+ ["sgch20","🎁","sg",()=>sgS().ex.chests.length,20,{g:20000,gm:30}],["sgaff","❤","sg",()=>Object.values(sgS().aff).filter(v=>v>=10).length,4,{g:6000,gm:15}],["sgpr10","🌟","sg",()=>prLv(sgS().pr.rn).l,10,{g:8000,gm:20}],
+ ["sgfl50","🛡️","sg",()=>sgS().fl.best,50,{g:10000,gm:20}],["sgs1","❔","sg",()=>sgS().gd.kasOk?1:0,1,{g:4000,gm:10}],["sgs2","❔","sg",()=>sgS().tr.secSeen?1:0,1,{g:8000,gm:15}],["sgs3","❔","sg",()=>sgS().bx.unl?1:0,1,{g:15000,gm:30}]);
+ACH2G.push(["sg","📜"]);
+const A2S={sgq10:["Квестоплет|Quest Weaver","Виконай {n} квестів Саги|Complete {n} Saga quests"],sgm20:["Літописець|Chronicler","Виконай усі {n} квестів Хроніки|Complete all {n} Chronicle quests"],sgtd9:["Підкорювач глибин|Depth Conqueror","Пройди всі {n} тематичних данжів|Clear all {n} themed dungeons"],
+ sgtw25:["Небожитель|Sky Climber","Дійди до {n} поверху Вежі|Reach floor {n} of the Tower"],sgtr:["Випробуваний|Tested","Переможи в {n} різних випробуваннях|Win {n} different trials"],sgex:["Шукач|Seeker","Досліди {n} місць|Explore {n} places"],
+ sgch20:["Скарбошукач|Treasure Seeker","Знайди всі {n} таємних скринь|Find all {n} secret chests"],sgaff:["Душа компанії|Life of the Party","Стань другом для {n} людей (❤10)|Become friends with {n} people (❤10)"],sgpr10:["Слава|Glory","Досягни {n} рівня престижу|Reach prestige level {n}"],
+ sgfl50:["Без жодної подряпини|Not a Scratch","Серія без поразок: {n}|Flawless streak: {n}"],sgs1:["Тиша|Silence","Таємне досягнення|Secret achievement"],sgs2:["Ім'я в темряві|A Name in the Dark","Таємне досягнення|Secret achievement"],sgs3:["За межею|Beyond","Таємне досягнення|Secret achievement"]};
+for(const k in A2S){const nm=S8(A2S[k][0]),ds=S8(A2S[k][1]);if(k.startsWith("sgs")){const f=ACH2.find(A=>A[0]===k)[3];Object.defineProperty(T8,"a2_"+k,{get:()=>(LG&&(SL.ach[k]||f()>=1))?nm:S8("???|???"),configurable:true})}else T8["a2_"+k]=nm;T8["a2d_"+k]=ds}
+/* the codex: the journal of the Saga */
+function sgRCodex(){const s=sgS();let h="";const qn=s.qd.slice(-15).reverse().map(id=>QDK[id]?qName(QDK[id]):id);
+ h+=`<h3 class="h3">📜 ${t("sg_cx_q")} (${s.qd.length})</h3><div class="mgChips">${qn.map(n=>`<span>${n}</span>`).join("")||"—"}</div>`;
+ h+=`<h3 class="h3">👥 ${t("sg_cx_npc")}</h3><div class="mgList">${SGN.filter(N=>!N.ro).map(N=>`<div class="mgRow"><b>${N.ic} ${sgNm(N.k)}</b><span>❤ ${sgAff(N.k)}/${SG_AFFMAX} · 📖 ${s.gd["t_"+N.k]|0}/${N.st}</span></div>`).join("")}</div>`;
+ h+=`<h3 class="h3">👑 ${t("sg_cx_boss")}</h3><div class="mgList">${TD.filter((D,i)=>s.td.clr[i]).map(D=>`<div class="mgRow"><b>${D.ic} ${t("sg_tb_"+D.k)}</b><span>×${s.td.clr[TD.indexOf(D)]}</span></div>`).join("")}${TRK.filter(k=>s.tr["w_"+k]).map(k=>`<div class="mgRow"><b>${TR[k].ic} ${trName(k)}</b><span>×${s.tr["w_"+k]}</span></div>`).join("")}${SGLM.map((M,i)=>s.cnt["lm"+i]?`<div class="mgRow"><b>${M.ic} ${t("sg_lm_"+i)}</b><span>×${s.cnt["lm"+i]}</span></div>`:"").join("")}</div>`;
+ h+=`<h3 class="h3">🗺️ ${t("sg_cx_loc")}</h3><p class="m">${Object.keys(s.bio).length} / ${BIOMES.length} · ${Object.keys(s.bio).slice(-12).map(i=>L(BIOME_N[i])).join(", ")}</p>`;
+ h+=`<h3 class="h3">🔍 ${t("sg_cx_sec")}</h3><div class="mgStats"><span>🗝️ ${s.ex.rooms.length}/10</span><span>🎁 ${s.ex.chests.length}/20</span><span>🏺 ${s.ex.relic.length}/6</span><span>🚪 ${t("sg_cx_pass")}: ${s.cnt.pass|0}</span><span>${s.gd.kasOk?"🌱 "+t("sg_cx_rid"):"🌱 ?"}</span><span>🕯️ ${t("sg_tmp",{n:s.tmp})}</span></div>`;
+ h+=`<h3 class="h3">🏆 ${t("sg_col")}</h3><div class="mgList">${SGCOL.map(C=>{const v=Math.min(C.f(s),C.n);return`<div class="mgRow${v>=C.n?" ok":""}"><b>${t("sg_col_"+C.k)} ${v}/${C.n}</b><span>${stTx(C.st)}</span><i>${v>=C.n?"✓":""}</i></div>`}).join("")}</div>`;
+ h+=`<h3 class="h3">🔓 ${t("sg_sab")}</h3><div class="mgList">${Object.keys(SAB).map(k=>`<div class="mgRow${s.sab[k]?" ok":""}"><b>${s.sab[k]?SAB[k].ic+" "+t("sg_ab_"+k):"❔ ???"}</b><span>${s.sab[k]?t("sg_abd_"+k):t("sg_abu_"+k)}</span></div>`).join("")}</div>`;
+ h+=`<h3 class="h3">📊 ${t("sg_cx_st")}</h3><div class="mgStats"><span>⚔ ${t("sg_cx_kill")}: ${nfm(LG.st.kill|0)}</span><span>💬 ${t("sg_cx_talk")}: ${s.st.talk|0}</span><span>🌟 ${nfm(s.pr.rn)}</span><span>🛡️ ${s.fl.best}</span><span>🗼 ${s.tw.best}</span><span>🌀 ${s.bx.best}</span></div>`;
+ h+=`<button class="btn sm" type="button" data-a="sgjump" data-v="log">${t("sg_cx_log")}</button>`;return h}
+function sgRPres(){const s=sgS(),{l,a}=prLv(s.pr.rn),nx=prNeed(l+1);let h=`<p class="sub">${t("sg_prH")}</p>`;
+ h+=`<div class="mgCard here"><div class="mgTop"><span class="mgIc">🌟</span><div><h4>${t("sg_prL",{n:l})}</h4><small>${nfm(s.pr.rn)} 🌟 · ${l<60?t("sg_prN",{n:nfm(a+nx-s.pr.rn)}):"MAX"}</small></div></div><div class="sgBar"><i style="width:${l>=60?100:Math.min(100,(s.pr.rn-a)/nx*100).toFixed(1)}%"></i></div><p class="m">${stTx([["dmgMul",l],["goldBonus",l],["maxhpPct",l*.5]])}</p></div>`;
+ h+=`<div class="mgList">${[10,25,50].map(n=>`<div class="mgRow${l>=n?" ok":""}"><b>${t("sg_prL",{n})}</b><span>${n===10?"🏷️ "+t("sl_t_renowned"):n===25?"🏷️ "+t("sl_t_paragon"):"MAX 60"}</span><i>${l>=n?"✓":""}</i></div>`).join("")}</div>`;
+ h+=`<h3 class="h3">🛡️ ${t("sg_fl")}</h3><p class="m">${t("sg_flH")}</p><div class="mgStats"><span>${t("sg_flN",{n:s.fl.cur,b:s.fl.best})}</span><span>🪙 +${Math.min(20,Math.floor(s.fl.cur/5))}%</span></div>`;
+ h+=`<h3 class="h3">${t("sg_fpH")}</h3><div class="mgList">${FORMS.map(F=>`<div class="mgRow${MG.fm.u[F.k]?" ok":""}"><b>${F.ic} ${t("mgf_"+F.k)}</b><span>${t("sg_fp_"+F.k)}</span><i>${MG.fm.u[F.k]?"✓":"🔒"}</i></div>`).join("")}</div>`;return h}
+/* all Saga buttons */
+{const _a=p15Act;p15Act=function(a,v){if(!a||!a.startsWith("sg"))return _a(a,v);if(!LG)return true;
+ switch(a){case "sgsel":sgSel=v;SFX.tab();renderMg();break;
+  case "sgo":{const [k,...o]=v.split("|");sgTalk(k,o.join("|"));renderMg();break}
+  case "sgclr":{const s=sgS();s.ch=s.ch.filter(m=>m.w!==v);s.ur[v]=0;save();renderMg();break}
+  case "sggo":sgSel=v;mgTab="sgchat";LS.set("r2_mgTab",mgTab);SFX.tab();renderMg();break;
+  case "sgdaily":closeModal();setTimeout(()=>{const b=$("bDaily");if(b)b.click()},250);break;
+  case "sgtd":tdStart(+v);break;case "sgtw":twStart(+v);break;case "sgbx":bxStart();break;
+  case "sgjump":mgTab=v;LS.set("r2_mgTab",v);SFX.tab();renderMg();break;
+  case "sgpre":sgPre=v;SFX.tab();renderMg();break;
+  case "sgtr":{const [k,m]=v.split("|");sgPre="";if(!TR[k])break;sgPost("boss",null,null,{x:t(m==="t"?"sg_pt":m==="p"?"sg_pp":"sg_pf").split("(")[0].trim(),me:1});sgPost("boss",null,null,{x:TR[k].ic+" "+trName(k)+": "+t(m==="t"?"sg_ptR":m==="p"?"sg_ppR":"sg_pfR"),tst:false});closeModal();setTimeout(()=>trStart(k,m),350);break}
+  case "sgmap":mapBuy();renderMg();break;case "sgfc":fortCollect();break;
+  case "sgfu":{const id=+v;sgArm="";if(sgFu.includes(id))sgFu=sgFu.filter(x=>x!==id);else if(sgFu.length<3)sgFu.push(id);SFX.tab();renderMg();break}
+  case "sgfuse":fuse();break;case "sgf2q":f2Claim(v);renderMg();break;case "sgf2b":{const [k,i]=v.split(":");f2Buy(k,+i);break}}
+ return true}}
+Object.assign(LG_R,{sgchat:sgRChat,sgquest:sgRQuest,sgdun:sgRDun,sgtrial:sgRTrial,sgexp:sgRExp,sgfort:sgRFort,sgcodex:sgRCodex,sgpres:sgRPres,sgbx:sgRBx});
+NWC.n56a1="new";NWC.n56a2="new";NWC.n56a3="new";NWC.n56a4="new";NEWS.unshift({v:"2026.12.20",ic:"📜",k:["n56a1","n56a2","n56a3","n56a4"]});
+/* titles pushed after loadState are read back from the save */
+try{const o=LS.get(PK("r2_lg"),null);if(o&&mgObj(o.ttl)&&LG)for(const k in o.ttl)if(TITLES.some(x=>x.k===k))LG.ttl[k]=1}catch(e){}
 const bootStep=(n,f)=>{try{f()}catch(e){console.error(e);BOOT.err.push(n+": "+(e&&e.message||e))}};
 bootStep("lang",applyLang);bootStep("resize",resize);bootStep("gfx",applyGfx);
 if(BOOT.safe)bootStep("toast",()=>toast(t(BOOT.safe>1?"bootSafe2d":"bootSafe")));
