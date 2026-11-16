@@ -18650,7 +18650,7 @@ sg_h_raid:"📯 Рейд-бос вийшов на бій: {n}.|📯 A raid boss 
 sg_h_port:"📯 Відкрились таємничі портали! Закрий їх, поки не пізно.|📯 Mysterious portals have opened! Close them before it's too late.",
 sg_h_sec:"📯 Хтось бачив Безіменного на дорозі…|📯 Someone saw the Nameless on the road…",sg_h_wb:"📯 Світовий бос прокинувся: {n}!|📯 A world boss has awoken: {n}!",
 sg_h_q:"📯 Новий квест: {n}|📯 New quest: {n}",sg_h_rdy:"📯 {n} чекає на звіт.|📯 {n} is waiting for your report.",
-sg_newMsg:"💬 Нове повідомлення: {n}|💬 New message: {n}"};
+sg_newMsg:"💬 Нове повідомлення: {n}|💬 New message: {n}",sg_sn_vel:"Велена|Velena",sg_sn_bor:"Борис|Borys",sg_sn_ysa:"Ізольда|Ysolde",sg_sn_mask:"Маска|Mask",sg_sn_lum:"Люмі|Lumi",sg_sn_dro:"Дрого|Drogo",sg_sn_zaf:"Зафіра|Zafira",sg_sn_kas:"Кас|Kass",sg_sn_her:"Глашатай|Herald",sg_sn_boss:"Боси|Bosses"};
 for(const k in SGTA)T8[k]=S8(SGTA[k]);
 
 /* ---- the Saga state, saved inside LG (LG.sg) and cleaned on load ---- */
@@ -18729,7 +18729,7 @@ function sgOpts(k){const N=SGNK[k];if(!N)return"";if(N.ro)return`<button class="
 function sgMsgHTML(m){const N=SGNK[m.w]||SGN[0];const txt=m.k?t(m.k,m.v):escH(m.x||"");const nm=m.me?escH(nickname||t("sg_me")):sgNm(m.w);
  return`<div class="sgM${m.me?" me":""}" style="--nc:${m.me?"#8fc6ff":N.c}"><b>${m.me?"🗡️":N.ic} ${nm}</b><p>${txt}</p></div>`}
 function sgRChat(){const s=sgS();if(!SGNK[sgSel])sgSel="vel";s.ur[sgSel]=0;const N=SGNK[sgSel];
- let h=`<p class="sub">${t("sg_hubH")}</p><div class="sgCts">`+SGN.map(C=>{const u=s.ur[C.k]|0;return`<button type="button" class="sgCt${C.k===sgSel?" on":""}" data-a="sgsel" data-v="${C.k}" style="--nc:${C.c}">${C.ic}<small>${sgNm(C.k).split(" ").slice(-1)[0]}</small>${u?`<i>${u>9?"9+":u}</i>`:""}</button>`}).join("")+`</div>`;
+ let h=`<p class="sub">${t("sg_hubH")}</p><div class="sgCts">`+SGN.map(C=>{const u=s.ur[C.k]|0;return`<button type="button" class="sgCt${C.k===sgSel?" on":""}" data-a="sgsel" data-v="${C.k}" style="--nc:${C.c}">${C.ic}<small>${t("sg_sn_"+C.k)}</small>${u?`<i>${u>9?"9+":u}</i>`:""}</button>`}).join("")+`</div>`;
  const a=sgAff(sgSel);h+=`<div class="sgHd" style="--nc:${N.c}"><span>${N.ic}</span><div><b>${sgNm(sgSel)}</b><small>${t("sg_r_"+sgSel)}</small>${N.ro?"":`<small>❤ ${t("sg_aff")}: ${a}/${SG_AFFMAX}</small>`}</div></div>`;
  const L0=s.ch.filter(m=>m.w===sgSel).slice(-40);h+=`<div class="sgLog" id="sgLog">${L0.length?L0.map(sgMsgHTML).join(""):`<p class="m">…</p>`}</div><div class="sgOpt">${sgOpts(sgSel)}</div>`;
  setTimeout(()=>{const el=$("sgLog");if(el)el.scrollTop=el.scrollHeight},20);return h}
@@ -19307,7 +19307,7 @@ P17UP.sgsite=(g,o)=>{if(g.userData.isle)g.userData.isle.position.y=20+Math.sin(t
 /* treasure charts: coordinates in metres along the road and the side of the road */
 function mapNew(){const s=sgS(),x=hero.x+rnd(2500,7000),sd=Math.random()<.5?-1:1;s.ex.map={x:Math.round(x),z:Math.round(clamp(hero.z+sd*rnd(60,120),zLo(25),zHi(25))),s:sd};toast(t("sg_mapNew"),"#ffd34e");sgPost("dro",null,null,{x:t("sg_mapNew")+" "+t("sg_mapT",{n:Math.round(x/10),m:t(sd>0?"sg_south":"sg_north")})})}
 let mapHint=0;
-function mapTick(dt){const s=sgS(),M=s.ex.map;if(!M||!isFP()||(MG&&MG.run))return;const d=Math.hypot(M.x-hero.x,(M.z-hero.z)*ZS);mapHint-=dt;
+function chartTick(dt){const s=sgS(),M=s.ex.map;if(!M||!isFP()||(MG&&MG.run))return;const d=Math.hypot(M.x-hero.x,(M.z-hero.z)*ZS);mapHint-=dt;
  if(d<70&&!mgObjs.some(o=>o.k==="sgx"&&!o.used)){mgObjs.push({k:"sgx",x:M.x,z:M.z});cbTxt(t("sg_mapX"),"#ffd34e");SFX.unlock&&SFX.unlock()}
  else if(d<600&&mapHint<=0){mapHint=5;cbTxt(t(d<250?"sg_mapHot":"sg_mapWarm",{n:Math.round(d/10)}),"#ffd34e")}}
 P17MK.sgx=(T,g,add)=>{const xm=p17Mat(0xffc83a,{emissive:0x6a3a00});add(geo("sgX",()=>new T.BoxGeometry(30,1.6,5)),xm,0,1,0).rotation.y=.785;add(geo("sgX",()=>new T.BoxGeometry(30,1.6,5)),xm,0,1.1,0).rotation.y=-.785;return null};
@@ -19329,7 +19329,7 @@ P17MK.sgport=(T,g,add,glow)=>{const r=add(geo("sgPtR2",()=>new T.TorusGeometry(1
 /* new weather: the eclipse and the magic storm (they come on their own now and then) */
 WX.eclipse={ic:"🌘",st:[["critDmg",15],["rarBonus",2],["dropBonus",15]],fog:.4};WX.mstorm={ic:"🌀",st:[["fireBonus",20],["lightningBonus",20],["dmgRed",-3]],fog:.6};
 let swT=300,msT=0;
-function wxTick(dt){if(!LG)return;const R=MG&&MG.run;swT-=dt;if(swT<=0){swT=rnd(420,660);if(!R&&isFP()&&battleNo>=5&&Math.random()<.4&&wxNow.k!=="eclipse"&&wxNow.k!=="mstorm"){const k=Math.random()<.5?"eclipse":"mstorm";
+function sgWxTick(dt){if(!LG)return;const R=MG&&MG.run;swT-=dt;if(swT<=0){swT=rnd(420,660);if(!R&&isFP()&&battleNo>=5&&Math.random()<.4&&wxNow.k!=="eclipse"&&wxNow.k!=="mstorm"){const k=Math.random()<.5?"eclipse":"mstorm";
   wxNow={k,t:rnd(130,210),bi:biomeIdx(),lt:rnd(4,8)};recalc();sgPost("her","sg_h_wx",{n:t("lg_wx_"+k)});toast(t(k==="eclipse"?"sg_ecl":"sg_ms"),k==="eclipse"?"#b0b0d0":"#c84aff")}}
  if(wxNow.k==="mstorm"&&isFP()&&!R){msT-=dt;if(msT<=0){msT=rnd(4,6.5);const foes=enemies.filter(e=>e.state!=="dead"&&Math.abs(e.x-hero.x)<450);
   if(foes.length){const e=foes[rint(0,foes.length-1)],el=rint(1,5),col=["#ff6a2a","#9fe8ff","#ffe14e","#6bf07a","#9a5aff"][el-1];try{damageEnemy(e,Math.round(e.maxhp*.06),false,1,0,"magic")}catch(er){}sparks(e.x,e.z,30,col,18,1)}
@@ -19344,7 +19344,7 @@ function wbWatch(){for(const e of enemies)if(e.wboss&&!e.sgHd&&e.state!=="dead")
 /* lands seen */
 function bioTick(){const s=sgS(),bi=biomeIdx();if(!s.bio[bi]&&!(MG&&MG.run)){s.bio[bi]=1}}
 let exT=0;
-{const _t=p17Tick;p17Tick=function(dt){_t(dt);if(!LG)return;try{siteTick(dt);mapTick(dt);portTick(dt);wxTick(dt);exT-=dt;if(exT<=0){exT=1;caveTick();wbWatch();bioTick()}}catch(e){console.error(e)}}}
+{const _t=p17Tick;p17Tick=function(dt){_t(dt);if(!LG)return;try{siteTick(dt);chartTick(dt);portTick(dt);sgWxTick(dt);exT-=dt;if(exT<=0){exT=1;caveTick();wbWatch();bioTick()}}catch(e){console.error(e)}}}
 /* the Explore tab */
 function sgRExp(){const s=sgS(),M=s.ex.map;let h=`<p class="sub">${t("sg_exH")}</p><div class="mgStats"><span>🗝️ <b>${s.ex.rooms.length}/10</b></span><span>🎁 <b>${s.ex.chests.length}/20</b></span><span>🏺 <b>${s.ex.relic.length}/6</b></span><span>💰 <b>${s.ex.dug}</b></span></div>`;
  h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">🗺️</span><div><h4>${t("sg_map")}</h4><small>${t("sg_mapY",{n:Math.round(hero.x/10)})}</small></div></div>`+(M?`<p class="m"><b>${t("sg_mapT",{n:Math.round(M.x/10),m:t(M.s>0?"sg_south":"sg_north")})}</b></p>`:`<p class="m">${t("sg_mapNo")}</p>`)+`<p class="m">${t("sg_mapH")}</p>`+
