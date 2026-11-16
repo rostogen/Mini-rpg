@@ -54,7 +54,8 @@ For speed, some runs turned off only the 3D drawing (the game logic ran as norma
 ## Not done or not checked
 
 - Not tested on a real phone, on iPhone, or in the Google Play app.
-- Long Saga texts (dialogues, quests, lore) are in Ukrainian and English; the other 18 main languages show English for them. Tab names and short buttons are in all 20.
+- P57 translated the most visible Saga texts into all 20 languages (chat options, quest objectives, names of dungeons, bosses, trials, legends, rooms, places, map, weather, factions, prestige). The long story and dialogue lines are still Ukrainian + English; the other 18 languages show English for them.
+- P57 fixed a text-key clash: the dungeon floor label showed «Flawless streak».
 - New bosses use the existing enemy models with their own names, colours, auras and attacks; no new 3D models.
 - No new pet species: the request's «rare companions» are the existing rare pets and dragons.
 - Online play, chat with real people and login need a server; the game has none on purpose. The chat is with characters only.
