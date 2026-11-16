@@ -60,3 +60,19 @@ For speed, some runs turned off only the 3D drawing (the game logic ran as norma
 - No new pet species: the request's «rare companions» are the existing rare pets and dragons.
 - Online play, chat with real people and login need a server; the game has none on purpose. The chat is with characters only.
 - Balance (damage, rewards) was not tuned by real play.
+
+# P59 MEGA 6.0 «Життя» (2026-11-16)
+
+New group «🎭 Життя» in the 🗺️ Adventures window: 11 tabs. `index.html` grew by about 120 KB (one block before `bootStep`).
+
+Already in the game before (extended, not copied): titles, achievements, photo mode, transmog and dye, auras, the journal, skill mastery (MST), holiday decorations (P25), road travellers (P48), NPC gifts (P48/P56), puzzles (PZ).
+
+Tests that were really run (headless Chromium on a PC, not a phone):
+1. All 11 tabs render in 4 languages at 360×640: no «undefined/NaN/[object», no window wider than the screen; group switching between all 4 groups by clicks.
+2. Mini-games played through by script: clockwork solved, rune memory, spot the difference, magic symbols, reaction; records and cups saved, 3 paid plays a day.
+3. Market: buying 10 iron raised the price (39 → 51). Room: two decorations placed, a backpack worn. Guild founded, levelled to 3, a friend with ❤7 joined. Steed upgraded and a breed bought. Mail gift taken once (the second try paid nothing). Collections, butterflies, coins, a lost letter, a creature and a viewpoint recorded.
+4. Photo mode: 📸 saved a 240 px thumbnail to the album and started a PNG download.
+5. Autopilot: 115 road battles in about 2 minutes, no script errors.
+6. Old save from the current `main` loads without losing gold, battle, materials, faction reputation, items, titles or forge level.
+
+Not done or not checked: not tested on a real phone; long texts are Ukrainian + English only; the hero is not visible in first person, so hairstyles show on the inventory doll and «poses» were replaced by photo frames; new steed breeds reuse the spirit steed model; balance not tuned by real play.

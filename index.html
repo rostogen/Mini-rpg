@@ -19672,6 +19672,636 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;setT
 /* when the 3D files could not be loaded (bad network), try once more a bit later instead of staying in 2D */
 let p58R=0;
 setInterval(()=>{try{if(R3&&R3.failed&&!R3.ok&&!R3.loading&&BOOT.safe!==2&&p58R<2&&navigator.onLine!==false&&!T3){p58R++;R3.failed=false;R3.round2=false;load3D()}}catch(e){}},20000);
+/* ============ P59 MEGA 6.0 «Життя» (part A): state, the fourth group of the Adventures window, reputation, mail, daily errands, streaks, emotes, cosmetics, wardrobe, looks, themes, music, specialisation, play style, weapon mastery ============ */
+const LFTA={
+lf_hub:"Життя|Life|Vie|Leben|生活|Vida|Vita|Życie|Vida|ライフ|라이프|Yaşam|Kehidupan|जीवन|Cuộc sống|ชีวิต|Leven|الحياة|জীবন|Buhay",
+lf_t_me:"Образ|Look|Style|Aussehen|形象|Estilo|Stile|Wygląd|Visual|見た目|외형|Görünüm|Gaya|रूप|Ngoại hình|รูปลักษณ์|Uiterlijk|المظهر|রূপ|Itsura",
+lf_t_day:"Справи|Errands|Tâches|Aufgaben|事务|Encargos|Commissioni|Sprawy|Tarefas|用事|할 일|İşler|Tugas|काम|Việc vặt|ธุระ|Klusjes|المهام|কাজ|Gawain",
+lf_t_mail:"Пошта|Mail|Courrier|Post|邮件|Correo|Posta|Poczta|Correio|郵便|우편|Posta|Surat|डाक|Thư|จดหมาย|Post|البريد|ডাক|Sulat",
+lf_t_game:"Мініігри|Mini-games|Mini-jeux|Minispiele|小游戏|Minijuegos|Minigiochi|Minigry|Minijogos|ミニゲーム|미니게임|Mini oyunlar|Gim mini|मिनी-गेम|Trò chơi nhỏ|มินิเกม|Minigames|ألعاب مصغرة|মিনি-গেম|Mini-games",
+lf_t_col:"Колекції|Collections|Collections|Sammlungen|收藏|Colecciones|Collezioni|Kolekcje|Coleções|コレクション|컬렉션|Koleksiyonlar|Koleksi|संग्रह|Bộ sưu tập|คอลเลกชัน|Verzamelingen|المجموعات|সংগ্রহ|Koleksiyon",
+lf_t_card:"Картки|Cards|Cartes|Karten|卡牌|Cartas|Carte|Karty|Cartas|カード|카드|Kartlar|Kartu|कार्ड|Thẻ|การ์ด|Kaarten|البطاقات|কার্ড|Kard",
+lf_t_room:"Кімната|Room|Chambre|Zimmer|房间|Habitación|Stanza|Pokój|Quarto|部屋|방|Oda|Kamar|कमरा|Phòng|ห้อง|Kamer|الغرفة|ঘর|Kuwarto",
+lf_t_guild:"Гільдія|Guild|Guilde|Gilde|公会|Gremio|Gilda|Gildia|Guilda|ギルド|길드|Lonca|Serikat|गिल्ड|Hội|กิลด์|Gilde|النقابة|গিল্ড|Guild",
+lf_t_mkt:"Ринок|Market|Marché|Markt|市场|Mercado|Mercato|Targ|Mercado|市場|시장|Pazar|Pasar|बाज़ार|Chợ|ตลาด|Markt|السوق|বাজার|Palengke",
+lf_t_pet:"Улюбленець|Pet|Compagnon|Haustier|宠物|Mascota|Compagno|Pupil|Mascote|ペット|펫|Evcil hayvan|Peliharaan|पालतू|Thú cưng|สัตว์เลี้ยง|Huisdier|الحيوان الأليف|পোষ্য|Alaga",
+lf_t_stat:"Статистика|Stats|Stats|Statistik|统计|Estadísticas|Statistiche|Statystyki|Estatísticas|統計|통계|İstatistik|Statistik|आँकड़े|Thống kê|สถิติ|Statistieken|الإحصاءات|পরিসংখ্যান|Estadistika",
+lf_hubH:"Життя героя поза битвами: образ, справи, пошта, мініігри, колекції, картки, кімната, гільдія, ринок, улюбленець і статистика. Усе зберігається.|The hero's life outside battles: looks, errands, mail, mini-games, collections, cards, room, guild, market, pet and stats. Everything is saved.",
+/* reputation */
+lf_rep:"Репутація|Reputation",lf_rep0:"Зганьблений|Disgraced",lf_rep1:"Підозрілий|Suspicious",lf_rep2:"Невідомий|Unknown",lf_rep3:"Шанований|Respected",lf_rep4:"Почесний|Honoured",lf_rep5:"Герой народу|Hero of the People",lf_rep6:"Легенда|Legend",
+lf_repH:"Люди пам'ятають твої вчинки: допомога, подарунки й виконані завдання піднімають репутацію, грубість і провали опускають. Від неї залежать ціни на ринку, подарунки поштою й те, як тебе вітають.|People remember your deeds: help, gifts and finished tasks raise your reputation, rudeness and failures lower it. It changes market prices, gifts in the mail and how people greet you.",
+lf_repUp:"🕊️ Репутація росте: {n}|🕊️ Reputation rises: {n}",lf_repDn:"⚠️ Репутація падає: {n}|⚠️ Reputation falls: {n}",
+lf_g0:"Я чув про тебе погане. Тримайся від мене подалі.|I've heard bad things about you. Keep your distance.",lf_g1:"Хм. Про тебе всяке кажуть.|Hm. People say all sorts about you.",lf_g3:"Радий бачити шанованого мандрівника!|Glad to see a respected traveller!",lf_g4:"Для мене честь говорити з тобою.|It's an honour to talk with you.",lf_g5:"Сам герой народу! Діти грають у тебе на вулицях.|The hero of the people himself! Children play at being you in the streets.",lf_g6:"Легенда стоїть переді мною… я не вірю очам.|A legend stands before me… I can't believe my eyes.",
+lf_mR:"Минулого разу ти мені нагрубив. Я пам'ятаю.|Last time you were rude to me. I remember.",lf_mG:"Дякую ще раз за той подарунок!|Thank you again for that gift!",lf_mQ:"Ти виконав моє прохання — я цього не забуду.|You did what I asked, I won't forget it.",lf_mE:"А, це ти махав мені рукою! Привіт!|Ah, you're the one who waved at me! Hi!",
+/* mail */
+lf_mailH:"Листи від людей світу, гільдії й загублені листи. Подарунки в листах забирай кнопкою.|Letters from the people of the world, from the guild and lost letters. Take the gifts in letters with the button.",
+lf_mailNone:"Скринька порожня.|The mailbox is empty.",lf_mailNew:"✉️ Новий лист: {n}|✉️ New letter: {n}",lf_take:"Забрати|Take",lf_del:"Видалити|Delete",lf_read:"Прочитано|Read",
+lf_ml_guild:"Звіт гільдії|Guild report",lf_mlb_guild:"Твоя гільдія зібрала внески за день. Ось твоя частка.|Your guild collected the day's dues. Here is your share.",
+lf_ml_gift:"Подарунок від друга|A gift from a friend",lf_mlb_gift:"{n} надіслав тобі подарунок на знак дружби.|{n} sent you a gift as a sign of friendship.",
+lf_ml_rec:"Новий рекорд!|A new record!",lf_mlb_rec:"Зала слави вітає тебе з рекордом: {n}.|The Hall of Fame congratulates you on a record: {n}.",
+lf_ml_streak:"Серія справ|Errand streak",lf_mlb_streak:"Ти виконував щоденні справи {n} днів поспіль. Тримай нагороду!|You've done your daily errands {n} days in a row. Here's a reward!",
+/* daily errands */
+lf_dayH:"Щодня — три випадкові справи. Виконай усі три, щоб продовжити серію. Серії на 3, 7, 14 і 30 днів дають великі нагороди поштою.|Three random errands every day. Do all three to keep your streak. Streaks of 3, 7, 14 and 30 days send big rewards by mail.",
+lf_d_bfly:"Спіймати метеликів: {p}/{n}|Catch butterflies: {p}/{n}",lf_d_coin:"Знайти стародавні монети: {p}/{n}|Find ancient coins: {p}/{n}",lf_d_game:"Зіграти в мініігри: {p}/{n}|Play mini-games: {p}/{n}",lf_d_emote:"Показати емоції: {p}/{n}|Show emotes: {p}/{n}",
+lf_d_photo:"Зробити фото: {p}/{n}|Take photos: {p}/{n}",lf_d_trade:"Угоди на ринку: {p}/{n}|Market deals: {p}/{n}",lf_d_feed:"Нагодувати улюбленця: {p}/{n}|Feed your pet: {p}/{n}",lf_d_kill:"Перемогти ворогів: {p}/{n}|Defeat foes: {p}/{n}",lf_d_find:"Дивні знахідки: {p}/{n}|Strange finds: {p}/{n}",lf_d_obs:"Спостерігати за істотою: {p}/{n}|Watch a creature: {p}/{n}",
+lf_streak:"Серія: {n} дн. · Рекорд: {b}|Streak: {n} days · Best: {b}",lf_dayAll:"✅ Усі справи на сьогодні виконано!|✅ All of today's errands are done!",
+/* emotes */
+lf_emo:"Емоції та жести|Emotes and gestures",lf_emoH:"Покажи емоцію: люди поруч, мандрівники й улюбленець відреагують. Деякі місця відповідають на певні жести…|Show an emote: people nearby, travellers and your pet react. Some places answer certain gestures…",
+lf_e_wave:"Помахати|Wave",lf_e_bow:"Вклонитися|Bow",lf_e_laugh:"Сміятися|Laugh",lf_e_dance:"Танцювати|Dance",lf_e_cheer:"Радіти|Cheer",lf_e_pray:"Молитися|Pray",lf_e_angry:"Злитися|Be angry",lf_e_sit:"Відпочити|Rest",
+lf_eLock:"🔒 Відкривається майстерністю|🔒 Opened by mastery",lf_eRe:"{n} відповідає тобі: {m}|{n} answers you: {m}",lf_petRe:"{n} радісно стрибає!|{n} hops happily!",lf_hid:"✨ Щось відгукнулося на твій жест…|✨ Something answered your gesture…",
+/* cosmetics */
+lf_cos:"Косметичні ефекти|Cosmetic effects",lf_cosH:"Сліди за тобою, ефект появи і ефект перемоги видно в грі. Слоти відкриваються майстерністю зброї.|Trails behind you, a spawn effect and a victory effect show in the game. Slots open with weapon mastery.",
+lf_sl_trail:"Слід|Trail",lf_sl_spawn:"Поява|Spawn",lf_sl_win:"Перемога|Victory",lf_none:"Немає|None",lf_slLock:"🔒 Слот відкриється на майстерності {n}|🔒 The slot opens at mastery {n}",
+lf_c_ember:"Жар|Embers",lf_c_frost:"Іній|Frost",lf_c_petal:"Пелюстки|Petals",lf_c_star:"Зірки|Stars",lf_c_shadow:"Тінь|Shadow",lf_c_gold:"Золото|Gold",lf_c_ring:"Кільця світла|Rings of light",lf_c_burst:"Вибух іскор|Spark burst",lf_c_fire:"Феєрверк|Fireworks",lf_c_rain:"Дощ монет|Coin rain",
+lf_cosNew:"✨ Новий косметичний ефект: {n}|✨ New cosmetic effect: {n}",
+/* wardrobe, looks */
+lf_ward:"Гардероб|Wardrobe",lf_wardH:"Зберігай до трьох образів: колір плаща, колір сяйва, аура, зачіска та ефекти. Характеристики спорядження не змінюються.|Save up to three outfits: cloak colour, glow colour, aura, hairstyle and effects. Gear stats don't change.",
+lf_wSave:"💾 Зберегти образ {n}|💾 Save outfit {n}",lf_wWear:"👕 Вдягнути образ {n}|👕 Wear outfit {n}",lf_wEmpty:"Порожньо|Empty",
+lf_hair:"Зачіска|Hairstyle",lf_h0:"Без зачіски|None",lf_h1:"Коротка|Short",lf_h2:"Довга|Long",lf_h3:"Хвіст|Ponytail",lf_h4:"Ірокез|Mohawk",lf_h5:"Коси|Braids",lf_h6:"Кучері|Curls",lf_hairH:"Видно на ляльці героя в інвентарі, коли не вдягнутий шолом.|Shows on the hero doll in the inventory when no helmet is worn.",
+lf_emb:"Особиста емблема|Personal emblem",lf_embH:"Твоя емблема видна біля імені на екрані.|Your emblem shows next to your name on screen.",
+lf_theme:"Оформлення інтерфейсу|Interface theme",lf_th_def:"Звичайне|Default",lf_th_forest:"Ліс|Forest",lf_th_ice:"Лід|Ice",lf_th_royal:"Королівське|Royal",lf_th_blood:"Кров|Blood",lf_th_sea:"Море|Sea",
+lf_mus:"Колекція музичних тем|Music themes",lf_musH:"Теми відкриваються в нових землях і за досягнення. Обрана тема грає замість звичайної.|Themes open in new lands and through achievements. The chosen theme plays instead of the usual one.",
+lf_m_auto:"Звичайна (за землею)|Default (by land)",lf_m_heroic:"Героїчна|Heroic",lf_m_calm:"Спокійна|Calm",lf_m_myst:"Таємнича|Mysterious",lf_m_fest:"Святкова|Festive",lf_m_dark:"Темна|Dark",lf_m_sea:"Морська|Seafaring",
+lf_musU:"Відкривається: {n}|Opens with: {n}",lf_mu_heroic:"5 рекордів|5 records",lf_mu_calm:"кімната з 3 прикрасами|a room with 3 decorations",lf_mu_myst:"3 таємничі послання|3 mysterious messages",lf_mu_fest:"серія справ 7 днів|a 7-day errand streak",lf_mu_dark:"20 відкритих земель|20 lands discovered",lf_mu_sea:"5 метеликів різних видів|5 butterfly species",
+/* spec and style */
+lf_spec:"Спеціалізація|Specialisation",lf_specH:"Одна спеціалізація з постійним бонусом. Зміна коштує золота (два дотики).|One specialisation with a lasting bonus. Changing costs gold (two taps).",
+lf_sp_col:"Колекціонер|Collector",lf_sp_exp:"Дослідник|Explorer",lf_sp_duel:"Дуелянт|Duellist",lf_sp_tam:"Приборкувач|Tamer",lf_sp_mer:"Торговець|Merchant",
+lf_spd_col:"+3 удачі рідкості, +5% золота, частіші знахідки|+3 rarity luck, +5% gold, more finds",lf_spd_exp:"+6% швидкості, +20% збирання, частіші метелики й монети|+6% speed, +20% gathering, more butterflies and coins",lf_spd_duel:"+4% криту, +6% шкоди босам|+4% crit, +6% boss damage",lf_spd_tam:"Бонус улюбленця ×1,5, настрій падає повільніше|Pet bonus ×1.5, mood drops slower",lf_spd_mer:"Ринок: −8% ціни купівлі, +8% ціни продажу|Market: −8% buy prices, +8% sell prices",
+lf_style:"Стиль гри|Play style",lf_styH:"Гра помічає, як ти б'єшся, і дає пасивний бонус за твій стиль.|The game notices how you fight and gives a passive bonus for your style.",
+lf_st_blade:"Клинок|Blade",lf_st_mage:"Маг|Mage",lf_st_shadow:"Тінь|Shadow",lf_st_none:"Ще не визначено|Not decided yet",lf_std_blade:"+5% шкоди|+5% damage",lf_std_mage:"+10% шкоди вогнем і блискавкою|+10% fire and lightning damage",lf_std_shadow:"+4% ухилення, +5% швидкості|+4% evasion, +5% speed",
+/* mastery */
+lf_mast:"Майстерність зброї|Weapon mastery",lf_mastH:"Росте від використання: удари мечем, заклинання і постріли Духа. Кожен рівень дає бонус, а рівні 5/10/15/20 відкривають слоти ефектів, емоції й анімації перемоги.|Grows with use: sword blows, spells and the Spirit's shots. Each level gives a bonus; levels 5/10/15/20 open effect slots, emotes and victory animations.",
+lf_ma_sword:"Мечі|Swords",lf_ma_magic:"Магія|Magic",lf_ma_bow:"Стрільба (Дух)|Archery (Spirit)",lf_maLv:"Рівень {n}/20|Level {n}/20",lf_maUp:"⚔️ Майстерність «{n}»: рівень {m}!|⚔️ «{n}» mastery: level {m}!"};
+for(const k in LFTA)T8[k]=S8(LFTA[k]);
+/* ---- state (LG.lf), cleaned on load by the Saga cleaner ---- */
+const LF0=()=>({rep:100,hair:0,emb:{i:0,c:0},cos:{trail:"",spawn:"",win:""},cosU:{},out:[],theme:"",mus:"",spec:"",specD:"",mail:[],mid:1,da:{d:"",t:[],p:[],got:0},stk:{d:"",n:0,best:0,paid:0},
+ gd:{n:"",lv:1,xp:0,i:0,c:0,up:{},mem:[],pt:0,d:""},cards:{},col:{},bfl:{},coins:{},letter:[],obs:{},vista:{},room:{s:[],own:{}},show:[],mkt:{p:{},t:0},mast:{sword:0,magic:0,bow:0},sty:{m:0,s:0,d:0},
+ mg:{d:"",n:{},best:{},cup:{}},pet:{food:70,mood:70,t:0,d:""},mount:{lv:0,br:"spirit",own:{}},hist:[],st:{},sec:{},scn:{},msg:{},hid:{},album:[],photo:[],pfr:"",mem:{}});
+const lfS=()=>{if(!LG)return LF0();if(!LG.lf||typeof LG.lf!=="object")LG.lf=LF0();return LG.lf};
+{const _l=p17Load;p17Load=function(o){_l(o);if(!o||!LG)return;const src=o.lf&&typeof o.lf==="object"?o.lf:{},s=sgClean(LF0(),src);
+ /* lists of objects get their own careful copy */
+ const arr=(a,n,f)=>Array.isArray(a)?a.filter(x=>x&&typeof x==="object").slice(-n).map(f):[];
+ s.mail=arr(src.mail,40,m=>({id:sgN(m.id)|0,k:String(m.k||"").slice(0,16),v:typeof m.v==="string"?m.v.slice(0,40):"",d:String(m.d||"").slice(0,12),rd:m.rd?1:0,got:m.got?1:0,g:sgN(m.g,1e9)|0,m:sgFlat(m.m,0),it:m.it==null?-1:Math.min(22,sgN(m.it)|0),tx:typeof m.tx==="string"?m.tx.slice(0,300):""}));
+ s.out=arr(src.out,3,w=>sgFlat(w,1));s.hist=arr(src.hist,40,h=>sgFlat(h,0));s.album=arr(src.album,30,a=>sgFlat(a,0));
+ s.photo=Array.isArray(src.photo)?src.photo.filter(p=>typeof p==="string"&&p.startsWith("data:image/jpeg")&&p.length<60000).slice(-8):[];
+ s.da.t=Array.isArray(src.da&&src.da.t)?src.da.t.filter(x=>typeof x==="string").slice(0,3).map(x=>x.slice(0,8)):[];
+ s.room.s=Array.isArray(src.room&&src.room.s)?src.room.s.slice(0,9).map(x=>typeof x==="string"?x.slice(0,12):""):[];
+ s.show=Array.isArray(src.show)?src.show.filter(x=>Number.isFinite(+x)).slice(0,6).map(x=>+x):[];
+ s.gd.mem=Array.isArray(src.gd&&src.gd.mem)?src.gd.mem.filter(x=>typeof x==="string").slice(0,12).map(x=>x.slice(0,8)):[];
+ s.letter=Array.isArray(src.letter)?src.letter.filter(x=>Number.isFinite(+x)).slice(0,20).map(x=>+x):[];
+ s.gd.n=typeof s.gd.n==="string"?s.gd.n.replace(/[<>&"]/g,"").slice(0,18):"";LG.lf=s;try{lfApplyLooks()}catch(e){}}}
+const lfCnt=(k,n)=>{const s=lfS();s.st[k]=(s.st[k]|0)+(n==null?1:n)};
+
+/* ---- the fourth group in the Adventures window ---- */
+const LF_TABS=[["lfme","🎭"],["lfday","📅"],["lfmail","✉️"],["lfgame","🎮"],["lfcol","🏺"],["lfcard","🃏"],["lfroom","🛋️"],["lfguild","🛡️"],["lfmkt","⚖️"],["lfpet","🐾"],["lfstat","📊"]];
+const lfTab=k=>LF_TABS.some(x=>x[0]===k);
+const lfDot=k=>k==="lfmail"?lfUnread()>0:k==="lfday"?lfDayReady():k==="lfpet"?lfPetNeed():false;
+{const _g=mgGrpHTML;mgGrpHTML=function(){let h=_g();const on=lfTab(mgTab);if(on)h=h.replace(' class="on" data-grp="0"',' class="" data-grp="0"');
+ const dot=lfUnread()>0||lfDayReady()||lfPetNeed();return h.replace(/<\/div>$/,`<button type="button" class="${on?"on":""}" data-grp="3">🎭 ${t("lf_hub")}${dot?'<i class="tdot on"></i>':""}</button></div>`)}}
+{const _r=renderMg;renderMg=function(){_r();if(!LG||!lfTab(mgTab))return;LS.set("r2_lfTab",mgTab);
+ $("mgTabs").innerHTML=LF_TABS.map(([k,ic])=>`<button type="button" class="tab mgtab${mgTab===k?" on":""}" data-mt="${k}">${ic} <span>${t("lf_t_"+k.slice(2))}</span>${lfDot(k)?'<i class="tdot on"></i>':""}</button>`).join("");
+ const on=$("mgTabs").querySelector(".on");if(on)on.scrollIntoView({block:"nearest",inline:"center"})}}
+$("mMg").addEventListener("click",e=>{const g=e.target.closest("[data-grp]");if(!g||!LG)return;const want=+g.dataset.grp,cur=lfTab(mgTab)?3:sgTab(mgTab)?2:lgTab(mgTab)?1:0;
+ if(want!==3&&cur!==3)return;e.stopPropagation();e.stopImmediatePropagation();if(want===cur)return;
+ if(want===3){mgTab=LS.get("r2_lfTab","lfme");if(!lfTab(mgTab))mgTab="lfme"}else if(want===2){mgTab=LS.get("r2_sgTab","sgchat");if(!sgTab(mgTab))mgTab="sgchat"}
+ else if(want===1){mgTab=LS.get("r2_lgTab","br");if(!lgTab(mgTab))mgTab="br"}else{mgTab=LS.get("r2_mgTab0","dun");if(!MG_TABS.some(x=>x[0]===mgTab))mgTab="dun"}
+ LS.set("r2_mgTab",mgTab);SFX.tab();renderMg()},true);
+{const _h=mgHud;mgHud=function(){_h();const bd=$("mgBdg");if(bd&&LG&&!bd._on&&!bd._sg){const on=lfUnread()>0||lfDayReady();if(on!==!!bd._lf){bd._lf=on;bd.classList.toggle("on",on)}}}}
+
+/* ---- reputation: 0..200, 100 = neutral ---- */
+const REPT=[0,40,85,115,140,165,190];
+const repLv=()=>{const r=lfS().rep;let l=0;for(let i=0;i<REPT.length;i++)if(r>=REPT[i])l=i;return l};
+function lfRep(n,why){const s=lfS(),l0=repLv();s.rep=Math.max(0,Math.min(200,s.rep+n));const l1=repLv();if(l1!==l0){toast(t(l1>l0?"lf_repUp":"lf_repDn",{n:t("lf_rep"+l1)}),l1>l0?"#8fe08a":"#ff8a8a");if(l1>=6&&!LG.ttl.legendrep){LG.ttl.legendrep=1;setTimeout(()=>banner("🏷️ "+t("sl_t_legendrep"),"🕊️"),1200)}}}
+const repPrice=()=>[1.15,1.08,1,.97,.94,.9,.86][repLv()];
+/* NPCs greet you by your reputation and remember what happened last time */
+{const _g=sgGreet;sgGreet=function(k){const out=_g(k),l=repLv(),m=lfS().mem;if(l!==2)out.push("lf_g"+l);const r=m["r_"+k],g=m["g_"+k],q=m["q_"+k],e=m["e_"+k];
+ const last=Math.max(r|0,g|0,q|0,e|0);if(last){out.push(last===r?"lf_mR":last===g?"lf_mG":last===q?"lf_mQ":"lf_mE")}return out}}
+{const _t=sgTalk;sgTalk=function(k,o){const n0=(sgS().gd["g_"+k]||"")+"|"+sgAff(k);_t(k,o);if(!LG)return;const m=lfS().mem,now=Date.now()/1000|0;
+ if(o==="rude"){lfRep(-3);m["r_"+k]=now}if(o==="gift"&&n0!==(sgS().gd["g_"+k]||"")+"|"+sgAff(k)){lfRep(1);m["g_"+k]=now}}}
+{const _f=qFinish;qFinish=function(Q,c){_f(Q,c);if(!LG)return;lfRep(2);lfS().mem["q_"+Q.g]=Date.now()/1000|0;gdXp(25)}}
+{const _p=p48Pay;p48Pay=function(q,x,z){const r=_p(q,x,z);if(LG){lfRep(2);gdXp(15)}return r}}
+{const _e=trEnd;trEnd=function(win){const k=sgF.k;_e(win);if(LG&&!win)lfRep(-1)}}
+
+/* ---- mail ---- */
+const lfUnread=()=>LG?lfS().mail.filter(m=>!m.rd).length:0;
+function mailSend(k,v,att,tx){const s=lfS(),m={id:s.mid++,k,v:v||"",d:dayKey(),rd:0,got:0,g:att&&att.g|0,m:att&&att.m||{},it:att&&att.it!=null?att.it:-1,tx:tx||""};s.mail.push(m);if(s.mail.length>40)s.mail.splice(0,s.mail.length-40);
+ toast(t("lf_mailNew",{n:mailTitle(m)}),"#ffd98a");return m}
+const mailTitle=m=>m.k==="letter"?t("lf_lt_t"+m.v):t("lf_ml_"+m.k);
+const mailBody=m=>m.k==="letter"?t("lf_lt_b"+m.v):m.tx||t("lf_mlb_"+m.k,{n:m.v});
+function mailTake(id){const s=lfS(),m=s.mail.find(x=>x.id===id);if(!m||m.got)return;m.got=1;m.rd=1;if(m.g){P.gold+=m.g;toast("🪙 +"+nfm(m.g),"#ffd34e")}for(const k in m.m)matAdd(k,m.m[k]);
+ if(m.it>=0)mgGiveItem(makeItem(Math.max(m.it,rollRarity(m.it))));SFX.coin&&SFX.coin();save();renderMg();hud()}
+/* friends write: once a day one Saga friend (❤4+) or a road friend may send a gift, more often with a good reputation */
+function mailDaily(){const s=lfS(),d=dayKey();if(s.gd.d===d)return;s.gd.d=d;
+ if(s.gd.n){const g=Math.round((80+battleNo*6)*(1+.15*(s.gd.up.dues|0))*(1+.05*s.gd.mem.length));mailSend("guild","",{g,m:{iron:1+(s.gd.up.dues|0)}})}
+ const fr=SGN.filter(N=>!N.ro&&sgAff(N.k)>=4);if(fr.length&&Math.random()<.35+repLv()*.08){const N=fr[rint(0,fr.length-1)];mailSend("gift",sgNm(N.k),{g:Math.round(150+battleNo*8),m:{crys:1+(sgAff(N.k)>=8?2:0)},it:sgAff(N.k)>=10?RO[5]:-1})}}
+
+/* ---- daily errands ---- */
+const DAT={bfly:[2,3],coin:[1,2],game:[2,3],emote:[3,5],photo:[1,1],trade:[2,4],feed:[1,1],kill:[20,40],find:[1,2],obs:[1,1]};
+function lfDay(){const s=lfS(),d=dayKey();if(s.da.d===d)return s.da;const r=qRng("lfd"+d+(nickname||"")),ks=Object.keys(DAT),t0=[];while(t0.length<3){const k=ks[Math.floor(r()*ks.length)];if(!t0.includes(k))t0.push(k)}
+ s.da={d,t:t0,p:[0,0,0],got:0,n:t0.map(k=>DAT[k][0]+Math.floor(r()*(DAT[k][1]-DAT[k][0]+1)))};return s.da}
+const lfDayReady=()=>{if(!LG)return false;const D=lfDay();return !D.got&&D.t.every((k,i)=>D.p[i]>=(D.n||[])[i])};
+function dayHit(k,n){if(!LG)return;const D=lfDay();D.t.forEach((x,i)=>{if(x===k&&D.p[i]<(D.n||[])[i]){D.p[i]=Math.min(D.n[i],D.p[i]+(n||1));if(D.p[i]>=D.n[i])toast("📅 "+t("lf_d_"+k,{p:D.p[i],n:D.n[i]})+" ✓","#8fe08a")}})}
+function dayClaim(){const s=lfS(),D=lfDay();if(D.got||!D.t.every((k,i)=>D.p[i]>=D.n[i]))return;D.got=1;const g=Math.round(400+battleNo*15);P.gold+=g;matAdd("crys",2);gdXp(40);lfRep(1);
+ const st=s.stk,y=new Date(Date.now()-864e5),yk=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");st.n=st.d===yk?st.n+1:1;st.d=D.d;st.best=Math.max(st.best,st.n);
+ for(const [n,rw] of [[3,{g:1500,m:{crys:4}}],[7,{g:4000,m:{star:2},it:RO[5]}],[14,{g:9000,m:{star:4,shard:2},it:RO[6]}],[30,{g:25000,m:{star:8,shard:5},it:RO[8]}]])if(st.n>=n&&st.paid<n){st.paid=n;mailSend("streak",String(n),rw);if(n===30)LG.ttl.steadfast=1}
+ if(st.n<st.paid)st.paid=0;if(st.n>=30)scnUnlock(3);banner("📅 "+t("lf_dayAll"),"🪙 +"+nfm(g));SFX.jackpot&&SFX.jackpot();save();renderMg();hud()}
+/* kills count for errands, mastery and stats */
+{const _k=p13Kill;p13Kill=function(e){_k(e);if(!LG||e.cfg.pet)return;dayHit("kill");lfCnt("kill");gdXp(1)}}
+
+/* ---- emotes ---- */
+const LFEMO=[["wave","👋",0],["bow","🙇",0],["laugh","😂",0],["dance","💃",5],["cheer","🙌",0],["pray","🙏",10],["angry","😠",0],["sit","🧘",15]];
+const emoOpen=E=>lfMaLv()>=E[2];
+let emoCd=0;
+function emote(k){const E=LFEMO.find(x=>x[0]===k),s=lfS();if(!E||!emoOpen(E)||emoCd>0)return;emoCd=1.2;const h=hero;closeModal();
+ setTimeout(()=>{cbTxt(E[1]+" "+t("lf_e_"+k),"#ffe9a0");const d=hdir();for(let i=0;i<14;i++)parts.push({x:h.x+d.x*40+rnd(-14,14),z:h.z+d.z*14+rnd(-5,5),h:rnd(20,44),vx:rnd(-20,20),vz:0,vh:rnd(10,50),g:0,life:rnd(.6,1.1),max:1.1,col:"#ffe9a0",size:rnd(2,3.5),t:"spark"});
+  dayHit("emote");lfCnt("emote");SFX.ui&&SFX.ui();
+  /* the pet hops, travellers and NPC objects near you answer */
+  if(petE){petE.h=Math.max(petE.h||0,18);if(Math.random()<.5)toast(t("lf_petRe",{n:(PETS.find(p=>p.k===SL.pa)||{ic:"🐾"}).ic}),"#c8e07a");lfS().pet.mood=Math.min(100,lfS().pet.mood+3)}
+  const npc=mgObjs.find(o=>!o.used&&o.k==="p48npc"&&Math.hypot(o.x-h.x,(o.z-h.z)*ZS)<220);
+  if(npc){const nm=p48Nm(npc.n|0),line=k==="angry"?t("sg_rude1"):k==="laugh"?t("sg_joke0"):t("sg_x_early");say(nm,line,"#ffe0a0",P48N[npc.n|0].ic);if(k!=="angry"&&lfS().hid["n"+(npc.n|0)]!==dayKey()){lfS().hid["n"+(npc.n|0)]=dayKey();try{p48Heart(npc.n|0)}catch(e){}lfRep(.5)}else if(k==="angry")lfRep(-1)}
+  hidTry(k);save()},250)}
+/* hidden interactions: some places answer one gesture once a day */
+const HID=[["lamp","pray",o=>{addBuf({k:"lfhid",ic:"🕯️",col:"#ffd98a",fx:[["regen",4],["dmgRed",5]],t:120,max:120})}],["camp","dance",o=>{addBuf({k:"lfhid2",ic:"🔥",col:"#ff9a4a",fx:[["atkSpd",8],["speed",8]],t:120,max:120})}],
+ ["statue","bow",o=>{P.gold+=300+battleNo*10;matAdd("crys",1)}],["sgsite","pray",o=>{if(o.s==="temple"){matAdd("star",1)}else matAdd("amber",2)}],["meteor","cheer",o=>{matAdd("crys",2)}],["fish","sit",o=>{LG.bait=(LG.bait|0)+2}]];
+function hidTry(k){const s=lfS(),h=hero;for(const [ok,ek,fn] of HID){if(ek!==k)continue;const o=mgObjs.find(x=>!x.used&&x.k===ok&&Math.hypot(x.x-h.x,(x.z-h.z)*ZS)<160);if(!o)continue;const key="h_"+ok;if(s.hid[key]===dayKey())continue;
+ s.hid[key]=dayKey();try{fn(o)}catch(e){}lfCnt("hidden");flashA=.3;flashCol="#ffe9a0";setTimeout(()=>toast(t("lf_hid"),"#ffe9a0"),300);SFX.divine&&SFX.divine();logH("✨","lf_hid","");return}}
+let lfEmoBtn=null;
+
+/* ---- cosmetics: trail, spawn and victory effects that really show in the game ---- */
+const COS={trail:["ember","frost","petal","star","shadow","gold"],spawn:["ring","burst","star","frost"],win:["fire","ring","petal","rain"]};
+const COSC={ember:"#ff8a3a",frost:"#bfe8ff",petal:"#ff9ac8",star:"#ffe9a0",shadow:"#9a5aff",gold:"#ffd34e",ring:"#fff2b0",burst:"#ffb03a",fire:"#ff5f6f",rain:"#ffd34e"};
+const cosSlotLv={trail:5,spawn:10,win:15};
+const cosOpen=(slot,k)=>!!lfS().cosU[slot+":"+k];
+function cosGive(slot,k){const s=lfS(),key=slot+":"+k;if(s.cosU[key])return;s.cosU[key]=1;toast(t("lf_cosNew",{n:t("lf_c_"+k)+" ("+t("lf_sl_"+slot)+")"}),COSC[k]);save()}
+let trT=0;
+function cosTick(dt){const s=lfS(),h=hero;if(!isFP()||hero.state==="dead")return;const tr=s.cos.trail;if(tr&&lfMaLv()>=cosSlotLv.trail){const mv=Math.hypot(h.vx||0,h.vz||0)>5||keys&&(keys.w||keys.ArrowUp)||joy&&Math.hypot(joy.x,joy.y)>.2;
+ trT-=dt;if(mv&&trT<=0){trT=.08;const d=hdir(),col=COSC[tr];for(let i=0;i<2;i++)parts.push({x:h.x+d.x*rnd(18,40)+rnd(-10,10),z:h.z+d.z*rnd(6,14)+rnd(-6,6),h:rnd(1,6),vx:-d.x*rnd(20,60),vz:0,vh:tr==="petal"||tr==="gold"?rnd(5,20):rnd(10,40),g:tr==="petal"?-10:0,life:rnd(.5,.9),max:.9,col:Math.random()<.3?"#ffffff":col,size:rnd(1.6,3),t:tr==="star"||tr==="gold"?"spark":"dot"})}}}
+function cosSpawn(){const s=lfS(),k=s.cos.spawn;if(!k||lfMaLv()<cosSlotLv.spawn||!isFP())return;const h=hero,col=COSC[k];flashA=.35;flashCol=col;
+ parts.push({x:h.x,z:h.z,h:0,life:.9,max:.9,t:"ring",col,size:40});for(let i=0;i<30;i++){const a=rnd(0,PI*2),v=rnd(40,140);parts.push({x:h.x+hdir().x*30,z:h.z,h:rnd(5,40),vx:Math.cos(a)*v,vz:Math.sin(a)*v*.4,vh:rnd(20,120),g:80,life:rnd(.5,1),max:1,col:i%3?col:"#ffffff",size:rnd(2,4),t:"spark"})}}
+function cosWin(){const s=lfS(),k=s.cos.win;if(!k||lfMaLv()<cosSlotLv.win||!isFP())return;const h=hero,d=hdir(),col=COSC[k];
+ if(k==="fire"){try{fireworks()}catch(e){}}else if(k==="ring"){for(let i=0;i<3;i++)setTimeout(()=>parts.push({x:h.x+d.x*60,z:h.z+d.z*20,h:0,life:1,max:1,t:"ring",col,size:30+i*14}),i*180)}
+ else for(let i=0;i<40;i++)parts.push({x:h.x+d.x*rnd(30,90)+rnd(-40,40),z:h.z+d.z*rnd(10,30)+rnd(-14,14),h:rnd(60,110),vx:rnd(-10,10),vz:0,vh:rnd(-40,-10),g:k==="rain"?120:15,life:rnd(1,1.6),max:1.6,col:k==="rain"?(i%2?"#ffd34e":"#fff2b0"):(i%2?col:"#ffffff"),size:rnd(2,3.5),t:k==="rain"?"spark":"dot"});
+ SFX.ui&&SFX.ui()}
+{const _w=p17WaveEnd;p17WaveEnd=function(){_w();if(LG&&!(MG&&MG.run))setTimeout(cosWin,400)}}
+{const _s=resetWorld;resetWorld=function(){_s();if(LG)setTimeout(cosSpawn,600)}}
+
+/* ---- looks: hair on the doll, emblem by the name, interface themes ---- */
+const HAIR=[null,"M41 40 Q42 22 60 21 Q78 22 79 40 Q74 31 60 30 Q46 31 41 40Z","M40 42 Q40 20 60 19 Q80 20 80 42 L82 66 Q78 58 76 46 Q70 30 60 30 Q50 30 44 46 Q42 58 38 66Z",
+ "M41 40 Q42 22 60 21 Q78 22 79 40 Q74 31 60 30 Q46 31 41 40Z M77 34 Q92 40 88 62 Q84 50 78 44Z","M55 32 Q56 10 60 8 Q64 10 65 32 Q60 28 55 32Z","M41 40 Q42 22 60 21 Q78 22 79 40 Q74 31 60 30 Q46 31 41 40Z M41 42 Q36 56 40 72 L44 70 Q42 56 45 44Z M79 42 Q84 56 80 72 L76 70 Q78 56 75 44Z",
+ "M40 40 Q36 30 44 24 Q46 16 56 18 Q62 12 70 18 Q80 18 80 28 Q86 34 80 42 Q76 32 70 32 Q64 28 58 32 Q50 28 44 34Z"];
+const HAIRC=["#2a1a10","#6a3a1a","#c8a060","#e8e0d0","#8a1a1a","#3a3a8a"];
+{const _d=dlHead;dlHead=function(it){const h=_d(it);if(it||!LG)return h;const s=lfS(),p=HAIR[s.hair|0];if(!p)return h;const c=HAIRC[(s.emb.c|0)%HAIRC.length];
+ return h+`<path d="${p}" fill="${c}" stroke="#1a0a06" stroke-width="1.2" stroke-linejoin="round"/><path d="${p}" fill="url(#none)" opacity=".2"/>`}}
+const EMB=["🛡️","⚔️","🐉","🦅","🌙","☀️","🔥","❄️","🌿","💀","👑","⭐"],EMBC=["#ffd34e","#ff5f6f","#6bf0ae","#8fc6ff","#c79cff","#ffb03a","#e8e8e8","#ff8ad8"];
+function lfApplyLooks(){const s=lfS(),b=document.body;["forest","ice","royal","blood","sea"].forEach(k=>b.classList.toggle("lfth_"+k,s.theme===k));
+ const nm=$("hName");if(nm){let em=$("lfEmb");if(!em){em=document.createElement("span");em.id="lfEmb";nm.parentNode.insertBefore(em,nm)}em.textContent=EMB[s.emb.i|0];em.style.cssText=`color:${EMBC[s.emb.c|0]};margin-right:3px;filter:drop-shadow(0 0 3px ${EMBC[s.emb.c|0]})`}
+ const bag=document.querySelector("#mInv");if(bag){["leather","royal","shadow","nature","frost"].forEach(k=>bag.classList.toggle("bp_"+k,s.room.own["bp_"+k]===2))}}
+{const st=document.createElement("style");st.textContent=`
+body.lfth_forest{--line:#3a6a3a}body.lfth_forest .sheet{background:linear-gradient(180deg,#0e1a10,#0a120b)!important;border-color:#3a6a3a!important}
+body.lfth_ice{--line:#4a7aa8}body.lfth_ice .sheet{background:linear-gradient(180deg,#0c1622,#081018)!important;border-color:#4a7aa8!important}
+body.lfth_royal{--line:#a8862a}body.lfth_royal .sheet{background:linear-gradient(180deg,#1c1206,#120a04)!important;border-color:#a8862a!important}
+body.lfth_blood{--line:#8a1a2a}body.lfth_blood .sheet{background:linear-gradient(180deg,#1e0608,#120304)!important;border-color:#8a1a2a!important}
+body.lfth_sea{--line:#2a8a8a}body.lfth_sea .sheet{background:linear-gradient(180deg,#061a1c,#041012)!important;border-color:#2a8a8a!important}
+#mInv.bp_leather .bagGrid,#mInv.bp_leather .bag{background:linear-gradient(180deg,#3a2414,#24160c)!important}#mInv.bp_royal .bagGrid,#mInv.bp_royal .bag{background:linear-gradient(180deg,#3a2a08,#1e1404)!important}
+#mInv.bp_shadow .bagGrid,#mInv.bp_shadow .bag{background:linear-gradient(180deg,#1a0e2a,#0c0614)!important}#mInv.bp_nature .bagGrid,#mInv.bp_nature .bag{background:linear-gradient(180deg,#14281a,#0a160e)!important}#mInv.bp_frost .bagGrid,#mInv.bp_frost .bag{background:linear-gradient(180deg,#10202e,#08121c)!important}
+.mgGrp{flex-wrap:wrap}.mgGrp button{flex:1 1 calc(50% - 6px)}
+.lfG{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.lfG button{padding:8px 2px;font-size:20px;border-radius:12px;border:1px solid var(--line);background:rgba(20,12,20,.7);color:#f4e8d8}.lfG button small{display:block;font-size:10px;margin-top:2px}
+.lfG button.on{outline:2px solid #ffd34e;background:rgba(80,60,20,.6)}.lfG button:disabled{opacity:.35}
+.mgArena{display:grid;gap:6px;justify-content:center;margin:8px 0}.mgArena button{width:56px;height:56px;font-size:26px;border-radius:12px;border:1px solid var(--line);background:#1a0f18;color:#fff}
+.mgArena button.hl{background:#3a6a2a;box-shadow:0 0 14px #6bf07a}.mgArena button.bad{background:#6a1a1a}.mgArena button.ok{background:#2a5a2a}
+.lfBig{font-size:46px;text-align:center;margin:10px 0}.lfRoom{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:10px;border-radius:14px;background:linear-gradient(180deg,#2a1a12,#1a100a);border:2px solid #5a3a22}
+.lfRoom div{aspect-ratio:1;display:grid;place-items:center;font-size:30px;border-radius:10px;background:rgba(255,230,190,.06);border:1px dashed rgba(255,230,190,.2)}.lfRoom div small{display:block;font-size:9px;text-align:center}
+.lfCard{display:inline-grid;place-items:center;width:62px;height:84px;margin:3px;border-radius:9px;border:2px solid var(--cc,#555);background:linear-gradient(160deg,#2a1a2a,#120a12);font-size:26px;vertical-align:top}.lfCard small{font-size:9px;line-height:1.1;text-align:center;padding:0 2px}.lfCard.lk{filter:grayscale(1) brightness(.4)}
+.lfSpark{width:100%;height:46px}.lfPh{display:inline-block;width:31%;margin:1%;border-radius:8px;border:1px solid var(--line)}
+`;document.head.appendChild(st)}
+
+/* ---- music themes: the chosen theme replaces the music of the land ---- */
+const MUS={heroic:{b:[41,41,45,43,46,46,45,43],m:[65,69,72,77,76,72,69,67,69,72,76,74],tp:250,u:()=>lfRecN()>=5},calm:{b:[45,45,43,43,41,41,43,40],m:[69,71,72,76,74,72,71,69,67,69,71,72],tp:330,u:()=>lfS().room.s.filter(Boolean).length>=3},
+ myst:{b:[38,38,39,39,36,36,35,35],m:[62,63,66,62,61,58,62,63,67,66,63,62],tp:300,u:()=>Object.keys(lfS().msg).length>=3},fest:{b:[48,48,45,45,41,41,43,43],m:[72,76,79,76,74,77,81,77,76,72,74,79],tp:220,u:()=>lfS().stk.best>=7},
+ dark:{b:[36,36,35,35,33,33,31,31],m:[60,63,62,58,57,60,63,65,63,62,58,55],tp:300,u:()=>Object.keys(sgS().bio).length>=20},sea:{b:[43,43,47,47,45,45,40,40],m:[67,71,74,72,71,67,64,67,69,71,74,76],tp:290,u:()=>Object.keys(lfS().bfl).length>=5}};
+{const _m=musicStart;musicStart=function(){const k=LG&&lfS().mus,M=k&&MUS[k];if(!M||!M.u())return _m();if(musTimer||!ac())return;musStep=0;
+ musTimer=setInterval(()=>{if(paused)return;const s=musStep++;if(s%2===0)mnote(M.b[(s>>1)%8],.7,"triangle",.07);if(s%8===0)mnote(M.b[(s>>1)%8]+12,1.4,"sine",.025);if(s%3!==2&&hash(s*1.7)<.55)mnote(M.m[(s*5+(s>>4))%M.m.length],.35,"sine",.022)},M.tp)}}
+function musSet(k){const s=lfS();if(k&&!(MUS[k]&&MUS[k].u()))return;s.mus=k;if(musTimer){clearInterval(musTimer);musTimer=null}if(S.musicOn)musicStart();save();renderMg()}
+
+/* ---- specialisation and play style ---- */
+const SPEC={col:[["rarBonus",3],["goldBonus",5]],exp:[["speed",6],["gath",20]],duel:[["crit",4],["bossDmg",6]],tam:[],mer:[]};
+let specArm="";
+function specPick(k){const s=lfS();if(!SPEC[k]||s.spec===k)return;const c=s.spec?Math.round(3000+battleNo*40):0;if(c&&P.gold<c){toast("🪙 "+t("sm_gold"),"#ff8a5a");SFX.buzz();return}
+ if(c&&specArm!==k){specArm=k;toast(t("sg_arm")+" · 🪙"+nfm(c),"#ffd34e");setTimeout(()=>{if(specArm===k)specArm=""},4000);return}specArm="";P.gold-=c;s.spec=k;recalc();SFX.equip&&SFX.equip();save();renderMg();hud()}
+const styNow=()=>{const s=lfS().sty,tot=s.m+s.s+s.d;if(tot<60)return"none";return s.s>s.m*.8&&s.s>=s.d?"mage":s.d>tot*.3?"shadow":"blade"};
+{const _a=tryAction;tryAction=function(a){const cd=hero.cd&&hero.cd[a],st=hero.state;_a(a);if(!LG)return;const used=(hero.cd&&hero.cd[a]>0&&!(cd>0))||(a==="attack"&&st!=="attack"&&hero.state==="attack");if(!used)return;
+ const s=lfS().sty;if(a==="attack"||a==="heavy"||a==="spin")s.m++;else if(a==="dodge")s.d++;else s.s++;if(s.m+s.s+s.d>400){s.m*=.9;s.s*=.9;s.d*=.9}
+ if(a==="fire"||a==="bolt"||a==="blaze"||a==="heal")maAdd("magic",1)}}
+
+/* ---- weapon mastery: swords by blows, magic by spells, archery by the Spirit's shots ---- */
+const maNeed=l=>Math.round(40*Math.pow(l+1,1.7));
+const maLv=k=>{const x=lfS().mast[k]|0;let l=0;while(l<20&&x>=maNeed(l))l++;return l};
+const lfMaLv=()=>Math.max(maLv("sword"),maLv("magic"),maLv("bow"));
+function maAdd(k,n){const l0=maLv(k);lfS().mast[k]=(lfS().mast[k]|0)+n;const l1=maLv(k);if(l1>l0){recalc();toast(t("lf_maUp",{n:t("lf_ma_"+k),m:l1}),"#ffd98a");
+ const mx=lfMaLv();if(l1===5)cosGive("trail",k==="sword"?"ember":k==="magic"?"star":"frost");if(l1===10)cosGive("spawn",k==="sword"?"burst":k==="magic"?"star":"frost");if(l1===15)cosGive("win",k==="sword"?"fire":k==="magic"?"ring":"petal");if(l1===20){cosGive("trail",k==="sword"?"gold":k==="magic"?"shadow":"petal");cosGive("win","rain")}
+ if(mx>=20&&!LG.ttl.weaponmaster)LG.ttl.weaponmaster=1}}
+{const _de=damageEnemy;damageEnemy=function(e,d,crit,dir,kb,kind){if(LG&&e&&e.state!=="dead"){if(kind==="spirit")maAdd("bow",1);else if(kind==="melee"||kind==="heavy"||kind==="spin"||!kind)maAdd("sword",1)}return _de(e,d,crit,dir,kb,kind)}}
+/* all bonuses of this update go into the stats here */
+{const _s=lgStats;lgStats=function(s){_s(s);if(!LG)return;const f=lfS(),add=(a,m)=>{if(a)for(const [k,v] of a)s[k]=(s[k]||0)+v*(m==null?1:m)};
+ add([["dmgMul",.5]],maLv("sword"));add([["fireBonus",1],["lightningBonus",1]],maLv("magic"));add([["spPow",2]],maLv("bow"));
+ if(f.spec&&SPEC[f.spec])add(SPEC[f.spec]);const sy=styNow();if(sy==="blade")add([["dmgMul",5]]);if(sy==="mage")add([["fireBonus",10],["lightningBonus",10]]);if(sy==="shadow")add([["evade",4],["speed",5]]);
+ add(lfColBonus());add(lfCardBonus());add(gdBonus());add(lfRoomBonus());add(mountBonus());
+ if(SL.pa){const P0=PETS.find(p=>p.k===SL.pa),m=petMoodMul();if(P0)add(P0.fx,(m-1)*(f.spec==="tam"?1.5:1)+(f.spec==="tam"?.5:0))}}}
+/* ============ P59 part B: five mini-games with rules, scores, records and rewards ============ */
+const LFTB={
+lf_gH:"П'ять ігор. Перші 3 партії кожної гри на день дають повну нагороду, далі — лише рекорди. За рекорди — кубки в колекцію.|Five games. The first 3 rounds of each game a day pay a full reward, after that only records count. Records earn cups for your collection.",
+lf_g_react:"Реакція|Reaction",lf_g_mem:"Пам'ять рун|Rune memory",lf_g_sym:"Магічні символи|Magic symbols",lf_g_diff:"Знайди відмінності|Spot the difference",lf_g_gear:"Механізм|Clockwork",
+lf_gd_react:"Коли руна засвітиться зеленим — тисни якомога швидше. 5 спроб. Натиснув зарано — штраф 500 мс.|When the rune turns green, tap as fast as you can. 5 tries. Tapping too early costs 500 ms.",
+lf_gd_mem:"Запам'ятай, які руни спалахнули, і повтори. Щоразу послідовність довшає.|Remember which runes flashed and repeat them. The sequence grows each time.",
+lf_gd_sym:"Натисни три символи заклинання в правильному порядку. 5 заклинань, 10 с на кожне.|Tap the three symbols of the spell in the right order. 5 spells, 10 s each.",
+lf_gd_diff:"Справа є 3 відмінності від лівої картинки. Знайди їх за 40 с.|The right picture has 3 differences from the left one. Find them in 40 s.",
+lf_gd_gear:"Повертай шестерні, поки всі стрілки не дивитимуться вгору. Що менше ходів — то краще.|Turn the gears until every arrow points up. The fewer moves, the better.",
+lf_gStart:"▶️ Грати|▶️ Play",lf_gBest:"Рекорд: {n}|Best: {n}",lf_gToday:"Сьогодні: {n}/3|Today: {n}/3",lf_gWait:"Чекай зеленого…|Wait for green…",lf_gNow:"ТИСНИ!|TAP!",lf_gEarly:"Зарано! +500 мс|Too early! +500 ms",
+lf_gRes:"Результат: {n}|Result: {n}",lf_gNewRec:"🏆 Новий рекорд!|🏆 New record!",lf_gWatch:"Дивись…|Watch…",lf_gYour:"Твоя черга!|Your turn!",lf_gBack:"⬅️ До списку ігор|⬅️ Back to games",
+lf_gMoves:"Ходів: {n}|Moves: {n}",lf_gTime:"Час: {n} с|Time: {n} s",lf_gFound:"Знайдено: {n}/3|Found: {n}/3",lf_gSpell:"Заклинання {n}/5|Spell {n}/5",lf_cupNew:"🏆 Кубок за гру «{n}»!|🏆 A cup for «{n}»!"};
+for(const k in LFTB)T8[k]=S8(LFTB[k]);
+const LFG=["react","mem","sym","diff","gear"],LFGI={react:"⚡",mem:"🧠",sym:"🔮",diff:"🔍",gear:"⚙️"};
+/* better = lower for reaction (ms) and clockwork (moves), higher for the rest */
+const lfLow=k=>k==="react"||k==="gear";
+const lfFmt=(k,v)=>k==="react"?v+" ms":k==="gear"?v+" ⚙️":String(v);
+const CUP={react:300,mem:9,sym:5,diff:3,gear:12};
+let G0=null;
+function gPlays(k){const s=lfS();if(s.mg.d!==dayKey()){s.mg.d=dayKey();s.mg.n={}}return s.mg.n[k]|0}
+function gStart(k){if(!LFG.includes(k))return;G0={k,st:"run",t0:performance.now()};if(k==="react"){G0.r=0;G0.sum=0;G0.go=0;gReactNext()}
+ if(k==="mem"){G0.seq=[rint(0,8)];G0.i=0;G0.show=1;gMemShow()}
+ if(k==="sym"){G0.n=0;G0.ok=0;gSymNew()}
+ if(k==="diff"){const E=["🌲","🪨","🍄","🌸","🏰","🐺","🦉","⭐","🌙","🔥","💧","🍀"];G0.L=Array.from({length:25},()=>E[rint(0,E.length-1)]);G0.R=G0.L.slice();G0.d=[];
+  while(G0.d.length<3){const i=rint(0,24);if(G0.d.includes(i))continue;G0.d.push(i);let x;do x=E[rint(0,E.length-1)];while(x===G0.L[i]);G0.R[i]=x}G0.f=[];G0.end=performance.now()+40000;gTimer()}
+ if(k==="gear"){G0.g=Array.from({length:9},()=>rint(0,3));if(G0.g.every(v=>v===0))G0.g[4]=2;G0.mv=0;G0.par=G0.g.reduce((a,v)=>a+(4-v)%4,0)}
+ renderMg()}
+function gEnd(score){const k=G0.k,s=lfS();G0.st="end";G0.score=score;const n=gPlays(k);s.mg.n[k]=n+1;lfCnt("game");dayHit("game");gdXp(10);
+ const b=s.mg.best[k],rec=b==null||(lfLow(k)?score<b:score>b);if(rec){s.mg.best[k]=score;G0.rec=1;if(b!=null)mailSend("rec",t("lf_g_"+k)+" — "+lfFmt(k,score))}
+ const good=lfLow(k)?score<=CUP[k]:score>=CUP[k];if(good&&!s.mg.cup[k]){s.mg.cup[k]=1;setTimeout(()=>banner(t("lf_cupNew",{n:t("lf_g_"+k)}),"🏆"),600);colGive("cups",LFG.indexOf(k))}
+ if(n<3){const q=lfLow(k)?Math.max(.2,Math.min(1.5,(k==="react"?600:G0.par*2+4)/Math.max(1,score))):Math.max(.2,Math.min(1.5,score/CUP[k]));const g=Math.round((150+battleNo*6)*q);P.gold+=g;if(q>=1)matAdd("crys",1);toast("🎮 +"+nfm(g)+" 🪙","#ffd34e")}
+ SFX.jackpot&&rec&&SFX.jackpot();save();renderMg();hud()}
+/* reaction */
+function gReactNext(){G0.go=0;G0.ready=0;clearTimeout(G0.to);G0.to=setTimeout(()=>{if(!G0||G0.k!=="react"||G0.st!=="run")return;G0.go=performance.now();G0.ready=1;const b=$("lfR");if(b){b.classList.add("hl");b.textContent="🟢";const tx=$("lfRt");if(tx)tx.textContent=t("lf_gNow")}},rnd(1200,3200))}
+function gReactTap(){if(!G0||G0.k!=="react"||G0.st!=="run")return;if(!G0.ready){G0.sum+=500;G0.r++;toast(t("lf_gEarly"),"#ff8a8a");SFX.buzz&&SFX.buzz()}else{const ms=Math.round(performance.now()-G0.go);G0.sum+=ms;G0.r++;cbTxt(ms+" ms","#8fe08a");SFX.ui&&SFX.ui()}
+ if(G0.r>=5){clearTimeout(G0.to);gEnd(Math.round(G0.sum/5))}else{renderMg();gReactNext()}}
+/* rune memory (repeat a growing sequence) */
+function gMemShow(){G0.show=1;G0.i=0;renderMg();let j=0;const step=()=>{if(!G0||G0.k!=="mem"||G0.st!=="run")return;const btns=document.querySelectorAll("#lfArena button");btns.forEach(b=>b.classList.remove("hl"));
+  if(j>=G0.seq.length){G0.show=0;const tx=$("lfRt");if(tx)tx.textContent=t("lf_gYour");return}const b=btns[G0.seq[j]];if(b){b.classList.add("hl");tone(330+G0.seq[j]*55,.25,"sine",.04)}j++;setTimeout(()=>{btns.forEach(x=>x.classList.remove("hl"));setTimeout(step,180)},520)};setTimeout(step,500)}
+function gMemTap(i){if(!G0||G0.k!=="mem"||G0.show||G0.st!=="run")return;tone(330+i*55,.2,"sine",.04);if(G0.seq[G0.i]!==i){gEnd(G0.seq.length-1);return}G0.i++;if(G0.i>=G0.seq.length){G0.seq.push(rint(0,8));setTimeout(gMemShow,500)}}
+/* magic symbols */
+const SYM=["🜁","🜂","🜃","🜄","☿","♄","♃","☽","☉"];
+function gSymNew(){G0.n++;G0.tg=[];while(G0.tg.length<3){const i=rint(0,8);if(!G0.tg.includes(i))G0.tg.push(i)}G0.i=0;G0.end=performance.now()+10000;gTimer()}
+function gSymTap(i){if(!G0||G0.k!=="sym"||G0.st!=="run")return;if(G0.tg[G0.i]===i){G0.i++;tone(500+G0.i*120,.15,"sine",.04);if(G0.i>=3){G0.ok++;if(G0.n>=5){gEnd(G0.ok);return}gSymNew()}}else{SFX.buzz&&SFX.buzz();if(G0.n>=5){gEnd(G0.ok);return}gSymNew()}renderMg()}
+/* spot the difference */
+function gDiffTap(i){if(!G0||G0.k!=="diff"||G0.st!=="run")return;if(G0.d.includes(i)&&!G0.f.includes(i)){G0.f.push(i);tone(660,.15,"sine",.05);if(G0.f.length>=3){gEnd(3+Math.max(0,Math.round((G0.end-performance.now())/4000)));return}}else{G0.end-=2000;SFX.buzz&&SFX.buzz()}renderMg()}
+/* clockwork: turning a gear also turns its right and lower neighbour */
+function gGearTap(i){if(!G0||G0.k!=="gear"||G0.st!=="run")return;G0.mv++;const r=(j)=>{G0.g[j]=(G0.g[j]+1)%4};r(i);if(i%3<2)r(i+1);if(i<6)r(i+3);tone(220+G0.mv*8,.08,"square",.02);if(G0.g.every(v=>v===0)){gEnd(G0.mv);return}renderMg()}
+/* a shared clock for the timed games */
+function gTimer(){clearInterval(G0&&G0.iv);if(!G0)return;G0.iv=setInterval(()=>{if(!G0||G0.st!=="run"){clearInterval(G0&&G0.iv);return}const left=Math.max(0,Math.ceil((G0.end-performance.now())/1000)),el=$("lfRt");if(el&&G0.k!=="react"&&G0.k!=="mem")el.textContent=t("lf_gTime",{n:left});
+ if(left<=0){if(G0.k==="sym"){if(G0.n>=5)gEnd(G0.ok);else{gSymNew();renderMg()}}else if(G0.k==="diff")gEnd(G0.f.length)}},250)}
+function lfRGame(){const s=lfS();if(G0&&modalOpen==="mMg"){const k=G0.k;let h=`<div class="mgCard here"><div class="mgTop"><span class="mgIc">${LFGI[k]}</span><div><h4>${t("lf_g_"+k)}</h4><small>${t("lf_gd_"+k)}</small></div></div>`;
+  if(G0.st==="end")h+=`<div class="lfBig">${G0.rec?"🏆":"🎮"}</div><p class="m" style="text-align:center"><b>${t("lf_gRes",{n:lfFmt(k,G0.score)})}</b>${G0.rec?"<br>"+t("lf_gNewRec"):""}</p><div class="smBtns"><button class="btn main" type="button" data-a="lfgo" data-v="${k}">${t("lf_gStart")}</button><button class="btn" type="button" data-a="lfgback">${t("lf_gBack")}</button></div>`;
+  else if(k==="react")h+=`<p class="m" id="lfRt" style="text-align:center">${t("lf_gWait")} (${G0.r}/5)</p><div class="mgArena"><button id="lfR" type="button" data-a="lfgtap" style="width:140px;height:140px;font-size:60px">🔴</button></div>`;
+  else if(k==="mem")h+=`<p class="m" id="lfRt" style="text-align:center">${G0.show?t("lf_gWatch"):t("lf_gYour")} · ${G0.seq.length}</p><div class="mgArena" id="lfArena" style="grid-template-columns:repeat(3,56px)">${SYM.map((x,i)=>`<button type="button" data-a="lfgtap" data-v="${i}">${x}</button>`).join("")}</div>`;
+  else if(k==="sym")h+=`<p class="m" style="text-align:center">${t("lf_gSpell",{n:G0.n})} · <span id="lfRt"></span></p><div class="lfBig">${G0.tg.map((x,j)=>`<span style="opacity:${j<G0.i?.3:1}">${SYM[x]}</span>`).join(" ")}</div><div class="mgArena" style="grid-template-columns:repeat(3,56px)">${SYM.map((x,i)=>`<button type="button" data-a="lfgtap" data-v="${i}">${x}</button>`).join("")}</div>`;
+  else if(k==="diff"){const cell=(L,cl)=>`<div class="mgArena" style="grid-template-columns:repeat(5,30px);gap:2px">${L.map((x,i)=>`<button type="button" ${cl?`data-a="lfgtap" data-v="${i}"`:"disabled"} class="${cl&&G0.f.includes(i)?"ok":""}" style="width:30px;height:30px;font-size:16px;padding:0">${x}</button>`).join("")}</div>`;
+   h+=`<p class="m" style="text-align:center">${t("lf_gFound",{n:G0.f.length})} · <span id="lfRt"></span></p><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">${cell(G0.L,0)}${cell(G0.R,1)}</div>`}
+  else if(k==="gear")h+=`<p class="m" style="text-align:center">${t("lf_gMoves",{n:G0.mv})}</p><div class="mgArena" style="grid-template-columns:repeat(3,56px)">${G0.g.map((v,i)=>`<button type="button" data-a="lfgtap" data-v="${i}" class="${v===0?"ok":""}"><span style="display:inline-block;transform:rotate(${v*90}deg)">⬆️</span></button>`).join("")}</div>`;
+  if(G0.st!=="end")h+=`<button class="btn sm" type="button" data-a="lfgback">${t("lf_gBack")}</button>`;return h+`</div>`}
+ G0=null;let h=`<p class="sub">${t("lf_gH")}</p>`;
+ for(const k of LFG){const b=s.mg.best[k];h+=`<div class="mgCard${s.mg.cup[k]?" done":""}"><div class="mgTop"><span class="mgIc">${LFGI[k]}</span><div><h4>${t("lf_g_"+k)}${s.mg.cup[k]?" 🏆":""}</h4><small>${t("lf_gBest",{n:b==null?"—":lfFmt(k,b)})} · ${t("lf_gToday",{n:Math.min(3,gPlays(k))})}</small></div></div><p class="m">${t("lf_gd_"+k)}</p><button class="btn sm main" type="button" data-a="lfgo" data-v="${k}">${t("lf_gStart")}</button></div>`}
+ return h}
+/* ============ P59 part C: things in the world (butterflies, coins, letters, rare creatures, panoramas), seasons, rare phenomena, mysterious messages, strange finds, secret scenes ============ */
+const LFTC={
+lf_bf:"Метелики|Butterflies",lf_bfN:"🦋 {n}! Торкнись, поки не відлетів.|🦋 {n}! Touch it before it flies away.",lf_bfC:"🦋 Спіймано: {n}|🦋 Caught: {n}",lf_bfG:"🦋 Метелик відлетів…|🦋 The butterfly flew away…",
+lf_b0:"Капустянка|Cabbage White",lf_b1:"Лимонниця|Brimstone",lf_b2:"Павичеве око|Peacock",lf_b3:"Махаон|Swallowtail",lf_b4:"Нічний сфінкс|Night Sphinx",lf_b5:"Кришталевий крилець|Crystalwing",lf_b6:"Вогнекрил|Emberwing",lf_b7:"Зоряний вітрильник|Star Sailor",
+lf_co:"Стародавні монети|Ancient coins",lf_coF:"🪙 Стародавня монета: {n}|🪙 Ancient coin: {n}",
+lf_c0:"Мідний грош|Copper Grosh",lf_c1:"Срібний денарій|Silver Denarius",lf_c2:"Королівська крона|Royal Crown",lf_c3:"Монета з дірою|Holed Coin",lf_c4:"Тіньовий обол|Shadow Obol",lf_c5:"Драконяча луска|Dragon Scale Coin",lf_c6:"Зоряний дукат|Star Ducat",lf_c7:"Монета без лиця|Faceless Coin",lf_c8:"Морський талер|Sea Thaler",lf_c9:"Попелястий гріш|Ash Penny",lf_c10:"Перша монета світу|First Coin of the World",lf_c11:"Монета з майбутнього|Coin from the Future",
+lf_lt:"Загублені листи|Lost letters",lf_ltF:"✉️ Знайдено загублений лист! Він у пошті.|✉️ A lost letter! It's in your mail.",
+lf_lt_t0:"Лист солдата|A soldier's letter",lf_lt_b0:"Мамо, тут холодно, але ми тримаємо стіну. Не плач. Я повернуся до жнив.|Mum, it's cold here, but we hold the wall. Don't cry. I'll be back by harvest.",
+lf_lt_t1:"Записка торговця|A trader's note",lf_lt_b1:"Хто знайде це — у дуплі старого дуба біля мосту я сховав мішечок. Мені він уже не знадобиться.|Whoever finds this: I hid a pouch in the hollow of the old oak by the bridge. I won't need it any more.",
+lf_lt_t2:"Любовний лист|A love letter",lf_lt_b2:"Я чекатиму на тебе біля маяка щовечора, поки море не висохне.|I'll wait for you by the lighthouse every evening until the sea runs dry.",
+lf_lt_t3:"Сторінка з щоденника|A diary page",lf_lt_b3:"Сьогодні бачив, як зірка впала в ліс. Завтра піду шукати. Якщо не повернуся — не шукайте.|Today I saw a star fall into the forest. Tomorrow I'll go looking. If I don't return, don't look for me.",
+lf_lt_t4:"Наказ без підпису|An unsigned order",lf_lt_b4:"Браму не відчиняти. Хай би хто стукав. Особливо якщо стукають зсередини.|Do not open the gate. No matter who knocks. Especially if they knock from the inside.",
+lf_lt_t5:"Дитячий малюнок|A child's drawing",lf_lt_b5:"На малюнку — герой з мечем і підпис: «Це ти. Ти нас врятуєш».|The drawing shows a hero with a sword and the words: «This is you. You will save us».",
+lf_lt_t6:"Рецепт бабусі|Grandma's recipe",lf_lt_b6:"Три гриби, жменя лаванди і крапля місячного світла. Варити, поки не заспіває.|Three mushrooms, a handful of lavender and a drop of moonlight. Boil until it sings.",
+lf_lt_t7:"Лист у пляшці|A letter in a bottle",lf_lt_b7:"Якщо ти це читаєш — острів існує. Я бачив його. Він рухається.|If you're reading this, the island is real. I saw it. It moves.",
+lf_lt_t8:"Прощальний лист|A farewell letter",lf_lt_b8:"Я йду туди, де закінчуються карти. Дякую за все, друже.|I'm going where the maps end. Thank you for everything, friend.",
+lf_lt_t9:"Лист, адресований тобі|A letter addressed to you",lf_lt_b9:"Ми ніколи не зустрічались, але я знаю, що ти дочитаєш до кінця. Продовжуй іти. Світ чекає.|We've never met, but I know you'll read to the end. Keep walking. The world is waiting.",
+lf_ob:"Рідкісні істоти|Rare creatures",lf_obN:"👀 Вдалині — {n}. Підійди ближче, дивись на неї й не нападай 3 с.|👀 In the distance: {n}. Come closer, look at it and don't attack for 3 s.",lf_obW:"👀 Ти спостерігав: {n}|👀 You watched: {n}",lf_obG:"👀 Істота зникла…|👀 The creature vanished…",
+lf_o0:"Білий олень|White Stag",lf_o1:"Кришталева лисиця|Crystal Fox",lf_o2:"Мандрівна черепаха|Wandering Tortoise",lf_o3:"Небесний кит|Sky Whale",lf_o4:"Тіньовий кіт|Shadow Cat",lf_o5:"Світляковий ведмідь|Firefly Bear",lf_o6:"Золотий заєць|Golden Hare",lf_o7:"Старий грифон|Old Griffin",
+lf_vi:"Панорамні місця|Panoramic places",lf_viN:"🗻 Оглядова точка поруч! Стань на неї й повільно озирнись навколо.|🗻 A viewpoint nearby! Stand on it and slowly look all around.",lf_viW:"🗻 Панорама відкрита: {n}|🗻 Panorama found: {n}",
+lf_sea0:"Весна|Spring",lf_sea1:"Літо|Summer",lf_sea2:"Осінь|Autumn",lf_sea3:"Зима|Winter",lf_seaH:"Пора року: {n} (прикраси світу змінюються з місяцем)|Season: {n} (the world's decorations change with the month)",
+lf_ph_blood:"🩸 Кривавий місяць! Вороги лютіші, але досвіду більше.|🩸 Blood moon! Foes are fiercer, but you gain more experience.",lf_ph_orb:"⚡ Кульова блискавка пливе поруч. Торкнись її!|⚡ Ball lightning drifts nearby. Touch it!",lf_ph_orbT:"⚡ Блискавка зарядила тебе!|⚡ The lightning charged you!",
+lf_ph_mir:"🏯 Міраж замку на обрії… підійди ближче.|🏯 A mirage of a castle on the horizon… come closer.",lf_ph_mirT:"🏯 Міраж розтанув, лишивши дарунок.|🏯 The mirage melted away, leaving a gift.",
+lf_msg:"Таємничі послання|Mysterious messages",lf_ms0:"«Ти стоїш там, де колись стояв перший герой.»|«You stand where the first hero once stood.»",lf_ms1:"«Опівночі тіні говорять правду.»|«At midnight the shadows tell the truth.»",
+lf_ms2:"«Хтось дивиться на тебе з-за меж карти.»|«Someone is watching you from beyond the edge of the map.»",lf_ms3:"«Твоє серце б'ється в такт із землею.»|«Your heart beats in time with the earth.»",lf_ms4:"«Не все, що блищить, — скарб. Але цього разу — так.»|«Not all that glitters is treasure. But this time it is.»",
+lf_ms5:"«Затемнення пам'ятає твоє ім'я.»|«The eclipse remembers your name.»",lf_msF:"📜 Таємниче послання з'явилося в повітрі…|📜 A mysterious message appeared in the air…",
+lf_find:"Дивні знахідки|Strange finds",lf_findF:"🔎 Дивна знахідка: {n}|🔎 A strange find: {n}",
+lf_scn:"Секретні сцени|Secret scenes",lf_scnNew:"🎬 Відкрито секретну сцену: {n}|🎬 Secret scene unlocked: {n}",lf_scnPlay:"▶️ Переглянути|▶️ Watch",lf_scnLock:"🔒 Умова прихована|🔒 The condition is hidden",
+lf_sc0:"Танець метеликів|Dance of Butterflies",lf_sc0a:"Тисячі крил здіймаються в небо…|Thousands of wings rise into the sky…",lf_sc0b:"…і на мить світ стає кольоровим, як у дитинстві.|…and for a moment the world is as colourful as in childhood.",
+lf_sc1:"Скарбниця королів|Treasury of Kings",lf_sc1a:"Монети в твоїй сумці раптом стають теплими.|The coins in your bag suddenly grow warm.",lf_sc1b:"Вони пам'ятають руки всіх королів, що тримали їх до тебе.|They remember the hands of every king who held them before you.",
+lf_sc2:"Голос гільдії|Voice of the Guild",lf_sc2a:"Під твоїм прапором зібралися всі, хто тобі вірить.|Everyone who believes in you has gathered under your banner.",lf_sc2b:"«За нашого лідера!» — лунає над дорогою.|«For our leader!» rings out over the road.",
+lf_sc3:"Тридцять світанків|Thirty Dawns",lf_sc3a:"Тридцять днів поспіль ти не здавався.|Thirty days in a row you didn't give up.",lf_sc3b:"Сонце сходить ніби лише для тебе.|The sun rises as if just for you.",
+lf_sc4:"Під затемненням|Under the Eclipse",lf_sc4a:"Місяць закриває сонце, і тіні стають живими.|The moon covers the sun and the shadows come alive.",lf_sc4b:"Вони вклоняються тобі — і зникають.|They bow to you, and vanish."};
+for(const k in LFTC)T8[k]=S8(LFTC[k]);
+/* butterflies: rarer ones in special lands or at night */
+const BFL=[{c:"#f4f4f4",r:0},{c:"#ffe14e",r:0},{c:"#c84a4a",r:1},{c:"#ffd98a",r:1},{c:"#5a4a8a",r:2,n:1},{c:"#9fe8ff",r:2},{c:"#ff6a2a",r:3},{c:"#c8b4ff",r:4,n:1}];
+const COINS=12,LETTERS=10,OBS=["🦌","🦊","🐢","🐋","🐈‍⬛","🐻","🐇","🦅"];
+let bfT=40,coT=70,ltT=150,obT=120,viT=100,phT=300,msT2=0,lfT1=0;
+function lfPlace(k,o,d0,d1,side){const x=hero.x+rnd(d0,d1),z=clamp(hero.z+(side||rnd(-90,90)),zLo(25),zHi(25)),ob=Object.assign({k,x,z,t0:tNow},o||{});mgObjs.push(ob);return ob}
+const lfLive=k=>mgObjs.some(o=>!o.used&&o.k===k&&o.x>hero.x-300);
+function lfWorldTick(dt){if(!LG||!isFP()||(MG&&MG.run)||hero.state==="dead"||battleNo<2)return;const s=lfS(),ex=s.spec==="exp"?1.5:1;
+ bfT-=dt*ex;if(bfT<=0){bfT=rnd(70,130);if(!lfLive("lfbfly")){const n=nightK()>.6,pool=BFL.map((B,i)=>[i,B.n&&!n?0:[50,40,18,14,8,6,3,1][i]]);const i=wpick(Math.random,pool),o=lfPlace("lfbfly",{b:i,ttl:45},140,320);toast(t("lf_bfN",{n:t("lf_b"+i)}),BFL[i].c)}}
+ coT-=dt*ex;if(coT<=0){coT=rnd(110,190);if(!lfLive("lfcoin"))lfPlace("lfcoin",{c:rint(0,COINS-1)},200,420)}
+ ltT-=dt;if(ltT<=0){ltT=rnd(240,420);if(!lfLive("lfletter")&&s.letter.length<LETTERS)lfPlace("lfletter",{},220,420)}
+ obT-=dt;if(obT<=0){obT=rnd(200,340);if(!lfLive("lfcrea")){const i=rint(0,OBS.length-1),o=lfPlace("lfcrea",{c:i,w:0,ttl:70},420,560,(Math.random()<.5?-1:1)*rnd(140,200));toast(t("lf_obN",{n:OBS[i]+" "+t("lf_o"+i)}),"#c8e07a")}}
+ viT-=dt;if(viT<=0){viT=rnd(260,420);const bi=biomeIdx();if(!s.vista[bi]&&!lfLive("lfvista")){lfPlace("lfvista",{bi,yaw:0,st:0},260,420);toast(t("lf_viN"),"#bfe8ff")}}
+ /* objects that move or wait */
+ for(const o of mgObjs){if(o.used)continue;
+  if(o.k==="lfbfly"){o.ttl-=dt;o.x+=Math.sin(tNow*1.3+o.b)*30*dt;o.z+=Math.cos(tNow*1.7+o.b)*12*dt;if(o.ttl<=0){o.used=1;toast(t("lf_bfG"),"#d8d0c0")}}
+  if(o.k==="lfcrea"){o.ttl-=dt;if(o.ttl<=0){o.used=1;toast(t("lf_obG"),"#d8d0c0");continue}const d=Math.hypot(o.x-hero.x,(o.z-hero.z)*ZS);if(d<330){const a=Math.atan2(-(o.z-hero.z)*ZS,o.x-hero.x),da=Math.abs(((a-(hero.ang||0))+PI*3)%(PI*2)-PI);
+   if(da<.45&&hero.state!=="attack"){o.w+=dt;if(o.w>=3){o.used=1;obsWin(o.c)}}else o.w=Math.max(0,o.w-dt*.5)}}
+  if(o.k==="lfvista"){const d=Math.hypot(o.x-hero.x,(o.z-hero.z)*ZS);if(d<40){const a=hero.ang||0;if(o.la!=null)o.yaw+=Math.min(.3,Math.abs(a-o.la));o.la=a;if(o.yaw>5.2){o.used=1;vistaWin(o)}}else{o.la=null}}}}
+function obsWin(i){const s=lfS();s.obs[i]=(s.obs[i]|0)+1;dayHit("obs");lfCnt("obs");gdXp(15);if(s.obs[i]===1){banner(OBS[i]+" "+t("lf_obW",{n:t("lf_o"+i)}),"👀");cardGive("cr"+i);P.gold+=400+battleNo*10;sgRenown&&sgRenown(10)}else toast(t("lf_obW",{n:t("lf_o"+i)}),"#c8e07a");SFX.divine&&SFX.divine();save()}
+function vistaWin(o){const s=lfS();s.vista[o.bi]=1;lfCnt("vista");flashA=.4;flashCol="#bfe8ff";banner("🗻 "+t("lf_viW",{n:L(BIOME_N[o.bi])}),"✨");P.gold+=500+battleNo*12;matAdd("sky",1);gdXp(20);colGive("souv",o.bi%12);cardGive("lc"+(BIOMES[o.bi]&&BIOMES[o.bi].props||"x"));SFX.divine&&SFX.divine();save()}
+/* touching */
+{const _o=p17Obj;p17Obj=function(o){const k=o.k;if(!k.startsWith("lf"))return _o(o);const s=lfS();
+ if(k==="lfbfly"){o.used=1;const i=o.b;s.bfl[i]=(s.bfl[i]|0)+1;dayHit("bfly");lfCnt("bfly");gdXp(5);toast(t("lf_bfC",{n:t("lf_b"+i)}),BFL[i].c);sparks(o.x,o.z,20,BFL[i].c,14,1);if(s.bfl[i]===1){cardGive("bf"+i);matAdd(BFL[i].r>=2?"bloom":"herb",1+BFL[i].r)}if(BFL.every((B,j)=>s.bfl[j]))scnUnlock(0);SFX.pickup&&SFX.pickup(1);save();return true}
+ if(k==="lfcoin"){o.used=1;const c=o.c;s.coins[c]=(s.coins[c]|0)+1;dayHit("coin");lfCnt("coin");P.gold+=60+battleNo*3;toast(t("lf_coF",{n:t("lf_c"+c)}),"#ffd34e");if(s.coins[c]===1)cardGive("co"+c);if(Array.from({length:COINS},(_,j)=>s.coins[j]).every(Boolean))scnUnlock(1);SFX.coin&&SFX.coin();save();return true}
+ if(k==="lfletter"){o.used=1;const left=Array.from({length:LETTERS},(_,j)=>j).filter(j=>!s.letter.includes(j));if(left.length){const j=left[0];s.letter.push(j);mailSend("letter",String(j),j===1?{g:800+battleNo*20}:j===6?{m:{herb:3,bloom:2}}:null);toast(t("lf_ltF"),"#ffd98a");lfRep(.5)}SFX.unlock&&SFX.unlock();save();return true}
+ if(k==="lforb"){o.used=1;addBuf({k:"lforb",ic:"⚡",col:"#9fe8ff",fx:[["atkSpd",15],["lightningBonus",40]],t:90,max:90});flashA=.5;flashCol="#9fe8ff";toast(t("lf_ph_orbT"),"#9fe8ff");SFX.zap&&SFX.zap();lfCnt("phen");return true}
+ return true}}
+{const _x=ixInfo;ixInfo=function(o){if(o.k==="lfbfly")return{ic:"🦋",s:t("lf_b"+o.b)};if(o.k==="lfcoin")return{ic:"🪙",s:t("lf_co")};if(o.k==="lfletter")return{ic:"✉️",s:t("lf_lt")};if(o.k==="lfcrea")return{ic:OBS[o.c],s:t("lf_o"+o.c)};if(o.k==="lfvista")return{ic:"🗻",s:t("lf_vi")};if(o.k==="lforb")return{ic:"⚡",s:t("lf_ph_orb")};if(o.k==="lfmir")return{ic:"🏯",s:"…"};return _x(o)}}
+["lfcrea","lfmir","lfdeco","lfvista"].forEach(k=>IX_SKIP.add(k));["lfdeco"].forEach(k=>P17NB.add(k));
+/* simple meshes */
+P17MK.lfbfly=(T,g,add,glow,stone,wood,o)=>{const m=new T.MeshBasicMaterial({color:new T.Color(BFL[o.b].c),side:T.DoubleSide});const L0=add(geo("lfW",()=>new T.CircleGeometry(4,8)),m,-3,30,0),R0=add(geo("lfW",()=>new T.CircleGeometry(4,8)),m,3,30,0);g.userData.w=[L0,R0];return null};
+P17UP.lfbfly=(g,o)=>{const w=g.userData.w;if(w){const f=Math.sin(tNow*18+o.b)*1.1;w[0].rotation.y=f;w[1].rotation.y=-f}};
+P17MK.lfcoin=(T,g,add)=>add(geo("lfCo",()=>new T.CylinderGeometry(4,4,1,14).rotateX(PI/2)),p17Mat(0xffc83a,{metalness:.8,roughness:.25,emissive:0x5a3a00}),0,5,0);
+P17MK.lfletter=(T,g,add)=>add(geo("lfLt",()=>new T.BoxGeometry(10,1,7)),p17Mat(0xf4e8c8),0,3,0);
+P17MK.lfcrea=(T,g,add,glow,stone,wood,o)=>{const cols=[0xf4f4f4,0x9fe8ff,0x6a8a4a,0x5a7aa8,0x1a1420,0xc8a060,0xffd34e,0xb08a5a];const m=p17Mat(cols[o.c],o.c===1||o.c===6?{emissive:cols[o.c],emissiveIntensity:.3}:{});
+ add(geo("lfCrB",()=>new T.SphereGeometry(10,10,8).scale(1.6,1,1)),m,0,16,0);add(geo("lfCrH",()=>new T.SphereGeometry(5,8,6)),m,15,24,0);for(const [x,z] of [[-8,-4],[-8,4],[8,-4],[8,4]])add(geo("lfCrL",()=>new T.CylinderGeometry(1.4,1.4,12,5).translate(0,6,0)),m,x,0,z);
+ g.scale.setScalar(o.c===3?3:o.c===2?1.4:1.2);return null};
+P17UP.lfcrea=(g,o)=>{g.position.y+=(o.c===3?40+Math.sin(tNow)*6:Math.abs(Math.sin(tNow*2+o.c))*2)};
+P17MK.lfvista=(T,g,add,glow,stone)=>{add(geo("lfViB",()=>new T.CylinderGeometry(16,20,6,10).translate(0,3,0)),stone,0,0,0);return add(geo("lfViR",()=>new T.TorusGeometry(12,1,6,24).rotateX(PI/2)),glow,0,7,0)};
+P17MK.lforb=(T,g,add,glow)=>add(geo("lfOrb",()=>new T.IcosahedronGeometry(6,1)),new T.MeshBasicMaterial({color:0x9fe8ff,transparent:true,opacity:.85,blending:T.AdditiveBlending}),0,26,0);
+P17UP.lforb=(g,o)=>{g.position.y+=Math.sin(tNow*3+o.x)*4;g.rotation.y=tNow*3};
+P17MK.lfmir=(T,g,add)=>{const m=new T.MeshBasicMaterial({color:0xd8c8ff,transparent:true,opacity:.25,depthWrite:false});add(geo("lfMr1",()=>new T.BoxGeometry(60,90,60).translate(0,45,0)),m,0,0,0);for(const x of [-40,40])add(geo("lfMr2",()=>new T.CylinderGeometry(12,12,140,8).translate(0,70,0)),m,x,0,0);add(geo("lfMr3",()=>new T.ConeGeometry(20,40,8).translate(0,160,0)),m,0,0,0);g.scale.setScalar(2.2);return null};
+P17UP.lfmir=(g,o)=>{const d=Math.hypot(o.x-hero.x,(o.z-hero.z)*ZS);g.visible=d>260;g.traverse(c=>{if(c.material)c.material.opacity=Math.min(.3,Math.max(0,(d-260)/1500))})};
+/* seasons by month: little props by the road and drifting bits in the air */
+const seaNow=()=>{const m=new Date().getMonth();return m>=2&&m<=4?0:m>=5&&m<=7?1:m>=8&&m<=10?2:3};
+const SEAD=[["🌸",0xffb0d0],["🌻",0xffd34e],["🍂",0xd8742a],["⛄",0xf4f8ff]];
+P17MK.lfdeco=(T,g,add,glow,stone,wood,o)=>{const s=o.s;if(s===3){const sn=p17Mat(0xf4f8ff);add(geo("lfSn1",()=>new T.SphereGeometry(8,10,8)),sn,0,8,0);add(geo("lfSn2",()=>new T.SphereGeometry(5.5,10,8)),sn,0,19,0);add(geo("lfSnN",()=>new T.ConeGeometry(1,4,6).rotateZ(-PI/2)),p17Mat(0xff8a3a),5.6,19,0)}
+ else if(s===2){for(let i=0;i<5;i++)add(geo("lfLf",()=>new T.CircleGeometry(2.6,5).rotateX(-PI/2)),p17Mat(i%2?0xd8742a:0xb84a1a),rnd(-10,10),.4,rnd(-10,10))}
+ else{add(geo("lfStem",()=>new T.CylinderGeometry(.6,.6,10,5).translate(0,5,0)),p17Mat(0x3a8a3a),0,0,0);add(geo("lfFl",()=>new T.SphereGeometry(3.4,8,6).scale(1,.5,1)),p17Mat(SEAD[s][1],{emissive:SEAD[s][1],emissiveIntensity:.15}),0,10.5,0)}return null};
+let seaT=20,seaP=0;
+function seaTick(dt){if(!isFP()||(MG&&MG.run))return;const s=seaNow();seaT-=dt;if(seaT<=0){seaT=rnd(8,16);if(mgObjs.filter(o=>o.k==="lfdeco"&&!o.used&&o.x>hero.x-200).length<5)lfPlace("lfdeco",{s},250,500,(Math.random()<.5?-1:1)*rnd(60,120))}
+ if(S.fxLo)return;seaP-=dt;if(seaP<=0){seaP=s===1&&nightK()<.5?99:.25;const d=hdir(),col=s===0?"#ffb0d0":s===1?"#d8ff6a":s===2?"#d8742a":"#ffffff";
+  parts.push({x:hero.x+d.x*rnd(30,160)+rnd(-60,60),z:hero.z+d.z*rnd(10,50)+rnd(-30,30),h:rnd(50,90),vx:rnd(-15,15),vz:0,vh:s===1?rnd(-5,5):rnd(-25,-10),g:0,life:rnd(2,3.5),max:3.5,col,size:rnd(1.6,2.8),t:s===1?"spark":"dot"})}
+ for(const o of mgObjs)if(o.k==="lfdeco"&&!o.used&&hero.x-o.x>700)o.used=1}
+/* rare phenomena: blood moon (a night with fiercer foes and more XP), ball lightning, a castle mirage */
+const PH={blood:0};
+{const _mk=makeEnemy;makeEnemy=function(ti,boss,x,z,delay,opt){const e=_mk(ti,boss,x,z,delay,opt);if(e&&PH.blood>0&&!(MG&&MG.run)&&!e.cfg.pet){e.atk=Math.round(e.atk*1.15);e.lfBlood=1}return e}}
+{const _g=gainXP;gainXP=function(x,raw){return _g(PH.blood>0&&!raw?Math.round(x*1.3):x,raw)}}
+function phTick(dt){if(!isFP()||(MG&&MG.run))return;if(PH.blood>0){PH.blood-=dt;if(PH.blood<=0||nightK()<.4){PH.blood=0;const el=$("lfBlood");if(el)el.remove()}}
+ phT-=dt;if(phT>0||locked)return;phT=rnd(420,720);const r=Math.random();
+ if(r<.35&&nightK()>.7&&!PH.blood){PH.blood=180;toast(t("lf_ph_blood"),"#ff4a4a");lfCnt("phen");const v=document.createElement("div");v.id="lfBlood";v.style.cssText="position:absolute;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 20%,rgba(160,0,20,.0),rgba(120,0,10,.22));mix-blend-mode:multiply";const st=$("stage");if(st)st.appendChild(v)}
+ else if(r<.7){lfPlace("lforb",{},120,260);toast(t("lf_ph_orb"),"#9fe8ff")}
+ else{const o=lfPlace("lfmir",{},1600,2000,0);o.z=hero.z;toast(t("lf_ph_mir"),"#d8c8ff");lfCnt("phen")}}
+function mirTick(){for(const o of mgObjs){if(o.k!=="lfmir"||o.used)continue;const d=Math.hypot(o.x-hero.x,(o.z-hero.z)*ZS);if(d<260){o.used=1;chests.push({x:o.x,z:hero.z,open:0,t:0,gold:true});toast(t("lf_ph_mirT"),"#d8c8ff");cardGive("ph_mir");lfCnt("phen")}if(hero.x-o.x>400)o.used=1}}
+/* mysterious messages appear only under certain conditions */
+const MSGC=[()=>battleNo>=1&&lfS().st.still>=8,()=>{const h=Math.floor(CLK/60)%24;return h===0&&lfS().st.still>=3},()=>Object.keys(sgS().bio).length>=15&&Math.abs(hero.z-zLo(0))<30,()=>P.hp>=P.maxhp&&nightK()>.6&&lfS().st.still>=5,()=>chests.some(c=>c.gold&&!c.open&&Math.hypot(c.x-hero.x,(c.z-hero.z)*ZS)<60),()=>wxNow&&wxNow.k==="eclipse"];
+let stillX=0,stillT=0;
+function msgTick(dt){const s=lfS();if(Math.abs(hero.x-stillX)<2&&!locked)stillT+=dt;else{stillT=0;stillX=hero.x}s.st.still=Math.floor(stillT);
+ msT2-=dt;if(msT2>0||!isFP()||(MG&&MG.run))return;msT2=2;for(let i=0;i<MSGC.length;i++){if(s.msg[i])continue;let ok=false;try{ok=MSGC[i]()}catch(e){}if(!ok)continue;s.msg[i]=1;
+  toast(t("lf_msF"),"#e8d8ff");setTimeout(()=>{say("📜",t("lf_ms"+i),"#e8d8ff","📜");P.gold+=300+battleNo*8;colGive("curio",i);if(i===5)scnUnlock(4)},800);SFX.divine&&SFX.divine();save();break}}
+/* strange finds: a curio, an instrument, a mask, a flag, a figurine or a seal now and then */
+const FINDC=["instr","mask","flag","figur","seal","curio"];
+function findTry(ch,x,z){const s=lfS();if(Math.random()>=ch*(s.spec==="col"?1.6:1))return false;const cat=FINDC[rint(0,FINDC.length-1)],n=COLS[cat].n,left=Array.from({length:n},(_,i)=>i).filter(i=>!s.col[cat+i]);
+ if(!left.length)return false;const i=left[rint(0,left.length-1)];colGive(cat,i);dayHit("find");lfCnt("find");return true}
+{const _k=p13Kill;p13Kill=function(e){_k(e);if(!LG||e.cfg.pet||(MG&&MG.run))return;findTry(.006,e.x,e.z)}}
+let chSeen=new WeakSet();
+function chestFindTick(){for(const c of chests){if(c.open&&!chSeen.has(c)){chSeen.add(c);lfCnt("chest");findTry(.05,c.x,c.z)}}}
+{const _s=siteGo;siteGo=function(o){_s(o);if(LG)findTry(.1,o.x,o.z)}}
+/* secret scenes: a short letterboxed moment that opens under special conditions, replayable from the collections */
+function scnUnlock(i){const s=lfS();if(s.scn[i])return;s.scn[i]=1;setTimeout(()=>{toast(t("lf_scnNew",{n:t("lf_sc"+i)}),"#e8d8ff");scnPlay(i)},1500);save()}
+function scnPlay(i){if(document.getElementById("lfScn"))return;closeModal(true);const d=document.createElement("div");d.id="lfScn";d.style.cssText="position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px;background:rgba(0,0,0,.25);pointer-events:auto";
+ d.innerHTML=`<div style="position:absolute;left:0;right:0;top:0;height:14vh;background:#000"></div><div style="position:absolute;left:0;right:0;bottom:0;height:14vh;background:#000"></div><h2 style="font:700 22px Cinzel,Georgia,serif;color:#ffe9a0;text-shadow:0 0 12px #000;text-align:center;padding:0 20px;z-index:1">${t("lf_sc"+i)}</h2><p id="lfScnT" style="font:17px Georgia,serif;color:#fff;max-width:520px;text-align:center;padding:0 24px;z-index:1;text-shadow:0 0 8px #000;transition:opacity .6s"></p>`;
+ document.body.appendChild(d);paused=true;const tx=d.querySelector("#lfScnT"),L0=[t("lf_sc"+i+"a"),t("lf_sc"+i+"b")];let j=0;flashA=.5;flashCol="#ffe9a0";SFX.divine&&SFX.divine();
+ const next=()=>{if(j>=L0.length){d.remove();if(!modalOpen)paused=false;return}tx.style.opacity=0;setTimeout(()=>{tx.textContent=L0[j++];tx.style.opacity=1},300);setTimeout(next,3600)};next();d.onclick=()=>{d.remove();if(!modalOpen)paused=false}}
+{const _t=p17Tick;p17Tick=function(dt){_t(dt);if(!LG)return;try{lfWorldTick(dt);seaTick(dt);phTick(dt);msgTick(dt);cosTick(dt);petTick2(dt);lfT1-=dt;if(lfT1<=0){lfT1=1;mirTick();chestFindTick();mailDaily();lfHistTick();if(emoCd>0)emoCd=0;lfStatTick()}}catch(e){console.error(e)}}}
+/* ============ P59 part D: collections, cards, room and showcase, guild, market, pet care, steeds, stats and records, photos, achievements, the tabs ============ */
+const LFTD={
+lf_colH:"Предмети з історіями. Знаходяться в бою, у скринях і в дивних місцях, за рекорди мініігор і в нових землях. Повні набори дають бонуси.|Items with stories. Found in battle, in chests and in strange places, for mini-game records and in new lands. Full sets give bonuses.",
+lf_cl_instr:"Музичні інструменти|Musical instruments",lf_cl_mask:"Декоративні маски|Decorative masks",lf_cl_flag:"Стародавні прапори|Ancient flags",lf_cl_figur:"Статуетки|Figurines",lf_cl_cups:"Кубки мініігор|Mini-game cups",lf_cl_seal:"Магічні печатки|Magic seals",lf_cl_souv:"Сувеніри земель|Land souvenirs",lf_cl_curio:"Речі з історіями|Items with stories",
+lf_colNew:"🏺 До колекції: {n}|🏺 Added to collection: {n}",lf_colDone:"🏺 Колекцію зібрано: {n}! Бонус активний.|🏺 Collection complete: {n}! The bonus is on.",lf_album:"Альбом скарбів|Treasure album",lf_albumH:"Найкращі речі, які ти знаходив (Небесні й вище), з датою.|The best items you've found (Celestial and better), with the date.",
+lf_cardH:"Картки відкриваються знахідками: істоти, яких ти бачив, метелики, монети, землі й легенди. Набори дають бонуси.|Cards open with your finds: creatures you've seen, butterflies, coins, lands and legends. Sets give bonuses.",lf_cardNew:"🃏 Нова картка: {n}|🃏 New card: {n}",
+lf_cs_cr:"Істоти|Creatures",lf_cs_bf:"Метелики|Butterflies",lf_cs_co:"Монети|Coins",lf_cs_lc:"Землі|Lands",lf_cs_lg:"Легенди|Legends",lf_cs_rr:"Рідкості|Rarities",
+lf_roomH:"Твоя кімната: купуй прикраси й став їх у 9 місць. Кожна прикраса дає маленький бонус відпочинку. Рюкзаки міняють вигляд сумки.|Your room: buy decorations and place them in 9 spots. Each decoration gives a small rest bonus. Backpacks change the look of your bag.",
+lf_rmShop:"Крамниця прикрас|Decoration shop",lf_rmPlace:"Поставити|Place",lf_rmTake:"Прибрати|Remove",lf_rmBuy:"Купити|Buy",lf_rmOwn:"Твоє|Owned",lf_rmFull:"Немає вільного місця|No free spot",
+lf_d_rug:"Килим|Rug",lf_d_bed:"Ліжко|Bed",lf_d_fire:"Камін|Fireplace",lf_d_book:"Книжкова шафа|Bookshelf",lf_d_plant:"Вазон|Plant",lf_d_arm:"Обладунки на стійці|Armour stand",lf_d_map:"Карта світу|World map",lf_d_globe:"Глобус|Globe",lf_d_chest:"Скриня|Chest",lf_d_harp:"Арфа|Harp",lf_d_aqua:"Акваріум|Aquarium",lf_d_throne:"Трон|Throne",
+lf_bp:"Рюкзаки|Backpacks",lf_bp_leather:"Шкіряний|Leather",lf_bp_royal:"Королівський|Royal",lf_bp_shadow:"Тіньовий|Shadow",lf_bp_nature:"Лісовий|Forest",lf_bp_frost:"Морозний|Frost",lf_bpWear:"Носити|Wear",lf_bpOn:"Вдягнуто|Worn",
+lf_show:"Вітрина|Showcase",lf_showH:"Обери до 6 найкращих речей із сумки або спорядження. Вони стоятимуть на вітрині.|Pick up to 6 of your best items from the bag or gear. They'll stand in the showcase.",lf_showAdd:"➕ На вітрину|➕ To the showcase",lf_showNone:"Вітрина порожня.|The showcase is empty.",
+lf_gdH:"Твоя гільдія: назва, емблема, рівень і покращення. Друзі з ❤6 і більше можуть вступити. Гільдійний досвід дають усі справи.|Your guild: name, emblem, level and upgrades. Friends with ❤6 or more can join. Every activity gives guild experience.",
+lf_gdName:"Назва гільдії|Guild name",lf_gdMake:"🛡️ Заснувати гільдію (🪙 {n})|🛡️ Found a guild (🪙 {n})",lf_gdLv:"Рівень {n} · {x}/{m} досвіду · очки: {p}|Level {n} · {x}/{m} exp · points: {p}",lf_gdUp:"🛡️ Гільдія досягла рівня {n}!|🛡️ The guild reached level {n}!",
+lf_gdMem:"Учасники ({n}/{m})|Members ({n}/{m})",lf_gdInv:"Запросити|Invite",lf_gdNoInv:"Немає друзів з ❤6+, щоб запросити.|No friends with ❤6+ to invite.",lf_gdUpg:"Покращення|Upgrades",
+lf_gu_gold:"Скарбниця (+3% золота за рівень)|Treasury (+3% gold per level)",lf_gu_xp:"Навчання (+3% досвіду за рівень)|Training (+3% experience per level)",lf_gu_luck:"Талісман (+1 удачі рідкості за рівень)|Charm (+1 rarity luck per level)",lf_gu_dues:"Внески (більші щоденні листи)|Dues (bigger daily letters)",lf_gu_trade:"Знижка на ринку (−2% за рівень)|Market discount (−2% per level)",
+lf_mktH:"Ціни змінюються від попиту: що більше купуєш, то дорожче; що більше продаєш, то дешевше. З часом ціни повертаються. Погода й події теж впливають.|Prices follow demand: the more you buy, the higher; the more you sell, the lower. Prices drift back over time. Weather and events matter too.",
+lf_buy:"Купити|Buy",lf_sell:"Продати|Sell",lf_mktEv:"Зараз: {n}|Now: {n}",lf_mktNo:"Не вистачає|Not enough",
+lf_petH:"Годуй улюбленця і грайся з ним. Ситий і веселий улюбленець дає більший бонус, сумний — менший.|Feed your pet and play with it. A full and happy pet gives a bigger bonus, a sad one a smaller bonus.",
+lf_food:"Ситість|Food",lf_moodL:"Настрій|Mood",lf_feed:"🍖 Нагодувати|🍖 Feed",lf_play:"🎾 Погратися|🎾 Play",lf_petNone:"Спершу обери улюбленця (Індекс → Улюбленці).|Pick a pet first (Index → Pets).",lf_fedOk:"😋 Смачно!|😋 Yummy!",lf_playOk:"🎾 Улюбленець щасливий!|🎾 Your pet is happy!",lf_playCd:"Улюбленець утомився, спробуй пізніше.|Your pet is tired, try later.",lf_petBon:"Бонус улюбленця: ×{n}|Pet bonus: ×{n}",
+lf_mount:"Транспорт|Mounts",lf_mountH:"Духовний скакун (кнопка 🐎) отримує породи й покращення. Порода і рівень дають бонуси, поки ти верхи.|The spirit steed (🐎 button) gets breeds and upgrades. The breed and level give bonuses while you ride.",
+lf_br_spirit:"Духовний кінь|Spirit horse",lf_br_stag:"Грозовий олень|Storm stag",lf_br_wolf:"Тіньовий вовк|Shadow wolf",lf_br_drake:"Вогняний ящір|Fire drake",lf_brd_spirit:"+10% швидкості верхи|+10% speed when riding",lf_brd_stag:"+5% швидкості, +4% ухилення|+5% speed, +4% evasion",lf_brd_wolf:"+6% криту верхи|+6% crit when riding",lf_brd_drake:"+8% шкоди верхи|+8% damage when riding",
+lf_mUp:"⬆️ Покращити (🪙 {n})|⬆️ Upgrade (🪙 {n})",lf_mLv:"Рівень скакуна {n}/10|Steed level {n}/10",lf_brBuy:"Купити породу (🪙 {n})|Buy the breed (🪙 {n})",lf_brUse:"Обрати|Choose",
+lf_stH:"Твоя історія в цифрах. Рекорди оновлюються після кожної гри, бою чи забігу.|Your story in numbers. Records update after every game, fight or run.",lf_rec:"Особисті рекорди|Personal records",lf_hist:"Історія характеристик|Stat history",
+lf_s_kill:"Перемог|Victories",lf_s_time:"Часу в грі|Time played",lf_s_far:"Пройдено, м|Walked, m",lf_s_gIn:"Золота зароблено|Gold earned",lf_s_gOut:"Золота витрачено|Gold spent",lf_s_chest:"Скринь відкрито|Chests opened",lf_s_game:"Мініігор зіграно|Mini-games played",lf_s_bfly:"Метеликів|Butterflies",lf_s_coin:"Монет|Coins",lf_s_find:"Дивних знахідок|Strange finds",lf_s_emote:"Емоцій|Emotes",lf_s_photo:"Фото|Photos",lf_s_trade:"Угод на ринку|Market deals",lf_s_obs:"Спостережень|Observations",lf_s_vista:"Панорам|Panoramas",lf_s_hidden:"Прихованих взаємодій|Hidden interactions",lf_s_phen:"Рідкісних явищ|Rare phenomena",
+lf_r_hit:"Найсильніший удар|Strongest blow",lf_r_dun:"Нескінченний данж|Endless dungeon",lf_r_tw:"Вежа босів|Boss Tower",lf_r_ar:"Арена|Arena",lf_r_br:"За межею реальності|Beyond Reality",lf_r_bx:"За межею (Сага)|Beyond (Saga)",lf_r_fl:"Серія без поразок|Flawless streak",lf_r_stk:"Серія справ|Errand streak",lf_r_lvl:"Рівень|Level",lf_r_battle:"Бій|Battle",
+lf_ph:"Фотоальбом|Photo album",lf_phH:"У фоторежимі (Пауза → 📷) натисни 📸, щоб зберегти кадр у рамці. Останні 8 фото зберігаються тут, і кожне можна завантажити на телефон.|In photo mode (Pause → 📷) press 📸 to save a framed shot. The last 8 photos are kept here, and each can be downloaded to your phone.",
+lf_phSaved:"📸 Фото збережено в альбом!|📸 Photo saved to the album!",lf_phFail:"Не вдалося зберегти фото.|Could not save the photo.",lf_frame:"Рамка|Frame",lf_fr0:"Без рамки|No frame",lf_fr1:"Золота|Gold",lf_fr2:"Плівка|Film",lf_fr3:"Віньєтка|Vignette",lf_dl:"⬇️ Завантажити|⬇️ Download",
+sl_ag_lf:"Життя|Life",n59a1:"🎭 MEGA 6.0 «Життя»: нова група у вікні 🗺️. Образ (зачіски, емблема, теми інтерфейсу, музичні теми, гардероб, косметичні ефекти, емоції), щоденні справи й серії, пошта з листами й подарунками, 5 мініігор з рекордами й кубками, колекції, картки, кімната з вітриною, своя гільдія, ринок із цінами від попиту, догляд за улюбленцем, породи скакунів, репутація, майстерність зброї, спеціалізації, статистика й рекорди, фотоальбом.|🎭 MEGA 6.0 «Life»: a new group in the 🗺️ window. Looks (hairstyles, emblem, interface and music themes, wardrobe, cosmetic effects, emotes), daily errands and streaks, mail with letters and gifts, 5 mini-games with records and cups, collections, cards, a room with a showcase, your own guild, a market with demand prices, pet care, steed breeds, reputation, weapon mastery, specialisations, stats and records, a photo album.",
+n59a2:"🦋 У світі: метелики, стародавні монети, загублені листи, рідкісні істоти, панорамні місця, сезонні прикраси, кривавий місяць, кульова блискавка, міражі, таємничі послання, дивні знахідки, приховані взаємодії й секретні сцени.|🦋 In the world: butterflies, ancient coins, lost letters, rare creatures, panoramic places, seasonal decorations, blood moons, ball lightning, mirages, mysterious messages, strange finds, hidden interactions and secret scenes."};
+for(const k in LFTD)T8[k]=S8(LFTD[k]);
+/* ---- collections ---- */
+const COLS={instr:{n:8,ic:["🪕","🎻","🪈","🥁","🎺","🪗","🎹","🔔"],st:[["xpBonus",5]]},mask:{n:8,ic:["🎭","👺","👹","🤡","💀","🦊","🐉","🌙"],st:[["evade",3]]},flag:{n:8,ic:["🚩","🏳️","🏴","🎌","🏁","⚑","🎏","🪧"],st:[["dmgRed",3]]},
+ figur:{n:8,ic:["🗿","🐘","🦁","🐎","🦉","🐲","🧙","⚔️"],st:[["maxhpPct",4]]},cups:{n:5,ic:["🏆","🥇","🏅","🎖️","👑"],st:[["goldBonus",8]]},seal:{n:8,ic:["🔯","☯️","🔱","⚜️","☸️","✡️","🕉️","☮️"],st:[["cdr",4]]},
+ souv:{n:12,ic:["🐚","🪶","🍁","🌵","❄️","🌋","🍄","🏮","⛩️","🪨","💎","🌺"],st:[["speed",3],["gath",10]]},curio:{n:6,ic:["📜","🕯️","🗝️","🧭","⌛","🔮"],st:[["rarBonus",2]]}};
+function colGive(cat,i){const s=lfS(),C=COLS[cat];if(!C||i>=C.n||s.col[cat+i])return;s.col[cat+i]=1;toast(t("lf_colNew",{n:C.ic[i]+" "+t("lf_cl_"+cat)}),"#ffd98a");
+ if(Array.from({length:C.n},(_,j)=>s.col[cat+j]).every(Boolean)){recalc();setTimeout(()=>banner("🏺 "+t("lf_colDone",{n:t("lf_cl_"+cat)}),"✨"),900)}save()}
+const colHave=cat=>{const s=lfS();return Array.from({length:COLS[cat].n},(_,j)=>s.col[cat+j]?1:0).reduce((a,b)=>a+b,0)};
+function lfColBonus(){const out=[];for(const c in COLS)if(colHave(c)>=COLS[c].n)out.push(...COLS[c].st);return out}
+/* land souvenirs: the first time you stand in a land of each kind */
+const SOUVP=["water","lava","autumn","mesa","ice","crystal","shrooms","pagoda","torii","ruins","coast","vale"];
+function souvTick(){const B=BIOMES[biomeIdx()],i=B?SOUVP.indexOf(B.props):-1;if(i>=0)colGive("souv",i);if(B)cardGive("lc"+B.props)}
+/* treasure album: celestial or better finds */
+{const _g=mgGiveItem;mgGiveItem=function(it){_g(it);try{lfAlbum(it)}catch(e){}}}
+{const _s=spawnLoot;spawnLoot=function(e,it){_s(e,it);try{lfAlbum(it)}catch(er){}}}
+function lfAlbum(it){if(!LG||!it||it.r<RO[6])return;const s=lfS();if(s.album.some(a=>a.id===it.id))return;s.album.push({id:it.id|0,r:it.r,s:it.s,n:itemName(it).slice(0,40),d:dayKey()});s.album.sort((a,b)=>b.r-a.r);if(s.album.length>30)s.album.length=30;gem.rf|=0}
+/* ---- cards ---- */
+const CARDS=[];
+OBS.forEach((ic,i)=>CARDS.push({k:"cr"+i,set:"cr",ic,n:()=>t("lf_o"+i),r:2}));BFL.forEach((B,i)=>CARDS.push({k:"bf"+i,set:"bf",ic:"🦋",n:()=>t("lf_b"+i),r:B.r}));
+Array.from({length:COINS},(_,i)=>CARDS.push({k:"co"+i,set:"co",ic:"🪙",n:()=>t("lf_c"+i),r:i>=10?4:i>=6?2:1}));
+[...new Set(BIOMES.map(B=>B.props))].forEach(p=>CARDS.push({k:"lc"+p,set:"lc",ic:"🗺️",n:()=>{const i=BIOMES.findIndex(B=>B.props===p);return i>=0?L(BIOME_N[i]):p},r:1}));
+P55B.forEach((B,i)=>CARDS.push({k:"lg"+i,set:"lg",ic:B.ic,n:()=>L(T8["p55_b"+i]),r:4}));TD.forEach((D,i)=>CARDS.push({k:"ld"+i,set:"lg",ic:D.ic,n:()=>t("sg_tb_"+D.k),r:3}));CARDS.push({k:"ph_mir",set:"lg",ic:"🏯",n:()=>t("lf_ph_mir").split("…")[0].replace("🏯 ",""),r:4});
+RAR.forEach((R,i)=>CARDS.push({k:"rr"+i,set:"rr",ic:"💠",n:()=>L(R.n),r:Math.min(4,Math.floor(i/5)),col:R.col}));
+const CARDK={};CARDS.forEach(C=>CARDK[C.k]=C);const CSETS=["cr","bf","co","lc","lg","rr"];
+const CSB={cr:[["xpBonus",6]],bf:[["speed",4]],co:[["goldBonus",6]],lc:[["gath",15]],lg:[["bossDmg",8]],rr:[["rarBonus",3]]};
+function cardGive(k){const s=lfS(),C=CARDK[k];if(!C||s.cards[k])return;s.cards[k]=1;toast(t("lf_cardNew",{n:C.ic+" "+C.n()}),"#c8b4ff");if(CARDS.filter(x=>x.set===C.set).every(x=>s.cards[x.k]))recalc()}
+function lfCardBonus(){const s=lfS(),out=[];for(const st of CSETS)if(CARDS.filter(x=>x.set===st).every(x=>s.cards[x.k]))out.push(...CSB[st]);return out}
+function cardTick(){const s=lfS();RAR.forEach((R,i)=>{if((gem.rf>>i)&1)cardGive("rr"+i)});if(LG.p55&&LG.p55.w)LG.p55.w.forEach((w,i)=>{if(w>0)cardGive("lg"+i)});sgS().td.clr.forEach((c,i)=>{if(c>0)cardGive("ld"+i)})}
+/* ---- the room, backpacks and the showcase ---- */
+const DECO=[["rug","🧶",800],["bed","🛏️",1500],["fire","🔥",2500],["book","📚",2000],["plant","🪴",600],["arm","🛡️",4000],["map","🗺️",3000],["globe","🌍",3500],["chest","🧰",2200],["harp","🎼",5000],["aqua","🐠",4500],["throne","👑",12000]];
+const BPK=[["leather",1500],["royal",6000],["shadow",4000],["nature",3000],["frost",3500]];
+const deco=k=>DECO.find(d=>d[0]===k);
+function lfRoomBonus(){const n=lfS().room.s.filter(Boolean).length;return n?[["xpBonus",n*.6],["regen",n*.15]]:[]}
+let rmSel="";
+function rmBuy(k){const s=lfS(),D=deco(k);if(!D||s.room.own[k])return;const c=Math.round(D[2]*repPrice());if(P.gold<c){toast("🪙 "+t("sm_gold"),"#ff8a5a");SFX.buzz();return}P.gold-=c;s.room.own[k]=1;SFX.buy&&SFX.buy();save();renderMg();hud()}
+function rmPlace(k){const s=lfS();if(!s.room.own[k]||s.room.s.includes(k))return;const i=[0,1,2,3,4,5,6,7,8].find(j=>!s.room.s[j]);if(i==null){toast(t("lf_rmFull"),"#ff8a8a");return}s.room.s[i]=k;recalc();save();renderMg()}
+function rmTake(i){const s=lfS();s.room.s[i]="";recalc();save();renderMg()}
+function bpBuy(k){const s=lfS(),B=BPK.find(b=>b[0]===k);if(!B)return;const key="bp_"+k;if(!s.room.own[key]){const c=Math.round(B[1]*repPrice());if(P.gold<c){toast("🪙 "+t("sm_gold"),"#ff8a5a");SFX.buzz();return}P.gold-=c;s.room.own[key]=1}
+ for(const [x] of BPK)if(s.room.own["bp_"+x]===2)s.room.own["bp_"+x]=1;s.room.own[key]=2;lfApplyLooks();SFX.equip&&SFX.equip();save();renderMg();hud()}
+function showAdd(id){const s=lfS();if(s.show.includes(id)||s.show.length>=6)return;s.show.push(id);save();renderMg()}
+const showItem=id=>bag.find(x=>x.id===id)||Object.values(eq).find(x=>x&&x.id===id)||(forge.owned||[]).find(x=>x&&x.id===id);
+/* ---- the guild ---- */
+const GD_UP=["gold","xp","luck","dues","trade"],gdNeed=l=>Math.round(200*Math.pow(l,1.5));
+function gdXp(n){if(!LG)return;const g=lfS().gd;if(!g.n)return;g.xp+=n;while(g.lv<30&&g.xp>=gdNeed(g.lv)){g.xp-=gdNeed(g.lv);g.lv++;g.pt++;banner("🛡️ "+t("lf_gdUp",{n:g.lv}),g.n);SFX.level&&SFX.level();if(g.lv>=10)scnUnlock(2)}}
+function gdMake(name){const s=lfS(),c=5000;name=String(name||"").replace(/[<>&"]/g,"").trim().slice(0,18);if(s.gd.n||!name)return;if(P.gold<c){toast("🪙 "+t("sm_gold"),"#ff8a5a");SFX.buzz();return}P.gold-=c;s.gd.n=name;s.gd.lv=1;s.gd.xp=0;s.gd.pt=1;banner("🛡️ "+name,"✨");SFX.unlock&&SFX.unlock();LG.ttl.guildfounder=1;save();renderMg();hud()}
+const gdCap=()=>2+Math.floor(lfS().gd.lv/3);
+function gdInvite(k){const g=lfS().gd;if(!g.n||g.mem.includes(k)||g.mem.length>=gdCap())return;if(!(sgAff(k)>=6))return;g.mem.push(k);recalc();sgPost(k,null,null,{x:"🛡️ "+g.n+"? "+t("sg_giftLove"),tst:false});SFX.unlock&&SFX.unlock();save();renderMg()}
+function gdUpg(k){const g=lfS().gd;if(!GD_UP.includes(k)||g.pt<1||(g.up[k]|0)>=5)return;g.pt--;g.up[k]=(g.up[k]|0)+1;recalc();SFX.buy&&SFX.buy();save();renderMg()}
+function gdBonus(){const g=lfS().gd;if(!g.n)return[];return[["goldBonus",3*(g.up.gold|0)+g.mem.length],["xpBonus",3*(g.up.xp|0)],["rarBonus",g.up.luck|0]]}
+/* ---- the market: prices follow your deals and drift back ---- */
+const MKT=[["iron",30],["crys",120],["herb",25],["bloom",45],["shroom",35],["ore",70],["amber",90],["sky",160],["sand",55],["shd",110]];
+function mktPrice(k){const s=lfS(),B=MKT.find(m=>m[0]===k);if(!B)return 0;let f=s.mkt.p[k]==null?1:s.mkt.p[k];const w=wxNow&&wxNow.k;if(w==="eclipse"&&k==="shd")f*=1.4;if(w==="mstorm"&&(k==="sky"||k==="crys"))f*=1.3;if((w==="rain"||w==="storm")&&(k==="herb"||k==="bloom"))f*=.85;if(MG&&MG.ev&&MG.ev.k)f*=1.1;
+ return Math.max(1,Math.round(B[1]*f*(1+battleNo/150)))}
+const mktBuyP=k=>Math.round(mktPrice(k)*repPrice()*(lfS().spec==="mer"?.92:1)*(1-.02*(lfS().gd.up.trade|0))),mktSellP=k=>Math.max(1,Math.round(mktPrice(k)*.6*(lfS().spec==="mer"?1.08:1)*(2-repPrice())));
+function mktDeal(k,n,buy){const s=lfS();if(!MKT.some(m=>m[0]===k))return;n=Math.max(1,Math.min(10,n|0));if(buy){const c=mktBuyP(k)*n;if(P.gold<c){toast("🪙 "+t("sm_gold"),"#ff8a5a");SFX.buzz();return}P.gold-=c;matAdd(k,n);s.mkt.p[k]=Math.min(3,(s.mkt.p[k]==null?1:s.mkt.p[k])*(1+.03*n))}
+ else{if((SL.mat[k]|0)<n){toast(t("lf_mktNo"),"#ff8a5a");SFX.buzz();return}SL.mat[k]-=n;P.gold+=mktSellP(k)*n;s.mkt.p[k]=Math.max(.35,(s.mkt.p[k]==null?1:s.mkt.p[k])*(1-.025*n))}
+ dayHit("trade");lfCnt("trade");SFX.coin&&SFX.coin();save();renderMg();hud()}
+function mktTick(){const s=lfS();for(const k in s.mkt.p){const v=s.mkt.p[k];s.mkt.p[k]=v+(1-v)*.004;if(Math.abs(s.mkt.p[k]-1)<.005)delete s.mkt.p[k]}}
+/* ---- pet care ---- */
+const petMoodMul=()=>{const p=lfS().pet;return .8+.4*((p.food+p.mood)/200)};
+const lfPetNeed=()=>!!(LG&&SL.pa&&(lfS().pet.food<35||lfS().pet.mood<35));
+function petTick2(dt){const p=lfS().pet;if(!SL.pa)return;const k=lfS().spec==="tam"?.5:1;p.food=Math.max(0,p.food-dt*.012*k);p.mood=Math.max(0,p.mood-dt*.008*k)}
+function petFeed(){const p=lfS().pet;if(!SL.pa)return;const food=(SL.mat.fishm|0)>0?"fishm":(SL.mat.herb|0)>0?"herb":null;if(!food){toast(t("lf_mktNo")+" 🐟/🌿","#ff8a5a");SFX.buzz();return}SL.mat[food]--;p.food=Math.min(100,p.food+(food==="fishm"?45:25));p.mood=Math.min(100,p.mood+5);dayHit("feed");recalc();toast(t("lf_fedOk"),"#c8e07a");save();renderMg()}
+function petPlay(){const p=lfS().pet;if(!SL.pa)return;const now=Date.now();if(now-(p.t|0)<120000){toast(t("lf_playCd"),"#d8d0c0");return}p.t=now;p.mood=Math.min(100,p.mood+30);recalc();toast(t("lf_playOk"),"#c8e07a");if(petE)petE.h=20;save();renderMg()}
+/* ---- steeds: breeds and levels that matter while riding ---- */
+const BRD={spirit:{c:0,st:[["speed",10]]},stag:{c:8000,st:[["speed",5],["evade",4]]},wolf:{c:10000,st:[["crit",6]]},drake:{c:15000,st:[["dmgMul",8]]}};
+function mountBonus(){if(typeof MT==="undefined"||!MT.on)return[];const m=lfS().mount;return(BRD[m.br]||BRD.spirit).st.concat([["speed",m.lv*1.5]])}
+const mUpCost=l=>Math.round(1500*Math.pow(l+1,1.6));
+function mountUp(){const m=lfS().mount;if(m.lv>=10)return;const c=mUpCost(m.lv);if(P.gold<c){toast("🪙 "+t("sm_gold"),"#ff8a5a");SFX.buzz();return}P.gold-=c;m.lv++;recalc();SFX.buy&&SFX.buy();save();renderMg();hud()}
+function mountBreed(k){const m=lfS().mount,B=BRD[k];if(!B)return;if(k!=="spirit"&&!m.own[k]){if(P.gold<B.c){toast("🪙 "+t("sm_gold"),"#ff8a5a");SFX.buzz();return}P.gold-=B.c;m.own[k]=1}m.br=k;recalc();SFX.equip&&SFX.equip();save();renderMg();hud()}
+/* ---- stats, records, stat history ---- */
+let gPrev=null,farX=null;
+function lfStatTick(){const s=lfS();if(gPrev!=null){const d=P.gold-gPrev;if(d>0)lfCnt("gIn",d);else if(d<0)lfCnt("gOut",-d)}gPrev=P.gold;lfCnt("time",1);
+ if(farX!=null&&!(MG&&MG.run)){const dx=hero.x-farX;if(dx>0&&dx<200)lfCnt("far",dx/10)}farX=hero.x;mktTick();if(Math.random()<.2){souvTick();cardTick()}}
+function lfHistTick(){const s=lfS(),d=dayKey(),last=s.hist[s.hist.length-1];if(last&&last.d===d){last.lv=P.level;last.atk=Math.round(P.atk||0);last.hp=P.maxhp;last.b=battleNo;return}s.hist.push({d,lv:P.level,atk:Math.round(P.atk||0),hp:P.maxhp,b:battleNo});if(s.hist.length>40)s.hist.shift()}
+function lfRecs(){const s=lfS(),R=REC(),sg=sgS();return[["⚔️","lf_r_hit",nfm(R.hit|0)],["🏰","lf_r_dun",MG.dun.best],["🗼","lf_r_tw",sg.tw.best],["🏟️","lf_r_ar",LG.ar.best],["🌌","lf_r_br",LG.br.best],["🌀","lf_r_bx",sg.bx.best],["🛡️","lf_r_fl",sg.fl.best],["📅","lf_r_stk",s.stk.best],["⭐","lf_r_lvl",P.level],["🗡️","lf_r_battle",battleNo]]
+ .concat(LFG.map(k=>[LFGI[k],"lf_g_"+k,s.mg.best[k]==null?"—":lfFmt(k,s.mg.best[k])]))}
+const lfRecN=()=>{const s=lfS();return LFG.filter(k=>s.mg.best[k]!=null).length+(sgS().tw.best>0)+(LG.ar.best>0)+(MG.dun.best>0)};
+function spark(arr,col){if(arr.length<2)return"";const mx=Math.max(...arr),mn=Math.min(...arr),w=300,h=40,p=arr.map((v,i)=>`${(i/(arr.length-1)*w).toFixed(1)},${(h-((v-mn)/((mx-mn)||1))*(h-4)-2).toFixed(1)}`).join(" ");return`<svg class="lfSpark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${p}" fill="none" stroke="${col}" stroke-width="2"/></svg>`}
+/* ---- photos: a framed shot from the photo mode, kept as small thumbnails, downloadable ---- */
+let phFr=0;
+function photoTake(){try{if(!G3||!G3.rr)throw 0;G3.rr.render(G3.scene,G3.cam);const src=G3.rr.domElement,W=src.width,H=src.height,c=document.createElement("canvas");c.width=W;c.height=H;const g=c.getContext("2d");g.drawImage(src,0,0);
+ if(phFr===1){g.strokeStyle="#d6a24a";g.lineWidth=Math.max(8,W*.02);g.strokeRect(g.lineWidth/2,g.lineWidth/2,W-g.lineWidth,H-g.lineWidth)}
+ if(phFr===2){g.fillStyle="#000";g.fillRect(0,0,W,H*.08);g.fillRect(0,H*.92,W,H*.08);g.fillStyle="#fff";for(let x=10;x<W;x+=40){g.fillRect(x,H*.02,16,H*.04);g.fillRect(x,H*.94,16,H*.04)}}
+ if(phFr===3){const gr=g.createRadialGradient(W/2,H/2,Math.min(W,H)*.3,W/2,H/2,Math.max(W,H)*.7);gr.addColorStop(0,"rgba(0,0,0,0)");gr.addColorStop(1,"rgba(0,0,0,.75)");g.fillStyle=gr;g.fillRect(0,0,W,H)}
+ g.font=`bold ${Math.round(H*.03)}px Georgia`;g.fillStyle="rgba(255,233,160,.85)";g.fillText("MINI RPG 3D · "+(nickname||""),Math.round(W*.03),Math.round(H*.96)-(phFr===2?H*.08:0));
+ const full=c.toDataURL("image/png"),th=document.createElement("canvas"),sc=240/Math.max(W,H);th.width=Math.round(W*sc);th.height=Math.round(H*sc);th.getContext("2d").drawImage(c,0,0,th.width,th.height);
+ const s=lfS();s.photo.push(th.toDataURL("image/jpeg",.7));if(s.photo.length>8)s.photo.shift();lfCnt("photo");dayHit("photo");if(wxNow&&wxNow.k==="eclipse")s.sec.ecl=1;save();
+ const a=document.createElement("a");a.href=full;a.download="mini-rpg-"+Date.now()+".png";document.body.appendChild(a);a.click();a.remove();toast(t("lf_phSaved"),"#8fe08a");flashA=.6;flashCol="#ffffff";SFX.ui&&SFX.ui()}catch(e){toast(t("lf_phFail"),"#ff8a8a")}}
+{const b=document.createElement("button");b.type="button";b.id="lfShot";b.className="phX";b.textContent="📸";b.style.cssText="right:auto;left:14px";try{$("stage").appendChild(b)}catch(e){}
+ const f=document.createElement("button");f.type="button";f.id="lfFr";f.className="phX";f.textContent="🖼️";f.style.cssText="right:auto;left:70px";try{$("stage").appendChild(f)}catch(e){}
+ b.addEventListener("pointerdown",e=>e.stopPropagation());f.addEventListener("pointerdown",e=>e.stopPropagation());b.onclick=e=>{e.stopPropagation();photoTake()};f.onclick=e=>{e.stopPropagation();phFr=(phFr+1)%4;toast(t("lf_frame")+": "+t("lf_fr"+phFr),"#d8d8d8")}}
+{const st=document.createElement("style");st.textContent="#lfShot,#lfFr{display:none}body.photoM #lfShot,body.photoM #lfFr{display:grid}";document.head.appendChild(st)}
+/* ---- achievements: three secret ones ---- */
+ACH2.push(["lfgame","🎮","lf",()=>LFG.filter(k=>lfS().mg.cup[k]).length,5,{g:8000,gm:20}],["lfbfly","🦋","lf",()=>Object.keys(lfS().bfl).length,8,{g:5000,m:{bloom:5}}],["lfcard","🃏","lf",()=>Object.keys(lfS().cards).length,40,{g:6000,gm:15}],
+ ["lfgd","🛡️","lf",()=>lfS().gd.lv,10,{g:10000,gm:20}],["lfrep","🕊️","lf",()=>repLv(),5,{g:8000,gm:15}],["lfs1","❔","lf",()=>lfS().sec.ecl?1:0,1,{g:5000,gm:15}],["lfs2","❔","lf",()=>Object.keys(lfS().msg).length>=6?1:0,1,{g:8000,gm:20}],["lfs3","❔","lf",()=>(lfS().st.hidden|0)>=6?1:0,1,{g:6000,gm:15}]);
+ACH2G.push(["lf","🎭"]);
+const A2L={lfgame:["Чемпіон ігор|Games Champion","Здобудь {n} кубків мініігор|Win {n} mini-game cups"],lfbfly:["Ловець метеликів|Butterfly Catcher","Спіймай усі {n} видів метеликів|Catch all {n} butterfly species"],lfcard:["Колекціонер карток|Card Collector","Збери {n} карток|Collect {n} cards"],
+ lfgd:["Лідер гільдії|Guild Leader","Підніми гільдію до рівня {n}|Raise your guild to level {n}"],lfrep:["Улюбленець народу|People's Favourite","Досягни репутації «Герой народу»|Reach «Hero of the People» reputation"],lfs1:["Кадр століття|Shot of the Century","Таємне досягнення|Secret achievement"],lfs2:["Читач знаків|Reader of Signs","Таємне досягнення|Secret achievement"],lfs3:["Шепіт речей|Whisper of Things","Таємне досягнення|Secret achievement"]};
+for(const k in A2L){const nm=S8(A2L[k][0]),ds=S8(A2L[k][1]);if(k.startsWith("lfs")){const f=ACH2.find(A=>A[0]===k)[3];Object.defineProperty(T8,"a2_"+k,{get:()=>(LG&&(SL.ach[k]||f()>=1))?nm:S8("???|???"),configurable:true})}else T8["a2_"+k]=nm;T8["a2d_"+k]=ds}
+const LFTT={legendrep:["🕊️","#fff2b0","Легенда народу|Legend of the People"],steadfast:["📅","#8fe08a","Незламна звичка|Steadfast"],weaponmaster:["⚔️","#ffd98a","Майстер зброї|Weapon Master"],guildfounder:["🛡️","#8fc6ff","Засновник гільдії|Guild Founder"]};
+for(const k in LFTT){TITLES.push({k,ic:LFTT[k][0],col:LFTT[k][1]});T8["sl_t_"+k]=S8(LFTT[k][2])}
+/* ============ P59 part E: the Life tabs and their buttons ============ */
+const lfB=(a,v,txt,cls,dis)=>`<button class="btn sm${cls?" "+cls:""}" type="button" data-a="${a}"${v!=null?` data-v="${v}"`:""}${dis?" disabled":""}>${txt}</button>`;
+function lfRMe(){const s=lfS(),ml=lfMaLv();let h=`<p class="sub">${t("lf_hubH")}</p>`;
+ h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">🕊️</span><div><h4>${t("lf_rep")}: ${t("lf_rep"+repLv())}</h4><small>${Math.round(s.rep-100)>0?"+":""}${Math.round(s.rep-100)}</small></div></div><div class="sgBar"><i style="width:${(s.rep/2).toFixed(1)}%"></i></div><p class="m">${t("lf_repH")}</p></div>`;
+ h+=`<h3 class="h3">😀 ${t("lf_emo")}</h3><p class="m">${t("lf_emoH")}</p><div class="lfG">${LFEMO.map(E=>`<button type="button" data-a="lfemo" data-v="${E[0]}"${emoOpen(E)?"":" disabled"}>${E[1]}<small>${emoOpen(E)?t("lf_e_"+E[0]):"🔒"+E[2]}</small></button>`).join("")}</div>`;
+ h+=`<h3 class="h3">✨ ${t("lf_cos")}</h3><p class="m">${t("lf_cosH")}</p>`;
+ for(const sl of ["trail","spawn","win"]){const op=ml>=cosSlotLv[sl];h+=`<div class="mgRow"><b>${t("lf_sl_"+sl)}</b><span>${op?"":t("lf_slLock",{n:cosSlotLv[sl]})}</span></div>`;
+  if(op)h+=`<div class="lfG">${[""].concat(COS[sl]).map(k=>{const own=!k||cosOpen(sl,k);return`<button type="button" class="${s.cos[sl]===k?"on":""}" data-a="lfcos" data-v="${sl}:${k}"${own?"":" disabled"}><span style="color:${COSC[k]||"#888"}">●</span><small>${k?t("lf_c_"+k):t("lf_none")}</small></button>`}).join("")}</div>`}
+ h+=`<button class="btn sm" type="button" data-a="sgjump" data-v="look">✨ AURA / 🎨 ${t("lg_tab_look")||"Look"}</button>`;
+ h+=`<h3 class="h3">💇 ${t("lf_hair")}</h3><p class="m">${t("lf_hairH")}</p><div class="lfG">${HAIR.map((p,i)=>`<button type="button" class="${(s.hair|0)===i?"on":""}" data-a="lfhair" data-v="${i}">💇<small>${t("lf_h"+i)}</small></button>`).join("")}</div>`;
+ h+=`<h3 class="h3">🛡️ ${t("lf_emb")}</h3><p class="m">${t("lf_embH")}</p><div class="lfG">${EMB.map((e,i)=>`<button type="button" class="${(s.emb.i|0)===i?"on":""}" data-a="lfemb" data-v="${i}">${e}</button>`).join("")}</div><div class="lfG" style="margin-top:6px">${EMBC.map((c,i)=>`<button type="button" class="${(s.emb.c|0)===i?"on":""}" data-a="lfembc" data-v="${i}"><span style="color:${c}">⬤</span></button>`).join("")}</div>`;
+ h+=`<h3 class="h3">👕 ${t("lf_ward")}</h3><p class="m">${t("lf_wardH")}</p><div class="mgList">${[0,1,2].map(i=>{const w=s.out[i];return`<div class="mgRow"><b>${i+1}. ${w?(HAIR[w.hair]?"💇":"")+" "+(w.aura||"")+" "+(w.trail?t("lf_c_"+w.trail):""):t("lf_wEmpty")}</b><i>${lfB("lfwsave",i,"💾")}${w?lfB("lfwwear",i,"👕","main"):""}</i></div>`}).join("")}</div>`;
+ h+=`<h3 class="h3">🎨 ${t("lf_theme")}</h3><div class="lfG">${["","forest","ice","royal","blood","sea"].map(k=>`<button type="button" class="${s.theme===k?"on":""}" data-a="lftheme" data-v="${k}">🎨<small>${t("lf_th_"+(k||"def"))}</small></button>`).join("")}</div>`;
+ h+=`<h3 class="h3">🎵 ${t("lf_mus")}</h3><p class="m">${t("lf_musH")}</p><div class="mgList"><div class="mgRow${s.mus?"":" ok"}"><b>🎵 ${t("lf_m_auto")}</b><i>${lfB("lfmus","",s.mus?"▶️":"✓")}</i></div>${Object.keys(MUS).map(k=>{const u=MUS[k].u();return`<div class="mgRow${s.mus===k?" ok":""}${u?"":" lk"}"><b>🎵 ${t("lf_m_"+k)}</b><span>${u?"":t("lf_musU",{n:t("lf_mu_"+k)})}</span><i>${u?lfB("lfmus",k,s.mus===k?"✓":"▶️"):"🔒"}</i></div>`}).join("")}</div>`;
+ h+=`<h3 class="h3">🎓 ${t("lf_spec")}</h3><p class="m">${t("lf_specH")}</p><div class="mgList">${Object.keys(SPEC).map(k=>`<div class="mgRow${s.spec===k?" ok":""}"><b>${t("lf_sp_"+k)}</b><span>${t("lf_spd_"+k)}</span><i>${s.spec===k?"✓":lfB("lfspec",k,specArm===k?"⚠️":"✓")}</i></div>`).join("")}</div>`;
+ const sy=styNow();h+=`<h3 class="h3">🎯 ${t("lf_style")}</h3><p class="m">${t("lf_styH")}</p><div class="mgRow ok"><b>${t("lf_st_"+sy)}</b><span>${sy!=="none"?t("lf_std_"+sy):""}</span></div>`;
+ h+=`<h3 class="h3">⚔️ ${t("lf_mast")}</h3><p class="m">${t("lf_mastH")}</p><div class="mgList">${["sword","magic","bow"].map(k=>{const l=maLv(k),x=s.mast[k]|0,a=l?maNeed(l-1):0,b=maNeed(l);return`<div class="mgRow"><b>${k==="sword"?"🗡️":k==="magic"?"🔮":"🏹"} ${t("lf_ma_"+k)}</b><span>${t("lf_maLv",{n:l})}<div class="sgBar"><i style="width:${l>=20?100:Math.min(100,(x-a)/(b-a)*100).toFixed(1)}%"></i></div></span></div>`}).join("")}</div>`;return h}
+function lfRDay(){const s=lfS(),D=lfDay(),done=D.t.every((k,i)=>D.p[i]>=D.n[i]);let h=`<p class="sub">${t("lf_dayH")}</p><div class="mgStats"><span>🔥 ${t("lf_streak",{n:s.stk.n,b:s.stk.best})}</span></div><div class="mgList">`;
+ h+=D.t.map((k,i)=>`<div class="mgRow${D.p[i]>=D.n[i]?" ok":""}"><b>${t("lf_d_"+k,{p:D.p[i],n:D.n[i]})}</b><i>${D.p[i]>=D.n[i]?"✓":"⏳"}</i></div>`).join("")+`</div>`;
+ h+=D.got?`<p class="m">${t("lf_dayAll")}</p>`:`<button class="btn main wide" type="button" data-a="lfday"${done?"":" disabled"}>${t("claim")}</button>`;
+ h+=`<div class="mgList" style="margin-top:8px">${[3,7,14,30].map(n=>`<div class="mgRow${s.stk.paid>=n?" ok":""}"><b>🔥 ${n}</b><i>${s.stk.paid>=n?"✓":"🎁"}</i></div>`).join("")}</div>`;return h}
+function lfRMail(){const s=lfS();let h=`<p class="sub">${t("lf_mailH")}</p>`;if(!s.mail.length)return h+`<p class="m">${t("lf_mailNone")}</p>`;
+ for(const m of s.mail.slice().reverse()){const att=m.g||Object.keys(m.m).length||m.it>=0;h+=`<div class="mgCard${m.rd?"":" here"}"><div class="mgTop"><span class="mgIc">${m.k==="letter"?"📜":m.k==="gift"?"🎁":m.k==="guild"?"🛡️":"✉️"}</span><div><h4>${mailTitle(m)}</h4><small>${m.d}</small></div></div><p class="m">${mailBody(m)}</p>`+
+  (att?`<p class="m">${m.g?"🪙 "+nfm(m.g)+" ":""}${matTxt(m.m)}${m.it>=0?" 🎁 "+L(RAR[m.it].n)+"+":""}</p>`:"")+`<div class="smBtns">${att&&!m.got?lfB("lfmtake",m.id,t("lf_take"),"main"):m.rd?"":lfB("lfmread",m.id,t("lf_read"))}${lfB("lfmdel",m.id,t("lf_del"))}</div></div>`}return h}
+function lfRCol(){const s=lfS();let h=`<p class="sub">${t("lf_colH")}</p>`;
+ for(const c in COLS){const C=COLS[c],n=colHave(c);h+=`<div class="mgCard${n>=C.n?" done":""}"><div class="mgTop"><span class="mgIc">${C.ic[0]}</span><div><h4>${t("lf_cl_"+c)} ${n}/${C.n}</h4><small>${stTx(C.st)}</small></div></div><div class="mgChips">${C.ic.map((ic,i)=>`<span>${s.col[c+i]?ic:"❔"}</span>`).join("")}</div></div>`}
+ const lists=[["🦋","lf_bf",BFL.map((B,i)=>s.bfl[i]?"🦋"+t("lf_b"+i)+" ×"+s.bfl[i]:"❔")],["🪙","lf_co",Array.from({length:COINS},(_,i)=>s.coins[i]?t("lf_c"+i):"❔")],["✉️","lf_lt",Array.from({length:LETTERS},(_,i)=>s.letter.includes(i)?t("lf_lt_t"+i):"❔")],
+  ["👀","lf_ob",OBS.map((ic,i)=>s.obs[i]?ic+" "+t("lf_o"+i):"❔")],["📜","lf_msg",Array.from({length:6},(_,i)=>s.msg[i]?t("lf_ms"+i):"❔")]];
+ for(const [ic,k,arr] of lists)h+=`<h3 class="h3">${ic} ${t(k)}</h3><div class="mgChips">${arr.map(x=>`<span>${x}</span>`).join("")}</div>`;
+ h+=`<h3 class="h3">🗻 ${t("lf_vi")}: ${Object.keys(s.vista).length}</h3><h3 class="h3">🎬 ${t("lf_scn")}</h3><div class="mgList">${[0,1,2,3,4].map(i=>`<div class="mgRow${s.scn[i]?" ok":""}"><b>${s.scn[i]?t("lf_sc"+i):"???"}</b><i>${s.scn[i]?lfB("lfscn",i,t("lf_scnPlay")):t("lf_scnLock")}</i></div>`).join("")}</div>`;
+ h+=`<h3 class="h3">📖 ${t("lf_album")}</h3><p class="m">${t("lf_albumH")}</p><div class="mgList">${s.album.slice(0,30).map(a=>`<div class="mgRow"><b style="color:${rarTxtCol(a.r)}">${SLOTS[a.s]?SLOTS[a.s].ic:"🎁"} ${a.n}</b><span>${L(RAR[a.r].n)} · ${a.d}</span></div>`).join("")||"<p class='m'>—</p>"}</div>`;
+ h+=`<h3 class="h3">📸 ${t("lf_ph")}</h3><p class="m">${t("lf_phH")}</p><div>${s.photo.map((p,i)=>`<a href="${p}" download="mini-rpg-photo-${i+1}.jpg"><img class="lfPh" src="${p}" alt="📸"></a>`).join("")||"—"}</div>`;return h}
+function lfRCard(){const s=lfS();let h=`<p class="sub">${t("lf_cardH")}</p><div class="mgStats"><span>🃏 <b>${Object.keys(s.cards).length}/${CARDS.length}</b></span></div>`;
+ for(const st of CSETS){const L0=CARDS.filter(x=>x.set===st),n=L0.filter(x=>s.cards[x.k]).length;h+=`<h3 class="h3">${t("lf_cs_"+st)} ${n}/${L0.length} ${n>=L0.length?"✓":""} <small>${stTx(CSB[st])}</small></h3><div>${L0.map(C=>{const own=s.cards[C.k];const col=["#9aa","#6bf07a","#4ab8ff","#c84aff","#ffb03a"][C.r]||"#ffd34e";return`<span class="lfCard${own?"":" lk"}" style="--cc:${col}">${own?C.ic:"❔"}<small>${own?C.n():"?"}</small></span>`}).join("")}</div>`}return h}
+function lfRRoom(){const s=lfS();let h=`<p class="sub">${t("lf_roomH")}</p><div class="lfRoom">${[0,1,2,3,4,5,6,7,8].map(i=>{const k=s.room.s[i],D=k&&deco(k);return`<div>${D?`<button type="button" data-a="lfrmtake" data-v="${i}" style="background:none;border:none;font-size:30px;color:#fff">${D[1]}<small>${t("lf_d_"+k)}</small></button>`:""}</div>`}).join("")}</div>`;
+ h+=`<h3 class="h3">🛒 ${t("lf_rmShop")}</h3><div class="mgList">${DECO.map(([k,ic,c])=>{const own=s.room.own[k],pl=s.room.s.includes(k);return`<div class="mgRow${own?" ok":""}"><b>${ic} ${t("lf_d_"+k)}</b><span>${own?(pl?"✓":t("lf_rmOwn")):"🪙 "+nfm(Math.round(c*repPrice()))}</span><i>${own?(pl?"":lfB("lfrmplace",k,t("lf_rmPlace"),"main")):lfB("lfrmbuy",k,t("lf_rmBuy"))}</i></div>`}).join("")}</div>`;
+ h+=`<h3 class="h3">🎒 ${t("lf_bp")}</h3><div class="mgList">${BPK.map(([k,c])=>{const v=s.room.own["bp_"+k];return`<div class="mgRow${v===2?" ok":""}"><b>🎒 ${t("lf_bp_"+k)}</b><span>${v?(v===2?t("lf_bpOn"):t("lf_rmOwn")):"🪙 "+nfm(Math.round(c*repPrice()))}</span><i>${v===2?"✓":lfB("lfbp",k,v?t("lf_bpWear"):t("lf_rmBuy"))}</i></div>`}).join("")}</div>`;
+ h+=`<h3 class="h3">🏛️ ${t("lf_show")}</h3><p class="m">${t("lf_showH")}</p><div class="mgList">${s.show.map(id=>{const it=showItem(id);return it?`<div class="mgRow"><b style="color:${rarTxtCol(it.r)}">${SLOTS[it.s].ic} ${itemName(it)}</b><span>${L(RAR[it.r].n)}</span><i>${lfB("lfshowdel",id,"✕")}</i></div>`:""}).join("")||`<p class="m">${t("lf_showNone")}</p>`}</div>`;
+ if(s.show.length<6){const cand=Object.values(eq).filter(Boolean).concat(bag).filter(it=>!s.show.includes(it.id)).sort((a,b)=>b.r-a.r).slice(0,8);h+=`<div class="mgList">${cand.map(it=>`<div class="mgRow"><b style="color:${rarTxtCol(it.r)}">${SLOTS[it.s].ic} ${itemName(it)}</b><i>${lfB("lfshow",it.id,"➕")}</i></div>`).join("")}</div>`}return h}
+function lfRGuild(){const s=lfS(),g=s.gd;let h=`<p class="sub">${t("lf_gdH")}</p>`;
+ if(!g.n)return h+`<div class="mgCard"><label class="fl"><span>${t("lf_gdName")}</span><input id="lfGdN" class="inp" maxlength="18" placeholder="⚔️"></label><button class="btn main wide" type="button" data-a="lfgdmake">${t("lf_gdMake",{n:nfm(5000)})}</button></div>`;
+ h+=`<div class="mgCard here"><div class="mgTop"><span class="mgIc" style="color:${EMBC[g.c|0]}">${EMB[g.i|0]}</span><div><h4>${escH(g.n)}</h4><small>${t("lf_gdLv",{n:g.lv,x:Math.floor(g.xp),m:gdNeed(g.lv),p:g.pt})}</small></div></div><div class="sgBar"><i style="width:${Math.min(100,g.xp/gdNeed(g.lv)*100).toFixed(1)}%"></i></div>`+
+  `<div class="lfG">${EMB.map((e,i)=>`<button type="button" class="${(g.i|0)===i?"on":""}" data-a="lfgdi" data-v="${i}">${e}</button>`).join("")}</div></div>`;
+ h+=`<h3 class="h3">👥 ${t("lf_gdMem",{n:g.mem.length,m:gdCap()})}</h3><div class="mgList">${g.mem.map(k=>`<div class="mgRow ok"><b>${SGNK[k]?SGNK[k].ic+" "+sgNm(k):k}</b></div>`).join("")}</div>`;
+ const can=SGN.filter(N=>!N.ro&&!g.mem.includes(N.k)&&sgAff(N.k)>=6);h+=can.length&&g.mem.length<gdCap()?`<div class="mgList">${can.map(N=>`<div class="mgRow"><b>${N.ic} ${sgNm(N.k)}</b><i>${lfB("lfgdinv",N.k,t("lf_gdInv"),"main")}</i></div>`).join("")}</div>`:`<p class="m">${t("lf_gdNoInv")}</p>`;
+ h+=`<h3 class="h3">⬆️ ${t("lf_gdUpg")}</h3><div class="mgList">${GD_UP.map(k=>`<div class="mgRow"><b>${t("lf_gu_"+k)}</b><span>${pips(g.up[k]|0,5)}</span><i>${(g.up[k]|0)<5&&g.pt>0?lfB("lfgdup",k,"⬆️","main"):""}</i></div>`).join("")}</div>`;return h}
+function lfRMkt(){let h=`<p class="sub">${t("lf_mktH")}</p>`;const w=wxNow&&wxNow.k;if(w&&w!=="clear")h+=`<p class="m">${t("lf_mktEv",{n:WX[w].ic+" "+t("lg_wx_"+w)})}</p>`;
+ h+=`<div class="mgList">${MKT.map(([k])=>{const f=lfS().mkt.p[k]==null?1:lfS().mkt.p[k],tr=f>1.05?"📈":f<.95?"📉":"➖";return`<div class="mgRow"><b>${matIc(k)} ${matN(k)} <small>(${nfm(SL.mat[k]|0)})</small></b><span>${tr} 🪙${nfm(mktBuyP(k))} / ${nfm(mktSellP(k))}</span><i>${lfB("lfbuy",k+":1","+1")}${lfB("lfbuy",k+":10","+10")}${lfB("lfsell",k+":1","−1")}${lfB("lfsell",k+":10","−10")}</i></div>`}).join("")}</div>`;return h}
+function lfRPet(){const s=lfS(),p=s.pet,m=s.mount;let h=`<p class="sub">${t("lf_petH")}</p>`;
+ if(SL.pa){const P0=PETS.find(x=>x.k===SL.pa);h+=`<div class="mgCard"><div class="mgTop"><span class="mgIc">${P0?P0.ic:"🐾"}</span><div><h4>${t("lf_t_pet")}</h4><small>${t("lf_petBon",{n:petMoodMul().toFixed(2)})}</small></div></div>`+
+  `<div class="mgRow"><b>🍖 ${t("lf_food")}</b><span><div class="sgBar"><i style="width:${p.food.toFixed(0)}%"></i></div></span></div><div class="mgRow"><b>😊 ${t("lf_moodL")}</b><span><div class="sgBar"><i style="width:${p.mood.toFixed(0)}%"></i></div></span></div>`+
+  `<div class="smBtns">${lfB("lffeed",null,t("lf_feed"),"main")}${lfB("lfplay",null,t("lf_play"))}</div></div>`}else h+=`<p class="m">${t("lf_petNone")}</p>`;
+ h+=`<h3 class="h3">🐎 ${t("lf_mount")}</h3><p class="m">${t("lf_mountH")}</p><div class="mgCard"><p class="m">${t("lf_mLv",{n:m.lv})}</p>${m.lv<10?lfB("lfmup",null,t("lf_mUp",{n:nfm(mUpCost(m.lv))}),"main"):""}</div>`;
+ h+=`<div class="mgList">${Object.keys(BRD).map(k=>{const own=k==="spirit"||m.own[k];return`<div class="mgRow${m.br===k?" ok":""}"><b>🐎 ${t("lf_br_"+k)}</b><span>${t("lf_brd_"+k)}</span><i>${m.br===k?"✓":lfB("lfbreed",k,own?t("lf_brUse"):t("lf_brBuy",{n:nfm(BRD[k].c)}))}</i></div>`}).join("")}</div>`;return h}
+function lfRStat(){const s=lfS(),st=s.st;let h=`<p class="sub">${t("lf_stH")}</p><div class="mgList">`;
+ const rows=[["kill",nfm(st.kill|0)],["time",tmTx(st.time|0)],["far",nfm(Math.round(st.far|0))],["gIn",nfm(Math.round(st.gIn|0))],["gOut",nfm(Math.round(st.gOut|0))],["chest",st.chest|0],["game",st.game|0],["bfly",st.bfly|0],["coin",st.coin|0],["find",st.find|0],["emote",st.emote|0],["photo",st.photo|0],["trade",st.trade|0],["obs",st.obs|0],["vista",st.vista|0],["hidden",st.hidden|0],["phen",st.phen|0]];
+ h+=rows.map(([k,v])=>`<div class="mgRow"><b>${t("lf_s_"+k)}</b><span>${v}</span></div>`).join("")+`</div>`;
+ h+=`<h3 class="h3">🏆 ${t("lf_rec")}</h3><div class="mgList">${lfRecs().map(([ic,k,v])=>`<div class="mgRow"><b>${ic} ${t(k)}</b><span>${v}</span></div>`).join("")}</div>`;
+ const H=s.hist;h+=`<h3 class="h3">📈 ${t("lf_hist")}</h3>`;if(H.length>1){h+=`<p class="m">⭐ ${t("lf_r_lvl")}: ${H[0].lv} → ${H[H.length-1].lv}</p>${spark(H.map(x=>x.lv),"#ffd34e")}<p class="m">❤ HP: ${nfm(H[0].hp)} → ${nfm(H[H.length-1].hp)}</p>${spark(H.map(x=>x.hp),"#ff6b86")}<p class="m">⚔️ ATK: ${nfm(H[0].atk)} → ${nfm(H[H.length-1].atk)}</p>${spark(H.map(x=>x.atk),"#8fc6ff")}`}else h+=`<p class="m">${H.length?H[0].d:"—"}</p>`;
+ h+=`<p class="m">${t("lf_seaH",{n:t("lf_sea"+seaNow())})}</p>`;return h}
+Object.assign(LG_R,{lfme:lfRMe,lfday:lfRDay,lfmail:lfRMail,lfgame:lfRGame,lfcol:lfRCol,lfcard:lfRCard,lfroom:lfRRoom,lfguild:lfRGuild,lfmkt:lfRMkt,lfpet:lfRPet,lfstat:lfRStat});
+/* the buttons */
+{const _a=p15Act;p15Act=function(a,v){if(!a||!a.startsWith("lf"))return _a(a,v);if(!LG)return true;const s=lfS();
+ switch(a){case "lfemo":emote(v);break;
+  case "lfcos":{const [sl,k]=v.split(":");if(k&&!cosOpen(sl,k))break;s.cos[sl]=k;SFX.equip&&SFX.equip();save();renderMg();break}
+  case "lfhair":s.hair=+v|0;save();renderMg();break;case "lfemb":s.emb.i=+v|0;lfApplyLooks();save();renderMg();break;case "lfembc":s.emb.c=+v|0;lfApplyLooks();save();renderMg();break;
+  case "lfwsave":{const i=+v|0;s.out[i]={hair:s.hair|0,dye:LG.dye||"",dyeG:LG.dyeG||"",aura:LG.aura||"",trail:s.cos.trail,spawn:s.cos.spawn,win:s.cos.win,theme:s.theme};SFX.ui&&SFX.ui();save();renderMg();break}
+  case "lfwwear":{const w=s.out[+v|0];if(!w)break;s.hair=w.hair|0;LG.dye=w.dye||LG.dye;LG.dyeG=w.dyeG||LG.dyeG;if(w.aura!=null)LG.aura=w.aura;for(const sl of ["trail","spawn","win"])if(!w[sl]||cosOpen(sl,w[sl]))s.cos[sl]=w[sl]||"";s.theme=w.theme||"";lfApplyLooks();recalc();SFX.equip&&SFX.equip();save();renderMg();break}
+  case "lftheme":s.theme=v;lfApplyLooks();save();renderMg();break;case "lfmus":musSet(v);break;case "lfspec":specPick(v);renderMg();break;
+  case "lfday":dayClaim();break;case "lfmtake":mailTake(+v);break;case "lfmread":{const m=s.mail.find(x=>x.id===+v);if(m)m.rd=1;save();renderMg();break}case "lfmdel":s.mail=s.mail.filter(x=>x.id!==+v);save();renderMg();break;
+  case "lfgo":gStart(v);break;case "lfgback":G0=null;renderMg();break;
+  case "lfgtap":{if(!G0)break;if(G0.k==="react")gReactTap();else if(G0.k==="mem")gMemTap(+v);else if(G0.k==="sym")gSymTap(+v);else if(G0.k==="diff")gDiffTap(+v);else if(G0.k==="gear")gGearTap(+v);break}
+  case "lfscn":scnPlay(+v);break;case "lfrmbuy":rmBuy(v);break;case "lfrmplace":rmPlace(v);break;case "lfrmtake":rmTake(+v);break;case "lfbp":bpBuy(v);break;
+  case "lfshow":showAdd(+v);break;case "lfshowdel":s.show=s.show.filter(x=>x!==+v);save();renderMg();break;
+  case "lfgdmake":{const el=$("lfGdN");gdMake(el?el.value:"");break}case "lfgdi":s.gd.i=+v|0;save();renderMg();break;case "lfgdinv":gdInvite(v);break;case "lfgdup":gdUpg(v);break;
+  case "lfbuy":case "lfsell":{const [k,n]=v.split(":");mktDeal(k,+n,a==="lfbuy");break}
+  case "lffeed":petFeed();break;case "lfplay":petPlay();break;case "lfmup":mountUp();break;case "lfbreed":mountBreed(v);break}
+ return true}}
+NWC.n59a1="new";NWC.n59a2="new";NEWS.unshift({v:"2026.12.22",ic:"🎭",k:["n59a1","n59a2"]});
+try{const o=LS.get(PK("r2_lg"),null);if(o&&mgObj(o.ttl)&&LG)for(const k in o.ttl)if(TITLES.some(x=>x.k===k))LG.ttl[k]=1}catch(e){}
+try{lfApplyLooks()}catch(e){}
 const bootStep=(n,f)=>{try{f()}catch(e){console.error(e);BOOT.err.push(n+": "+(e&&e.message||e))}};
 bootStep("lang",applyLang);bootStep("resize",resize);bootStep("gfx",applyGfx);
 if(BOOT.safe)bootStep("toast",()=>toast(t(BOOT.safe>1?"bootSafe2d":"bootSafe")));
