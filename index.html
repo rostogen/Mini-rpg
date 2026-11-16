@@ -1169,6 +1169,49 @@ body.dkf .banner h1{color:#f1d9a6;text-shadow:0 0 28px rgba(200,20,40,.85),0 0 4
 .rgl{position:absolute;left:4px;top:2px;z-index:3;font:900 12px/12px "Segoe UI Symbol","Noto Sans Symbols 2","Noto Sans Symbols","Noto Sans Javanese",system-ui,sans-serif;color:var(--gold);text-shadow:0 1px 0 #000,0 0 5px currentColor;pointer-events:none;opacity:.9}
 @media (prefers-reduced-motion:reduce){.p60ash{display:none}}
 </style>
+<style id="p63css">
+/* P63: hand-made look. Iron HUD buttons with rivets and our own line icons, film grain, a sword-slash start, the full-screen gate */
+.ib .ic63{width:70%;height:70%;color:#f0cf8c;stroke-width:2;filter:drop-shadow(0 1px 0 #000) drop-shadow(0 0 3px rgba(255,170,80,.25));pointer-events:none}
+body.dkf .ib,.ib{border-radius:5px;background:
+ radial-gradient(circle at 4px 4px,#8a7356 0 1.2px,transparent 1.8px),radial-gradient(circle at calc(100% - 4px) 4px,#8a7356 0 1.2px,transparent 1.8px),
+ radial-gradient(circle at 4px calc(100% - 4px),#6a5640 0 1.2px,transparent 1.8px),radial-gradient(circle at calc(100% - 4px) calc(100% - 4px),#6a5640 0 1.2px,transparent 1.8px),
+ linear-gradient(160deg,#2c2522 0%,#17110f 55%,#0e0a09 100%);
+ border:1px solid #070505;box-shadow:inset 0 0 0 1px rgba(200,160,100,.32),inset 0 0 0 3px rgba(0,0,0,.45),inset 0 2px 0 rgba(255,225,180,.12),0 3px 8px rgba(0,0,0,.6)}
+.ib::before{display:none}
+.ib.gift{background:radial-gradient(circle at 4px 4px,#b08a5a 0 1.2px,transparent 1.8px),radial-gradient(circle at calc(100% - 4px) 4px,#b08a5a 0 1.2px,transparent 1.8px),linear-gradient(160deg,#3e1a1c 0%,#1d0b0d 60%,#120607 100%);border-color:#070303}
+.ib.gift .ic63{color:#f0c36e}
+.ib:active .ic63{color:#ffe2a8;filter:drop-shadow(0 0 6px rgba(255,190,100,.7))}
+.ibl{font-family:Georgia,"Times New Roman",serif;font-weight:700;letter-spacing:.02em;color:#e3cfa6}
+/* film grain over the 3D view (off with fewer effects, calm mode and outside first person) */
+#p63gr{position:absolute;inset:-40px;z-index:1;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+ animation:p63g .9s steps(6) infinite}
+@keyframes p63g{0%{transform:translate(0,0)}20%{transform:translate(-18px,12px)}40%{transform:translate(14px,-20px)}60%{transform:translate(-8px,22px)}80%{transform:translate(22px,6px)}100%{transform:translate(0,0)}}
+body.p60off #p63gr,body:not(.dkf) #p63gr{display:none}
+/* the start: one sword slash cuts the screen open */
+#p63sl{position:fixed;inset:0;z-index:2147483000;pointer-events:none;overflow:hidden}
+#p63sl .h{position:absolute;left:0;right:0;height:50%;background:#050203}
+#p63sl .t{top:0;animation:p63up .7s cubic-bezier(.7,0,.25,1) .95s forwards}
+#p63sl .b{bottom:0;animation:p63dn .7s cubic-bezier(.7,0,.25,1) .95s forwards}
+#p63sl i{position:absolute;left:-20%;top:50%;width:140%;height:3px;margin-top:-1.5px;background:linear-gradient(90deg,transparent,#fff 30%,#ffe2b0 50%,#ff3a2a 70%,transparent);box-shadow:0 0 18px 4px rgba(255,90,60,.7),0 0 46px 10px rgba(255,40,30,.35);transform:scaleX(0) rotate(-7deg);transform-origin:0 50%;animation:p63cut .3s cubic-bezier(.2,.9,.3,1) forwards,p63fade .4s ease .9s forwards}
+#p63sl b{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font:700 clamp(26px,7.5vw,54px)/1 Cinzel,Georgia,serif;letter-spacing:.16em;color:#f3dcae;text-shadow:0 0 18px rgba(255,80,50,.55),0 2px 0 #000;opacity:0;animation:p63tt 1.35s ease .12s forwards}
+@keyframes p63cut{to{transform:scaleX(1) rotate(-7deg)}}
+@keyframes p63fade{to{opacity:0}}
+@keyframes p63up{to{transform:translateY(-102%) skewY(-7deg)}}
+@keyframes p63dn{to{transform:translateY(102%) skewY(-7deg)}}
+@keyframes p63tt{0%{opacity:0;letter-spacing:.5em;filter:blur(6px)}35%{opacity:1;letter-spacing:.16em;filter:blur(0)}62%{opacity:1}100%{opacity:0;transform:translateY(-50%) scale(1.08);filter:blur(3px)}}
+/* full-screen gate: the game is made for the whole screen */
+#fsGate{box-sizing:border-box;position:fixed;inset:0;z-index:2147482000;display:none;place-items:center;background:radial-gradient(ellipse at 50% 40%,rgba(70,10,14,.86),rgba(4,2,3,.97) 70%);color:#ead8b4;text-align:center;padding:24px;font-family:Georgia,serif;touch-action:none}
+#fsGate.on{display:grid}
+#fsGate .fgC{width:100%;max-width:340px}
+#fsGate svg{width:74px;height:74px;color:#d9b77a;filter:drop-shadow(0 0 12px rgba(255,120,60,.45));animation:fgP 2.2s ease-in-out infinite}
+#fsGate h3{margin:14px 0 6px;font:700 22px/1.2 Cinzel,Georgia,serif;letter-spacing:.06em;color:#f3dcae}
+#fsGate p{margin:0 0 20px;font-size:14px;line-height:1.45;color:#cdb898}
+#fsGate button{font:700 17px Georgia,serif;color:#fbe9c6;padding:14px 26px;border-radius:6px;border:1px solid #070303;background:linear-gradient(180deg,#7a1820,#3a080c);box-shadow:inset 0 0 0 1px rgba(230,170,110,.45),inset 0 2px 0 rgba(255,220,180,.2),0 6px 22px rgba(0,0,0,.7),0 0 26px rgba(200,40,40,.35);cursor:pointer}
+#fsGate button:active{transform:scale(.96)}
+#fsGate small{display:block;margin-top:14px;font-size:11.5px;color:#9a8670}
+@keyframes fgP{50%{transform:scale(1.08)}}
+</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="iaRb" gradientUnits="userSpaceOnUse" x1="6" y1="6" x2="58" y2="58"><stop offset="0" stop-color="#ff5a6a"/><stop offset=".25" stop-color="#ffd24a"/><stop offset=".5" stop-color="#4fe08a"/><stop offset=".75" stop-color="#4f9dff"/><stop offset="1" stop-color="#c06bff"/></linearGradient></defs></svg>
@@ -1194,15 +1237,15 @@ body.dkf .banner h1{color:#f1d9a6;text-shadow:0 0 28px rgba(200,20,40,.85),0 0 4
     <div class="rightHud">
       <div class="plate res"><span class="g">🪙 <b id="hGold">0</b></span><span class="gm">💎 <b id="hGem">0</b></span><button class="zw" id="hZoneB" type="button" data-tk="sl_zones"><i id="hZic">🏡</i>⚔ <b id="hWave">#1</b></button></div>
       <div class="ibs">
-        <button class="ib gift" id="bDaily" data-tk="hbDaily">🎁<i class="bdg dot" id="dayBdg"></i><small class="ibl" data-i="hbDaily">Нагороди</small></button>
-        <button class="ib" id="bFriends" data-tk="friends">👥<small class="ibl" data-i="friends">Друзі</small></button>
-        <button class="ib" id="bTree" data-tk="tree">🌳<small class="ibl" data-i="hbTree">Навички</small></button>
-        <button class="ib" id="bForge" data-tk="forge">🔨<small class="ibl" data-i="hbForge">Кузня</small></button>
-        <button class="ib" id="bInv" data-tk="inv">🎒<i class="bdg" id="invBdg"></i><small class="ibl" data-i="hbInv">Речі</small></button>
-        <button class="ib" id="bDrops" data-tk="drops">🎲<i class="bdg dot" id="luckBdg"></i><small class="ibl" data-i="hbDrops">Дропи</small></button>
-        <button class="ib" id="bBest" data-tk="best">📖<small class="ibl" data-i="hbBest">Індекс</small></button>
-        <button class="ib" id="bMg" data-tk="mg_hub">🗺️<i class="bdg dot" id="mgBdg"></i><small class="ibl" data-i="mg_hubS">Пригоди</small></button>
-        <button class="ib" id="bFull" data-tk="fullscreen">⛶<small class="ibl" data-i="hbFull">Екран</small></button>
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="ic63-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5h17v9h-17z"/><path d="M3.5 10.5 5.5 5h13l2 5.5"/><path d="M10 10.5v4.2h4v-4.2"/><path d="M12 14.7v1.8"/><path d="M8 5v5.5M16 5v5.5"/></symbol><symbol id="ic63-friends" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.1"/><path d="M3 20c.4-3.9 2.9-6 6-6s5.6 2.1 6 6"/><circle cx="17.2" cy="9.2" r="2.4"/><path d="M15.6 14.4c2.9.1 4.9 1.8 5.4 5"/></symbol><symbol id="ic63-tree" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V8.5"/><path d="M12 13.5 7 10M12 11 17 7.5M12 16.5l4.3-3"/><circle cx="12" cy="6" r="2.1"/><circle cx="6.6" cy="9.4" r="1.6"/><circle cx="17.6" cy="6.8" r="1.6"/><circle cx="16.9" cy="12.9" r="1.6"/><path d="M7.5 21h9"/></symbol><symbol id="ic63-forge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 14h12.5l-2.4 3H6z"/><path d="M8 17v3.5M12 17v3.5M6.5 20.5h7"/><path d="M16 14c2.6 0 4.5-.8 4.5-2.4H16"/><path d="m12.5 3.5 4 4"/><path d="M11 5l3-3 4 4-3 3z"/><path d="m13.5 7.5-4.5 4.5"/></symbol><symbol id="ic63-inv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5a6 6 0 0 1 12 0V20H6z"/><path d="M9.3 4.6V3h5.4v1.6"/><path d="M6 13.2h12"/><path d="M10.2 13.2v3h3.6v-3"/></symbol><symbol id="ic63-drops" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2.8 8 4.6v9.2L12 21.2l-8-4.6V7.4z"/><path d="m12 2.8-4 8.2h8z"/><path d="M8 11 4 7.4M16 11l4-3.6M8 11l4 10.2L16 11"/></symbol><symbol id="ic63-best" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17.5a3 3 0 0 1 3-3h11"/><path d="M9.2 8.9c1.6-1.8 4.3-1.8 5.9 0-1.6 1.8-4.3 1.8-5.9 0z"/><circle cx="12.15" cy="8.9" r=".7"/></symbol><symbol id="ic63-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 6.2 6-2.2 6 2.2 6-2.2v13.6L15 19.8l-6-2.2-6 2.2z"/><path d="M9 4v13.6M15 6.2v13.6"/><path d="m10.6 10.2 2.6 2.6m0-2.6-2.6 2.6"/></symbol><symbol id="ic63-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol></defs></svg><button class="ib gift" id="bDaily" data-tk="hbDaily"><svg class="ic63" aria-hidden="true"><use href="#ic63-gift"/></svg><i class="bdg dot" id="dayBdg"></i><small class="ibl" data-i="hbDaily">Нагороди</small></button>
+        <button class="ib" id="bFriends" data-tk="friends"><svg class="ic63" aria-hidden="true"><use href="#ic63-friends"/></svg><small class="ibl" data-i="friends">Друзі</small></button>
+        <button class="ib" id="bTree" data-tk="tree"><svg class="ic63" aria-hidden="true"><use href="#ic63-tree"/></svg><small class="ibl" data-i="hbTree">Навички</small></button>
+        <button class="ib" id="bForge" data-tk="forge"><svg class="ic63" aria-hidden="true"><use href="#ic63-forge"/></svg><small class="ibl" data-i="hbForge">Кузня</small></button>
+        <button class="ib" id="bInv" data-tk="inv"><svg class="ic63" aria-hidden="true"><use href="#ic63-inv"/></svg><i class="bdg" id="invBdg"></i><small class="ibl" data-i="hbInv">Речі</small></button>
+        <button class="ib" id="bDrops" data-tk="drops"><svg class="ic63" aria-hidden="true"><use href="#ic63-drops"/></svg><i class="bdg dot" id="luckBdg"></i><small class="ibl" data-i="hbDrops">Дропи</small></button>
+        <button class="ib" id="bBest" data-tk="best"><svg class="ic63" aria-hidden="true"><use href="#ic63-best"/></svg><small class="ibl" data-i="hbBest">Індекс</small></button>
+        <button class="ib" id="bMg" data-tk="mg_hub"><svg class="ic63" aria-hidden="true"><use href="#ic63-map"/></svg><i class="bdg dot" id="mgBdg"></i><small class="ibl" data-i="mg_hubS">Пригоди</small></button>
+        <button class="ib" id="bFull" data-tk="fullscreen"><svg class="ic63" aria-hidden="true"><use href="#ic63-full"/></svg><small class="ibl" data-i="hbFull">Екран</small></button>
         <button class="ib" id="bPause" data-tk="pause"><i class="pzI"></i><small class="ibl" data-i="hbPause">Пауза</small></button>
       </div>
     </div>
@@ -13704,7 +13747,7 @@ function syncGoal3(){
 /* round map in the corner: you are the arrow in the middle (looking up), the road, monsters, chests and the ★ */
 function drawMinimap(c,h){
  if(h.state==="dead"){mmHide();return}
- const R=Math.min(50,LW*.13),cx=R+12,cy=Math.max(82,GT*.36)+R,sc=R/560,a=h.ang||0,fx=Math.cos(a),fz=-Math.sin(a),rx=Math.sin(a),rz=Math.cos(a);
+ const R=Math.min(50,LW*.13),cx=R+12,cy=Math.max(82,GT*.36,(window.p63hb||0)/SC+12)+R,sc=R/560,a=h.ang||0,fx=Math.cos(a),fz=-Math.sin(a),rx=Math.sin(a),rz=Math.cos(a);
  const P=(x,z3)=>{const dx=x-h.x,dz=z3-h.z*ZS;return[cx+(dx*rx+dz*rz)*sc,cy-(dx*fx+dz*fz)*sc]};
  const B=BIOMES[G3.biome]||BIOMES[0];
  c.save();c.beginPath();c.arc(cx,cy,R,0,PI*2);c.fillStyle=hexA(B.ground[1],.78);c.fill();c.save();c.clip();
@@ -20535,6 +20578,43 @@ function rfB(r,c){return r<24?[c?"rfc":"rf",r]:[c?"rfcH":"rfH",r-24]}
 function rfHas(r,c){const [k,b]=rfB(r,c);return gem&&((gem[k]|0)>>b&1)}
 function rfSet(r,c){const [k,b]=rfB(r,c);if(gem)gem[k]=(gem[k]|0)|1<<b}
 function rfAny(){return!!gem&&!!(((gem.rf|0)&~(gem.rfc|0))|((gem.rfH|0)&~(gem.rfcH|0)))}
+/* ============ P63: full screen only, hand-made HUD look, film grain, a sword-slash start ============ */
+const P63Tsrc={
+fs_t:"Тільки на весь екран|Full screen only|Plein écran uniquement|Nur im Vollbild|仅限全屏|Solo en pantalla completa|Solo a schermo intero|Tylko na pełnym ekranie|Somente em tela cheia|全画面専用|전체 화면 전용|Yalnızca tam ekran|Hanya layar penuh|केवल पूर्ण स्क्रीन|Chỉ toàn màn hình|เต็มจอเท่านั้น|Alleen schermvullend|ملء الشاشة فقط|শুধু পূর্ণ পর্দায়|Full screen lamang",
+fs_d:"Тіньові землі зроблені для всього екрана: так видно бій, карту й усі кнопки. Гра стоїть на паузі.|The Shadow Lands are made for the whole screen: that is how you see the fight, the map and every button. The game is paused.|Les Terres d'Ombre sont faites pour tout l'écran : on y voit le combat, la carte et chaque bouton. Le jeu est en pause.|Die Schattenlande sind für den ganzen Bildschirm gemacht: So siehst du Kampf, Karte und jeden Knopf. Das Spiel ist pausiert.|暗影之地为全屏而生：这样才能看清战斗、地图和所有按钮。游戏已暂停。|Las Tierras Sombrías están hechas para toda la pantalla: así se ven el combate, el mapa y cada botón. El juego está en pausa.|Le Terre d'Ombra sono fatte per tutto lo schermo: così vedi la lotta, la mappa e ogni pulsante. Il gioco è in pausa.|Krainy Cienia są zrobione na cały ekran: tak widać walkę, mapę i każdy przycisk. Gra jest wstrzymana.|As Terras Sombrias foram feitas para a tela inteira: assim você vê a luta, o mapa e cada botão. O jogo está pausado.|影の地は全画面向けに作られている：戦い、地図、すべてのボタンが見える。ゲームは一時停止中。|그림자 땅은 전체 화면용으로 만들어졌다: 그래야 전투, 지도, 모든 버튼이 보인다. 게임이 일시 정지됐다.|Gölge Topraklar tam ekran için yapıldı: savaşı, haritayı ve her düğmeyi böyle görürsün. Oyun duraklatıldı.|Negeri Bayangan dibuat untuk layar penuh: begitulah pertarungan, peta, dan semua tombol terlihat. Permainan dijeda.|छाया-भूमि पूरी स्क्रीन के लिए बनी है: तभी लड़ाई, नक्शा और हर बटन दिखते हैं। खेल रुका हुआ है।|Vùng Đất Bóng Tối được làm cho toàn màn hình: như vậy mới thấy trận đấu, bản đồ và mọi nút. Trò chơi đang tạm dừng.|ดินแดนเงาสร้างมาสำหรับเต็มจอ: จะเห็นการต่อสู้ แผนที่ และทุกปุ่ม เกมหยุดชั่วคราวอยู่|De Schaduwlanden zijn gemaakt voor het hele scherm: zo zie je het gevecht, de kaart en elke knop. Het spel is gepauzeerd.|صُنعت أراضي الظل لملء الشاشة: هكذا ترى المعركة والخريطة وكل زر. اللعبة متوقفة مؤقتًا.|ছায়াভূমি পুরো পর্দার জন্য তৈরি: এভাবেই লড়াই, মানচিত্র আর সব বোতাম দেখা যায়। খেলা থেমে আছে।|Ang Lupain ng Anino ay ginawa para sa buong screen: ganoon mo makikita ang laban, ang mapa at bawat button. Naka-pause ang laro.",
+fs_b:"Грати на весь екран|Play in full screen|Jouer en plein écran|Im Vollbild spielen|全屏游玩|Jugar en pantalla completa|Gioca a schermo intero|Graj na pełnym ekranie|Jogar em tela cheia|全画面でプレイ|전체 화면으로 플레이|Tam ekran oyna|Main layar penuh|पूरी स्क्रीन पर खेलें|Chơi toàn màn hình|เล่นแบบเต็มจอ|Schermvullend spelen|العب بملء الشاشة|পুরো পর্দায় খেলো|Maglaro sa full screen",
+fs_n:"Вийшов з повного екрана? Натисни кнопку, і гра продовжиться.|Left full screen? Tap the button and the game goes on.|Sorti du plein écran ? Touche le bouton et le jeu reprend.|Vollbild verlassen? Tippe auf den Knopf, dann geht es weiter.|退出了全屏？点按钮即可继续。|¿Saliste de la pantalla completa? Toca el botón y el juego sigue.|Uscito dallo schermo intero? Tocca il pulsante e il gioco riprende.|Wyszedłeś z pełnego ekranu? Dotknij przycisku, a gra potoczy się dalej.|Saiu da tela cheia? Toque no botão e o jogo continua.|全画面を抜けた？ボタンを押せば続きから。|전체 화면에서 나왔나? 버튼을 누르면 계속된다.|Tam ekrandan mı çıktın? Düğmeye dokun, oyun devam etsin.|Keluar dari layar penuh? Ketuk tombolnya dan permainan berlanjut.|पूरी स्क्रीन से बाहर आ गए? बटन दबाओ और खेल आगे चलेगा।|Đã thoát toàn màn hình? Chạm nút để chơi tiếp.|ออกจากเต็มจอแล้ว? แตะปุ่มแล้วเกมจะเล่นต่อ|Volledig scherm verlaten? Tik op de knop en het spel gaat verder.|خرجت من ملء الشاشة؟ اضغط الزر وتتابع اللعبة.|পুরো পর্দা থেকে বেরিয়ে গেছ? বোতাম চাপো, খেলা চলবে।|Lumabas sa full screen? Pindutin ang button at tuloy ang laro.",
+n63a1:"🗡️ Гра тепер тільки на весь екран: поки він вимкнений, бій стоїть на паузі під заслоною з однією кнопкою (на iPhone і в застосунку, де весь екран і так, заслони немає). Нові кнопки зверху: кований метал із заклепками й власні намальовані значки замість смайликів. Початок гри розсікає удар меча, а на картинці лежить ледь помітне плівкове зерно. Міні-карта більше не налазить на кнопки у вертикальному екрані.|🗡️ The game is now full screen only: while it is off, the fight waits under a cover with one button (no cover on iPhone or in the app, where the screen is already whole). New top buttons: forged metal with rivets and our own drawn icons instead of emoji. A sword slash opens the game, and a faint film grain lies over the picture. The minimap no longer covers the buttons in portrait."};
+for(const k in P63Tsrc)T8[k]=S8(P63Tsrc[k]);
+NWC.n63a1="ui";NEWS.unshift({v:"2026.12.25",ic:"🗡️",k:["n63a1"]});
+const p63={gate:false,fail:0,slash:0,hbT:0};
+/* where full screen can and should be asked for: the API exists, we are not already a standalone app / Play app, and not a test robot */
+const p63Can=()=>{const el=document.documentElement;if(!(el.requestFullscreen||el.webkitRequestFullscreen))return false;
+ if(window.Capacitor||/[?&]fsgate=0/.test(location.search))return false;
+ try{if(matchMedia("(display-mode: standalone)").matches&&!isFull())return false}catch(e){}
+ if(navigator.webdriver&&!/[?&]fsgate=1/.test(location.search))return false;return true};
+const p63Started=()=>{const b=$("boot");return BOOT.go&&(!b||b.classList.contains("off")||getComputedStyle(b).display==="none")};
+function p63Req(){const el=document.documentElement;let pr;try{pr=(el.requestFullscreen?el.requestFullscreen({navigationUI:"hide"}):el.webkitRequestFullscreen&&el.webkitRequestFullscreen())}catch(e){pr=null}
+ if(pr&&pr.then)pr.then(()=>{try{p63Check()}catch(e){}},()=>{p63.fail++;if(p63.fail>=2)p63Show(false)});return pr}
+function p63Show(on){if(on===p63.gate)return;p63.gate=on;let g=$("fsGate");
+ if(!g){g=document.createElement("div");g.id="fsGate";document.body.appendChild(g);g.addEventListener("click",e=>{if(e.target.closest("button")){try{SFX.ui()}catch(x){}p63Req()}})}
+ if(on){g.innerHTML=`<div class="fgC"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><use href="#ic63-full"/></svg><h3>${t("fs_t")}</h3><p>${t("fs_d")}</p><button type="button">${t("fs_b")}</button><small>${t("fs_n")}</small></div>`;
+  g.classList.add("on");paused=true;attackHeld=false;try{joy.id=null;joy.x=joy.y=0}catch(e){}}
+ else{g.classList.remove("on");paused=!!modalOpen;last=performance.now()}}
+function p63Check(){if(!p63Can()||p63.fail>=2){if(p63.gate)p63Show(false);return}
+ const need=p63Started()&&!isFull();if(need!==p63.gate)p63Show(need);else if(need&&!paused)paused=true}
+document.addEventListener("fullscreenchange",()=>setTimeout(p63Check,80));document.addEventListener("webkitfullscreenchange",()=>setTimeout(p63Check,80));
+/* the start tap is a user gesture: ask for full screen right there (orientation stays free) and cut the screen open with a slash */
+{const _g=p47Go;p47Go=function(){const was=BOOT.go;_g.apply(this,arguments);if(was||!BOOT.go)return;
+ if(p63Can()&&!isFull())p63Req();
+ if(!S.fxLo&&!S.calm&&!p63.slash){p63.slash=1;const d=document.createElement("div");d.id="p63sl";d.innerHTML=`<div class="h t"></div><div class="h b"></div><i></i><b>${L(T8.sl_achT||["Shadow Lands"]).replace(/[«»"]/g,"")}</b>`;
+  document.body.appendChild(d);try{SFX.swing&&SFX.swing()}catch(e){}try{whoosh(.5,.18,300,2400)}catch(e){}setTimeout(()=>d.remove(),2300)}}}
+/* film grain inside the stage, under the HUD */
+(function(){const st=$("stage");if(!st||$("p63gr"))return;const g=document.createElement("div");g.id="p63gr";const v=$("p60vg");if(v&&v.parentNode===st)v.after(g);else st.prepend(g)})();
+/* the bottom of the top button row (CSS px) for the minimap, only for buttons that sit over the minimap's column */
+function p63HB(){let m=0;const lim=Math.min(50,LW*.13)*2*SC+24;document.querySelectorAll("#hud .ib, .ib").forEach(b=>{if(!b.offsetParent)return;const r=b.getBoundingClientRect();if(r.left<lim&&r.top<innerHeight*.45&&r.bottom>m)m=r.bottom+12});window.p63hb=m}
+setInterval(()=>{try{p63Check();if(++p63.hbT%2===0)p63HB()}catch(e){}},500);
+addEventListener("resize",()=>setTimeout(()=>{try{p63HB();p63Check()}catch(e){}},120));
 const bootStep=(n,f)=>{try{f()}catch(e){console.error(e);BOOT.err.push(n+": "+(e&&e.message||e))}};
 bootStep("lang",applyLang);bootStep("resize",resize);bootStep("gfx",applyGfx);
 if(BOOT.safe)bootStep("toast",()=>toast(t(BOOT.safe>1?"bootSafe2d":"bootSafe")));
