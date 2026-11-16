@@ -76,3 +76,28 @@ Tests that were really run (headless Chromium on a PC, not a phone):
 6. Old save from the current `main` loads without losing gold, battle, materials, faction reputation, items, titles or forge level.
 
 Not done or not checked: not tested on a real phone; long texts are Ukrainian + English only; the hero is not visible in first person, so hairstyles show on the inventory doll and «poses» were replaced by photo frames; new steed breeds reuse the spirit steed model; balance not tuned by real play.
+
+# P60 «Темна корона» + audit (2026-11-16)
+
+Audit run first, on the `main` build (headless Chromium on a PC, not a phone):
+- Boot: the loading screen is ready in about 4 s; 3D starts; no script errors at start.
+- All 22 windows open at 360×640, 320×568 and 1280×720: no «undefined/NaN/[object]», no window wider than the screen. (The «rewards ready» window reports a wider inner box only when opened empty by a script; with real content it fits.)
+- Autopilot fights for 60-90 s: waves clear, gold grows, no script errors.
+- No login or cloud saves exist in the game (the «account» window is a local profile on the device, and it says so). Google/GitHub login needs a server: not built, not faked.
+
+P60 changes (look only, no new saved state):
+1. Rarity mark in the corner of every item tile (◇ ✧ ✦ ❖ ♛ ✠ ☼ ⚜ ⟡ ☀ ✶ ☾ ✺ ♆ ❂ ∞ ✹ ◈ ✵ ✷ ☠ ⦿ ⁂ ◉).
+2. Falling ash, rising embers and a dark vignette over the world (off in light mode, «fewer effects», «calm mode», menus).
+3. Level-up banner between ꧁ ꧂ with a glow.
+4. Dark toasts (also the coloured ones), ❖ in window titles, ⟡ before section heads, a gold line under window headers.
+5. Start screen: blood moon behind the swords, ꧁ Тіньові землі ꧂, dark crimson button with ⚔.
+
+Tests really run after P60 (headless Chromium, PC):
+1. `node --check` of the main script: OK; new names do not clash.
+2. All 22 windows again at 360×640: same result as before, no script errors.
+3. Screenshots checked: start screen, HUD toast, level-up banner, bag with 10 items of different rarities, What's New at 1280×720.
+4. Ash layer: hidden in light mode and with «fewer effects», shown again when turned back on.
+5. Old save: a profile saved by the `main` build (gold 123456, level 9, battle 37, one item) loads in the new build with the same values.
+6. Autopilot 45-75 s: no script errors.
+
+Not done / not checked: not tested on a real phone; the symbol ꧁ ꧂ needs the Javanese font (Android has it; very old phones may show boxes); balance was not changed in this pass; Google Play app crash (wrong MainActivity) still needs a new build 3 signed with the old key.

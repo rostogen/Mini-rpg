@@ -1142,6 +1142,33 @@ body.photoM .hud,body.photoM #pad,body.photoM #goalP,body.photoM #styM,body.phot
 .stgBar{height:4px;margin:4px 8% 0;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden;display:none}.stgBar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffe07a,#ffb03a);transition:width .15s}.stgBar.full i{background:#fff6c0;box-shadow:0 0 8px #ffe07a}
 .pxL{list-style:none;margin-top:4px;font-size:12.5px}
 </style>
+<style id="p60css">
+/* P60 «Темна корона»: dark fantasy finish (start screen, windows, toasts, rarity marks, ash and vignette) */
+.bsMain{background:radial-gradient(circle at 50% 21%,rgba(205,34,46,.5) 0 9vmin,rgba(150,16,30,.22) 11vmin,transparent 27vmin),radial-gradient(ellipse at 50% 40%,#2a0b14 0%,#0d0509 55%,#020103 100%)}
+.bsHead{position:relative}
+.bsSub span::before{content:"꧁ ";color:#b8323e;text-shadow:0 0 10px rgba(220,40,50,.7);letter-spacing:0}
+.bsSub span::after{content:" ꧂";color:#b8323e;text-shadow:0 0 10px rgba(220,40,50,.7);letter-spacing:0}
+.bsGo{background:linear-gradient(180deg,#61111c,#2a050b);border:1px solid #c9a25a;color:#f3dcae;font-family:Cinzel,Georgia,serif;letter-spacing:.06em;box-shadow:0 0 0 3px rgba(0,0,0,.65),0 0 0 4px rgba(201,162,90,.35),0 0 26px rgba(200,30,40,.5),inset 0 1px 0 rgba(255,220,170,.16)}
+.bsGo::before{content:"⚔ ";color:#c9a25a}.bsGo::after{content:" ⚔";color:#c9a25a}
+.bsBar{border-color:#5a3a2a}
+.p60vg,.p60ash{position:absolute;inset:0;pointer-events:none;z-index:1}
+.p60vg{background:radial-gradient(ellipse at 50% 52%,transparent 52%,rgba(24,0,8,.38) 82%,rgba(0,0,0,.66) 100%)}
+.p60ash{overflow:hidden}
+.p60ash i{position:absolute;top:-4%;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;background:var(--c);opacity:0;will-change:transform,opacity;animation:p60fall var(--t) linear var(--d) infinite}
+.p60ash i.up{top:auto;bottom:-4%;box-shadow:0 0 6px var(--c);animation-name:p60rise}
+@keyframes p60fall{0%{transform:translate3d(0,0,0);opacity:0}12%{opacity:.55}100%{transform:translate3d(var(--w),108vh,0);opacity:0}}
+@keyframes p60rise{0%{transform:translate3d(0,0,0);opacity:0}15%{opacity:.8}100%{transform:translate3d(var(--w),-70vh,0);opacity:0}}
+body:not(.dkf) .p60vg,body:not(.dkf) .p60ash,body.p60off .p60ash,body.p60off .p60vg,body:has(.modal.on) .p60ash,body.cineOn .p60ash{display:none}
+body.dkf .toast{background:linear-gradient(180deg,rgba(34,12,19,.95),rgba(12,5,9,.95));color:#ecd3a0;border:1px solid #7a4a2e;box-shadow:0 0 0 1px #000,0 0 18px rgba(170,30,42,.45),inset 0 1px 0 rgba(255,220,170,.08);text-shadow:0 1px 0 #000}
+body.dkf .sheet h2::before{content:"❖";color:#a8323c;text-shadow:0 0 8px rgba(200,40,50,.6)}
+body.dkf .sheet .shead{border-bottom:1px solid transparent;border-image:linear-gradient(90deg,transparent,#5a2a24 15%,#c9a25a 50%,#5a2a24 85%,transparent) 1;padding-bottom:5px}
+body.dkf .sheet .h3::before{content:"⟡ ";color:#a8323c;font-size:.8em}
+body.dkf .banner h1{color:#f1d9a6;text-shadow:0 0 28px rgba(200,20,40,.85),0 0 4px #000,0 4px 0 #2a0610}
+#banner.p60lv h1{background:none;color:#ffe6a8;text-shadow:0 0 30px rgba(255,190,80,.75),0 0 60px rgba(200,20,40,.7),0 4px 0 #2a0610;animation:p60lv 2.6s ease-out both}
+@keyframes p60lv{0%{letter-spacing:.5em;filter:blur(6px)}25%{letter-spacing:.06em;filter:blur(0)}100%{letter-spacing:.04em}}
+.rgl{position:absolute;left:4px;top:2px;z-index:3;font:900 12px/12px "Segoe UI Symbol","Noto Sans Symbols 2","Noto Sans Symbols","Noto Sans Javanese",system-ui,sans-serif;color:var(--gold);text-shadow:0 1px 0 #000,0 0 5px currentColor;pointer-events:none;opacity:.9}
+@media (prefers-reduced-motion:reduce){.p60ash{display:none}}
+</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="iaRb" gradientUnits="userSpaceOnUse" x1="6" y1="6" x2="58" y2="58"><stop offset="0" stop-color="#ff5a6a"/><stop offset=".25" stop-color="#ffd24a"/><stop offset=".5" stop-color="#4fe08a"/><stop offset=".75" stop-color="#4f9dff"/><stop offset="1" stop-color="#c06bff"/></linearGradient></defs></svg>
@@ -4524,7 +4551,7 @@ reR(UNQ,(r,j)=>[[S8("Клинок Розривача Небес|Skyrender Blade|
 reR(UAK,(r,j)=>[[0,4,0,3,2,3,1,1,1,6,0],[0,4,0,0,4,3,1,1,1,6,0],[0,4,0,1,4,1,1,1,1,6,7],[4,4,0,0,1,0,1,1,1,6,1],[4,4,3,0,3,2,3,1,1,6,0],[0,4,3,0,0,2,4,1,1,6,3],[0,4,0,1,2,2,4,1,1,6,3],[4,4,3,1,1,1,3,1,1,6,0],[0,4,3,1,1,2,3,1,1,6,0],[0,4,2,0,1,3,1,1,1,6,0]][j]);
 function itemKind(it){const S=SLOTS[it.s];if(it.gs&&GSETS[it.gs-1])return GSETS[it.gs-1].p[it.gp|0][2];if(it.hu&&HIDI&&HIDI[it.hu-1])return HIDI[it.hu-1].k;if(it.a!=null&&ARM[it.a])return ARM[it.a].k;if(it.u){const q=unqOf(it);if(q&&q[0]!=null)return q[0]}const g=it.r<=1?0:it.r<=3?1:2,ng=S.names[g],ix=(it.n!=null?it.n:it.id%3)%ng.length;return S.ak[g][ix]||0}
 const iIc=it=>`<span class="ih">${itemArt(it.s,itemKind(it),it.r,{bare:1,lk:itemLook(it)})}</span>`;
-const iTile=it=>(S.cb?`<b class="rnb">${it.r+1}</b>`:"")+`<span class="ia">${itemArt(it.s,itemKind(it),it.r,{lk:itemLook(it)})}</span>${it.up?`<b class="ub">+${it.up}</b>`:""}${it.u?'<i class="us">★</i>':it.hu?'<i class="us">🔮</i>':""}`;
+const iTile=it=>(S.cb?`<b class="rnb">${it.r+1}</b>`:"")+rarGlyph(it.r)+`<span class="ia">${itemArt(it.s,itemKind(it),it.r,{lk:itemLook(it)})}</span>${it.up?`<b class="ub">+${it.up}</b>`:""}${it.u?'<i class="us">★</i>':it.hu?'<i class="us">🔮</i>':""}`;
 /* art as a canvas (for loot sprites): filled when the SVG has decoded */
 const IA_IMG={};
 function artCv(sl,kd,r,px,lk){const key=sl+"_"+kd+"_"+r+"_"+px+"_"+(lk?lk.id:"");let e=IA_IMG[key];if(e)return e;const cv=document.createElement("canvas");cv.width=cv.height=px;e=IA_IMG[key]={cv,ok:false};const im=new Image();im.onload=()=>{cv.getContext("2d").drawImage(im,0,0,px,px);e.ok=true;if(e.tx)e.tx.needsUpdate=true};im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(itemArt(sl,kd,r,{bare:1,sa:1,lk}).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" width="'+px+'" height="'+px+'" '));return e}
@@ -20302,6 +20329,27 @@ Object.assign(LG_R,{lfme:lfRMe,lfday:lfRDay,lfmail:lfRMail,lfgame:lfRGame,lfcol:
 NWC.n59a1="new";NWC.n59a2="new";NEWS.unshift({v:"2026.12.22",ic:"🎭",k:["n59a1","n59a2"]});
 try{const o=LS.get(PK("r2_lg"),null);if(o&&mgObj(o.ttl)&&LG)for(const k in o.ttl)if(TITLES.some(x=>x.k===k))LG.ttl[k]=1}catch(e){}
 try{lfApplyLooks()}catch(e){}
+/* ============ P60 «Темна корона»: dark fantasy finish ============
+   Rarity marks on item tiles (rarGlyph, used by iTile), falling ash and rising embers over the world (#p60ash),
+   a dark vignette (#p60vg), gothic level-up banner. Everything is CSS + a tiny tick: no new game state, nothing saved. */
+const P60G={common:"◇",uncommon:"✧",rare:"✦",epic:"❖",legendary:"♛",mythic:"✠",celestial:"☼",ancient:"⚜",voidborn:"⟡",divine:"☀",astral:"✶",eclipse:"☾",chaos:"✺",ancientone:"♆",primordial:"❂",eternal:"∞",omniversal:"✹",shadow:"◈",infinity:"✵",heavenly:"✷",godslayer:"☠",absolute:"⦿",beyond:"⁂",singularity:"◉"};
+const P60Tsrc={n60a1:"👑 «Темна корона»: ще темніший світ. На полі бою падає попіл і здіймаються жарини, краї екрана тонуть у темряві, а підвищення рівня світиться під ꧁ ꧂. Кожен предмет має знак своєї рідкості в кутку (◇ ✦ ❖ ♛ ✠ ⚜ ☾ ∞ ◈ …). Нові темні сповіщення, заголовки вікон з ❖ і ⟡, похмурий стартовий екран з кривавим місяцем. Попіл вимикається в Налаштуваннях → «Менше ефектів» або «Спокійний режим».|👑 «Dark Crown»: an even darker world. Ash falls and embers rise over the battlefield, the screen edges sink into darkness and a level-up glows between ꧁ ꧂. Every item shows the mark of its rarity in the corner (◇ ✦ ❖ ♛ ✠ ⚜ ☾ ∞ ◈ …). New dark notices, window titles with ❖ and ⟡, a gloomy start screen with a blood moon. Turn the ash off in Settings → «Fewer effects» or «Calm mode»."};
+for(const k in P60Tsrc)T8[k]=S8(P60Tsrc[k]);
+function rarGlyph(r){const R=RAR[r];if(!R)return"";const g=P60G[R.k]||"✦";let c="";try{c=R.col||""}catch(e){}return`<i class="rgl"${c&&c[0]==="#"?` style="color:${c}"`:""}>${g}</i>`}
+const p60={on:-1};
+(function p60Build(){const st=$("stage");if(!st||$("p60ash"))return;
+ const vg=document.createElement("div");vg.className="p60vg";vg.id="p60vg";
+ const ash=document.createElement("div");ash.className="p60ash";ash.id="p60ash";let h="";
+ for(let i=0;i<18;i++){const up=i%3===0,s=up?rnd(2,3.6):rnd(1.6,3.2),c=up?["#ff7a3a","#ffb04a","#ff4a3a"][i%3]:["#9a8f8a","#6e6460","#b8aca6"][i%3];
+  h+=`<i class="${up?"up":""}" style="--x:${(i*5.7+rnd(0,4)).toFixed(1)}%;--s:${s.toFixed(1)}px;--c:${c};--t:${(up?rnd(6,10):rnd(9,16)).toFixed(1)}s;--d:-${rnd(0,14).toFixed(1)}s;--w:${rnd(-60,60).toFixed(0)}px"></i>`}
+ ash.innerHTML=h;const ref=$("vig3");if(ref&&ref.parentNode===st){ref.after(vg);vg.after(ash)}else{st.prepend(ash);st.prepend(vg)}})();
+function p60Tick(){const off=!!(S.fxLo||S.calm||!isFP());if(off!==p60.on){p60.on=off;document.body.classList.toggle("p60off",off)}}
+setInterval(()=>{try{p60Tick()}catch(e){}},1000);
+{const bn0=banner;banner=function(a,b){let lv=false;try{lv=typeof P!=="undefined"&&a===t("levelUp",{n:P.level})}catch(e){}
+ if(lv)a="꧁ "+a+" ꧂";bn0(a,b);const el=$("banner");if(el){el.classList.toggle("p60lv",lv)}}}
+/* coloured toasts (day challenge, hints, rewards) keep the dark plate: their colour goes to the text and the frame */
+{const tst0=toast;toast=function(s,col){tst0(s,col);if(col&&document.body.classList.contains("dkf")&&/^#[0-9a-f]{3,8}$/i.test(col)){const el=$("toast");el.style.background="";el.style.color=col;el.style.borderColor=col;el.style.boxShadow="0 0 0 1px #000,0 0 18px "+col+"66,inset 0 1px 0 rgba(255,220,170,.08)"}else{const el=$("toast");el.style.borderColor="";el.style.boxShadow=""}}}
+NWC.n60a1="ui";NEWS.unshift({v:"2026.12.23",ic:"👑",k:["n60a1"]});
 const bootStep=(n,f)=>{try{f()}catch(e){console.error(e);BOOT.err.push(n+": "+(e&&e.message||e))}};
 bootStep("lang",applyLang);bootStep("resize",resize);bootStep("gfx",applyGfx);
 if(BOOT.safe)bootStep("toast",()=>toast(t(BOOT.safe>1?"bootSafe2d":"bootSafe")));
