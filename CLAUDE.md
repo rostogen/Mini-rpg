@@ -4,6 +4,7 @@
   Never suggest steps that need a PC: terminal, Claude Desktop, `claude remote-control`, adb, USB cable.
   Give phone-friendly ways instead (GitHub links, the browser, the Claude app).
 - Talk in Ukrainian, short and simple (caveman style).
+- When the chat's health check turns 🔴 red (long chat, lost details): at once write the handoff file (`/amhandoff`, saved in the repo root as `handoff-mini-rpg-<n>.md`), send it to Ростик and tell him to move to a new session. Do not wait to be asked.
 - The owner's name is Ростик: call him that (not «господар» or «власник»).
 - The game is one file: `index.html` (Three.js, first person only, open world, 20 languages: never add Russian).
 - When work is done: commit, push, open a PR, merge it into `main`, and give the link where the branch can be deleted.
